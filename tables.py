@@ -41,8 +41,6 @@ def create_registration_table():
                                         pan_number TEXT,
                                         aadhar_file TEXT ,
                                         pan_file TEXT, 
-                                        street_address1 TEXT,
-                                        street_address2 TEXT,
                                         highest_qualification TEXT,
                                         tenth_certificate TEXT,
                                         inter_certificate TEXT ,

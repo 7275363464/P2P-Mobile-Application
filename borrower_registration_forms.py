@@ -157,11 +157,12 @@ Borrower = '''
 
                     hint_text: "Enter Date Of Birth"
 
-                    helper_text: 'DD/MM/YYYY'
+                    helper_text: 'YYYY-MM-DD'
                     helper_text_mode: "on_error"
                     font_name: "Roboto-Bold"
                     hint_text_color: 0, 0, 0, 1
-
+                    input_type:'number'
+                    on_touch_down: root.on_date_touch_down()
 
             MDRectangleFlatButton:
                 text: 'Next'
@@ -1636,11 +1637,13 @@ Borrower = '''
             MDTextField:
                 id: father_dob
                 hint_text: 'Enter Father D.O.B'
-                helper_text: 'Enter Date of Birth with  format YY-MM-DD'
+                helper_text: 'YYYY-MM-DD'
                 multiline: False
                 helper_text_mode: 'on_focus'
                 hint_text_color: 0,0,0, 1
                 font_name: "Roboto-Bold"
+                input_type:'number'
+                on_touch_down: root.on_date_touch_down()
 
             GridLayout:
                 cols: 1
@@ -1754,11 +1757,13 @@ Borrower = '''
             MDTextField:
                 id: mother_dob
                 hint_text: 'Enter Mother D.O.B'
-                helper_text: 'Enter Date of Birth with  format YY-MM-DD'
+                helper_text: 'YYYY-MM-DD'
                 multiline: False
                 helper_text_mode: 'on_focus'
                 hint_text_color: 0,0,0, 1
                 font_name: "Roboto-Bold"
+                input_type:'number'
+                on_touch_down: root.on_date_touch_down()
 
             GridLayout:
                 cols: 1
@@ -2731,11 +2736,12 @@ Borrower = '''
             MDTextField:
                 id: spouse_date_textfield
                 hint_text: "Enter Spouse Date Of Birth"
-                helper_text: 'DD/MM/YYYY'
+                helper_text: 'YYYY-MM-DD'
                 font_name: "Roboto-Bold"
                 helper_text_mode: 'on_focus'
                 hint_text_color: 0, 0, 0, 1
-
+                input_type:'number'
+                on_touch_down: root.on_date_touch_down()
 
             MDTextField:
                 id: spouse_mobile
@@ -3358,7 +3364,7 @@ Borrower = '''
             MDTextField:
                 id: person_dob
                 hint_text: 'Enter Person D.O.B'
-                helper_text: 'Enter Valid Person Date of Birth'
+                helper_text: 'YYYY-MM-DD'
                 multiline: False
                 helper_text_mode: 'on_focus'
                 halign: 'left'
@@ -3366,6 +3372,9 @@ Borrower = '''
                 text_color: 1, 1, 1, 1
                 font_name: "Roboto-Bold"
                 bold: True
+                input_type:'number'
+                on_touch_down: root.on_date_touch_down()
+
 
             MDTextField:
                 id: person_ph_no
@@ -3439,6 +3448,10 @@ class BorrowerScreen(Screen):
             self.ids.username.text = data[index]['full_name']
         else:
             print('email not found')
+
+    def on_date_touch_down(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.date_textfield.input_type = 'number'
 
     def validate_input(self, name, gender, date_of_birth):
         errors = []
@@ -3907,12 +3920,6 @@ class BorrowerScreen2(Screen):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
-        if len(aadhar_number) != 12 or not aadhar_number.isdigit():
-            self.show_validation_error('Please Enter a Valid Govt ID with 12 digit number')
-            return
-        if len(pan_number) != 11:
-            self.show_validation_error('Please Enter a Valid Govt ID with 11 digits')
-            return
 
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
@@ -5288,6 +5295,9 @@ class BorrowerScreen4(Screen):
 
 
 class BorrowerScreen5(Screen):
+    def on_date_touch_down(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.father_dob.input_type = 'number'
 
     def on_father_age_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
@@ -5448,6 +5458,9 @@ class BorrowerScreen5(Screen):
 
 
 class BorrowerScreen6(Screen):
+    def on_date_touch_down(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.mother_dob.input_type = 'number'
 
     def on_mother_age_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
@@ -7130,6 +7143,10 @@ class BorrowerScreen15(Screen):
 
 class BorrowerScreen16(Screen):
 
+    def on_date_touch_down(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.spouse_date_textfield.input_type = 'number'
+
     def on_spouse_mobile_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
         self.ids.spouse_mobile.input_type = 'number'
@@ -7182,7 +7199,15 @@ class BorrowerScreen16(Screen):
             return
         try:
             dob = datetime.strptime(spouse_date_textfield, "%Y-%m-%d")
+            today = datetime.now()
+            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+            if age < 18:
+                self.show_validation_error("Enter a Valid Date of Birth Age must be Greater Than 18")
+                return
 
+        except ValueError:
+            self.show_validation_error("Please enter a valid date of birth in the format YYYY-MM-DD")
+            return
         except ValueError:
             self.show_validation_error("Please enter a valid date of birth in the format YYYY-MM-DD")
             return
@@ -8159,6 +8184,10 @@ class BorrowerScreen22(Screen):
 
 class BorrowerScreen23(Screen):
 
+    def on_date_touch_down(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.person_dob.input_type = 'number'
+
     def on_mother_ph_no_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
         self.ids.person_ph_no.input_type = 'number'
@@ -8216,7 +8245,15 @@ class BorrowerScreen23(Screen):
             return
         try:
             dob = datetime.strptime(person_dob, "%Y-%m-%d")
+            today = datetime.now()
+            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+            if age < 18:
+                self.show_validation_error("Enter a Valid Date of Birth Age must be Greater Than 18")
+                return
 
+        except ValueError:
+            self.show_validation_error("Please enter a valid date of birth in the format YYYY-MM-DD")
+            return
         except ValueError:
             self.show_validation_error("Please enter a valid date of birth in the format YYYY-MM-DD")
             return

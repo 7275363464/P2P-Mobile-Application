@@ -136,6 +136,7 @@ Builder.load_string(
                     font_name: "Roboto-Bold"  
 
         MDBoxLayout:
+            id: box
             orientation: 'horizontal'
             spacing: dp(10)
             padding: dp(10)
@@ -179,9 +180,11 @@ Builder.load_string(
 
 
 class WalletScreen(Screen):
-    def __init__(self, **kwargs):
+    def __init__(self, loan_amount_text=None, **kwargs):
         super().__init__(**kwargs)
         self.type = None
+        self.loan_amount = loan_amount_text
+        print(self.loan_amount)  # Print the loan amount received during initialization
         data = app_tables.fin_wallet.search()
         email = self.email()
         w_email = []
@@ -192,11 +195,32 @@ class WalletScreen(Screen):
             w_id.append(i['wallet_id'])
             w_amount.append(i['wallet_amount'])
 
+        index = 0
         if email in w_email:
             index = w_email.index(email)
             self.ids.total_amount.text = str(w_amount[index])
         else:
             print("no email found")
+
+        if loan_amount_text is not None and w_amount[index] >= float(loan_amount_text):
+            button = MDRoundFlatButton(
+                text="Pay Now",
+                size_hint_y=None,
+                height=30,
+                font_size=14,
+                theme_text_color='Custom',
+                text_color=(1, 1, 1, 1),
+                font_name="Roboto-Bold",
+                md_bg_color=(0.043, 0.145, 0.278, 1)
+            )
+            button.bind(on_release=self.disbrsed_loan)
+            self.ids.box.add_widget(button)
+        elif loan_amount_text != None and w_amount[index] < loan_amount_text:
+            print("Amount Not Sufficient")
+
+    def disbrsed_loan(self, instance):
+        print("amount paid")
+        self.manager.get_screen('BorrowerDuesScreen').go_to_paynow()
 
     def highlight_button(self, button_type):
         if button_type == 'deposit':
@@ -344,7 +368,8 @@ class WalletScreen(Screen):
                 print("no email found")
 
     def refresh(self):
-        self.__init__()
+        current_loan_amount = anvil.server.call('loan_amount_text')
+        self.__init__(loan_amount_text=current_loan_amount)
 
     def email(self):
         return anvil.server.call('another_method')

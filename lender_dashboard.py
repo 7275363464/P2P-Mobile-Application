@@ -1,5 +1,6 @@
 from anvil.tables import app_tables
 from kivy.factory import Factory
+from kivy.uix.popup import Popup
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.core.window import Window
@@ -37,6 +38,7 @@ user_helpers1 = """
 <WindowManager>:
     LenderDashboard:
     ViewProfileScreen:
+    ViewEditScreen:
 
 <LenderDashboard>
     MDBoxLayout:
@@ -49,6 +51,25 @@ user_helpers1 = """
             orientation:"horizontal"
             pos_hint:{"top":1}
             size_hint_y: 0.15
+            MDIcon:
+                icon: 'account'  # For "View Loans"
+                halign: 'center'
+                valign: 'middle'
+                size_hint_x: None
+                width: dp(34)
+                spacing: dp(10)
+                padding: dp(10)
+                theme_text_color: 'Custom'
+                text_color: 0.043, 0.145, 0.278, 1 
+                size: dp(180), dp(180)
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                on_touch_down:  root.profile() if self.collide_point(*args[1].pos) else None
+                canvas.before:
+                    Color:
+                        rgba: 174/255, 214/255, 241/255, 1
+                    Ellipse:
+                        size: self.size
+                        pos: self.pos 
 
             MDBoxLayout:
                 orientation:"vertical"
@@ -64,7 +85,6 @@ user_helpers1 = """
                     height: self.texture_size[1]
                 MDLabel:
                     id:username
-                    text:"Mani krishna"
                     font_size: dp(15)
                     size_hint_y: None
                     height: self.texture_size[1]
@@ -191,7 +211,7 @@ user_helpers1 = """
                         MDCard:
                             md_bg_color: "#ffffff"  # Customize background color
                             orientation: "vertical"
-                            padding:dp(0), dp(7)
+                            padding:dp(9), dp(3)
                             on_release: root.view_loanscreen()
 
                             MDIcon:
@@ -215,7 +235,7 @@ user_helpers1 = """
                         MDCard:
                             md_bg_color: "#ffffff"  # Customize background color
                             orientation: "vertical"
-                            padding:dp(0), dp(7)
+                            padding:dp(9), dp(3)
                             on_release: root.view_loan_request()
 
                             MDIcon:
@@ -241,7 +261,7 @@ user_helpers1 = """
                         MDCard:
                             md_bg_color: "#ffffff"  # Customize background color
                             orientation: "vertical"
-                            padding:dp(0), dp(7)
+                            padding:dp(9), dp(3)
                             on_release: root.lender_today_due()
 
                             MDIcon:
@@ -266,7 +286,7 @@ user_helpers1 = """
                         MDCard:
                             md_bg_color: "#ffffff"  # Customize background color
                             orientation: "vertical"
-                            padding:dp(0), dp(7)
+                            padding:dp(9), dp(3)
                             on_release: root.newloan_extension()
 
                             MDIcon:
@@ -291,7 +311,7 @@ user_helpers1 = """
                         MDCard:
                             md_bg_color: "#ffffff"  # Customize background color
                             orientation: "vertical"
-                            padding:dp(0), dp(7)
+                            padding:dp(9), dp(3)
                             on_release: root.view_loan_foreclose()
 
                             MDIcon:
@@ -316,7 +336,7 @@ user_helpers1 = """
                         MDCard:
                             md_bg_color: "#ffffff"  # Customize background color
                             orientation: "vertical"
-                            padding:dp(0), dp(7)
+                            padding:dp(9), dp(3)
                             on_release: root.view_lost_opportunities()
 
                             MDIcon:
@@ -341,7 +361,7 @@ user_helpers1 = """
                         MDCard:
                             md_bg_color: "#ffffff"  # Customize background color
                             orientation: "vertical"
-                            padding:dp(0), dp(7)
+                            padding:dp(9), dp(3)
                             on_release: root.view_transaction_history()
 
                             MDIcon:
@@ -414,1120 +434,322 @@ user_helpers1 = """
                                 bold: True
                                 halign:"center"              
 <ViewProfileScreen>
-    canvas.before:
-        Color:
-            rgba: 1, 1, 1, 1
-        Rectangle:
-            size: self.size
-            pos: self.pos
-
     BoxLayout:
         orientation: 'vertical'
         size_hint: 1, 1
         pos_hint: {'center_x':0.5, 'center_y':0.5}
-
         MDTopAppBar:
             title: "View Profile"
-            elevation: 3
+            elevation: 2
+            pos_hint: {'top': 1}
             left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            title_align: 'center'
             md_bg_color: 0.043, 0.145, 0.278, 1
+
         ScrollView:  # Add ScrollView here
             do_scroll_x: False
             BoxLayout:
                 orientation: "vertical"
-                padding:dp(35)
-                spacing:dp(20)
+                padding:dp(10)
+                spacing:dp(25)
                 size_hint_y: None
                 height: self.minimum_height
-
-                MDRectangleFlatButton:
-
-                    line_color:1,1,1,1
-                    size_hint: None, None
-                    size: dp(120), dp(120)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    canvas.before:
-                        Color:
-                            rgba: 174/255, 214/255, 241/255, 1
-                        Ellipse:
-                            size: self.size
-                            pos: self.pos 
-
-                    Image:
-                        id: selected_image1
-                        source: "profile.png"
-
-                    MDFloatLayout:
-
-                        size_hint:(None,None)
-                        spacing:dp(0)
-                        padding:dp(0)
-                        pos_hint: {'center_x': 0, 'center_y': 0}
-                        MDIconButton:
-                            icon: 'camera-plus'
-                            on_release: app.root.get_screen('ViewProfileScreen').check_and_open_file_manager1()
-                            pos_hint: {'center_x':1.2, 'center_y':0}
-                Label:
-                    id: selected_file_label
-                    text: 'Selected File: None'
+                MDBoxLayout:
+                    orientation: 'vertical'
                     size_hint_y: None
-                    height: 30
-
-                MDLabel:
-                    text: ' Customer ID '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDTextField:
-                        id: customer_id
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        readonly: True
-
-                MDLabel:
-                    text: ' Full Name '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        id: edit_button
-                        size_hint: None, None
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color: 6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-
-                    MDTextField:
-                        id: username
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
-                MDLabel:
-                    text: ' Mobile Number '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color:6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-                    MDTextField:
-                        id: text_input1
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-
-
-
-                MDLabel:
-                    text: ' Date Of Birth '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color: 6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-                    MDTextField:
-                        id: text_input2
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
-                MDLabel:
-                    text: ' Gender '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color: 6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-                    MDTextField:
-                        id: text_input3
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
-                MDLabel:
-                    text: ' Alternate email '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color:6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-                    MDTextField:
-                        id: text_input4
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
-                MDLabel:
-                    text: ' Government ID1 '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDTextField:
-                        id: text_input5
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-                        readonly: True
-
-                MDLabel:
-                    text: ' Government ID2 '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-
-
-                    MDTextField:
-                        id: text_input6
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-                        readonly: True
-
-                MDLabel:
-                    text: ' Highest Qualification'
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color:6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-                    MDTextField:
-                        id: text_input7
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold" 
-
-
-                MDLabel:
-                    text: ' Street Name '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color:6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-                    MDTextField:
-                        id: text_input8
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
-
-                MDLabel:
-                    text: ' City Name '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color:6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-                    MDTextField:
-                        id: text_input9
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
-
-                MDLabel:
-                    text: ' Zipcode '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color:6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-                    MDTextField:
-                        id: text_input10
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
-
-                MDLabel:
-                    text: ' State Name '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color:6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-                    MDTextField:
-                        id: text_input110
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
-                MDLabel:
-                    text: ' Country Name '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color:6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-                    MDTextField:
-                        id: text_input11
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
-                MDLabel:
-                    text: ' Loan Type '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDTextField:
-                        id: text_input12
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-                        readonly: True
-
-                MDLabel:
-                    text: ' Investment '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color:6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-                    MDTextField:
-                        id: text_input13
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
-                MDLabel:
-                    text: ' Lending Period '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color:6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-                    MDTextField:
-                        id: text_input14
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
-                MDLabel:
-                    text: ' User Type '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDTextField:
-                        id: text_input15
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-                        readonly: True
-
-
-                MDLabel:
-                    text: ' Account Holder Name '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color:6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-                    MDTextField:
-                        id: text_input16
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
-                MDLabel:
-                    text: ' Account Type '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color:6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-                    MDTextField:
-                        id: text_input17
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
-
-
-                MDLabel:
-                    text: ' Account Number '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color:6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-                    MDTextField:
-                        id: text_input18
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
-                MDLabel:
-                    text: ' Bank Name '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color:6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-                    MDTextField:
-                        id: text_input19
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
-                MDLabel:
-                    text: ' Bank ID '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color:6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-                    MDTextField:
-                        id: text_input20
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
-                MDLabel:
-                    text: ' Branch Name '
-                    color: 0, 0, 0, 1
-                    halign: 'left'
-                    size_hint_x: 1
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    bold: True
-
-                MDFloatLayout:
-                    size_hint: None, None
-                    size: dp(200), dp(40)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    size_hint_x: 1
-                    canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1  # Set background color to white
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [10, 10, 10, 10]
-
-                        Color:
-                            rgba: 0, 0, 0, 1  # Set border color to black
-
-                        Line:
-                            rounded_rectangle: [self.x + 5, self.y + 0.9, self.width - 2, self.height - 0.5, 10, 10, 10, 10]
-                            width: 1  # Border line width
-
-                    MDFlatButton:
-                        text: "EDIT"
-                        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-                        theme_text_color: "Custom"
-                        text_color:6/255, 143/255, 236/255, 1
-                        font_name: "Roboto-Bold"
-
-                    MDTextField:
-                        id: text_input21
-                        size_hint: None, None
-                        size_hint_x: 0.91
-                        multiline: False
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        line_color_normal: [1, 1, 1, 1]  
-                        line_color_focus: [1, 1, 1, 1]
-                        font_name: "Roboto-Bold"
-
+                    height: self.minimum_height
+                    padding: dp(20)
+                    BoxLayout:
+                        id: box1
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: dp(500)
+                        padding: [10, 0,0,0]
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 0, 1  # Blue color for the box
+                            Line:
+                                rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
+
+                        MDGridLayout:
+                            cols: 2
+                            spacing: dp(10)
+                            padding: dp(10)
+                            MDLabel:
+                                text: "Name:" 
+                                size_hint_y:None
+                                height:dp(50)
+                                bold: True
+                                halign: "left"
+                            MDLabel:
+                                id: name        
+                                text: "" 
+                                size_hint_y:None
+                                height:dp(50)
+                                halign: "left"
+                        MDGridLayout:
+                            cols: 2
+                            spacing: dp(10)
+                            padding: dp(10)
+                            MDLabel:
+                                text: "Email:" 
+                                size_hint_y:None
+                                height:dp(50)
+                                bold: True
+                                halign: "left"
+                            MDLabel:
+                                id: email        
+                                text: "" 
+                                size_hint_y:None
+                                height:dp(50)
+                                halign: "left"
+
+                        MDGridLayout:
+                            cols: 2
+                            spacing: dp(10)
+                            padding: dp(10)
+                            MDLabel:
+                                text: "Mobile No::" 
+                                size_hint_y:None
+                                height:dp(50)
+                                bold: True
+                                halign: "left"
+                            MDLabel:
+                                id: mobile_no        
+                                text: "" 
+                                size_hint_y:None
+                                height:dp(50)
+                                halign: "left"
+                        MDGridLayout:
+                            cols: 2
+                            spacing: dp(10)
+                            padding: dp(10)
+                            MDLabel:
+                                text: "Date Of Birth::" 
+                                size_hint_y:None
+                                height:dp(50)
+                                bold: True
+                                halign: "left"
+                            MDLabel:
+                                id: dob        
+                                text: "" 
+                                size_hint_y:None
+                                height:dp(50)
+                                halign: "left"
+                        MDGridLayout:
+                            cols: 2
+                            spacing: dp(10)
+                            padding: dp(10)
+                            MDLabel:
+                                text: "City:" 
+                                size_hint_y:None
+                                height:dp(50)
+                                bold: True
+                                halign: "left"
+                            MDLabel:
+                                id: city        
+                                text: "" 
+                                size_hint_y:None
+                                height:dp(50)
+                                halign: "left"
+                        MDGridLayout:
+                            cols: 2
+                            spacing: dp(10)
+                            padding: dp(10)
+                            MDLabel:
+                                text: "Gender:" 
+                                size_hint_y:None
+                                height:dp(50)
+                                bold: True
+                                halign: "left"
+                            MDLabel:
+                                id: gender        
+                                text: "" 
+                                size_hint_y:None
+                                height:dp(50)
+                                halign: "left"
+                        MDGridLayout:
+                            cols: 2
+                            spacing: dp(10)
+                            padding: dp(10)
+                            MDLabel:
+                                text: "Marrital Status:" 
+                                size_hint_y:None
+                                height:dp(50)
+                                bold: True
+                                halign: "left"
+                            MDLabel:
+                                id: marrital_status        
+                                text: "" 
+                                size_hint_y:None
+                                height:dp(50)
+                                halign: "left"
+
+                        MDFloatLayout:
+                            MDRaisedButton:
+                                text: "Edit Profile"
+                                md_bg_color: 0.043, 0.145, 0.278, 1
+                                font_name: "Roboto-Bold"
+                                size_hint: 0.4, None
+                                height: dp(50)
+                                on_release:root.on_edit()
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                font_size:dp(15)
+<ViewEditScreen>                            
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: 1, 1
+        pos_hint: {'center_x':0.5, 'center_y':0.5}
+        MDTopAppBar:
+            title: "View Profile"
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            title_align: 'center'
+            md_bg_color: 0.043, 0.145, 0.278, 1
+
+        ScrollView:  # Add ScrollView here
+            do_scroll_x: False
+            BoxLayout:
+                orientation: "vertical"
+                padding:dp(10)
+                spacing:dp(25)
+                size_hint_y: None
+                height: self.minimum_height
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(20)
+                    BoxLayout:
+                        id: box1
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: dp(500)
+                        padding: [10, 0,0,0]
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 0, 1  # Blue color for the box
+                            Line:
+                                rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
+
+                        MDGridLayout:
+                            cols: 2
+                            spacing: dp(10)
+                            padding: dp(10)
+                            MDLabel:
+                                text: "Name:" 
+                                size_hint_y:None
+                                height:dp(50)
+                                bold: True
+                                halign: "left"
+                            MDTextField:
+                                id: name        
+                                text: "" 
+                                size_hint_y:None
+                                height:dp(50)
+                                halign: "left"
+                        MDGridLayout:
+                            cols: 2
+                            spacing: dp(10)
+                            padding: dp(10)
+                            MDLabel:
+                                text: "Email:" 
+                                size_hint_y:None
+                                height:dp(50)
+                                bold: True
+                                halign: "left"
+                            MDTextField:
+                                id: email        
+                                text: "" 
+                                size_hint_y:None
+                                height:dp(50)
+                                halign: "left"
+
+                        MDGridLayout:
+                            cols: 2
+                            spacing: dp(10)
+                            padding: dp(10)
+                            MDLabel:
+                                text: "Mobile No::" 
+                                size_hint_y:None
+                                height:dp(50)
+                                bold: True
+                                halign: "left"
+                            MDTextField:
+                                id: mobile_no        
+                                text: "" 
+                                size_hint_y:None
+                                height:dp(50)
+                                halign: "left"
+                        MDGridLayout:
+                            cols: 2
+                            spacing: dp(10)
+                            padding: dp(10)
+                            MDLabel:
+                                text: "Date Of Birth::" 
+                                size_hint_y:None
+                                height:dp(50)
+                                bold: True
+                                halign: "left"
+                            MDLabel:
+                                id: dob        
+                                text: "" 
+                                size_hint_y:None
+                                height:dp(50)
+                                halign: "left"
+                        MDGridLayout:
+                            cols: 2
+                            spacing: dp(10)
+                            padding: dp(10)
+                            MDLabel:
+                                text: "City:" 
+                                size_hint_y:None
+                                height:dp(50)
+                                bold: True
+                                halign: "left"
+                            MDTextField:
+                                id: city        
+                                text: "" 
+                                size_hint_y:None
+                                height:dp(50)
+                                halign: "left"
+                        MDGridLayout:
+                            cols: 2
+                            spacing: dp(10)
+                            padding: dp(10)
+                            MDLabel:
+                                text: "Gender:" 
+                                size_hint_y:None
+                                height:dp(50)
+                                bold: True
+                                halign: "left"
+                            Spinner:
+                                id: gender
+                                text: "Select Gender"
+                                multiline: False
+                                size_hint: None, None
+                                size: "180dp", "45dp"
+                                halign: "center"
+                                background_color: 1, 1, 1, 0
+                                color: 0, 0, 0, 1
+                                canvas.before:
+                                    Color:
+                                        rgba: 0, 0, 0, 1  # Border color (black in this example)
+                                    Line:
+                                        width: 0.7  # Border width
+                                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+
+                        MDFloatLayout:
+                            MDRaisedButton:
+                                text: "Save"
+                                md_bg_color: 0.043, 0.145, 0.278, 1
+                                font_name: "Roboto-Bold"
+                                size_hint: 0.4, None
+                                height: dp(50)
+                                on_release:root.save_edited_data()
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                font_size:dp(15)
 """
 
 conn = sqlite3.connect('fin_user_profile.db')
@@ -1754,6 +976,7 @@ class LenderDashboard(Screen):
 
         self.manager.add_widget(Factory.NewExtension(name='NewExtension'))
         self.manager.current = 'NewExtension'
+
     def view_transaction_history(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])
 
@@ -1847,87 +1070,30 @@ class ViewProfileScreen(Screen):
         super().__init__(**kwargs)
         email = self.get_email()
         data = app_tables.fin_user_profile.search()
-        customer = []
-        email1 = []
         name = []
-        mobile = []
-        date_of_birth = []
-        gender = []
-        alternate_email = []
-        government_type1 = []
-        government_type2 = []
-        highest_qualification = []
-        street_name = []
+        email1 = []
+        mobile_no = []
+        dob = []
         city = []
-        zipcode = []
-        state = []
-        country = []
-        loan_type1 = []
-        investment = []
-        lending_period = []
-        user_type = []
-        acholder_name = []
-        account_type = []
-        account_number = []
-        bank_name = []
-        bank_id = []
-        branch_name = []
+        gender = []
+        marrital_status = []
         for row in data:
-            customer.append(row['customer_id'])
-            email1.append(row['email_user'])
             name.append(row['full_name'])
-            mobile.append(row['mobile'])
-            date_of_birth.append(row['date_of_birth'])
-            gender.append(row['gender'])
-            alternate_email.append(row['another_email'])
-            government_type1.append(row['aadhaar_no'])
-            government_type2.append(row['pan_number'])
-            highest_qualification.append(row['qualification'])
-            street_name.append(row['street'])
+            email1.append(row['email_user'])
+            mobile_no.append(row['mobile'])
+            dob.append(row['date_of_birth'])
             city.append(row['city'])
-            zipcode.append(row['pincode'])
-            state.append(row['state'])
-            country.append(row['country'])
-            loan_type1.append(row['loan_type'])
-            investment.append(row['investment'])
-            lending_period.append(row['lending_period'])
-            user_type.append(row['usertype'])
-            acholder_name.append(row['account_name'])
-            account_type.append(row['account_type'])
-            account_number.append(row['account_number'])
-            bank_name.append(row['bank_name'])
-            bank_id.append(row['bank_id'])
-            branch_name.append(row['account_bank_branch'])
-
+            gender.append(row['gender'])
+            marrital_status.append(row['marital_status'])
         if email in email1:
             index = email1.index(email)
-            self.ids.customer_id.text = str(customer[index])
-            self.ids.username.text = str(name[index])
-            self.ids.text_input1.text = str(mobile[index])
-            self.ids.text_input2.text = str(date_of_birth[index])
-            self.ids.text_input3.text = str(gender[index])
-            self.ids.text_input4.text = str(alternate_email[index])
-            self.ids.text_input5.text = str(government_type1[index])
-            self.ids.text_input6.text = str(government_type2[index])
-            self.ids.text_input7.text = str(highest_qualification[index])
-            self.ids.text_input8.text = str(street_name[index])
-            self.ids.text_input9.text = str(city[index])
-            self.ids.text_input10.text = str(zipcode[index])
-            self.ids.text_input110.text = str(state[index])
-            self.ids.text_input11.text = str(country[index])
-            self.ids.text_input12.text = str(loan_type1[index])
-            self.ids.text_input13.text = str(investment[index])
-            self.ids.text_input14.text = str(lending_period[index])
-            self.ids.text_input15.text = str(user_type[index])
-            self.ids.text_input16.text = str(acholder_name[index])
-            self.ids.text_input17.text = str(account_type[index])
-            self.ids.text_input18.text = str(account_number[index])
-            self.ids.text_input19.text = str(bank_name[index])
-            self.ids.text_input20.text = str(bank_id[index])
-            self.ids.text_input21.text = str(branch_name[index])
-
-        else:
-            print("email not Found")
+            self.ids.name.text = str(name[index])
+            self.ids.email.text = str(email1[index])
+            self.ids.mobile_no.text = str(mobile_no[index])
+            self.ids.dob.text = str(dob[index])
+            self.ids.city.text = str(city[index])
+            self.ids.gender.text = str(gender[index])
+            self.ids.marrital_status.text = str(marrital_status[index])
 
     def get_email(self):
         # Make a call to the Anvil server function
@@ -1951,6 +1117,10 @@ class ViewProfileScreen(Screen):
         else:
             # For non-Android platforms, directly open the file manager
             self.file_manager_open(icon_id, label_id, file_label_id, image_id)
+
+    def on_edit(self):
+        self.manager.add_widget(Factory.EditScreen(name='ViewEditScreen'))
+        self.manager.current = 'ViewEditScreen'
 
     def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
         self.file_manager = MDFileManager(
@@ -2017,5 +1187,180 @@ class ViewProfileScreen(Screen):
         self.manager.current = 'LenderDashboard'
 
 
+class ViewEditScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        gender_data = app_tables.fin_gender.search()
+        gender_list = []
+        for i in gender_data:
+            gender_list.append(i['gender'])
+        self.unique_gender = []
+        for i in gender_list:
+            if i not in self.unique_gender:
+                self.unique_gender.append(i)
+        print(self.unique_gender)
+        if len(self.unique_gender) >= 1:
+            self.ids.gender.values = ['Select a Gender'] + self.unique_gender
+        else:
+            self.ids.gender.values = ['Select a Gender']
+
+        email = self.get_email()
+        data = app_tables.fin_user_profile.search()
+        name = []
+        email1 = []
+        mobile_no = []
+        dob = []
+        city = []
+        gender = []
+        for row in data:
+            name.append(row['full_name'])
+            email1.append(row['email_user'])
+            mobile_no.append(row['mobile'])
+            dob.append(row['date_of_birth'])
+            city.append(row['city'])
+            gender.append(row['gender'])
+        if email in email1:
+            index = email1.index(email)
+            self.ids.name.text = str(name[index])
+            self.ids.email.text = str(email1[index])
+            self.ids.mobile_no.text = str(mobile_no[index])
+            self.ids.dob.text = str(dob[index])
+            self.ids.city.text = str(city[index])
+            self.ids.gender.text = str(gender[index])
+
+    def get_email(self):
+        # Make a call to the Anvil server function
+        # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
+        return anvil.server.call('another_method')
+
+    def save_edited_data(self):
+        # Retrieve the edited data from the UI
+        name = self.ids.name.text
+        email = self.ids.email.text
+        mobile_no = self.ids.mobile_no.text
+        dob = self.ids.dob.text
+        city = self.ids.city.text
+        gender = self.ids.gender.text
+
+        # Update the database with the edited data
+        # Replace 'update_profile_data' with your actual database update function
+        success = self.update_profile_data(name, email, mobile_no, dob, city, gender)
+
+        if success:
+            self.show_popup("Database Update Sucessfully.")
+            # If the update was successful, navigate back to the dashboard screen
+            self.manager.add_widget(Factory.LenderDashboard(name='LenderDashboard'))
+            self.manager.current = 'LenderDashboard'
+        else:
+            # Handle the case where the update failed (e.g., display an error message)
+            self.on_back_button_press()
+
+    def show_popup(self, text):
+        content = MDLabel(text=text)
+        popup = Popup(title="DataBase", content=content, size_hint=(None, None), size=(400, 200))
+        popup.open()
+
+    def update_profile_data(self, name, email, mobile_no, dob, city, gender):
+        user_profiles = app_tables.fin_user_profile.search(email_user=email)
+
+        # Check if any user profile exists
+        if user_profiles:
+            # Assuming there should be only one row per unique email address,
+            # we retrieve the first matching row
+            user_profile = user_profiles[0]
+
+            # Update the user's profile data
+            user_profile.update(full_name=name,
+                                email_user=email,
+                                mobile=mobile_no,
+                                gender=gender,
+                                city=city,
+                                date_of_birth=dob
+                                )
+            return True
+        else:
+            # Handle the case where the user's profile does not exist
+            return False
+
+    def get_table(self):
+        # Make a call to the Anvil server function
+        # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
+        return anvil.server.call('profile')
+
+    def check_and_open_file_manager1(self):
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
+
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id):
+        if platform == 'android':
+            if check_permission(Permission.READ_MEDIA_IMAGES):
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id)
+            else:
+                self.request_media_images_permission()
+        else:
+            # For non-Android platforms, directly open the file manager
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id)
+
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            # For other platforms, show the file manager from the root directory
+            self.file_manager.show('/')
+
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
+        self.ids[image_id].source = path  # Set the source of the Image widget
+        self.file_manager.close()
+
+    def exit_manager(self, *args):
+        self.file_manager.close()
+
+    def request_media_images_permission(self):
+        request_permissions([Permission.READ_MEDIA_IMAGES], self.permission_callback)
+
+    def permission_callback(self, permissions, grants):
+        if all(grants.values()):
+            # Permission granted, open the file manager
+            self.file_manager_open()
+        else:
+            # Permission denied, show a modal view
+            self.show_permission_denied()
+
+    def show_permission_denied(self):
+        view = ModalView()
+        view.add_widget(Button(
+            text='Permission NOT granted.\n\n' +
+                 'Tap to quit app.\n\n\n' +
+                 'If you selected "Don\'t Allow",\n' +
+                 'enable permission with App Settings.',
+            on_press=self.bye)
+        )
+        view.open()
+
+    def on_pre_enter(self):
+        Window.bind(on_keyboard=self.on_back_button)
+
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=self.on_back_button)
+
+    def on_back_button(self, instance, key, scancode, codepoint, modifier):
+        if key == 27:
+            self.on_back_button_press()
+            return True
+        return False
+
+    def go_back(self):
+        self.manager.transition = SlideTransition(direction='right')
+        self.manager.current = 'ViewProfileScreen'
+
+    def on_back_button_press(self):
+        self.manager.current = 'ViewProfileScreen'
+
+
 class MyScreenManager(ScreenManager):
     pass
+

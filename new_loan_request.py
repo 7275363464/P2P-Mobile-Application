@@ -35,6 +35,7 @@ user_helpers2 = """
     NewloanScreen:
     NewloanScreen1:
     NewloanScreen2:
+    NewloanScreen3:
     MenuScreen:
         name: 'menu'
     PaymentDetailsScreen:
@@ -520,7 +521,7 @@ user_helpers2 = """
 
 <NewloanScreen2>:
     MDTopAppBar:
-        title: "View Deatils"
+        title: "View Details"
         elevation: 2
         pos_hint: {'top': 1}
 
@@ -667,6 +668,64 @@ user_helpers2 = """
 
         MDLabel:
             text: " "
+
+<NewloanScreen3>:
+    MDTopAppBar:
+        title: "Loan Request Submitted"
+        elevation: 2
+        pos_hint: {'top': 1}
+        title_align: 'center'
+        md_bg_color: 0.043, 0.145, 0.278, 1
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(20)
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        MDLabel:
+            text: " "
+        MDLabel:
+            text: " "
+        MDLabel:
+            text: " "
+
+        Image:
+            source: "checkmark.png"
+            size_hint: None, None
+            size: "70dp", "70dp"
+            pos_hint: {'center_x': 0.5}
+
+        MDLabel:
+            text: "Thank You"
+            font_style: 'H4'
+            bold: True
+            halign: 'center'
+
+        MDLabel:
+            text: "Your loan request application has been received and you will be notified once it is approved."
+            font_style: 'Body1'
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        MDLabel:
+            text: " "   
+        MDLabel:
+            text: " "
+        MDLabel:
+            text: " "
+
+        MDRaisedButton:
+            text: "Go Back Home"
+            on_press: root.go_back_home()
+            md_bg_color: 0.043, 0.145, 0.278, 1
+            theme_text_color: 'Custom'
+            text_color: 1, 1, 1, 1
+            size_hint: None, None
+            size: "200dp", "50dp"
+            pos_hint: {'center_x': 0.5}
+            font_name: "Roboto-Bold"
+        MDLabel:
+            text: " "             
 <MenuScreen>:
     MDBoxLayout:
         orientation: 'vertical'
@@ -933,6 +992,7 @@ class NewloanScreen(Screen):
     # Add this line to check if the build method is called
 
     def on_pre_enter(self, *args):
+        self.clear_data()
         Window.bind(on_keyboard=self.on_back_button)
         try:
             # Get the first row from the 'fin_borrower' table
@@ -946,6 +1006,16 @@ class NewloanScreen(Screen):
         except Exception as e:
             print(f"Error: {e}")
 
+
+
+
+    def clear_data(self):
+        # Clear the text of spinners
+        self.ids.group_id1.text = "Select Group"
+        self.ids.group_id2.text = "Select Categories"
+        self.ids.group_id3.text = "Select product name"
+        # Clear the text of labels or any other widgets if needed
+        self.ids.product_description.text = ""
     def on_pre_leave(self):
         Window.unbind(on_keyboard=self.on_back_button)
 
@@ -1226,12 +1296,15 @@ class NewloanScreen1(Screen):
                                          emi_type=emi_type)
                 self.manager.add_widget(menu_screen)
                 self.manager.current = 'menu'
+
+
 class NewloanScreen2(Screen):
     loan_amount = ""
     loan_tenure = ""
     emi_type = ""
     interest_rate = ""
     Processing_fee = ""
+    product_group = ""
 
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.on_back_button)
@@ -1397,14 +1470,24 @@ class NewloanScreen2(Screen):
                     monthly_emi=float(monthly_EMI),
                     emi_payment_type=str(emi_type)
                 )
+
                 modal_view.dismiss()
-                self.show_success_dialog(f"Request submitted successfully!")
+                self.clear_fields()
+                self.manager.add_widget(Factory.NewloanScreen3(name='NewloanScreen3'))
+                self.manager.current = 'NewloanScreen3'
+
             except ValueError as e:
                 modal_view.dismiss()
                 print(f"An error occurred: {e}")
         else:
             # Handle the case where some fields are empty
             self.show_popup("Please fill in all fields before submitting.")
+
+    def clear_fields(self):
+        self.root_screen.ids.text_input1.text = ""
+        self.root_screen.ids.text_input2.text = ""
+        self.root_screen.ids.group_id4.text = "Select EMI Type"
+
 
     def show_success_dialog(self, text):
         dialog = MDDialog(
@@ -1427,6 +1510,11 @@ class NewloanScreen2(Screen):
         self.manager.current = 'DashboardScreen'
 
     # Assuming you are in NewloanScreen2 class
+
+
+class NewloanScreen3(Screen):
+    def go_back_home(self):
+        self.manager.current = 'DashboardScreen'
 
 
 class PaymentDetailsScreen(Screen):
@@ -1479,6 +1567,7 @@ class MenuScreen(Screen):
             self.calculate_three_months_payment()
         elif self.emi_type == 'Six Months':
             self.calculate_six_months_payment()
+
     def calculate_schedule(self):
         print("Calculating payment schedule...")
         container = self.ids.container

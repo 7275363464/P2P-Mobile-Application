@@ -11,7 +11,8 @@ from homepage import MainScreen
 
 import anvil.server
 
-anvil.server.connect("server_635VQMRGUWWXIZWF57HGCVHC-SVLIE44VW6QI5GH5")
+#anvil.server.connect("server_ZPLBUSN6GM4U7FXC3PP7EHHP-OZATT3SDKEEAAR6A") #published
+anvil.server.connect("server_SCQAA7522N262HFSYZ7GLPPK-DVKXHXN3FMGIYIJX")
 class MyApp(MDApp):
     def build(self):
         sm = ScreenManager(transition=SlideTransition())

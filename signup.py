@@ -179,16 +179,19 @@ class SignupScreen(Screen):
             latest_user_id = cursor.fetchone()
 
             c_id = app_tables.fin_user_profile.search()
-
             id_c = []
+
             for i in c_id:
                 id_c.append(i['customer_id'])
 
-            if len(id_c) >= 1:
-                user_id = id_c[-1] + 1
+            if id_c:
+                last_customer_id = id_c[-1]
+                if isinstance(last_customer_id, dict) and 'customer_id' in last_customer_id:
+                    user_id = last_customer_id['customer_id'] + 1
+                else:
+                    user_id = 100000
             else:
                 user_id = 100000
-
             if latest_user_id is not None:
                 next_user_id = latest_user_id[0] + 1
             else:
@@ -376,7 +379,7 @@ class SignupScreen(Screen):
         else:
             wallet_id = 'WA0001'
 
-        if len(acc_id) >= 1:
+        if acc_id and acc_id[-1]:
             account_id = 'AC' + str(int(acc_id[-1][2:]) + 1).zfill(4)
         else:
             account_id = 'AC0001'

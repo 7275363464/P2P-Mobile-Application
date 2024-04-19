@@ -1116,10 +1116,11 @@ class ViewLoansProfileScreenLR(Screen):
             lender_customer_id.append(i['lender_customer_id'])
             processing_fee.append(i['total_processing_fee_amount'])
 
+        index = 0
         if loan_id in loan_id_list:
             index = loan_id_list.index(loan_id)
 
-        loan_amount_text = float(self.ids.amount_applied.text) - processing_fee[index]
+        loan_amount_text = float(self.ids.amount_applied.text) + processing_fee[index]
 
         b_index = -1
         l_index = -1
@@ -1173,17 +1174,7 @@ class ViewLoansProfileScreenLR(Screen):
                                                        receiver_customer_id=wallet_customer_id[l_index],
                                                        receiver_email=wallet_email[l_index])
             anvil.server.call('loan_text', None)
-            from lender_dashboard import LenderDashboard
-            sm = self.manager
-
-            # Create a new instance of the LoginScreen
-            login_screen = LenderDashboard(name='LenderDashboard')
-
-            # Add the LoginScreen to the existing ScreenManager
-            sm.add_widget(login_screen)
-
-            # Switch to the LoginScreen
-            sm.current = 'LenderDashboard'
+            self.manager.current = 'LenderDashboard'
             return
 
         elif minutes_difference < 30 and wallet_amount[l_index] < float(loan_amount_text):

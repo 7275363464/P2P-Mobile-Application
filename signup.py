@@ -189,13 +189,14 @@ class SignupScreen(Screen):
                 if isinstance(last_customer_id, dict) and 'customer_id' in last_customer_id:
                     user_id = last_customer_id['customer_id'] + 1
                 else:
-                    user_id = 100000
+                    user_id = 100000 + len(id_c)
             else:
                 user_id = 100000
+
             if latest_user_id is not None:
                 next_user_id = latest_user_id[0] + 1
             else:
-                next_user_id = 100000
+                next_user_id = user_id
 
             hash_pashword = bcrypt.hashpw(self.ids.password.text.encode('utf-8'), bcrypt.gensalt())
             hash_pashword = hash_pashword.decode('utf-8')

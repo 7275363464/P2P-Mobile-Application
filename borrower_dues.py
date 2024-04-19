@@ -27,6 +27,7 @@ user_helpers2 = """
 <WindowManager>:
     BorrowerDuesScreen:
     DuesScreen:
+    LastScreenWallet:
 <DuesScreen>:
     BoxLayout:
         orientation: 'vertical'
@@ -199,6 +200,65 @@ user_helpers2 = """
                 size_hint:0.4, None  
                 font_name:"Roboto-Bold"
                 font_size:dp(15)
+
+<LastScreenWallet>:
+    MDTopAppBar:
+        title: "Today Due Request Submitted"
+        elevation: 2
+        pos_hint: {'top': 1}
+        title_align: 'center'
+        md_bg_color: 0.043, 0.145, 0.278, 1
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(20)
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        MDLabel:
+            text: " "
+        MDLabel:
+            text: " "
+        MDLabel:
+            text: " "
+
+        Image:
+            source: "checkmark.png"
+            size_hint: None, None
+            size: "70dp", "70dp"
+            pos_hint: {'center_x': 0.5}
+
+        MDLabel:
+            text: "Thank You"
+            font_style: 'H4'
+            bold: True
+            halign: 'center'
+
+        MDLabel:
+            text: "Your Today Due application has been requested and you will be notified once it is approved."
+            font_style: 'Body1'
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        MDLabel:
+            text: " "
+        MDLabel:
+            text: " "
+        MDLabel:
+            text: " "
+
+        MDRaisedButton:
+            text: "Go Back Home"
+            on_press: root.go_back_home()
+            md_bg_color: 0.043, 0.145, 0.278, 1
+            theme_text_color: 'Custom'
+            text_color: 1, 1, 1, 1
+            size_hint: None, None
+            size: "200dp", "50dp"
+            pos_hint: {'center_x': 0.5}
+            font_name: "Roboto-Bold"
+        MDLabel:
+            text: " "             
+
 """
 Builder.load_string(user_helpers2)
 
@@ -224,10 +284,12 @@ class BorrowerDuesScreen(Screen):
         product_id = []
         lapsed_fee = []
         default_fee = []
+        npa = []
         for i in product:
             product_id.append(i['product_id'])
             lapsed_fee.append(i['lapsed_fee'])
             default_fee.append(i['default_fee'])
+            npa.append(i['npa'])
         data1 = app_tables.fin_loan_details.search()
         user_profile = app_tables.fin_user_profile.search()
 
@@ -295,25 +357,34 @@ class BorrowerDuesScreen(Screen):
             if (today_date - shechule_date[value]).days >= 6 and (today_date - shechule_date[value]).days < 8:
                 product_index = product_id.index(loan_product[index])
                 lapsed = lapsed_fee[product_index]
-                total_amount = monthly_emi[index] + extra_amount + lapsed
-                self.ids.total.text = "Total Amount (Lapsed)"
-                self.ids.extra_amount.text = str(extra_amount)
+                total_amount = monthly_emi[index] + extra_amount
+                self.ids.extra.text = "Extra Payment (Lapsed)"
+                self.ids.extra_amount.text = str(extra_amount + lapsed)
                 self.ids.total_amount.text = str(total_amount)
                 data1[index]['loan_state_status'] = "lapsed"
 
-            elif (today_date - shechule_date[value]).days >= 8 and (today_date - shechule_date[value]).days < 90:
+            elif (today_date - shechule_date[value]).days >= 8 and (today_date - shechule_date[value]).days < 98:
                 product_index = product_id.index(loan_product[index])
                 default = default_fee[product_index]
-                total_amount = monthly_emi[index] + extra_amount + default
-                self.ids.total.text = "Total Amount (Default)"
-                self.ids.extra_amount.text = str(extra_amount)
+                total_amount = monthly_emi[index] + extra_amount
+                self.ids.extra.text = "Extra Payment(Default)"
+                self.ids.extra_amount.text = str(extra_amount + default)
                 self.ids.total_amount.text = str(total_amount)
                 data1[index]['loan_state_status'] = 'default'
+            elif (today_date - shechule_date[value]).days >= 98:
+                product_index = product_id.index(loan_product[index])
+                npa = npa[product_index]
+                total_amount = monthly_emi[index] + extra_amount
+                self.ids.extra.text = "Extra Payment(NPA)"
+                self.ids.extra_amount.text = str(extra_amount + npa)
+                self.ids.total_amount.text = str(total_amount)
+                data1[index]['loan_state_status'] = 'npa'
+
             else:
                 total_amount = monthly_emi[index] + extra_amount
                 self.ids.extra_amount.text = str(extra_amount)
                 self.ids.total_amount.text = str(total_amount)
-                self.ids.total.text = "Total Amount "
+                self.ids.extra.text = "Extra Payment "
 
 
         elif loan_status[index] == "extension":
@@ -342,27 +413,33 @@ class BorrowerDuesScreen(Screen):
                 if (today_date - shechule_date[value]).days >= 6 and (today_date - shechule_date[value]).days < 8:
                     product_index = product_id.index(loan_product[index])
                     lapsed = lapsed_fee[product_index]
-                    self.ids.extra_amount.text = str(extend_amount)
+                    self.ids.extra_amount.text = str(extend_amount + lapsed)
                     self.ids.emi_amount.text = str(new_emi_amount)
-                    self.ids.total_amount.text = str(total_amount + lapsed)
-                    self.ids.total.text = "Total Amount (Lapsed)"
+                    self.ids.total_amount.text = str(total_amount)
+                    self.ids.extra.text = "Extra Payment (Lapsed)"
                     data1[index]['loan_state_status'] = "lapsed"
-                elif (today_date - shechule_date[value]).days >= 8 and (today_date - shechule_date[value]).days < 90:
+                elif (today_date - shechule_date[value]).days >= 8 and (today_date - shechule_date[value]).days < 98:
                     product_index = product_id.index(loan_product[index])
                     default = default_fee[product_index]
-                    self.ids.extra_amount.text = str(extend_amount)
+                    self.ids.extra_amount.text = str(extend_amount + default)
                     self.ids.emi_amount.text = str(new_emi_amount)
-                    self.ids.total_amount.text = str(total_amount + default)
-                    self.ids.total.text = "Total Amount (Default)"
+                    self.ids.total_amount.text = str(total_amount)
+                    self.ids.extra.text = "Extra Payment (Default)"
                     data1[index]['loan_state_status'] = "default"
+                elif (today_date - shechule_date[value]).days >= 98:
+                    product_index = product_id.index(loan_product[index])
+                    npa = npa[product_index]
+                    self.ids.extra_amount.text = str(extend_amount + npa)
+                    self.ids.emi_amount.text = str(new_emi_amount)
+                    self.ids.total_amount.text = str(total_amount)
+                    self.ids.extra.text = "Extra Payment (Default)"
+                    data1[index]['loan_state_status'] = 'npa'
                 else:
                     self.ids.extra_amount.text = str(extend_amount)
                     self.ids.emi_amount.text = str(new_emi_amount)
                     self.ids.total_amount.text = str(total_amount)
-                    self.ids.total.text = "Total Amount"
+                    self.ids.extra.text = "Extra Payment"
                 print(extend_amount, new_emi_amount, total_amount)
-
-
 
         elif loan_status[index] == "foreclosure":
             print(loan_status[index])
@@ -379,24 +456,37 @@ class BorrowerDuesScreen(Screen):
                 if (today_date - shechule_date[value]).days >= 6 and (today_date - shechule_date[value]).days < 8:
                     product_index = product_id.index(loan_product[index])
                     lapsed = lapsed_fee[product_index]
-                    self.ids.extra_amount.text = str(foreclose_amount1)
+                    self.ids.extra_amount.text = str(foreclose_amount1 + lapsed)
                     self.ids.emi_amount.text = str(emi_amount1)
-                    self.ids.total_amount.text = str(total_amount + lapsed)
+                    self.ids.total_amount.text = str(total_amount)
                     self.ids.total.text = "Total Amount (Lapsed)"
                     data1[index]['loan_state_status'] = "lapsed"
                     data1[index]['loan_updated_status'] = "closed"
+                    emi_data[index]['next_payment'] = None
 
-                elif (today_date - shechule_date[value]).days >= 8 and (today_date - shechule_date[value]).days < 90:
+                elif (today_date - shechule_date[value]).days >= 8 and (today_date - shechule_date[value]).days < 98:
                     product_index = product_id.index(loan_product[index])
                     default = default_fee[product_index]
-                    self.ids.extra_amount.text = str(foreclose_amount1)
+                    self.ids.extra_amount.text = str(foreclose_amount1 + default)
                     self.ids.emi_amount.text = str(emi_amount1)
-                    self.ids.total_amount.text = str(total_amount + default)
+                    self.ids.total_amount.text = str(total_amount)
                     self.ids.total.text = "Total Amount (Default)"
                     data1[index]['loan_state_status'] = "default"
                     data1[index]['loan_updated_status'] = "closed"
+
+                elif (today_date - shechule_date[value]).days >= 98:
+                    product_index = product_id.index(loan_product[index])
+                    npa = npa[product_index]
+                    self.ids.extra_amount.text = str(foreclose_amount1 + npa)
+                    self.ids.emi_amount.text = str(emi_amount1)
+                    self.ids.total_amount.text = str(total_amount)
+                    self.ids.extra.text = "Extra Payment (Default)"
+                    data1[index]['loan_state_status'] = "default"
+                    data1[index]['loan_updated_status'] = "closed"
+
+
                 else:
-                    self.ids.total.text = "Total Amount"
+                    self.ids.extra.text = "Extra Payment"
                     self.ids.extra_amount.text = str(foreclose_amount1)
                     self.ids.emi_amount.text = str(emi_amount1)
                     self.ids.total_amount.text = str(total_amount)
@@ -435,7 +525,7 @@ class BorrowerDuesScreen(Screen):
         cos_id1 = []
         emi_type_pay = []
         lender_customer_id = []
-        borrower_email =[]
+        borrower_email = []
         lender_email = []
         for i in data1:
             loan_id.append(i['loan_id'])
@@ -486,7 +576,6 @@ class BorrowerDuesScreen(Screen):
         print(wallet_amount[b_index], float(total))
         print(wallet_amount[b_index] >= float(total))
         if wallet_amount[b_index] >= float(total):
-            self.show_success_dialog(f"Amount paid successfully {total} ")
             wallet[b_index]['wallet_amount'] -= float(total)
             wallet[l_index]['wallet_amount'] += float(total)
 
@@ -499,7 +588,7 @@ class BorrowerDuesScreen(Screen):
                 next_payment_date = schedule_date[index] + timedelta(days=180)
             elif emi_type_pay[index] == 'One Time':
                 if tenure:
-                    next_payment_date = schedule_date[index] + timedelta(days=30 * tenure)
+                    next_payment_date = schedule_date[index] + timedelta(days=30 * int(tenure))
             app_tables.fin_emi_table.add_row(
                 loan_id=str(loan),
                 extra_fee=float(extra_amount),
@@ -508,13 +597,21 @@ class BorrowerDuesScreen(Screen):
                 scheduled_payment=schedule_date[index],
                 next_payment=next_payment_date,
                 account_number=account_num[index1],
-                emi_number= emi_number,
+                emi_number=emi_number,
                 borrower_email=borrower_email[index],
                 borrower_customer_id=cos_id1[index],
-                lender_customer_id = lender_customer_id[index],
-                lender_email = lender_email[index]
+                lender_customer_id=lender_customer_id[index],
+                lender_email=lender_email[index]
             )
             anvil.server.call('loan_text', None)
+            sm = self.manager
+            # Create a new instance of the LenderWalletScreen
+            wallet_screen = LastScreenWallet(name='LastScreenWallet')
+            # Add the LenderWalletScreen to the existing ScreenManager
+            sm.add_widget(wallet_screen)
+            # Switch to the LenderWalletScreen
+            sm.current = 'LastScreenWallet'
+
         elif wallet_amount[b_index] < float(total):
             self.show_success_dialog2(f"Insufficient Balance Please Deposit {float(total)}")
             anvil.server.call('loan_text', total)
@@ -556,10 +653,12 @@ class BorrowerDuesScreen(Screen):
             ]
         )
         dialog.open()
+
     def open_dashboard_screen(self, dialog):
 
         dialog.dismiss()
         self.manager.current = 'DashboardScreen'
+
     def open_dashboard_screen2(self, dialog):
 
         dialog.dismiss()
@@ -583,6 +682,12 @@ class BorrowerDuesScreen(Screen):
 
     def current(self):
         self.manager.current = 'DuesScreen'
+
+
+class LastScreenWallet(Screen):
+
+    def go_back_home(self):
+        self.manager.current = 'DashboardScreen'
 
 
 class DuesScreen(Screen):
@@ -621,7 +726,7 @@ class DuesScreen(Screen):
                 if loan_id[i] not in emi_loan_id and today_date >= schedule_date[i]:
                     index_list.append(i)
                     shedule_date[loan_id[i]] = schedule_date[i]
-                elif loan_id[i] in emi_loan_id :
+                elif loan_id[i] in emi_loan_id:
                     last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(loan_id[i])
                     if today_date >= next_payment[last_index]:
                         index_list.append(i)
@@ -647,7 +752,8 @@ class DuesScreen(Screen):
                 tertiary_text_color=(0, 0, 0, 1),
                 tertiary_theme_text_color='Custom'
             )
-            item.bind(on_release=lambda instance, loan_id=loan_id[i],: self.icon_button_clicked(instance, loan_id, shedule_date))
+            item.bind(on_release=lambda instance, loan_id=loan_id[i],: self.icon_button_clicked(instance, loan_id,
+                                                                                                shedule_date))
             self.ids.container.add_widget(item)
 
     def icon_button_clicked(self, instance, loan_id, shedule_date):

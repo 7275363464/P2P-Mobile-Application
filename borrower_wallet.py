@@ -198,7 +198,7 @@ class WalletScreen(Screen):
         index = 0
         if email in w_email:
             index = w_email.index(email)
-            self.ids.total_amount.text = str(w_amount[index])
+            self.ids.total_amount.text = str(round(w_amount[index],2))
         else:
             print("no email found")
 
@@ -237,10 +237,8 @@ class WalletScreen(Screen):
             self.type = 'withdraw'
 
     def go_back(self):
-        from borrower_dashboard import DashboardScreen  # Import the correct screen class
-        dashboard_screen = DashboardScreen(name='DashboardScreen')  # Create an instance of the screen
-        self.manager.add_widget(dashboard_screen)  # Add the screen to the ScreenManager
-        self.manager.current = 'DashboardScreen'  # Switch to the added screen
+        self.manager.transition = SlideTransition(direction='right')
+        self.manager.current = 'LenderDashboard'
 
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.on_back_button)

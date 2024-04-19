@@ -197,7 +197,7 @@ class LenderWalletScreen(Screen):
         index = 0
         if email in w_email:
             index = w_email.index(email)
-            self.ids.total_amount.text = str(w_amount[index])
+            self.ids.total_amount.text = str(round(w_amount[index],2))
         else:
             print("no email found")
 

@@ -780,7 +780,6 @@ class LenderDashboard(Screen):
         else:
             # Handle the case when 'logged' is not in the status list
             self.ids.username.text = "User welcome to P2P"
-        Window.bind(on_keyboard=self.on_back_button)
 
     def on_pre_leave(self):
         # Unbind the back button event when leaving the screen

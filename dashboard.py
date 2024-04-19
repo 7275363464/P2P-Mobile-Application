@@ -79,8 +79,8 @@ KV = """
     
         Image:
             source: "borrowerimg.png"
-            size_hint_x: None
-            width: dp(100)
+            size_hint: None, None
+            size: dp(100), dp(80)
     
         MDBoxLayout:
             orientation: 'vertical'

@@ -227,7 +227,7 @@ extension_loan_request = """
                             spacing: dp(10)
                             padding: dp(10)
                             MDLabel:
-                                text: "Extension Fees :" 
+                                text: "Extension Fee :" 
                                 size_hint_y:None
                                 height:dp(50)
                                 bold: True
@@ -584,20 +584,21 @@ class ExtensionLoansRequest(Screen):
 
 class ExtensionLoansProfileScreen(Screen):
     def initialize_with_value(self, value, data):
+        emi1 = app_tables.fin_emi_table.search()
         profile = app_tables.fin_user_profile.search()
         profile_customer_id = [i['customer_id'] for i in profile]
         profile_mobile_number = [i['mobile'] for i in profile]
 
         product = app_tables.fin_product_details.search()
-        extension_details = {i['product_name']: (i['extension_allowed'], i['extension_fee']) for i in product}
+        extension_details = {i['product_name']: (i['extension_allowed'], i['extension_fee'],i['min_extension_months']) for i in product}
 
         loan_details = {i['loan_id']: (
         i['borrower_customer_id'], i['loan_amount'], i['tenure'], i['product_name'], i['interest_rate'],
         i['borrower_full_name']) for i in data}
-
+        emi_loan = [i['emi_number'] for i in emi1 if i['loan_id'] == value]
         if value in loan_details:
             borrower_customer_id, loan_amount, tenure, product_name, interest_rate, borrower_name = loan_details[value]
-            extension_allowed, extension_fee = extension_details.get(product_name, ('No', 0))
+            extension_allowed, extension_fee, product_id = extension_details.get(product_name, ('No', 0, None))
 
             # Check if the borrower's customer ID is in the profile customer ID list
             if borrower_customer_id in profile_customer_id:
@@ -610,11 +611,14 @@ class ExtensionLoansProfileScreen(Screen):
             self.ids.loan_id.text = str(value)
             self.ids.loan_amount.text = str(loan_amount)
             self.ids.user1.text = str(borrower_customer_id)
-            self.ids.interest.text = str(interest_rate)
+            self.ids.interest.text = f"{interest_rate}%"
             self.ids.tenure.text = str(tenure)
             self.ids.product_name.text = str(product_name)
             self.ids.extension_allowed.text = str(extension_allowed)
-            self.ids.extension_fee.text = str(extension_fee)
+            extension_fee_display = f"{extension_fee}%" if extension_fee != 'No' else 'N/A'
+
+            # Now you can assign extension_fee_display to the corresponding text field in your UI
+            self.ids.extension_fee.text = extension_fee_display
             self.ids.name.text = str(borrower_name)
 
             # Check if the button exists in ids before accessing its attributes
@@ -623,10 +627,19 @@ class ExtensionLoansProfileScreen(Screen):
             else:
                 self.show_popup("Extension Warning", "Your extension is not allowed")
                 self.ids.extension_request.disabled = True
+
+            # Retrieve minimum extension months based on the product_id
+            minimum_months = [i['min_extension_months'] for i in product if i['product_name'] == product_name]
+            print(minimum_months)
+            if emi_loan and minimum_months:
+                if emi_loan[0] >= minimum_months[0]:
+                    self.ids.extension_request.disabled = False
+                else:
+                    self.ids.extension_request.disabled = True
+            else:
+                print("Either emi_loan or minimum_months is empty.")
         else:
             print(f"Loan with ID '{value}' not found in loan details.")
-
-
     def show_popup(self, title, content):
         popup = Popup(title=title, content=Label(text=content), size_hint=(None, None), size=(400, 200))
         popup.open()
@@ -817,3 +830,4 @@ class ExtendLoansScreen(Screen):
 
 class MyScreenManager(ScreenManager):
     pass
+

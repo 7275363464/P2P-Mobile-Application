@@ -1768,14 +1768,20 @@ KV = '''
                 input_type: 'number'  
                 on_touch_down: root.on_father_ph_no_touch_down()
 
-            MDTextField:
-                id: father_dob
-                hint_text: 'Enter Father D.O.B'
-                helper_text: 'Enter valid Father Date of Birth'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                hint_text_color: 0,0,0, 1
-                font_name: "Roboto-Bold"
+            MDGridLayout:
+                cols: 3
+                spacing: dp(10)
+                padding: dp(10)
+
+                MDTextField:
+                    id: father_dob
+                    hint_text: "Enter Father D.O.B"
+                    helper_text: 'YYYY-MM-DD'
+                    font_name: "Roboto-Bold"
+                    hint_text_color: 0, 0, 0, 1
+                    input_type:'number'
+                    on_touch_down: root.on_date_touch_down()
+
 
             GridLayout:
                 cols: 1
@@ -1886,14 +1892,20 @@ KV = '''
                 input_type: 'number'  
                 on_touch_down: root.on_mother_ph_no_touch_down()
 
-            MDTextField:
-                id: mother_dob
-                hint_text: 'Enter Mother D.O.B'
-                helper_text: 'Enter valid Mother Date of Birth'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                hint_text_color: 0,0,0, 1
-                font_name: "Roboto-Bold"
+            MDGridLayout:
+                cols: 3
+                spacing: dp(10)
+                padding: dp(10)
+
+                MDTextField:
+                    id: mother_dob
+                    hint_text: "Enter Mother D.O.B"
+                    helper_text: 'YYYY-MM-DD'
+                    font_name: "Roboto-Bold"
+                    hint_text_color: 0, 0, 0, 1
+                    input_type:'number'
+                    on_touch_down: root.on_date_touch_down()
+
 
             GridLayout:
                 cols: 1
@@ -2888,13 +2900,20 @@ KV = '''
                 font_name: "Roboto-Bold"
 
 
-            MDTextField:
-                id: spouse_date_textfield
-                hint_text: "Enter Spouse Date Of Birth"
-                helper_text: 'DD/MM/YYYY'
-                font_name: "Roboto-Bold"
-                helper_text_mode: 'on_focus'
-                hint_text_color: 0, 0, 0, 1
+            MDGridLayout:
+                cols: 3
+                spacing: dp(10)
+                padding: dp(10)
+
+                MDTextField:
+                    id: spouse_date_textfield
+                    hint_text: "Enter Spouse Date Of Birth"
+                    helper_text: 'YYYY-MM-DD'
+                    font_name: "Roboto-Bold"
+                    hint_text_color: 0, 0, 0, 1
+                    input_type:'number'
+                    on_touch_down: root.on_date_touch_down()
+
 
 
             MDTextField:
@@ -3268,20 +3287,20 @@ KV = '''
                 spacing: dp(10)
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}  # Fixed the typo here
                 MDFillRoundFlatButton:
-                    id: id1
+                    id: id5
                     text: "Father"
                     md_bg_color: 0.043, 0.145, 0.278, 1
                     font_name: "Roboto-Bold"
                     on_release: root.on_yes_button_pressed1()
                 MDFillRoundFlatButton:
-                    id: id2
+                    id: id6
                     text: "Mother"
                     md_bg_color: 0.043, 0.145, 0.278, 1
                     font_name: "Roboto-Bold"
                     on_release: root.on_yes_button_pressed2()
 
                 MDFillRoundFlatButton:
-                    id: id4
+                    id: id7
                     text: "Other"
                     md_bg_color: 0.043, 0.145, 0.278, 1
                     font_name: "Roboto-Bold"
@@ -3371,17 +3390,19 @@ KV = '''
                 font_name: "Roboto-Bold"
                 bold: True
 
-            MDTextField:
-                id: person_dob
-                hint_text: 'Enter Person D.O.B'
-                helper_text: 'Enter Valid Person Date of Birth'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                halign: 'left'
-                theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
-                font_name: "Roboto-Bold"
-                bold: True
+            MDGridLayout:
+                cols: 3
+                spacing: dp(10)
+                padding: dp(10)
+
+                MDTextField:
+                    id: person_dob
+                    hint_text: "Enter Person D.O.B"
+                    helper_text: 'YYYY-MM-DD'
+                    font_name: "Roboto-Bold"
+                    hint_text_color: 0, 0, 0, 1
+                    input_type:'number'
+                    on_touch_down: root.on_date_touch_down()
 
             MDTextField:
                 id: person_ph_no
@@ -3455,6 +3476,7 @@ class LenderScreen(Screen):
             self.ids.username.text = data[index]['full_name']
         else:
             print('email not found')
+
     def on_date_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
         self.ids.date_textfield.input_type = 'number'
@@ -3534,7 +3556,6 @@ class LenderScreen(Screen):
         except ValueError:
             self.show_validation_error("Invalid date format. Please use YYYY-MM-DD.")
             return
-
 
         if date == '':
             self.ids.date.error = True
@@ -3632,6 +3653,7 @@ class LenderScreen1(Screen):
             self.ids.mobile_number.text = data[index]['mobile']
         else:
             print('email not found')
+
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
                                          "image_label1")
@@ -3976,7 +3998,6 @@ class LenderScreen2(Screen):
             error_message += "\n".join(f"- {field}" for field in missing_fields)
             self.show_validation_error(error_message)
             return  # Prevent further execution if there are missing fields
-
 
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
@@ -5242,7 +5263,6 @@ class AddressScreen(Screen):
         else:
             self.ids.spinner_id2.values = ['Select Duration At Address']
 
-
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
         anim = Animation(y=modal_height - loading_label.height, duration=1) + \
@@ -5524,6 +5544,9 @@ class LenderScreen4(Screen):
 
 
 class LenderScreen5(Screen):
+    def on_date_touch_down(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.father_dob.input_type = 'number'
 
     def on_father_age_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
@@ -5599,7 +5622,7 @@ class LenderScreen5(Screen):
                 return
 
         except ValueError:
-            self.show_validation_error("Please enter a valid date of birth in the format YYYY-MM-DD")
+            self.show_validation_error("Invalid date format. Please use YYYY-MM-DD")
             return
 
         cursor.execute('select * from fin_users')
@@ -5684,6 +5707,9 @@ class LenderScreen5(Screen):
 
 
 class LenderScreen6(Screen):
+    def on_date_touch_down(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.mother_dob.input_type = 'number'
 
     def on_mother_age_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
@@ -5760,7 +5786,7 @@ class LenderScreen6(Screen):
                 return
 
         except ValueError:
-            self.show_validation_error("Please enter a valid date of birth in the format YYYY-MM-DD")
+            self.show_validation_error("Invalid date format. Please use YYYY-MM-DD")
             return
 
         cursor.execute('select * from fin_users')
@@ -6049,7 +6075,7 @@ class LenderScreenInstitutionalForm1(Screen):
         # You can replace the sleep with your actual logic
         Clock.schedule_once(
             lambda dt: self.perform_data_addition_action4(business_name, business_location, business_address,
-                                                           modal_view), 2)
+                                                          modal_view), 2)
 
     def perform_data_addition_action4(self, business_name, business_location, business_address,
                                       modal_view):
@@ -6313,6 +6339,7 @@ class LenderScreenInstitutionalForm2(Screen):
 class LenderScreenInstitutionalForm3(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
         anim = Animation(y=modal_height - loading_label.height, duration=1) + \
@@ -7409,6 +7436,9 @@ class LenderScreen8(Screen):
 
 
 class LenderScreen9(Screen):
+    def on_date_touch_down(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.spouse_date_textfield.input_type = 'number'
 
     def on_spouse_mobile_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
@@ -7462,9 +7492,16 @@ class LenderScreen9(Screen):
             return
         try:
             dob = datetime.strptime(spouse_date_textfield, "%Y-%m-%d")
+            today = datetime.today()
+            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+
+            # Check if age is less than 18
+            if age < 18:
+                self.show_validation_error("You must be at least 18 years old to register.")
+                return
 
         except ValueError:
-            self.show_validation_error("Please enter a valid date of birth in the format YYYY-MM-DD")
+            self.show_validation_error("Invalid date format. Please use YYYY-MM-DD")
             return
 
         if not spouse_mobile.isdigit() or len(spouse_mobile) != 10:
@@ -8395,30 +8432,30 @@ class LenderScreen12(Screen):
         self.type = None
 
     def on_yes_button_pressed1(self):
-        self.ids.id1.md_bg_color = 0.043, 0.145, 0.278, 1
-        self.ids.id1.text_color = (1, 1, 1, 1)
-        self.ids.id2.md_bg_color = 192 / 262, 209 / 262, 203 / 262
-        self.ids.id2.text_color = (1, 1, 1, 1)
-        self.ids.id4.md_bg_color = 192 / 262, 209 / 262, 203 / 262
-        self.ids.id4.text_color = (1, 1, 1, 1)
+        self.ids.id5.md_bg_color = 0.043, 0.145, 0.278, 1
+        self.ids.id5.text_color = (1, 1, 1, 1)
+        self.ids.id6.md_bg_color = 192 / 262, 209 / 262, 203 / 262
+        self.ids.id6.text_color = (1, 1, 1, 1)
+        self.ids.id7.md_bg_color = 192 / 262, 209 / 262, 203 / 262
+        self.ids.id7.text_color = (1, 1, 1, 1)
         self.type = "Father"
 
     def on_yes_button_pressed2(self):
-        self.ids.id2.md_bg_color = 0.043, 0.145, 0.278, 1
-        self.ids.id2.text_color = (1, 1, 1, 1)
-        self.ids.id1.md_bg_color = 192 / 262, 209 / 262, 203 / 262
-        self.ids.id1.text_color = (1, 1, 1, 1)
-        self.ids.id4.md_bg_color = 192 / 262, 209 / 262, 203 / 262
-        self.ids.id4.text_color = (1, 1, 1, 1)
+        self.ids.id6.md_bg_color = 0.043, 0.145, 0.278, 1
+        self.ids.id6.text_color = (1, 1, 1, 1)
+        self.ids.id5.md_bg_color = 192 / 262, 209 / 262, 203 / 262
+        self.ids.id5.text_color = (1, 1, 1, 1)
+        self.ids.id7.md_bg_color = 192 / 262, 209 / 262, 203 / 262
+        self.ids.id7.text_color = (1, 1, 1, 1)
         self.type = "Mother"
 
     def on_yes_button_pressed4(self):
-        self.ids.id4.md_bg_color = 0.043, 0.145, 0.278, 1
-        self.ids.id4.text_color = (1, 1, 1, 1)
-        self.ids.id2.md_bg_color = 192 / 262, 209 / 262, 203 / 262
-        self.ids.id2.text_color = (1, 1, 1, 1)
-        self.ids.id1.md_bg_color = 192 / 262, 209 / 262, 203 / 262
-        self.ids.id1.text_color = (1, 1, 1, 1)
+        self.ids.id7.md_bg_color = 0.043, 0.145, 0.278, 1
+        self.ids.id7.text_color = (1, 1, 1, 1)
+        self.ids.id6.md_bg_color = 192 / 262, 209 / 262, 203 / 262
+        self.ids.id6.text_color = (1, 1, 1, 1)
+        self.ids.id5.md_bg_color = 192 / 262, 209 / 262, 203 / 262
+        self.ids.id5.text_color = (1, 1, 1, 1)
         self.type = "Other"
 
     def animate_loading_text(self, loading_label, modal_height):
@@ -8536,6 +8573,9 @@ class LenderScreen12(Screen):
 
 
 class LenderScreen13(Screen):
+    def on_date_touch_down(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.person_dob.input_type = 'number'
 
     def on_mother_ph_no_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
@@ -8594,6 +8634,13 @@ class LenderScreen13(Screen):
             return
         try:
             dob = datetime.strptime(person_dob, "%Y-%m-%d")
+            today = datetime.today()
+            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+
+            # Check if age is less than 18
+            if age < 18:
+                self.show_validation_error("You must be at least 18 years old to register.")
+                return
 
         except ValueError:
             self.show_validation_error("Please enter a valid date of birth in the format YYYY-MM-DD")
@@ -9367,6 +9414,9 @@ class LenderScreen12(Screen):
 
 
 class LenderScreen13(Screen):
+    def on_date_touch_down(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.person_dob.input_type = 'number'
 
     def on_mother_ph_no_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
@@ -9420,7 +9470,19 @@ class LenderScreen13(Screen):
         if not person_ph_no.isdigit() and len(person_ph_no) != 10:
             self.show_validation_error("Please Enter Valid Mother Number.")
             return
+        try:
+            dob = datetime.strptime(person_dob, "%Y-%m-%d")
+            today = datetime.today()
+            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
 
+            # Check if age is less than 18
+            if age < 18:
+                self.show_validation_error("You must be at least 18 years old to register.")
+                return
+
+        except ValueError:
+            self.show_validation_error("Invalid date format. Please use YYYY-MM-DD")
+            return
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []

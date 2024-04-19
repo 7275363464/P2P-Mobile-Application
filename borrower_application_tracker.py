@@ -38,7 +38,7 @@ application_tracker = """
         orientation: 'vertical'
         size_hint: 1, 1 
         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        
+
 
         MDTopAppBar:
             title: "Application status"
@@ -57,10 +57,10 @@ application_tracker = """
                 font_size: dp(20)
                 bold: True
                 size_hint_y: None
-                height: 50
+                height: 5
 
             MDLabel:
-                text: "Congratulations! Your first loan application with P2P has been received. Please wait while we process the loan. You can check the status here"
+                text: "Congratulations! Your loan application with P2P has been received. Please wait while we process the loan. You can check the status here"
                 size_hint_y: None
                 height: 50
 
@@ -85,34 +85,12 @@ application_tracker = """
 
                 MDLabel:
                     id: label1
-                    text: "Application for #loanamount sent"
+                    text: "Application for #product_name Product Loan sent"
                     theme_text_color: "Custom"
                     text_color: 86/255, 94/255, 97/255, 1
                     size_hint_y: None
                     height: 50
 
-                MDIconButton:
-                    id: icon2
-                    icon: "checkbox-blank-circle-outline"
-                    theme_text_color: "Custom"
-                    size_hint_y: None
-                    height: 50
-
-                    text_color: 0.043, 0.145, 0.278, 1
-                    canvas:
-                        Color:
-                            rgba: 0.043, 0.145, 0.278, 1
-                        Line:
-                            width: 2
-                            points: self.x + dp(24), self.y + dp(12) , self.x + dp(24), self.y - dp(34)
-
-                MDLabel:
-                    id: label2
-                    text: "Waiting for approval"
-                    theme_text_color: "Custom"
-                    text_color: 86/255, 94/255, 97/255, 1
-                    size_hint_y: None
-                    height: 50
 
                 MDIconButton:
                     id: icon3
@@ -130,7 +108,7 @@ application_tracker = """
 
                 MDLabel:
                     id: label3
-                    text: "Loan is approved for #loanamount"
+                    text: "Loan is approved "
                     theme_text_color: "Custom"
                     text_color: 86/255, 94/255, 97/255, 1
                     size_hint_y: None
@@ -152,7 +130,7 @@ application_tracker = """
 
                 MDLabel:
                     id: label4
-                    text: "Loan is under disbursal process"
+                    text: "Loan has been disbursed"
                     theme_text_color: "Custom"
                     text_color: 86/255, 94/255, 97/255, 1
                     size_hint_y: None
@@ -168,7 +146,7 @@ application_tracker = """
 
                 MDLabel:
                     id: label5
-                    text: "Loan credited to a/c xxxxxxxxxxx"
+                    text: "Loan is credited to a/c: xxxxxxxxxxx"
                     theme_text_color: "Custom"
                     text_color: 86/255, 94/255, 97/255, 1
                     size_hint_y: None
@@ -187,12 +165,13 @@ class ApplicationTrackerScreen(Screen):
         loan_id = []
         loan_amount = []
         loan_status = []
+        product_name = []
 
         for i in data:
             loan_id.append(i['loan_id'])
             loan_amount.append(i['loan_amount'])
             loan_status.append(i['loan_updated_status'])
-
+            product_name.append(i['product_name'])
         profile_email_id = []
         profile_account_number = []
 
@@ -212,13 +191,9 @@ class ApplicationTrackerScreen(Screen):
             if loan_status[index] == 'under process':
                 print('under process')
                 self.ids.icon1.icon = 'circle-slice-8'
-                self.ids.icon2.icon = 'circle-slice-8'
                 self.ids.label1.theme_text_color = "Custom"
                 self.ids.label1.text_color = 0, 0, 0, 1
                 self.ids.label1.bold = True
-                self.ids.label2.theme_text_color = "Custom"
-                self.ids.label2.text_color = 0, 0, 0, 1
-                self.ids.label2.bold = True
                 self.ids.icon3.icon = 'checkbox-blank-circle-outline'
                 self.ids.label3.theme_text_color = "Custom"
                 self.ids.label3.text_color = 0.043, 0.145, 0.278, 1
@@ -231,70 +206,18 @@ class ApplicationTrackerScreen(Screen):
                 self.ids.label5.theme_text_color = "Custom"
                 self.ids.label5.text_color = 0.043, 0.145, 0.278, 1
                 self.ids.label5.bold = False
-                self.ids.label1.text = f"Application for {loan_amount[index]} sent"
+                self.ids.label1.text = f"Application for {product_name[index]} product loan sent"
 
             elif loan_status[index] == 'approved':
                 self.ids.icon1.icon = 'circle-slice-8'
-                self.ids.icon2.icon = 'circle-slice-8'
                 self.ids.label1.theme_text_color = "Custom"
                 self.ids.label1.text_color = 0, 0, 0, 1
                 self.ids.label1.bold = True
-                self.ids.label2.theme_text_color = "Custom"
-                self.ids.label2.text_color = 0, 0, 0, 1
-                self.ids.label2.bold = True
-                self.ids.label1.text = f"Application for {loan_amount[index]} sent"
+                self.ids.label1.text = f"Application for {product_name[index]} product loan sent"
                 self.ids.icon3.icon = 'circle-slice-8'
                 self.ids.label3.theme_text_color = "Custom"
                 self.ids.label3.text_color = 0, 0, 0, 1
-                self.ids.label3.text = f'Loan is approved for {loan_amount[index]}'
-                self.ids.label3.bold = True
-                self.ids.icon4.icon = 'circle-slice-8'
-                self.ids.label4.theme_text_color = "Custom"
-                self.ids.label4.text_color = 0, 0, 0, 1
-                self.ids.label4.bold = True
-                self.ids.icon5.icon = 'checkbox-blank-circle-outline'
-                self.ids.label5.theme_text_color = "Custom"
-                self.ids.label5.text_color = 0.043, 0.145, 0.278, 1
-                self.ids.label5.bold = False
-
-            elif loan_status[index] == 'disbursed':
-                self.ids.icon1.icon = 'circle-slice-8'
-                self.ids.icon2.icon = 'circle-slice-8'
-                self.ids.label1.theme_text_color = "Custom"
-                self.ids.label1.text_color = 0, 0, 0, 1
-                self.ids.label1.bold = True
-                self.ids.label2.theme_text_color = "Custom"
-                self.ids.label2.text_color = 0, 0, 0, 1
-                self.ids.label2.bold = True
-                self.ids.label1.text = f"Application for {loan_amount[index]} sent"
-                self.ids.icon3.icon = 'circle-slice-8'
-                self.ids.label3.theme_text_color = "Custom"
-                self.ids.label3.text_color = 0, 0, 0, 1
-                self.ids.label3.text = f'Loan is approved for {loan_amount[index]}'
-                self.ids.label3.bold = True
-                self.ids.icon4.icon = 'circle-slice-8'
-                self.ids.label4.theme_text_color = "Custom"
-                self.ids.label4.text_color = 0, 0, 0, 1
-                self.ids.label4.bold = True
-                self.ids.icon5.icon = 'circle-slice-8'
-                self.ids.label5.theme_text_color = "Custom"
-                self.ids.label5.text_color = 0, 0, 0, 1
-                self.ids.label5.bold = True
-
-            elif loan_status[index] == 'rejected':
-                self.ids.icon1.icon = 'circle-slice-8'
-                self.ids.icon2.icon = 'circle-slice-8'
-                self.ids.label1.theme_text_color = "Custom"
-                self.ids.label1.text_color = 0, 0, 0, 1
-                self.ids.label1.bold = True
-                self.ids.label2.theme_text_color = "Custom"
-                self.ids.label2.text_color = 0, 0, 0, 1
-                self.ids.label2.bold = True
-                self.ids.label1.text = f"Application Rejected"
-                self.ids.icon3.icon = 'cancel'
-                self.ids.label3.theme_text_color = "Custom"
-                self.ids.label3.text_color = 0, 0, 0, 1
-                self.ids.label3.text = f'Loan is Rejected {loan_amount[index]}'
+                self.ids.label3.text = f'Loan is approved for ₹{loan_amount[index]:.2f}'
                 self.ids.label3.bold = True
                 self.ids.icon4.icon = 'checkbox-blank-circle-outline'
                 self.ids.label4.theme_text_color = "Custom"
@@ -304,11 +227,46 @@ class ApplicationTrackerScreen(Screen):
                 self.ids.label5.theme_text_color = "Custom"
                 self.ids.label5.text_color = 0.043, 0.145, 0.278, 1
                 self.ids.label5.bold = False
-
-            if index1 != -1:
+            elif loan_status[index] == 'disbursed':
+                self.ids.icon1.icon = 'circle-slice-8'
+                self.ids.label1.theme_text_color = "Custom"
+                self.ids.label1.text_color = 0, 0, 0, 1
+                self.ids.label1.bold = True
+                self.ids.label1.text = f"Application for {product_name[index]} product loan sent"
+                self.ids.icon3.icon = 'circle-slice-8'
+                self.ids.label3.theme_text_color = "Custom"
+                self.ids.label3.text_color = 0, 0, 0, 1
+                self.ids.label3.text = f'Loan is approved for ₹{loan_amount[index]:.2f}'
+                self.ids.label3.bold = True
+                self.ids.icon4.icon = 'circle-slice-8'
+                self.ids.label4.theme_text_color = "Custom"
+                self.ids.label4.text_color = 0, 0, 0, 1
+                self.ids.label4.text = f"{product_name[index]} product loan has been disbursed"
+                self.ids.label4.bold = True
+                self.ids.icon5.icon = 'circle-slice-8'
                 self.ids.label5.text = f"Loan credited to a/c {profile_account_number[index1]}"
-            else:
-                print("Email not found in profile_email_id")
+                self.ids.label5.theme_text_color = "Custom"
+                self.ids.label5.text_color = 0, 0, 0, 1
+                self.ids.label5.bold = True
+            elif loan_status[index] == 'rejected':
+                self.ids.icon1.icon = 'circle-slice-8'
+                self.ids.label1.theme_text_color = "Custom"
+                self.ids.label1.text_color = 0, 0, 0, 1
+                self.ids.label1.bold = True
+                self.ids.label1.text = f"Application Rejected"
+                self.ids.icon3.icon = 'cancel'
+                self.ids.label3.theme_text_color = "Custom"
+                self.ids.label3.text_color = 0, 0, 0, 1
+                self.ids.label3.text = f'Loan is Rejected ₹{loan_amount[index]:.2f}'
+                self.ids.label3.bold = True
+                self.ids.icon4.icon = 'checkbox-blank-circle-outline'
+                self.ids.label4.theme_text_color = "Custom"
+                self.ids.label4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label4.bold = False
+                self.ids.icon5.icon = 'checkbox-blank-circle-outline'
+                self.ids.label5.theme_text_color = "Custom"
+                self.ids.label5.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label5.bold = False
 
     def get_table(self):
         # Make a call to the Anvil server function

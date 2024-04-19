@@ -46,7 +46,7 @@ KV = """
 
     Label:
         id:username
-        pos_hint: {'center_x': 0.5, 'center_y': 0.41}
+        pos_hint: {'center_x': 0.5, 'center_y': 0.46}
         color: 1/255, 26/255, 51/255, 1
         bold:"True"
         font_size:dp(23)
@@ -54,37 +54,104 @@ KV = """
     Label:
         text: 'Start your journey with us,'
         font_size:dp(20)
-        pos_hint: {'center_x': 0.5, 'center_y': 0.45}
+        pos_hint: {'center_x': 0.5, 'center_y': 0.52}
         color: 0, 0, 0, 1
 
 
-    MDRaisedButton:
-        text: 'Continue as Borrower'
-        on_release: root.go_to_borrower_landing()
+    MDBoxLayout:
+        orientation: 'horizontal'
+        size_hint_x: None
+        size_hint_y: None
+        height: dp(90)
+        width: dp(340)
+        pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+        padding: dp(10)  # Adding padding to the box layout
+        spacing: dp(1)
+        on_touch_down: if self.collide_point(*args[1].pos): root.go_to_borrower_landing()
+    
+        canvas:
+            Color:
+                rgba: 0.043, 0.145, 0.278, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [40, 40, 40, 40]  # rounded corners
+    
+        Image:
+            source: "borrowerimg.png"
+            size_hint_x: None
+            width: dp(100)
+    
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_x: None
+            width: dp(230)
+    
+            MDLabel:
+                text: "Continue as a Borrower"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1  # White color
+                halign: 'left'
+                font_size: "20sp"
+                font_name: "Roboto-Bold"
+                
+    
+            MDLabel:
+                text: "I'm looking to borrow"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1  # White color
+                halign: 'left'
+                font_size: "15sp"
+                
+            
+    MDBoxLayout:
+        orientation: 'horizontal'
+        size_hint_x: None
+        size_hint_y: None
+        height: dp(90)
+        width: dp(340)
+        pos_hint: {'center_x': 0.5, 'center_y': 0.1}
+        padding: dp(10)  # Adding padding to the box layout
+        spacing: dp(1)
+        on_touch_down: if self.collide_point(*args[1].pos): root.go_to_lender_landing()
 
-        size_hint: (None, None)
-        padding:dp(10)
-        height: dp(100)  # Fixed height
-        pos_hint: {'center_x': 0.5, 'center_y': 0.25}
-        theme_text_color: "Custom"
-        text_color:1,1,1,1
-        md_bg_color:0.043, 0.145, 0.278, 1   
-        font_name: "Roboto-Bold"
-        font_size:dp(15)
 
-    MDRaisedButton:
-        text: 'Continue as Lender'
-        on_release: root.go_to_lender_landing()
-        size_hint: (None,None)
-        font_name: "Roboto-Bold"
-        border_radius: [1, 1, 1, 1]
-        height: dp(120)  # Fixed height
-        pos_hint: {'center_x': 0.5, 'center_y': 0.15}
-        theme_text_color: "Custom"
-        text_color: 1,1,1,1
-        md_bg_color:0.043, 0.145, 0.278, 1      
 
-        font_size:dp(15)
+        canvas:
+            Color:
+                rgba: 0.043, 0.145, 0.278, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [40, 40, 40, 40]  # rounded corners
+
+
+        Image:
+            source: "lenderimg.png"
+            size_hint_x: None
+            width: dp(100)
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_x: None
+            width: dp(230)
+    
+            MDLabel:
+                text: "Continue as a Lender"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1  # White color
+                halign: 'left'
+                font_size: "20sp"
+                font_name: "Roboto-Bold"
+                
+    
+            MDLabel:
+                text: "I'm looking to Invest"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1  # White color
+                halign: 'left'
+                font_size: "15sp"
+            
+            
 """
 
 

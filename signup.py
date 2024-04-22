@@ -9,9 +9,7 @@ from kivy.uix.modalview import ModalView
 from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
 from kivymd.app import MDApp
 import sqlite3
-
 from kivymd.uix.label import MDLabel
-
 from tables import create_user_table, create_registration_table
 from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.snackbar import Snackbar
@@ -298,8 +296,8 @@ class SignupScreen(Screen):
 
         # Other input validations
         # Name validation
-        if not name or not re.match(r'^[a-zA-Z\s]{4,}$', name):
-            validation_errors.append((self.ids.name, "Please enter a valid name"))
+        if not name or len(name.split()) < 2 or not re.match(r'^[a-zA-Z\s]{4,}$', name):
+            validation_errors.append((self.ids.name, "Please enter a valid full name with at least a first name and last name"))
         else:
             self.ids.name.helper_text = ''
 

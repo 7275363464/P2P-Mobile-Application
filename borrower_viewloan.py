@@ -271,7 +271,7 @@ kv = '''
 
                 MDLabel:
                     id: pro_name
-                    halign: 'center'
+                    halign: 'left'
 
             MDGridLayout:
                 cols: 2
@@ -283,7 +283,7 @@ kv = '''
 
                 MDLabel:
                     id: b_name
-                    halign: 'center'
+                    halign: 'left'
 
             MDGridLayout:
                 cols: 2
@@ -295,7 +295,7 @@ kv = '''
 
                 MDLabel:
                     id: phone_num
-                    halign: 'center'
+                    halign: 'left'
 
             MDGridLayout:
                 cols: 2
@@ -307,7 +307,7 @@ kv = '''
 
                 MDLabel:
                     id: int_rate
-                    halign: 'center'
+                    halign: 'left'
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -318,7 +318,7 @@ kv = '''
 
                 MDLabel:
                     id: tenure
-                    halign: 'center' 
+                    halign: 'left' 
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -329,7 +329,7 @@ kv = '''
 
                 MDLabel:
                     id: date
-                    halign: 'center'
+                    halign: 'left'
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -340,7 +340,7 @@ kv = '''
 
                 MDLabel:
                     id: updated_status
-                    halign: 'center' 
+                    halign: 'left' 
             MDLabel:
                 text: ''
                 halign: 'left'

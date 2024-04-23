@@ -167,8 +167,8 @@ class DashScreen(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        profile = app_tables.fin_user_profile.search()
         log_email = anvil.server.call('another_method')
+        profile = app_tables.fin_user_profile.search(email_user=log_email)
         print(log_email)
 
         email_user = []

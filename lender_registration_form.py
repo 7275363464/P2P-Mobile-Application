@@ -120,6 +120,8 @@ KV = '''
                 helper_text: "Enter Valid Name"
                 helper_text_mode: 'on_focus'
                 font_name: "Roboto-Bold"
+                theme_text_color: 'Custom'
+                text_color: 1, 1, 1, 1
                 height:self.minimum_height
                 font_size: "15dp"
             MDLabel:
@@ -158,7 +160,8 @@ KV = '''
                     helper_text: 'YYYY-MM-DD'
                     helper_text_mode: "on_error"
                     font_name: "Roboto-Bold"
-                    hint_text_color: 0, 0, 0, 1
+                    theme_text_color: 'Custom'
+                    text_color: 1, 1, 1, 1
                     height:self.minimum_height
                     font_size: "15dp"
                     input_type:'number'
@@ -528,12 +531,12 @@ KV = '''
                 helper_text_mode: 'on_focus'
 
             MDLabel:
-                text: "Select Present Address"
+                text: "Select Type Of Address"
                 halign: 'left'
                 bold:True
                 font_size: "15dp"
                 size_hint_y: None
-                height:dp(50)
+                height:dp(5)
             Spinner:
                 id: spinner_id1
                 text: "Select Present Address"
@@ -553,12 +556,12 @@ KV = '''
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
             MDLabel:
-                text: "Select Staying Address"
+                text: "How Long you are staying this address:"
                 halign: 'left'
                 bold:True
                 size_hint_y: None
                 font_size: "15dp"
-                height:dp(50)
+                height:dp(5)
 
             Spinner:
                 id: spinner_id2
@@ -706,9 +709,17 @@ KV = '''
 
             MDLabel:
                 text: 'Education Details'
+                halign: 'center'
+                font_size: "20dp"
+                font_name: "Roboto-Bold"
+            
+            MDLabel:
+                text: "Select Education Details:"
                 halign: 'left'
+                bold:True
+                size_hint_y: None
                 font_size: "15dp"
-                bold: True
+                height:dp(5)
 
             Spinner:
                 id: spinner_id
@@ -775,7 +786,7 @@ KV = '''
                 halign: 'center'
                 bold: True
                 size_hint_y: None
-                height:dp(50)
+                height:dp(0)
 
             MDLabel:
                 text: "Upload 10th class certificate"
@@ -783,7 +794,7 @@ KV = '''
                 bold:True
                 size_hint_y: None
                 font_size: "15dp"
-                height:dp(50)
+                height:dp(5)
 
 
             BoxLayout:
@@ -820,6 +831,7 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
             MDLabel:
                 id: image_label1
                 text: ''
@@ -3456,6 +3468,7 @@ KV = '''
                 MDLabel:
                     text: "I Agree Terms and Conditions"
                     multiline: False
+
 
             MDRaisedButton:
                 text: "Submit"
@@ -8237,6 +8250,11 @@ class LenderScreenIndividualBankForm1(Screen):
 
 
 class LenderScreenIndividualBankForm2(Screen):
+    def on_checkbox_active(self, checkbox, value):
+        if value:
+            self.check = True
+        else:
+            self.check = False
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
         anim = Animation(y=modal_height - loading_label.height, duration=1) + \

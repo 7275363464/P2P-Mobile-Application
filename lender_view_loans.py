@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
 from kivymd.uix.list import *
 from kivy.animation import Animation
 from kivymd.uix.label import MDLabel
+from lender_view_loans_request import view_loan_request, ViewLoansProfileScreenLR, ViewLoansProfileScreenRL
 
 view_loans = '''
 <WindowManager>:
@@ -282,7 +283,7 @@ view_loans = '''
 
                 MDLabel:
                     id: b_name
-                    halign: 'center'
+                    halign: 'left'
 
             MDGridLayout:
                 cols: 2
@@ -464,7 +465,7 @@ view_loans = '''
 
                 MDLabel:
                     id: pro_name
-                    halign: 'left'
+                    halign: 'center'
 
             MDGridLayout:
                 cols: 2
@@ -476,7 +477,7 @@ view_loans = '''
 
                 MDLabel:
                     id: b_name
-                    halign: 'left'
+                    halign: 'center'
 
             MDGridLayout:
                 cols: 2
@@ -488,7 +489,7 @@ view_loans = '''
 
                 MDLabel:
                     id: phone_num
-                    halign: 'left'
+                    halign: 'center'
 
             MDGridLayout:
                 cols: 2
@@ -500,7 +501,7 @@ view_loans = '''
 
                 MDLabel:
                     id: int_rate
-                    halign: 'left'
+                    halign: 'center'
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -511,7 +512,7 @@ view_loans = '''
 
                 MDLabel:
                     id: tenure
-                    halign: 'left' 
+                    halign: 'center' 
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -522,7 +523,7 @@ view_loans = '''
 
                 MDLabel:
                     id: limit
-                    halign: 'left' 
+                    halign: 'center' 
 
 
             MDGridLayout:
@@ -535,7 +536,7 @@ view_loans = '''
 
                 MDLabel:
                     id: date
-                    halign: 'left'
+                    halign: 'center'
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -546,7 +547,7 @@ view_loans = '''
 
                 MDLabel:
                     id: status
-                    halign: 'left' 
+                    halign: 'center' 
             MDLabel:
                 text: ''
                 halign: 'left'
@@ -1100,40 +1101,55 @@ class ViewLoansProfileScreens2(Screen):
         self.manager.current = 'ALlLoansScreen'
 
     def initialize_with_value(self, value, data):
+        profile = app_tables.fin_user_profile.search()
         customer_id = []
         loan_id = []
+        product_name = []
+        borrower_name = []
         tenure = []
         interest_rate = []
         loan_amount = []
-        member_rom = []
-        member_since = []
+        loan_amount1 = []
         credit_limit = []
         date_of_apply = []
-        beseem_score = []
-        name = []
         status = []
         for i in data:
             customer_id.append(i['borrower_customer_id'])
             loan_id.append(i['loan_id'])
+            product_name.append(i['product_name'])
+            borrower_name.append(i['borrower_full_name'])
             tenure.append(i['tenure'])
-            date_of_apply.append(i['borrower_loan_created_timestamp'])
             interest_rate.append(i['interest_rate'])
             loan_amount.append(i['loan_amount'])
+            loan_amount1.append(i['loan_amount'])
             credit_limit.append(i['credit_limit'])
-            name.append(i['borrower_full_name'])
+            date_of_apply.append(i['borrower_loan_created_timestamp'])
             status.append(i['loan_updated_status'])
+        profile_customer_id = []
+        profile_mobile_number = []
+
+        for i in profile:
+            profile_customer_id.append(i['customer_id'])
+            profile_mobile_number.append(i['mobile'])
+
+        index = 0
 
         if value in loan_id:
             index = loan_id.index(value)
-            self.ids.loan_id.text = str(loan_id[index])
-            self.ids.user1.text = str(customer_id[index])
-            self.ids.interest.text = str(interest_rate[index])
-            self.ids.date.text = str(date_of_apply[index])
+            self.ids.pro_name.text = str(product_name[index])
+            self.ids.b_name.text = str(borrower_name[index])
+            self.ids.int_rate.text = str(interest_rate[index])
             self.ids.tenure.text = str(tenure[index])
-            self.ids.amount_applied.text = str(loan_amount[index])
+            self.ids.amount.text = str(loan_amount[index])
+            self.ids.amount_1.text = str(loan_amount1[index])
             self.ids.limit.text = str(credit_limit[index])
-            self.ids.name.text = str(name[index])
+            self.ids.date.text = str(date_of_apply[index])
             self.ids.status.text = str(status[index])
+
+        if customer_id[index] in profile_customer_id:
+            index2 = profile_customer_id.index(customer_id[index])
+
+            self.ids.phone_num.text = str(profile_mobile_number[index2])
 
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method

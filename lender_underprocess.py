@@ -17,7 +17,7 @@ from kivy.uix.screenmanager import Screen, SlideTransition
 from kivymd.app import MDApp
 from datetime import datetime, timedelta, timezone
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.button import MDFlatButton, MDRectangleFlatButton
+from kivymd.uix.button import MDFlatButton, MDRectangleFlatButton, MDRaisedButton
 
 from borrower_wallet import WalletScreen
 from lender_wallet import LenderWalletScreen
@@ -925,6 +925,7 @@ class ViewUnderScreen(Screen):
         profile_customer_id = []
         profile_email = []
         profile_name = []
+        email_index = 0
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_email.append(i['email_user'])
@@ -1132,15 +1133,44 @@ class ViewUnderScreenLR(Screen):
         disbursed = []
         credit_limit = []
         loan_amount = []
+        bow_customer_id = []
+
+        wallet = app_tables.fin_wallet.search()
+        wallet_customer_id = []
+        wallet_amount = []
+        wallet_email = []
+        wallet_id = []
+        for i in wallet:
+            wallet_customer_id.append(i['customer_id'])
+            wallet_amount.append(i['wallet_amount'])
+            wallet_email.append(i['user_email'])
+            wallet_id.append(i['wallet_id'])
+
+        lender_customer_id = []
+        processing_fee = []
         for i in data:
             loan_id_list.append(i['loan_id'])
             disbursed.append(i['lender_accepted_timestamp'])
             credit_limit.append(i['credit_limit'])
+            bow_customer_id.append(i['borrower_customer_id'])
             loan_amount.append(i['loan_amount'])
+            lender_customer_id.append(i['lender_customer_id'])
+            processing_fee.append(i['total_processing_fee_amount'])
 
         if loan_id in loan_id_list:
             index = loan_id_list.index(loan_id)
 
+        loan_amount_text = float(self.ids.amount.text) - processing_fee[index]
+
+        b_index = -1
+        l_index = -1
+        if lender_customer_id[index] in wallet_customer_id and int(bow_customer_id[index]) in wallet_customer_id:
+            b_index = wallet_customer_id.index(int(bow_customer_id[index]))
+            l_index = wallet_customer_id.index(lender_customer_id[index])
+        else:
+            print("no customer id found")
+
+        print(loan_amount_text)
         datetime1 = datetime.fromisoformat(str(disbursed_time)).replace(tzinfo=timezone.utc)
         datetime2 = datetime.fromisoformat(str(disbursed[index])).replace(tzinfo=timezone.utc)
 
@@ -1152,29 +1182,125 @@ class ViewUnderScreenLR(Screen):
 
         print(f"The difference in minutes is: {minutes_difference} minutes")
 
-        if minutes_difference < 30:
-            self.show_validation_error(
-                f"Time Out You Must Finish Before 30 Minutes {loan_amount[index]} to this Loan ID {loan_id_list[index]}")
+        transaction = app_tables.fin_wallet_transactions.search()
+        t_id = []
+        for i in transaction:
+            t_id.append(i['transaction_id'])
+
+        if len(t_id) >= 1:
+            transaction_id = 'TA' + str(int(t_id[-1][2:]) + 1).zfill(4)
+        else:
+            transaction_id = 'TA0001'
+        transaction_date_time = datetime.today()
+        if minutes_difference < 30 and wallet_amount[l_index] >= float(loan_amount_text):
+            self.show_success_dialog(
+                f"Amount paid successfully {loan_amount_text} to this Loan ID {loan_id_list[index]}")
             data[index]['loan_updated_status'] = 'disbursed'
             data[index]['loan_disbursed_timestamp'] = paid_time
-            from lender_dashboard import LenderDashboard
-            sm = self.manager
-
-            # Create a new instance of the LoginScreen
-            login_screen = LenderDashboard(name='LenderDashboard')
-
-            # Add the LoginScreen to the existing ScreenManager
-            sm.add_widget(login_screen)
-
-            # Switch to the LoginScreen
-            sm.current = 'LenderDashboard'
+            wallet[b_index]['wallet_amount'] += float(loan_amount_text)
+            wallet[l_index]['wallet_amount'] -= float(loan_amount_text)
+            app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                       customer_id=wallet_customer_id[l_index],
+                                                       user_email=wallet_email[l_index],
+                                                       transaction_type="amount transferred",
+                                                       amount=float(loan_amount_text),
+                                                       status='success', wallet_id=wallet_id[l_index],
+                                                       transaction_time_stamp=transaction_date_time,
+                                                       receiver_customer_id=wallet_customer_id[b_index],
+                                                       receiver_email=wallet_email[b_index])
+            app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                       customer_id=wallet_customer_id[b_index],
+                                                       user_email=wallet_email[b_index],
+                                                       transaction_type="amount received",
+                                                       amount=float(loan_amount_text),
+                                                       status='success', wallet_id=wallet_id[b_index],
+                                                       transaction_time_stamp=transaction_date_time,
+                                                       receiver_customer_id=wallet_customer_id[l_index],
+                                                       receiver_email=wallet_email[l_index])
+            anvil.server.call('loan_text', None)
+            anvil.server.call('view_loan', None)
+            self.manager.current = "LenderDashboard"
             return
+
+        elif minutes_difference < 30 and wallet_amount[l_index] < float(loan_amount_text):
+
+            self.show_success_dialog2(f"Insufficient Balance Please Deposit {float(loan_amount_text)}")
+            anvil.server.call('loan_text', loan_amount_text)
+            anvil.server.call('view_loan', "view_loan_text")
+
+            sm = self.manager
+            # Create a new instance of the LenderWalletScreen
+            wallet_screen = LenderWalletScreen(name='LenderWalletScreen', loan_amount_text=float(loan_amount_text))
+            # Add the LenderWalletScreen to the existing ScreenManager
+            sm.add_widget(wallet_screen)
+            # Switch to the LenderWalletScreen
+            sm.current = 'LenderWalletScreen'
 
         elif minutes_difference > 30:
-            self.show_validation_error(f"Time Out You Must Finish Before 30 Minutes")
+            self.show_success_dialog3(f"Time Out You Must Finish Before 30 Minutes")
             data[index]['loan_updated_status'] = 'lost opportunities'
-            self.manager.current = 'ViewUnderProcess'
+            self.manager.current = 'ViewLoansRequest'
             return
+
+    def show_success_dialog(self, text):
+        dialog = MDDialog(
+            text=text,
+            size_hint=(0.8, 0.3),
+            buttons=[
+                MDRaisedButton(
+                    text="OK",
+                    on_release=lambda *args: self.open_dashboard_screen(dialog),
+                    theme_text_color="Custom",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                )
+            ]
+        )
+        dialog.open()
+
+    def show_success_dialog2(self, text):
+        dialog = MDDialog(
+            text=text,
+            size_hint=(0.8, 0.3),
+            buttons=[
+                MDRaisedButton(
+                    text="OK",
+                    on_release=lambda *args: self.open_dashboard_screen2(dialog),
+                    theme_text_color="Custom",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                )
+            ]
+        )
+        dialog.open()
+
+    def show_success_dialog3(self, text):
+        dialog = MDDialog(
+            text=text,
+            size_hint=(0.8, 0.3),
+            buttons=[
+                MDRaisedButton(
+                    text="OK",
+                    on_release=lambda *args: self.open_dashboard_screen3(dialog),
+                    theme_text_color="Custom",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                )
+            ]
+        )
+        dialog.open()
+
+    def open_dashboard_screen(self, dialog):
+
+        dialog.dismiss()
+        self.manager.current = 'LenderDashboard'
+
+    def open_dashboard_screen2(self, dialog):
+
+        dialog.dismiss()
+        self.manager.current = 'LenderWalletScreen'
+
+    def open_dashboard_screen3(self, dialog):
+
+        dialog.dismiss()
+        self.manager.current = 'ViewLoansRequest'
 
 
 class ViewUnderScreenRL(Screen):

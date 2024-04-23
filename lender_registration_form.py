@@ -1968,7 +1968,7 @@ KV = '''
 
             MDTextField:
                 id:year_of_estd
-               hint_text: 'Enter Year of Estd'
+                hint_text: 'Enter Year of Estd'
                 multiline: False
                 helper_text: "Enter valid Year of Estd"
                 helper_text_mode: 'on_focus'
@@ -1976,7 +1976,7 @@ KV = '''
                 font_size: "15dp"
             MDTextField:
                 id: industry_type
-               hint_text: 'Enter Industry Type'
+                hint_text: 'Enter Industry Type'
                 multiline: False
                 helper_text: "Enter valid Industry Type"
                 helper_text_mode: 'on_focus'
@@ -2112,7 +2112,7 @@ KV = '''
                 font_name: "Roboto-Bold"
                 font_size: "15dp"
 
-           MDLabel:
+            MDLabel:
                 text: "Upload Prrof Of Verification"
                 halign: 'left'
                 font_size: "15dp"
@@ -3608,6 +3608,7 @@ class LenderScreen(Screen):
             data[index]['full_name'] = name
             data[index]['gender'] = gender
             data[index]['date_of_birth'] = date
+            data[index]['form_count'] = 1
         else:
             print("email not there")
 
@@ -3828,6 +3829,7 @@ class LenderScreen1(Screen):
             index = id_list.index(user_email)
             data[index]['mobile'] = mobile_number
             data[index]['another_email'] = alternate_email
+            data[index]['form_count'] = 2
         else:
             print('no email found')
 

@@ -1,8 +1,12 @@
 from anvil import Label
 from anvil.tables import app_tables
+from kivy.metrics import dp
+from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 from kivymd.app import MDApp
+from kivymd.uix.button import MDRaisedButton, MDRectangleFlatButton
+from kivymd.uix.dialog import MDDialog
 from kivymd.uix.list import *
 from kivy.lang import Builder
 from kivy.core.window import Window
@@ -231,6 +235,7 @@ loan_forecloseB = '''
                                 size_hint: (None, None)
                                 width: 50
                                 bold: True
+                                on_active: root.checkbox_callback1(self, self.active)
                                 color: 0.043, 0.145, 0.278, 1 
 
                             MDLabel:
@@ -481,9 +486,11 @@ loan_forecloseB = '''
                     spacing: dp(10)
 
                     CheckBox:
+                        id: check
                         size_hint: None, None
                         width: dp(30) 
                         color: (195/255, 110/255, 108/255, 1)
+                        on_active: root.checkbox_callback(self, self.active)
 
                     MDLabel:
                         text: "I Agree Terms and Conditions"
@@ -649,6 +656,14 @@ class LoansDetailsB(Screen):
         return anvil.server.call('another_method')
 
 class ViewProfileScreenFB(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.check_box = None
+    def checkbox_callback1(self, checkbox, value):
+        if value:
+            self.check_box = True
+        else:
+            self.check_box = False
     def initialize_with_value(self, value, data):
         emi1 = app_tables.fin_emi_table.search()
         pro_details = app_tables.fin_product_details.search()
@@ -699,7 +714,7 @@ class ViewProfileScreenFB(Screen):
                     self.ids.foreclose_button.disabled = False
                 else:
                     self.ids.foreclose_button.disabled = True
-                    #self.show_snackbar(f"This Foreclose Value need to be Eligible")
+                    self.show_success_dialog(f"This Foreclose Value need to be Eligible")
 
             minimum_months = [i['min_months'] for i in pro_details if i['product_id'] == data[index]['product_id']]
             print(minimum_months)
@@ -711,8 +726,25 @@ class ViewProfileScreenFB(Screen):
             else:
                 print("Either emi_loan or minimum_months is empty.")
 
-    #def show_snackbar(self, text):
-        #Snackbar(text=text, pos_hint={'top': 1}, md_bg_color=[1, 0, 0, 1]).open()
+    def show_success_dialog(self, text):
+        dialog = MDDialog(
+            text=text,
+            size_hint=(0.8, 0.3),
+            buttons=[
+                MDRaisedButton(
+                    text="OK",
+                    on_release=lambda *args: self.open_dashboard_screen(dialog),
+                    theme_text_color="Custom",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                )
+            ]
+        )
+        dialog.open()
+
+    def open_dashboard_screen(self, dialog):
+
+        dialog.dismiss()
+        self.manager.current = 'DashboardScreen'
 
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.on_keyboard)
@@ -745,20 +777,47 @@ class ViewProfileScreenFB(Screen):
         Window.softinput_mode = "below_target"
 
     def on_foreclose_press(self, loan_id):
-        sm = self.manager
+        if self.check_box == True:
+            sm = self.manager
 
-        # Create a new instance of the LoginScreen
-        approved = ForecloseDetails(name='ForecloseDetails')
+            # Create a new instance of the LoginScreen
+            approved = ForecloseDetails(name='ForecloseDetails')
 
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(approved)
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(approved)
 
-        # Switch to the LoginScreen
-        sm.current = 'ForecloseDetails'
-        self.manager.get_screen('ForecloseDetails').initialize_with_value(loan_id)
+            # Switch to the LoginScreen
+            sm.current = 'ForecloseDetails'
+            self.manager.get_screen('ForecloseDetails').initialize_with_value(loan_id)
+        else:
+            self.show_validation_error(f"You have to click on check box to proceed")
 
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
 
 class ForecloseDetails(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.check = None
+    def checkbox_callback(self, checkbox, value):
+        if value:
+            self.check = True
+        else:
+            self.check = False
+
 
     def initialize_with_value(self, value):
         data1 = app_tables.fin_foreclosure.search()
@@ -808,6 +867,7 @@ class ForecloseDetails(Screen):
             total_amount = month_emi[index2] * emi_num
             print(month_emi[index2], emi_num)
 
+
         self.ids.totalamount.text = str(total_amount)
 
         if value in loan_id1:
@@ -849,7 +909,8 @@ class ForecloseDetails(Screen):
 
         if value in loan_id1:
             total_amount1 = overall_outstanding_amount + overall_interest_amount
-            self.ids.total_amount.text = str(total_amount1)
+            rounded_total_amount = round(total_amount1, 2)
+            self.ids.total_amount.text = str(rounded_total_amount)
             outstanding_amount1 = overall_outstanding_amount
             self.ids.outstanding_amount.text = str(outstanding_amount1)
 
@@ -872,6 +933,7 @@ class ForecloseDetails(Screen):
         if product_id1[index10] in product_id2:
             index11 = product_id1.index(product_id1[index10])
             self.ids.foreclosure_fee.text = str(foreclose_fee[index11])
+            print(foreclose_fee[index11])
             foreclose_amount = overall_outstanding_amount * (foreclose_fee[index11] / 100)
             foreclose_amount = round(foreclose_amount, 2)
             print(overall_outstanding_amount, foreclose_fee[index11])
@@ -880,9 +942,18 @@ class ForecloseDetails(Screen):
             total_due_amount = round(total_due_amount, 2)
             self.ids.total_due_amount.text = str(total_due_amount)
 
+
+
     date = datetime.today()
 
     def add_data(self, loan_id, outstanding_amount, foreclose_fee, foreclose_amount, reason, total_due_amount, totalamount, monthly_emi1):
+
+        if len(self.ids.reason.text) < 3:
+            self.show_validation_error('You Must need to enter a reason for foreclosure')
+            return
+        if self.check != True:
+            self.show_validation_error('You need to select Terms and Conditions')
+            return
         data = app_tables.fin_loan_details.search()
         data1 = app_tables.fin_emi_table.search()
         loan_id3 = []
@@ -923,12 +994,42 @@ class ForecloseDetails(Screen):
                                                interest_rate=interest_rate[index],
                                                borrower_name=borrower_name1[index],
                                                loan_amount=loan_amount[index])
-        #self.show_snackbar(f"This Loan ID {loan_id} has been submitted")
+        self.show_success_dialog(f"This Loan ID {loan_id} has been submitted")
+
+    def show_success_dialog(self, text):
+        dialog = MDDialog(
+            text=text,
+            size_hint=(0.8, 0.3),
+            buttons=[
+                MDRaisedButton(
+                    text="OK",
+                    on_release=lambda *args: self.open_dashboard_screen(dialog),
+                    theme_text_color="Custom",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                )
+            ]
+        )
+        dialog.open()
+
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+    def open_dashboard_screen(self, dialog):
+
+        dialog.dismiss()
         self.manager.current = 'DashboardScreen'
-
-    #def show_snackbar(self, text):
-        #Snackbar(text=text, pos_hint={'top': 1}, md_bg_color=[1, 0, 0, 1]).open()
-
 class MyScreenManager(ScreenManager):
     pass
 

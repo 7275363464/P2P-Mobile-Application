@@ -270,7 +270,7 @@ view_loans = '''
 
                 MDLabel:
                     id: pro_name
-                    halign: 'center'
+                    halign: 'left'
 
             MDGridLayout:
                 cols: 2
@@ -294,7 +294,7 @@ view_loans = '''
 
                 MDLabel:
                     id: phone_num
-                    halign: 'center'
+                    halign: 'left'
 
             MDGridLayout:
                 cols: 2
@@ -306,7 +306,7 @@ view_loans = '''
 
                 MDLabel:
                     id: int_rate
-                    halign: 'center'
+                    halign: 'left'
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -317,7 +317,7 @@ view_loans = '''
 
                 MDLabel:
                     id: tenure
-                    halign: 'center' 
+                    halign: 'left' 
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -328,7 +328,7 @@ view_loans = '''
 
                 MDLabel:
                     id: limit
-                    halign: 'center' 
+                    halign: 'left' 
 
 
             MDGridLayout:
@@ -341,7 +341,7 @@ view_loans = '''
 
                 MDLabel:
                     id: date
-                    halign: 'center'
+                    halign: 'left'
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -352,7 +352,7 @@ view_loans = '''
 
                 MDLabel:
                     id: status
-                    halign: 'center' 
+                    halign: 'left' 
             MDLabel:
                 text: ''
                 halign: 'left'
@@ -464,7 +464,7 @@ view_loans = '''
 
                 MDLabel:
                     id: pro_name
-                    halign: 'center'
+                    halign: 'left'
 
             MDGridLayout:
                 cols: 2
@@ -476,7 +476,7 @@ view_loans = '''
 
                 MDLabel:
                     id: b_name
-                    halign: 'center'
+                    halign: 'left'
 
             MDGridLayout:
                 cols: 2
@@ -488,7 +488,7 @@ view_loans = '''
 
                 MDLabel:
                     id: phone_num
-                    halign: 'center'
+                    halign: 'left'
 
             MDGridLayout:
                 cols: 2
@@ -500,7 +500,7 @@ view_loans = '''
 
                 MDLabel:
                     id: int_rate
-                    halign: 'center'
+                    halign: 'left'
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -511,7 +511,7 @@ view_loans = '''
 
                 MDLabel:
                     id: tenure
-                    halign: 'center' 
+                    halign: 'left' 
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -522,7 +522,7 @@ view_loans = '''
 
                 MDLabel:
                     id: limit
-                    halign: 'center' 
+                    halign: 'left' 
 
 
             MDGridLayout:
@@ -535,7 +535,7 @@ view_loans = '''
 
                 MDLabel:
                     id: date
-                    halign: 'center'
+                    halign: 'left'
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -546,7 +546,7 @@ view_loans = '''
 
                 MDLabel:
                     id: status
-                    halign: 'center' 
+                    halign: 'left' 
             MDLabel:
                 text: ''
                 halign: 'left'

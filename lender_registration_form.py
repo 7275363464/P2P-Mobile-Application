@@ -7,7 +7,7 @@ from kivy.core.window import Window
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.lang import Builder
-from kivymd.uix.button import MDRectangleFlatButton
+from kivymd.uix.button import MDRectangleFlatButton, MDFlatButton
 from kivy.metrics import dp
 from kivymd.uix.label import MDLabel
 from kivymd.uix.menu import MDDropdownMenu
@@ -33,6 +33,8 @@ from kivymd.uix.spinner import MDSpinner
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
 from lender_dashboard import LenderDashboard
+
+# anvil.server.connect("server_6MFSRHQN7TZHDVGRHE4DACOS-MSES5HYVGRJ5LJH4") #published
 
 if platform == 'android':
     from kivy.uix.button import Button
@@ -82,13 +84,8 @@ KV = '''
 
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(10)
-
-        MDLabel:
-            text:""
-            size_hint_y: None
-            height:dp(50)
+        spacing: dp(30)
+        padding: dp(30)
         MDLabel:
             text:""
             size_hint_y: None
@@ -96,8 +93,8 @@ KV = '''
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(10)
+            spacing: dp(40)
+            padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -111,36 +108,40 @@ KV = '''
                 halign: 'center'
                 font_size: "20dp"
                 font_name: "Roboto-Bold"
-                size_hint_y: None
+                ize_hint_y: None
                 height:dp(50)
+
             MDTextField:
                 id: username
                 hint_text: 'Enter Full Name'
-                multiline: False
+                mFultiline: False
                 helper_text: "Enter Valid Name"
                 helper_text_mode: 'on_focus'
-                font_name: "Roboto-Bold"
-                theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
                 height:self.minimum_height
                 font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+
             MDLabel:
-                text: "Select Gender"
-                bold: True
-                size_hint_y:None
-                height:dp(20)
-                halign: "left"
+                text: 'Select Your Gender:'
+                halign: 'left'
                 font_size: "15dp"
+                font_name: "Roboto-Bold"
+                ize_hint_y: None
+                height:dp(20)
 
             Spinner:
                 id: spinner_id
                 text: "Select Gender"
+                font_size: "15dp"
                 multiline: False
                 size_hint: 1 , None
                 height:"40dp"
                 background_color: 0,0,0,0
                 background_normal:''
-                font_size: "15dp"
                 color: 0, 0, 0, 1
                 canvas.before:
                     Color:
@@ -159,13 +160,18 @@ KV = '''
                     hint_text: "Enter Date Of Birth"
                     helper_text: 'YYYY-MM-DD'
                     helper_text_mode: "on_error"
-                    font_name: "Roboto-Bold"
-                    theme_text_color: 'Custom'
-                    text_color: 1, 1, 1, 1
-                    height:self.minimum_height
                     font_size: "15dp"
+                    theme_text_color: "Custom"
+                    hint_text_color: 0, 0, 0, 1
+                    hint_text_color_normal: "black"
+                    text_color_normal: "black"
+                    helper_text_color_normal: "black"
                     input_type:'number'
                     on_touch_down: root.on_date_touch_down()
+            MDLabel:
+                text:""
+                size_hint_y: None
+                height:dp(20)
 
             MDRectangleFlatButton:
                 text: 'Next'
@@ -176,7 +182,6 @@ KV = '''
                 height: "50dp"
                 font_name: "Roboto-Bold"
                 on_release: root.add_data(username.text, spinner_id.text, date_textfield.text)
-
 
 <LenderScreen1>:
     MDTopAppBar:
@@ -190,20 +195,18 @@ KV = '''
 
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(10)
+        spacing: dp(20)
+        padding: dp(20)
+
         MDLabel:
-            text: ""
+            text:""
             size_hint_y: None
             height:dp(50)
-        MDLabel:
-            text: ""
-            size_hint_y: None
-            height:dp(50)
+
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(10)
+            spacing: dp(30)
+            padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -224,37 +227,45 @@ KV = '''
                 id: mobile_number
                 hint_text: 'Enter mobile number'
                 multiline: False
-                helper_text: 'Enter Your number'
+                helper_text: 'Enter valid number'
                 helper_text_mode: 'on_focus'
-                font_name: "Roboto-Bold"
-                hint_text_color: 0,0,0, 1
-                input_type: 'number'
-                font_size: "15dp"
+                input_type: 'number'  
                 on_touch_down: root.on_mobile_number_touch_down()
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
 
             MDTextField:
                 id: altername_email
-                hint_text: 'Enter your alternate email'
+                hint_text: ' Enter Alternate Email ID'
                 multiline: False
-                helper_text: 'Enter your Your email_id'
+                helper_text: "Enter Valid Alternate Email ID"
                 helper_text_mode: 'on_focus'
+                font_size: "15dp"
+                theme_text_color: "Custom"
                 hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+
+            MDLabel:
+                text:"Upload Profile Photo:"
+                halign: 'left'
                 font_size: "15dp"
                 font_name: "Roboto-Bold"
-            MDLabel:
-                text: "Upload Profile Photo"
-                bold: True
-                size_hint_y:None
+                size_hint_y: None
                 height:dp(5)
-                halign: "left"
-
             BoxLayout:
                 orientation: 'horizontal'
                 padding: "10dp"
                 spacing: "10dp"
                 size_hint: None, None
-                size: dp(280), dp(50)  # Adjust size as needed
+                size: dp(200), dp(50)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
                 canvas:
                     Color:
                         rgba: 0, 0, 0, 1  # Border color (black in this example)
@@ -285,22 +296,25 @@ KV = '''
 
             MDLabel:
                 id: image_label1
-                text: ''
+                text:""
                 halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            MDRectangleFlatButton:
-                text: "Next"
-                on_release: root.add_data(mobile_number.text, altername_email.text)
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
+                font_size: "15dp"
                 font_name: "Roboto-Bold"
+                size_hint_y: None
+                height:dp(5)
+
+            GridLayout:
+                cols: 1
+                spacing:dp(30)
+                MDRectangleFlatButton:
+                    text: "Next"
+                    on_release: root.add_data(mobile_number.text, altername_email.text)
+                    md_bg_color: 0.043, 0.145, 0.278, 1
+                    pos_hint: {'right': 1, 'y': 0.5}
+                    text_color: 1, 1, 1, 1
+                    size_hint: 1, None
+                    height: "50dp"
+                    font_name: "Roboto-Bold"
 
 <LenderScreen2>:
     MDTopAppBar:
@@ -346,7 +360,11 @@ KV = '''
                 helper_text_mode: 'on_focus'
                 size_hint_y: None
                 height: self.minimum_height
+                theme_text_color: "Custom"
                 hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
                 font_size: "15dp"
 
             MDLabel:
@@ -409,7 +427,11 @@ KV = '''
                 size_hint_y: None
                 height: self.minimum_height
                 font_size: "15dp"
+                theme_text_color: "Custom"
                 hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
 
             MDLabel:
                 text: "Upload Government ID2"
@@ -474,6 +496,7 @@ KV = '''
                 font_name: "Roboto-Bold"
 
 
+
 <LenderScreen3>:
     MDTopAppBar:
         title: "P2P LENDING"
@@ -483,19 +506,21 @@ KV = '''
         right_action_items: [['home', lambda x: root.go_to_dashboard()]]
         title_align: 'center'  # Center-align the title
         md_bg_color: 0.043, 0.145, 0.278, 1
+
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(10)
+        spacing: dp(25)
         padding: dp(20)
 
         MDLabel:
             text:""
             size_hint_y: None
             height:dp(50)
+
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(20)  # Reduce the top padding
+            spacing: dp(15)
+            padding: dp(30)
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -507,36 +532,51 @@ KV = '''
             MDLabel:
                 text: 'Lender Registration Form'
                 halign: 'center'
-                font_name: "Roboto-Bold"
                 font_size: "20dp"
+                font_name: "Roboto-Bold"
             MDLabel:
                 text: 'Address Information'
                 halign: 'center'
                 bold: True
-            MDLabel:
-                text:""
+
             MDTextField:
                 id: street_address1
-                hint_text: 'Enter Street Address1'
+                hint_text: 'Enter Street Address1 '
                 multiline: False
                 helper_text: 'Enter Your address'
-                font_size: "15dp"
                 helper_text_mode: 'on_focus'
+                size_hint_y: None
+                height: self.minimum_height
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                font_size: "15dp"
+
+
             MDTextField:
                 id: street_address2
                 hint_text: 'Enter Street Address2'
                 multiline: False
-                font_size: "15dp"
                 helper_text: 'Enter Your address'
                 helper_text_mode: 'on_focus'
+                size_hint_y: None
+                height: self.minimum_height
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
 
             MDLabel:
                 text: "Select Type Of Address"
-                halign: 'left'
-                bold:True
-                font_size: "15dp"
-                size_hint_y: None
-                height:dp(5)
+                bold: True
+                size_hint_y:None
+                height:dp(50)
+                halign: "left"
+
             Spinner:
                 id: spinner_id1
                 text: "Select Present Address"
@@ -556,12 +596,11 @@ KV = '''
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
             MDLabel:
-                text: "How Long you are staying this address:"
-                halign: 'left'
-                bold:True
-                size_hint_y: None
-                font_size: "15dp"
-                height:dp(5)
+                text: "How Long You Are Staying At This Address"
+                bold: True
+                size_hint_y:None
+                height:dp(50)
+                halign: "left"
 
             Spinner:
                 id: spinner_id2
@@ -579,7 +618,12 @@ KV = '''
                         rgba: 0, 0, 0, 1
                     Line:
                         width: 0.7
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)    
+            MDLabel:
+                text: ""
+                bold: True
+                height:dp(5)
+                size_hint_y:None
 
             MDRectangleFlatButton:
                 text: "Next"
@@ -591,6 +635,7 @@ KV = '''
                 height: "50dp"
                 font_name: "Roboto-Bold"
 
+
 <LenderScreen4>:
     MDTopAppBar:
         title: "P2P LENDING"
@@ -600,19 +645,22 @@ KV = '''
         right_action_items: [['home', lambda x: root.go_to_dashboard()]]
         title_align: 'center'  # Center-align the title
         md_bg_color: 0.043, 0.145, 0.278, 1
+
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
+        orientation: 'vertical'
+        spacing: dp(30)
+        padding: dp(30)
 
         MDLabel:
             text:""
             size_hint_y: None
             height:dp(50)
+
         MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(10)
-            padding: dp(20)  # Reduce the top padding
+            padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -624,42 +672,74 @@ KV = '''
             MDLabel:
                 text: 'Lender Registration Form'
                 halign: 'center'
-                font_name: "Roboto-Bold"
                 font_size: "20dp"
+                font_name: "Roboto-Bold"
             MDLabel:
                 text: 'Address Information'
                 halign: 'center'
                 bold: True
+
             MDTextField:
                 id: city
-                hint_text: 'Enter City Name'
-                font_size: "15dp"
+                hint_text: 'Enter City Name '
                 multiline: False
+                helper_text: 'Enter Your city'
                 helper_text_mode: 'on_focus'
                 size_hint_y: None
+                height: self.minimum_height
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                font_size: "15dp"
+
             MDTextField:
                 id: zip_code
-                hint_text: 'Enter postal/zipcode '
+                hint_text: 'Enter postal/zipcode'
                 multiline: False
+                helper_text: 'Enter Your zipcode'
                 helper_text_mode: 'on_focus'
                 size_hint_y: None
+                height: self.minimum_height
                 font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
                 input_type: 'number'
                 on_touch_down: root.on_mobile_number_touch_down()
+
             MDTextField:
                 id: state
                 hint_text: 'Enter State Name'
                 multiline: False
-                font_size: "15dp"
+                helper_text: 'Enter Your State'
                 helper_text_mode: 'on_focus'
                 size_hint_y: None
+                height: self.minimum_height
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+
             MDTextField:
                 id: country
                 hint_text: 'Enter Country Name'
                 multiline: False
-                font_size: "15dp"
+                helper_text: 'Enter Your Country'
                 helper_text_mode: 'on_focus'
-
+                size_hint_y: None
+                height: self.minimum_height
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
             MDRectangleFlatButton:
                 text: "Next"
                 on_release: root.add_data(city.text, zip_code.text, state.text, country.text)
@@ -682,17 +762,18 @@ KV = '''
 
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(30)
+        spacing: dp(50)
         padding: dp(30)
+
         MDLabel:
             text:""
             size_hint_y: None
-            height:dp(50)
+            height:dp(40)
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(50)
-            padding: dp(30)
+            spacing: dp(30)
+            padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -712,7 +793,8 @@ KV = '''
                 halign: 'center'
                 font_size: "20dp"
                 font_name: "Roboto-Bold"
-            
+
+
             MDLabel:
                 text: "Select Education Details:"
                 halign: 'left'
@@ -739,6 +821,11 @@ KV = '''
                         width: 0.7
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
+            MDLabel:
+                text: ' '
+                halign: 'center'
+                font_size: "20dp"
+                font_name: "Roboto-Bold"
             MDRectangleFlatButton:
                 text: "Next"
                 on_press: root.next_pressed(spinner_id.text)
@@ -762,8 +849,8 @@ KV = '''
 
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
+        spacing: dp(30)
+        padding: dp(30)
         MDLabel:
             text: ""
             size_hint_y: None
@@ -771,8 +858,8 @@ KV = '''
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(20)
+            spacing: dp(50)
+            padding: dp(30)
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -1654,6 +1741,7 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
             MDLabel:
                 id: image_label4
                 text: ''
@@ -1663,9 +1751,10 @@ KV = '''
                 valign: 'middle'  # Align the label text vertically in the center
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
+
             MDLabel:
                 text: "Upload PHD Certificate"
-                halign: 'center'
+                halign: 'left'
                 font_size: "15dp"
                 bold: True
 
@@ -1733,16 +1822,18 @@ KV = '''
 
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(10)
+        spacing: dp(20)
         padding: dp(20)
+
         MDLabel:
             text:""
             size_hint_y: None
             height:dp(50)
+
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(20)  # Reduce the top padding
+            spacing: dp(30)
+            padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -1753,29 +1844,33 @@ KV = '''
 
             MDLabel:
                 text: 'Lender Registration Form'
-                font_size: "20dp"
                 halign: 'center'
+                font_size: "20dp"
                 font_name: "Roboto-Bold"
-            MDLabel:
-                text: "Select Loan Type"
-                bold: True
-                size_hint_y:None
+                size_hint_y: None
                 height:dp(50)
+
+            MDLabel:
+                text: 'Select Loan Type:'
+                halign: 'left'
                 font_size: "15dp"
-                halign: "left"
+                font_name: "Roboto-Bold"
+                ize_hint_y: None
+                height:dp(20)
+
             Spinner:
                 id: spinner
                 text: "Select Loan Type"
+                font_size: "15dp"
                 multiline: False
                 size_hint: 1 , None
                 height:"40dp"
                 background_color: 0,0,0,0
                 background_normal:''
                 color: 0, 0, 0, 1
-                font_size: "15dp"
                 canvas.before:
                     Color:
-                        rgba: 0, 0, 0, 1
+                        rgba: 0, 0, 0, 1  
                     Line:
                         width: 0.7
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
@@ -1783,47 +1878,56 @@ KV = '''
 
             MDTextField:
                 id: investment
-                hint_text: 'Enter investment Amount '
+                hint_text: 'Enter investment Amount'
                 multiline: False
-                helper_text: 'Enter above 100000'
+                helper_text: "Enter above 100000"
                 helper_text_mode: 'on_focus'
-                input_type: 'number'
+                height:self.minimum_height
                 font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
                 on_touch_down: root.on_investment_touch_down()
             MDLabel:
-                text: "Select Lending Period"
-                bold: True
-                size_hint_y:None
-                height:dp(50)
+                text: 'Select Lending Period:'
+                halign: 'left'
                 font_size: "15dp"
-                halign: "left"
+                font_name: "Roboto-Bold"
+                ize_hint_y: None
+                height:dp(20)
+
             Spinner:
                 id: spinner2
                 text: "Select Lending Period"
+                font_size: "15dp"
                 multiline: False
                 size_hint: 1 , None
                 height:"40dp"
                 background_color: 0,0,0,0
                 background_normal:''
                 color: 0, 0, 0, 1
-                font_size: "15dp"
                 canvas.before:
                     Color:
-                        rgba: 0, 0, 0, 1
+                        rgba: 0, 0, 0, 1  
                     Line:
                         width: 0.7
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
 
-            MDRaisedButton:
-                text: "Next"
-                on_release: root.next_pressed(spinner.text, investment.text, spinner2.text)
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
+            GridLayout:
+                cols: 1
+                spacing:dp(30)
+                MDRectangleFlatButton:
+                    text: "Next"
+                    on_release: root.next_pressed(spinner.text, investment.text, spinner2.text)
+                    md_bg_color: 0.043, 0.145, 0.278, 1
+                    pos_hint: {'right': 1, 'y': 0.5}
+                    text_color: 1, 1, 1, 1
+                    size_hint: 1, None
+                    height: "50dp"
+                    font_name: "Roboto-Bold"
 
 
 <LenderScreenInstitutionalForm1>:
@@ -1838,16 +1942,18 @@ KV = '''
 
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
+        spacing: dp(20)
+        padding: dp(50)
+
         MDLabel:
             text:""
             size_hint_y: None
-            height:dp(50)
+            height:dp(30)
+
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(20)
+            spacing: dp(20)
+            padding: dp(30) 
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -1861,35 +1967,48 @@ KV = '''
                 halign: 'center'
                 font_size: "20dp"
                 font_name: "Roboto-Bold"
+            MDLabel:
+                text: 'Business Information'
+                halign: 'center'
+                bold: True
 
             MDTextField:
                 id: business_name
                 hint_text: 'Enter Business Name '
                 multiline: False
-                helper_text: "Enter valid Business Name"
+                helper_text: 'Enter Your Business Name'
                 helper_text_mode: 'on_focus'
-                font_name: "Roboto-Bold"
+                size_hint_y: None
                 height: self.minimum_height
-                font_size: "15dp"
+                theme_text_color: "Custom"
                 hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                font_size: "15dp"
 
             MDTextField:
-                id:  business_address
+                id: business_address
                 hint_text: 'Enter Business Address'
                 multiline: False
-                helper_text: "Enter valid Business Address"
+                helper_text: 'Enter Your Business Address'
                 helper_text_mode: 'on_focus'
-                font_name: "Roboto-Bold"
+                size_hint_y: None
                 height: self.minimum_height
                 font_size: "15dp"
+                theme_text_color: "Custom"
                 hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+
             MDLabel:
-                text: "Select Business Type"
-                bold: True
-                size_hint_y:None
-                height:dp(50)
+                text: 'Select Business Type:'
+                halign: 'left'
                 font_size: "15dp"
-                halign: "left"   
+                font_name: "Roboto-Bold"
+                ize_hint_y: None
+                height:dp(20)
             Spinner:
                 id: spin
                 text: "Select Business Type"
@@ -1908,12 +2027,13 @@ KV = '''
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
             MDLabel:
-                text: "Select No.Of Employees Working"
-                bold: True
-                size_hint_y:None
+                text: 'Select No.Of Employees Working:'
+                halign: 'left'
                 font_size: "15dp"
-                height:dp(50)
-                halign: "left"
+                font_name: "Roboto-Bold"
+                ize_hint_y: None
+                height:dp(20)
+
             Spinner:
                 id: spinner_id
                 text: "Select No.Of Employees Working"
@@ -1954,16 +2074,18 @@ KV = '''
 
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
+        spacing: dp(20)
+        padding: dp(50)
+
         MDLabel:
             text:""
             size_hint_y: None
-            height:dp(50)
+            height:dp(40)
+
         MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(10)
-            padding: dp(20)
+            padding: dp(30) 
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -1977,39 +2099,65 @@ KV = '''
                 halign: 'center'
                 font_size: "20dp"
                 font_name: "Roboto-Bold"
+            MDLabel:
+                text: 'Business Information'
+                halign: 'center'
+                bold: True
 
             MDTextField:
-                id:year_of_estd
-                hint_text: 'Enter Year of Estd'
+                id: year_of_estd
+                hint_text:'Enter Year of Estd'
                 multiline: False
-                helper_text: "Enter valid Year of Estd"
+                helper_text: 'YYYY-MM-DD'
                 helper_text_mode: 'on_focus'
-                font_name: "Roboto-Bold"
+                size_hint_y: None
+                height: self.minimum_height
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
                 font_size: "15dp"
+
             MDTextField:
                 id: industry_type
                 hint_text: 'Enter Industry Type'
                 multiline: False
-                helper_text: "Enter valid Industry Type"
+                helper_text: 'Enter Your Industry Type'
                 helper_text_mode: 'on_focus'
-                font_name: "Roboto-Bold"
+                size_hint_y: None
+                height: self.minimum_height
                 font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
             MDTextField:
                 id: last_six_months_turnover
                 hint_text: 'Enter last 6 months turnover'
                 multiline: False
+                helper_text: 'Enter Your last 6 months turnover'
                 helper_text_mode: 'on_focus'
                 size_hint_y: None
+                height: self.minimum_height
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
                 input_type: 'number'
                 on_touch_down: root.on_last_six_months_turnover_touch_down()
 
             MDLabel:
-                text: "Last 6 months bank statements"
-                bold: True
-                size_hint_y:None
+                text: 'Last 6 months bank statements:'
+                halign: 'left'
                 font_size: "15dp"
-                height:dp(50)
-                halign: "left"
+                font_name: "Roboto-Bold"
+                ize_hint_y: None
+                height:dp(20)
+
             BoxLayout:
                 orientation: 'horizontal'
                 padding: "10dp"
@@ -2075,16 +2223,18 @@ KV = '''
 
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
+        spacing: dp(20)
+        padding: dp(50)
+
         MDLabel:
             text:""
             size_hint_y: None
-            height:dp(50)
+            height:dp(40)
+
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(20)
+            spacing: dp(20)
+            padding: dp(30)
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -2093,44 +2243,63 @@ KV = '''
                     width: 0.7  # Border width
                     rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
+
             MDLabel:
-                text: 'Lender Registration Form'
+                text: 'Business Information'
                 halign: 'center'
-                font_size: "20dp"
-                font_name: "Roboto-Bold"
+                bold: True
 
             MDTextField:
-                id:din
-                hint_text: 'Enter DIN'
+                id: din
+                hint_text:'Enter DIN'
                 multiline: False
-                helper_text: "Enter valid DIN"
+                helper_text: 'Enter DIN'
                 helper_text_mode: 'on_focus'
-                font_name: "Roboto-Bold"
+                size_hint_y: None
+                height: self.minimum_height
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
                 font_size: "15dp"
+
             MDTextField:
                 id: cin
                 hint_text: 'Enter CIN'
                 multiline: False
-                helper_text: "Enter valid CIN"
+                helper_text: 'Enter CIN'
                 helper_text_mode: 'on_focus'
-                font_name: "Roboto-Bold"
+                size_hint_y: None
+                height: self.minimum_height
                 font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
             MDTextField:
                 id: reg_office_address
-                hint_text: 'Enter Registered Office Address '
+                hint_text: 'Enter Registered Office Address'
                 multiline: False
-                helper_text: "Enter valid Registration Office Address"
+                helper_text: 'Enter Valid Registered Office Address'
                 helper_text_mode: 'on_focus'
-                font_name: "Roboto-Bold"
+                size_hint_y: None
+                height: self.minimum_height
                 font_size: "15dp"
-
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
             MDLabel:
-                text: "Upload Prrof Of Verification"
+                text: 'Upload Proof Of Verification:'
                 halign: 'left'
                 font_size: "15dp"
                 font_name: "Roboto-Bold"
-                size_hint_y: None
+                ize_hint_y: None
                 height:dp(20)
+
             BoxLayout:
                 orientation: 'horizontal'
                 padding: "10dp"
@@ -2190,7 +2359,7 @@ KV = '''
         title: "P2P LENDING"
         elevation: 2
         pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen7')]]
+        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen6')]]
         right_action_items: [['home', lambda x: root.go_to_dashboard()]]
         title_align: 'center'  # Center-align the title
         md_bg_color: 0.043, 0.145, 0.278, 1
@@ -2206,7 +2375,7 @@ KV = '''
         MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(10)
-            padding: dp(20)  # Reduce the top padding
+            padding: dp(20)
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -2216,96 +2385,106 @@ KV = '''
                     rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
             MDLabel:
-                text: ""
-                size_hint_y: None
-                height:dp(50)
-
-            MDLabel:
-                text: 'Individual Type'
+                text: 'Lender Registration Form'
                 halign: 'center'
                 font_size: "20dp"
                 font_name: "Roboto-Bold"
 
             MDLabel:
                 text: 'Employment Details'
-                halign: 'left'
+                halign: 'center'
                 bold: True
-                font_size: "15dp"
                 size_hint_y: None
+                height:dp(50)
+
+            MDLabel:
+                text: 'Select Employment Type:'
+                halign: 'left'
+                font_size: "15dp"
+                font_name: "Roboto-Bold"
+                ize_hint_y: None
+                height:dp(20)
 
             Spinner:
                 id: spinner1
-                text: "Please Select Employment Type"
+                text: "Select Employment Type"
                 multiline: False
                 size_hint: 1 , None
-                font_size: "15dp"
                 height:"40dp"
                 background_color: 0,0,0,0
                 background_normal:''
+                font_size: "15dp"
                 color: 0, 0, 0, 1
                 canvas.before:
                     Color:
-                        rgba: 0, 0, 0, 1  
+                        rgba: 0, 0, 0, 1
                     Line:
                         width: 0.7
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
             MDTextField:
-                id:company_name
-                hint_text: 'Enter company name'
-                multiline: False                        
+                id: company_name
+                hint_text: 'Enter company Name'
+                multiline: False
+                helper_text: "Enter Valid company Name"
                 helper_text_mode: 'on_focus'
-                size_hint_y: None
+                height:self.minimum_height
                 font_size: "15dp"
+                font_name: "Roboto-Bold"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
             MDLabel:
-                text: "Select Organisation Type"
+                text: 'Select Organisation Type:'
                 halign: 'left'
                 font_size: "15dp"
                 font_name: "Roboto-Bold"
-                size_hint_y: None
+                ize_hint_y: None
                 height:dp(20)
 
             Spinner:
                 id: spinner2
-                text: "Please Select Organisation Type"
+                text: "Select Organisation Type"
                 multiline: False
-                font_size: "15dp"
                 size_hint: 1 , None
                 height:"40dp"
                 background_color: 0,0,0,0
                 background_normal:''
+                font_size: "15dp"
                 color: 0, 0, 0, 1
                 canvas.before:
                     Color:
-                        rgba: 0, 0, 0, 1  
+                        rgba: 0, 0, 0, 1
                     Line:
                         width: 0.7
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
             MDLabel:
-                text: "Select Occupation Type"
+                text: 'Select Occupation Type:'
                 halign: 'left'
                 font_size: "15dp"
                 font_name: "Roboto-Bold"
-                size_hint_y: None
+                ize_hint_y: None
                 height:dp(20)
+
             Spinner:
                 id: spinner3
                 text: "Select Occupation Type"
                 multiline: False
                 size_hint: 1 , None
-                font_size: "15dp"
                 height:"40dp"
                 background_color: 0,0,0,0
                 background_normal:''
+                font_size: "15dp"
                 color: 0, 0, 0, 1
                 canvas.before:
                     Color:
-                        rgba: 0, 0, 0, 1  
+                        rgba: 0, 0, 0, 1
                     Line:
                         width: 0.7
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDRaisedButton:
+            MDRectangleFlatButton:
                 text: "Next"
                 on_release: root.add_data(spinner1.text,spinner3.text, company_name.text, spinner2.text)
                 md_bg_color: 0.043, 0.145, 0.278, 1
@@ -2313,9 +2492,9 @@ KV = '''
                 text_color: 1, 1, 1, 1
                 size_hint: 1, None
                 height: "50dp"
+                font_name: "Roboto-Bold"
 
 <LenderScreenIndividualForm2>:
-    name: 'len_reg_individual_form2'
     MDTopAppBar:
         title: "P2P LENDING"
         elevation: 2
@@ -2327,16 +2506,18 @@ KV = '''
 
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
+        spacing: dp(20)
+        padding: dp(30)
+
         MDLabel:
             text:""
             size_hint_y: None
-            height:dp(40)
+            height:dp(35)
+
         MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(10)
-            padding: dp(20)  # Reduce the top padding
+            padding: dp(30) 
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -2345,48 +2526,55 @@ KV = '''
                     width: 0.7  # Border width
                     rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
+            MDLabel:
+                text: ''
+                halign: 'center'
+                font_size: "20dp"
+                font_name: "Roboto-Bold"
 
             MDLabel:
                 text: 'Employment Details'
                 halign: 'center'
-                font_name: "Roboto-Bold"
-                font_size: "20dp"
-            MDTextField:
-                id:annual_salary
-                hint_text: 'Enter annual salary'
-                halign: 'left'
-                font_size: "15dp"
-                theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
-                multiline: False
-                helper_text:  "Enter Valid Annual Salary"
-                helper_text_mode: 'on_focus'
-                font_name: "Roboto-Bold"
                 bold: True
+                size_hint_y: None
+                height:dp(30)
+
+            MDTextField:
+                id: annual_salary
+                hint_text: 'Enter annual salary'
+                multiline: False
+                helper_text: "Enter Valid Annual Salary"
+                helper_text_mode: 'on_focus'
+                height:self.minimum_height
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
                 input_type: 'number'
                 on_touch_down: root.on_annual_salary_touch_down()
+                helper_text_color_normal: "black"
 
             MDTextField:
-                id:designation
-                hint_text: 'Enter designation'
-                font_size: "15dp"
-                halign: 'left'
-                theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
+                id: designation
+                hint_text: 'Enter Designation'
                 multiline: False
-                helper_text: "Enter Valid Designation"
+                helper_text: "Enter Valid designation"
                 helper_text_mode: 'on_focus'
-                font_name: "Roboto-Bold"
-                bold: True
-
+                height:self.minimum_height
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                input_type: 'number'
             MDLabel:
-                text: "Upload Employee ID"
+                text: 'Upload Employee ID:'
                 halign: 'left'
                 font_size: "15dp"
                 font_name: "Roboto-Bold"
-                size_hint_y: None
+                ize_hint_y: None
                 height:dp(20)
-
 
             BoxLayout:
                 orientation: 'horizontal'
@@ -2426,12 +2614,16 @@ KV = '''
                 text_color: 0, 0, 0, 1  # Black text color
                 valign: 'middle'  # Align the label text vertically in the center
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                height:dp(15)
+                size_hint_y: None
 
             MDLabel:
-                text: "Upload last 6 months bank statements"
+                text: 'Select Upload last 6 months bank statements:'
                 halign: 'left'
-                bold: True
-
+                font_size: "15dp"
+                font_name: "Roboto-Bold"
+                ize_hint_y: None
+                height:dp(20)
 
             BoxLayout:
                 orientation: 'horizontal'
@@ -2471,8 +2663,10 @@ KV = '''
                 text_color: 0, 0, 0, 1  # Black text color
                 valign: 'middle'  # Align the label text vertically in the center
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint_y: None
+                height:dp(15)
 
-            MDRaisedButton:
+            MDRectangleFlatButton:
                 text: "Next"
                 on_release: root.add_data(annual_salary.text, designation.text)
                 md_bg_color: 0.043, 0.145, 0.278, 1
@@ -2481,6 +2675,7 @@ KV = '''
                 size_hint: 1, None
                 height: "50dp"
                 font_name: "Roboto-Bold"
+
 
 <LenderScreenIndividualForm3>:
     MDTopAppBar:
@@ -2494,16 +2689,18 @@ KV = '''
 
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
+        spacing: dp(30)
+        padding: dp(30)
+
         MDLabel:
             text:""
             size_hint_y: None
-            height:dp(40)
+            height:dp(50)
+
         MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(10)
-            padding: dp(20)  # Reduce the top padding
+            padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -2513,43 +2710,60 @@ KV = '''
                     rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
             MDLabel:
-                text: 'Employment Details'
+                text: 'Lender Registration Form'
                 halign: 'center'
                 font_size: "20dp"
                 font_name: "Roboto-Bold"
-            MDTextField:
-                id:company_address
-                hint_text: 'Enter company address'
-                multiline: False                        
-                helper_text_mode: 'on_focus'
+
+            MDLabel:
+                text: 'Employment Details'
+                halign: 'center'
+                bold: True
                 size_hint_y: None
+                height:dp(50)
+
+            MDTextField:
+                id: company_address
+                hint_text: 'Enter company address'
+                helper_text: 'Enter valid company address'
+                multiline: False
+                helper_text_mode: 'on_focus'
+                hint_text_color: 0,0,0, 1
+                font_name: "Roboto-Bold"
                 font_size: "15dp"
 
             MDTextField:
-                id:company_pin_code
+                id: company_pin_code
                 hint_text: 'Enter Company Pincode'
+                helper_text: 'Enter valid Company Pincode'
                 multiline: False
                 helper_text_mode: 'on_focus'
-                size_hint_y: None
+                hint_text_color: 0,0,0, 1
                 font_size: "15dp"
-                input_type: 'number'
+                font_name: "Roboto-Bold"
+                input_type: 'number'  
                 on_touch_down: root.on_company_pin_code_touch_down()
 
-            MDTextField:
-                id:company_country
-                hint_text: 'Enter Company Country'
-                multiline: False
-                font_size: "15dp"
-                helper_text_mode: 'on_focus'
-                size_hint_y: None
 
             MDTextField:
-                id:landmark
+                id: company_country
+                hint_text: 'Enter Company Country'
+                helper_text: 'Enter valid Company Country'
+                multiline: False
+                helper_text_mode: 'on_focus'
+                hint_text_color: 0,0,0, 1
+                font_size: "15dp"
+                font_name: "Roboto-Bold"
+
+            MDTextField:
+                id: landmark
                 hint_text: 'Enter landmark'
                 multiline: False
                 font_size: "15dp"
+                helper_text: 'Enter valid landmark'
                 helper_text_mode: 'on_focus'
-                size_hint_y: None
+                text_color: 0,0,0, 1
+                font_name: "Roboto-Bold"
 
             MDTextField:
                 id:business_phone_number
@@ -2558,11 +2772,16 @@ KV = '''
                 helper_text_mode: 'on_focus'
                 size_hint_y: None
                 input_type: 'number'
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
                 font_size: "15dp"
                 on_touch_down: root.on_business_phone_number_touch_down()
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                input_type: 'number'
 
-            MDRaisedButton:
+
+            MDRectangleFlatButton:
                 text: "Next"
                 on_release: root.add_data(company_address.text, company_pin_code.text, company_country.text, landmark.text, business_phone_number.text)
                 md_bg_color: 0.043, 0.145, 0.278, 1
@@ -2579,6 +2798,345 @@ KV = '''
         elevation: 2
         pos_hint: {'top': 1}
         left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen6')]]
+        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
+        title_align: 'center'  # Center-align the title
+        md_bg_color: 0.043, 0.145, 0.278, 1
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        spacing: dp(50)
+        padding: dp(30)
+
+        MDLabel:
+            text:""
+            size_hint_y: None
+            height:dp(40)
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            spacing: dp(30)
+            padding: dp(30)  # Reduce the top padding
+            md_bg_color:253/255, 254/255, 254/255, 1
+            canvas:
+                Color:
+                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
+                Line:
+                    width: 0.7  # Border width
+                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+
+            MDLabel:
+                text: 'Lender Registration Form'
+                halign: 'center'
+                font_size: "20dp"
+                font_name: "Roboto-Bold"
+
+            MDLabel:
+                text: 'Marital Status'
+                halign: 'center'
+                font_size: "20dp"
+                font_name: "Roboto-Bold"
+
+
+            MDLabel:
+                text: "Select Marital Status:"
+                halign: 'left'
+                bold:True
+                size_hint_y: None
+                font_size: "15dp"
+                height:dp(5)
+
+            Spinner:
+                id: marital_status_id
+                text: "Select Marital Status"
+                multiline: False
+                size_hint: 1 , None
+                font_size: "15dp"
+                height:"40dp"
+                background_color: 0,0,0,0
+                background_normal:''
+                color: 0, 0, 0, 1
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  
+                    Line:
+                        width: 0.7
+                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+
+            MDLabel:
+                text: ' '
+                halign: 'center'
+                font_size: "20dp"
+                font_name: "Roboto-Bold"
+            MDRaisedButton:
+                text: "Next"
+                on_release: root.add_data(marital_status_id.text)
+                md_bg_color: 0.043, 0.145, 0.278, 1
+                pos_hint: {'right': 1, 'y': 0.5}
+                text_color: 1, 1, 1, 1
+                size_hint: 1, None
+                height: "50dp"
+                font_name: "Roboto-Bold"
+
+<LenderScreen8>:
+    MDTopAppBar:
+        title: "P2P LENDING"
+        elevation: 2
+        pos_hint: {'top': 1}
+        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen7')]]
+        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
+        title_align: 'center'  # Center-align the title
+        md_bg_color: 0.043, 0.145, 0.278, 1
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        spacing: dp(30)
+        padding: dp(30)
+
+        MDLabel:
+            text:""
+            size_hint_y: None
+            height:dp(50)
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            spacing: dp(10)
+            padding: dp(30) # Reduce the top padding
+            md_bg_color:253/255, 254/255, 254/255, 1
+            canvas:
+                Color:
+                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
+                Line:
+                    width: 0.7  # Border width
+                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+
+            MDLabel:
+                text: 'Lender Registration Form'
+                halign: 'center'
+                font_size: "20dp"
+                font_name: "Roboto-Bold"
+                size_hint_y: None
+                height:dp(50)
+
+            MDLabel:
+                text: 'Father Information'
+                halign: 'center'
+                bold: True
+
+            MDTextField:
+                id: father_name
+                hint_text: 'Enter Father Name'
+                helper_text: 'Enter valid Father Name'
+                multiline: False
+                helper_text_mode: 'on_focus'
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                font_name: "Roboto-Bold"
+                font_size: "15dp"
+
+            MDTextField:
+                id: father_age
+                hint_text: 'Enter Father Age'
+                helper_text: 'Enter valid Father Age'
+                multiline: False
+                helper_text_mode: 'on_focus'
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                font_size: "15dp"
+                font_name: "Roboto-Bold"
+                input_type: 'number'  
+                on_touch_down: root.on_father_age_touch_down()
+
+            MDTextField:
+                id: father_dob
+                hint_text: "Enter Father D.O.B"
+                helper_text: 'YYYY-MM-DD'
+                helper_text_mode: "on_error"
+                font_name: "Roboto-Bold"
+                theme_text_color: 'Custom'
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                height:self.minimum_height
+                font_size: "15dp"
+                input_type:'number'
+                on_touch_down: root.on_date_touch_down()
+
+            MDTextField:
+                id: father_occupation
+                hint_text: 'Enter Father Occupation'
+                helper_text: 'Enter valid Father Occupation'
+                multiline: False
+                helper_text_mode: 'on_focus'
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                font_size: "15dp"
+                font_name: "Roboto-Bold"
+
+            MDTextField:
+                id: father_ph_no
+                hint_text: 'Enter Father Phone NO'
+                multiline: False
+                font_size: "15dp"
+                helper_text: 'Enter valid PH No'
+                helper_text_mode: 'on_focus'
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                font_name: "Roboto-Bold"
+                input_type: 'number'  
+                on_touch_down: root.on_father_ph_no_touch_down()
+
+
+            MDRectangleFlatButton:
+                text: "Next"
+                on_release: root.add_data(father_name.text, father_age.text, father_occupation.text, father_ph_no.text, father_dob.text)
+                md_bg_color: 0.043, 0.145, 0.278, 1
+                pos_hint: {'right': 1, 'y': 0.5}
+                text_color: 1, 1, 1, 1
+                size_hint: 1, None
+                height: "50dp"
+                font_name: "Roboto-Bold"
+
+<LenderScreen9>:
+    MDTopAppBar:
+        title: "P2P LENDING"
+        elevation: 2
+        pos_hint: {'top': 1}
+        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen7')]]
+        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
+        title_align: 'center'  # Center-align the title
+        md_bg_color: 0.043, 0.145, 0.278, 1
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: dp(50)
+
+        MDLabel:
+            text:""
+            size_hint_y: None
+            height:dp(40)
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            spacing: dp(10)
+            padding: dp(30) # Reduce the top padding
+            md_bg_color:253/255, 254/255, 254/255, 1
+            canvas:
+                Color:
+                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
+                Line:
+                    width: 0.7  # Border width
+                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+
+            MDLabel:
+                text: 'Lender Registration Form'
+                halign: 'center'
+                font_size: "20dp"
+                font_name: "Roboto-Bold"
+
+            MDLabel:
+                text: 'Mother Information'
+                halign: 'center'
+                bold: True
+                size_hint_y: None
+                height:dp(50)
+
+            MDTextField:
+                id: mother_name
+                hint_text: 'Enter Mother Name'
+                helper_text: 'Enter valid Mother Name'
+                multiline: False
+                helper_text_mode: 'on_focus'
+                hint_text_color: 0,0,0, 1
+                font_name: "Roboto-Bold"
+                font_size: "15dp"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+
+            MDTextField:
+                id: mother_age
+                hint_text: 'Enter Mother Address'
+                helper_text: 'Enter valid Mother Address'
+                multiline: False
+                helper_text_mode: 'on_focus'
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                font_size: "15dp"
+                font_name: "Roboto-Bold"
+                input_type: 'number'  
+                on_touch_down: root.on_mother_age_touch_down()
+
+            MDTextField:
+                id: Mother_dob
+                hint_text: "Enter Father D.O.B"
+                helper_text: 'YYYY-MM-DD'
+                font_name: "Roboto-Bold"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                input_type:'number'
+                font_size: "15dp"
+                on_touch_down: root.on_date_touch_down()
+
+            MDTextField:
+                id: mother_occupation
+                hint_text: 'Enter Mother Occupation'
+                helper_text: 'Enter valid Mother Occupation'
+                multiline: False
+                helper_text_mode: 'on_focus'
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                font_size: "15dp"
+                font_name: "Roboto-Bold"
+
+            MDTextField:
+                id: mother_ph_no
+                hint_text: 'Enter Mother Phone NO'
+                multiline: False
+                font_size: "15dp"
+                helper_text: 'Enter valid PH No'
+                helper_text_mode: 'on_focus'
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                font_name: "Roboto-Bold"
+                input_type: 'number'  
+                on_touch_down: root.on_mother_ph_no_touch_down()
+
+            MDRectangleFlatButton:
+                text: "Next"
+                on_release: root.add_data(mother_name.text, mother_age.text, mother_occupation.text, mother_ph_no.text, mother_dob.text)
+                md_bg_color: 0.043, 0.145, 0.278, 1
+                pos_hint: {'right': 1, 'y': 0.5}
+                text_color: 1, 1, 1, 1
+                size_hint: 1, None
+                height: "50dp"
+                font_name: "Roboto-Bold"
+
+
+<LenderScreen10>:
+    MDTopAppBar:
+        title: "P2P LENDING"
+        elevation: 2
+        pos_hint: {'top': 1}
+        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen7')]]
         right_action_items: [['home', lambda x: root.go_to_dashboard()]]
         title_align: 'center'  # Center-align the title
         md_bg_color: 0.043, 0.145, 0.278, 1
@@ -2606,370 +3164,65 @@ KV = '''
                     rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
             MDLabel:
-                text: 'Lender Registration Form'
-                halign: 'center'
-                font_size: "20dp"
-                font_name: "Roboto-Bold"
-            MDLabel:
-                text:"Select Marital Status:"
-                halign: 'left'
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-                size_hint_y: None
-                height:dp(20)
-            Spinner:
-                id: marital_status_id
-                text: "Select Marital Status"
-                multiline: False
-                size_hint: 1 , None
-                font_size: "15dp"
-                height:"40dp"
-                background_color: 0,0,0,0
-                background_normal:''
-                color: 0, 0, 0, 1
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1  
-                    Line:
-                        width: 0.7
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-
-            MDRaisedButton:
-                text: "Next"
-                on_release: root.add_data(marital_status_id.text)
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
-
-<LenderScreen8>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen7')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
-
-        MDLabel:
-            text:""
-            size_hint_y: None
-            height:dp(50)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(20)  # Reduce the top padding
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: 'Lender Registration Form'
-                halign: 'center'
-                font_size: "20dp"
-                font_name: "Roboto-Bold"
-
-            MDLabel:
-                text: 'Father Information'
-                halign: 'center'
-                bold: True
-                size_hint_y: None
-                height:dp(50)
-
-            MDTextField:
-                id: father_name
-                hint_text: 'Enter Father Name'
-                helper_text: 'Enter valid Father Name'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                hint_text_color: 0,0,0, 1
-                font_name: "Roboto-Bold"
-                font_size: "15dp"
-
-            MDTextField:
-                id: father_age
-                hint_text: 'Enter Father Address'
-                helper_text: 'Enter valid Father Address'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                hint_text_color: 0,0,0, 1
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-                input_type: 'number'  
-                on_touch_down: root.on_father_age_touch_down()
-
-
-            MDTextField:
-                id: father_occupation
-                hint_text: 'Enter Father Occupation'
-                helper_text: 'Enter valid Father Occupation'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                hint_text_color: 0,0,0, 1
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-
-            MDTextField:
-                id: father_ph_no
-                hint_text: 'Enter Father Phone NO'
-                multiline: False
-                font_size: "15dp"
-                helper_text: 'Enter valid PH No'
-                helper_text_mode: 'on_focus'
-                text_color: 0,0,0, 1
-                font_name: "Roboto-Bold"
-                input_type: 'number'  
-                on_touch_down: root.on_father_ph_no_touch_down()
-
-            MDGridLayout:
-                cols: 3
-                spacing: dp(10)
-                padding: dp(10)
-
-                MDTextField:
-                    id: father_dob
-                    hint_text: "Enter Father D.O.B"
-                    helper_text: 'YYYY-MM-DD'
-                    font_name: "Roboto-Bold"
-                    hint_text_color: 0, 0, 0, 1
-                    input_type:'number'
-                    font_size: "15dp"
-                    on_touch_down: root.on_date_touch_down()
-
-
-            MDRectangleFlatButton:
-                text: "Next"
-                on_release: root.add_data(father_name.text, father_age.text, father_occupation.text, father_ph_no.text, father_dob.text)
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
-
-<LenderScreen9>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen7')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
-
-        MDLabel:
-            text:""
-            size_hint_y: None
-            height:dp(40)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(20)  # Reduce the top padding
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: 'Lender Registration Form'
-                halign: 'center'
-                font_size: "20dp"
-                font_name: "Roboto-Bold"
-
-            MDLabel:
-                text: 'Mother Information'
-                halign: 'center'
-                bold: True
-                size_hint_y: None
-                height:dp(50)
-
-
-            MDTextField:
-                id: mother_name
-                hint_text: 'Enter Mother Name'
-                helper_text: 'Enter Valid Mother Name'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                halign: 'left'
-                theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-                bold: True
-
-            MDTextField:
-                id: mother_age
-                hint_text: 'Enter Mother Address'
-                helper_text: 'Enter Valid Mother Address'
-                multiline: False
-                font_size: "15dp"
-                helper_text_mode: 'on_focus'
-                halign: 'left'
-                theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
-                font_name: "Roboto-Bold"
-                bold: True
-                input_type: 'number'  
-                on_touch_down: root.on_mother_age_touch_down()
-
-
-            MDTextField:
-                id: mother_occupation
-                hint_text: 'Enter Mother Occupation'
-                helper_text: 'Enter Valid Mother Occupation'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                halign: 'left'
-                theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
-                font_name: "Roboto-Bold"
-                font_size: "15dp"
-                bold: True
-
-            MDTextField:
-                id: mother_ph_no
-                hint_text: 'Enter Mother Phone No'
-                helper_text: 'Enter Valid Mother Phone No'
-                helper_text_mode: 'on_focus'
-                halign: 'left'
-                font_size: "15dp"
-                theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
-                font_name: "Roboto-Bold"
-                bold: True
-                input_type: 'number'
-                on_touch_down: root.on_mother_ph_no_touch_down()
-
-            MDGridLayout:
-                cols: 3
-                spacing: dp(10)
-                padding: dp(10)
-
-                MDTextField:
-                    id: mother_dob
-                    hint_text: "Enter Mother D.O.B"
-                    helper_text: 'YYYY-MM-DD'
-                    font_name: "Roboto-Bold"
-                    hint_text_color: 0, 0, 0, 1
-                    font_size: "15dp"
-                    input_type:'number'
-                    on_touch_down: root.on_date_touch_down()
-
-            MDRectangleFlatButton:
-                text: "Next"
-                on_release: root.add_data(mother_name.text, mother_age.text, mother_occupation.text, mother_ph_no.text, mother_dob.text)
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
-
-<LenderScreen10>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen7')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
-
-        MDLabel:
-            text:""
-            size_hint_y: None
-            height:dp(50)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(20)  # Reduce the top padding
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: 'Step-1'
+                text: 'Spouse Details'
                 halign: 'center'
                 bold:True
 
             MDTextField:
                 id: spouse_name
-                hint_text: 'Enter Spouse Name '
+                hint_text: 'Enter Spouse Name'
                 multiline: False
                 helper_text: "Enter Valid Spouse Name"
                 helper_text_mode: 'on_focus'
                 font_name: "Roboto-Bold"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                height:self.minimum_height
                 font_size: "15dp"
 
-
-            MDGridLayout:
-                cols: 3
-                spacing: dp(10)
-                padding: dp(10)
-
-                MDTextField:
-                    id: spouse_date_textfield
-                    hint_text: "Enter Spouse Date Of Birth"
-                    helper_text: 'YYYY-MM-DD'
-                    font_size: "15dp"
-                    font_name: "Roboto-Bold"
-                    hint_text_color: 0, 0, 0, 1
-                    input_type:'number'
-                    on_touch_down: root.on_date_touch_down()
+            MDTextField:
+                id: spouse_marriage_date
+                hint_text: "Enter Spouse Marriage Date"
+                helper_text: 'YYYY-MM-DD'
+                helper_text_mode: "on_error"
+                font_name: "Roboto-Bold"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                height:self.minimum_height
+                font_size: "15dp"
+                input_type:'number'
+                on_touch_down: root.on_date_touch_down()
 
             MDTextField:
                 id: spouse_mobile
                 hint_text: 'Enter Spouse Mobile No'
                 multiline: False
-                helper_text: "Enter valid Spouse Mobile No"
+                helper_text: "Enter Valid Spouse Mobile No"
                 helper_text_mode: 'on_focus'
                 font_name: "Roboto-Bold"
+                height:self.minimum_height
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
                 font_size: "15dp"
                 input_type: 'number'
                 on_touch_down: root.on_spouse_mobile_touch_down()
 
-            MDRaisedButton:
-                text: "Next"
-                on_release: root.add_data(spouse_name.text, spouse_date_textfield.text, spouse_mobile.text)
+            MDRectangleFlatButton:
+                text: 'Next'
                 md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
+                theme_text_color: 'Custom'
                 text_color: 1, 1, 1, 1
                 size_hint: 1, None
                 height: "50dp"
                 font_name: "Roboto-Bold"
+                on_release: root.add_data(spouse_name.text, spouse_marriage_date.text, spouse_mobile.text)
+
 
 <LenderScreen11>:
     MDTopAppBar:
@@ -2983,18 +3236,18 @@ KV = '''
 
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
+        spacing: dp(20)
+        padding: dp(50)
 
         MDLabel:
             text:""
             size_hint_y: None
-            height:dp(50)
+            height:dp(40)
 
         MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(10)
-            padding: dp(20)  # Reduce the top padding
+            padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -3004,23 +3257,32 @@ KV = '''
                     rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
             MDLabel:
-                text: 'Step-2'
+                text: 'Spouse Details'
                 halign: 'center'
                 bold:True
 
             MDTextField:
                 id: spouse_company_name
-                hint_text: 'Enter Spouse Company Name '
+                hint_text: 'Enter Spouse Company Name'
                 multiline: False
-                helper_text: 'Enter Valid Spouse Company Name '
+                helper_text: "Enter Valid Spouse Company Name"
                 helper_text_mode: 'on_focus'
-                font_size: "15dp"
                 font_name: "Roboto-Bold"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                height:self.minimum_height
+                font_size: "15dp"
 
             MDTextField:
                 id: spouse_profession
                 hint_text: 'Enter Spouse Profession '
                 multiline: False
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
                 helper_text: "Enter valid Spouse Profession"
                 helper_text_mode: 'on_focus'
                 font_name: "Roboto-Bold"
@@ -3030,6 +3292,10 @@ KV = '''
                 id: spouse_annual_salary
                 hint_text: 'Enter Annual Salary'
                 font_size: "15dp"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
                 multiline: False
                 helper_text: 'Enter valid Annual Salary'
                 helper_text_mode: 'on_focus'
@@ -3037,15 +3303,15 @@ KV = '''
                 input_type: 'number'
                 on_touch_down: root.on_spouse_annual_salary_touch_down()
 
-            MDRaisedButton:
-                text: "Next"
-                on_release: root.add_data(spouse_company_name.text, spouse_profession.text, spouse_annual_salary.text)
+            MDRectangleFlatButton:
+                text: 'Next'
                 md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
+                theme_text_color: 'Custom'
                 text_color: 1, 1, 1, 1
                 size_hint: 1, None
                 height: "50dp"
                 font_name: "Roboto-Bold"
+                on_release: root.add_data(spouse_company_name.text, spouse_profession.text, spouse_annual_salary.text)
 
 <LenderScreen12>:
     MDTopAppBar:
@@ -3073,6 +3339,7 @@ KV = '''
             orientation: "vertical"
             spacing: "7dp"
             padding: "15dp"
+
             MDLabel:
                 text: "Provide Another Person Details"
                 halign: "center"
@@ -3125,8 +3392,9 @@ KV = '''
         pos_hint: {'top': 1}
         left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen7')]]
         right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
+        title_align: 'center'
         md_bg_color: 0.043, 0.145, 0.278, 1
+
     MDBoxLayout:
         orientation: 'vertical'
         spacing: dp(20)
@@ -3136,39 +3404,40 @@ KV = '''
             text: "Family Members Details"
             size_hint_y: None
             height: dp(40)
-            padding: [0, dp(40), 0, 0]  # Padding: [left, top, right, bottom]
+            padding: [0, dp(40), 0, 0]
             halign: "center"
             bold: True
             font_name: "Roboto-Bold"
+
         BoxLayout:
             orientation: "vertical"
-            spacing: "10dp"
-            padding: "10dp"
+            spacing: dp(10)
+            padding: dp(10)
+
             MDLabel:
                 text: "Provide Another Person Details"
                 halign: "center"
                 size_hint_y: None
                 height: dp(70)
-
             MDGridLayout:
                 cols: 4
                 spacing: dp(10)
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}  # Fixed the typo here
                 MDFillRoundFlatButton:
-                    id: id5
+                    id: id1
                     text: "Father"
                     md_bg_color: 0.043, 0.145, 0.278, 1
                     font_name: "Roboto-Bold"
                     on_release: root.on_yes_button_pressed1()
                 MDFillRoundFlatButton:
-                    id: id6
+                    id: id2
                     text: "Mother"
                     md_bg_color: 0.043, 0.145, 0.278, 1
                     font_name: "Roboto-Bold"
                     on_release: root.on_yes_button_pressed2()
 
                 MDFillRoundFlatButton:
-                    id: id7
+                    id: id4
                     text: "Other"
                     md_bg_color: 0.043, 0.145, 0.278, 1
                     font_name: "Roboto-Bold"
@@ -3186,7 +3455,6 @@ KV = '''
 <LenderScreen14>:
     MDTopAppBar:
         title: "P2P LENDING"
-        elevation: 2
         pos_hint: {'top': 1}
         left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen7')]]
         right_action_items: [['home', lambda x: root.go_to_dashboard()]]
@@ -3216,13 +3484,13 @@ KV = '''
                     rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
             MDLabel:
-                text: 'Lender Registration Form'
+                text: 'Borrower Registration Form'
                 halign: 'center'
                 font_size: "20dp"
                 font_name: "Roboto-Bold"
 
             MDLabel:
-                text: 'Mother Information'
+                text: 'Person Details'
                 halign: 'center'
                 bold: True
                 size_hint_y: None
@@ -3236,11 +3504,12 @@ KV = '''
                 multiline: False
                 helper_text_mode: 'on_focus'
                 halign: 'left'
-                theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
-                font_name: "Roboto-Bold"
                 font_size: "15dp"
-                bold: True
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
 
             MDTextField:
                 id: person_name
@@ -3250,25 +3519,28 @@ KV = '''
                 helper_text_mode: 'on_focus'
                 halign: 'left'
                 font_size: "15dp"
-                theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
-                font_name: "Roboto-Bold"
-                bold: True
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
 
-            MDGridLayout:
-                cols: 3
-                spacing: dp(10)
-                padding: dp(10)
+            MDTextField:
+                id: person_dob
+                hint_text: 'Enter Person D.O.B'
+                helper_text: 'YYYY-MM-DD'
+                multiline: False
+                helper_text_mode: 'on_focus'
+                halign: 'left'
+                input_type:'number'
+                on_touch_down: root.on_date_touch_down()
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
 
-                MDTextField:
-                    id: person_dob
-                    hint_text: "Enter Person D.O.B"
-                    helper_text: 'YYYY-MM-DD'
-                    font_name: "Roboto-Bold"
-                    hint_text_color: 0, 0, 0, 1
-                    font_size: "15dp"
-                    input_type:'number'
-                    on_touch_down: root.on_date_touch_down()
 
             MDTextField:
                 id: person_ph_no
@@ -3276,13 +3548,14 @@ KV = '''
                 helper_text: 'Enter Valid Person Phone No'
                 helper_text_mode: 'on_focus'
                 halign: 'left'
-                theme_text_color: 'Custom'
-                font_size: "15dp"
-                text_color: 1, 1, 1, 1
-                font_name: "Roboto-Bold"
-                bold: True
-                input_type: 'number'
+                input_type: 'number'  
                 on_touch_down: root.on_mother_ph_no_touch_down()
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
 
             MDTextField:
                 id: person_proffission
@@ -3291,18 +3564,25 @@ KV = '''
                 multiline: False
                 helper_text_mode: 'on_focus'
                 font_size: "15dp"
-                hint_text_color: 0,0,0, 1
-                font_name: "Roboto-Bold"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
 
-            MDRectangleFlatButton:
-                text: "Next"
-                on_release: root.add_data(relation_name.text, person_name.text, person_dob.text, person_ph_no.text, person_proffission.text)
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
+            GridLayout:
+                cols: 1
+                spacing: dp(30)
+                padding: [0, "30dp", 0, 0]
+                MDRectangleFlatButton:
+                    text: "Next"
+                    on_release: root.add_data(relation_name.text, person_name.text, person_dob.text, person_ph_no.text, person_proffission.text)
+                    md_bg_color: 0.043, 0.145, 0.278, 1
+                    pos_hint: {'right': 1, 'y': 0.5}
+                    text_color: 1, 1, 1, 1
+                    size_hint: 1, None
+                    height: "50dp"
+                    font_name: "Roboto-Bold"
 
 <LenderScreenIndividualBankForm1>:
     MDTopAppBar:
@@ -3318,10 +3598,12 @@ KV = '''
         orientation: 'vertical'
         spacing: dp(20)
         padding: dp(50)
+
         MDLabel:
             text:""
             size_hint_y: None
             height:dp(40)
+
         MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(10)
@@ -3339,17 +3621,35 @@ KV = '''
                 halign: 'center'
                 font_size: "20dp"
                 font_name: "Roboto-Bold"
-
             MDTextField:
                 id: account_holder_name
                 hint_text: 'Enter account holder name '
-                multiline: False
                 helper_text: 'Enter Your account holder name'
+                multiline: False
                 helper_text_mode: 'on_focus'
+                size_hint_y:None
                 font_size: "15dp"
-                size_hint_y: None
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+
+            MDTextField:
+                id: designation
+                hint_text: 'Enter Designation'
+                multiline: False
+                helper_text: "Enter Valid designation"
+                helper_text_mode: 'on_focus'
+                height:self.minimum_height
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                input_type: 'number'
             MDLabel:
-                text:"Select Account Type:"
+                text: 'Select Account Type:'
                 halign: 'left'
                 font_size: "15dp"
                 font_name: "Roboto-Bold"
@@ -3359,14 +3659,16 @@ KV = '''
             Spinner:
                 id: spinner_id
                 text: "Select Account Type"
-                size_hint: 1, None
-                background_color: 0,0,0, 0
-                background_normal:''
                 font_size: "15dp"
+                multiline: False
+                size_hint: 1 , None
+                height:"40dp"
+                background_color: 0,0,0,0
+                background_normal:''
                 color: 0, 0, 0, 1
                 canvas.before:
                     Color:
-                        rgba: 0, 0, 0, 1
+                        rgba: 0, 0, 0, 1  
                     Line:
                         width: 0.7
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
@@ -3376,19 +3678,30 @@ KV = '''
                 hint_text: 'Enter account number '
                 multiline: False
                 helper_text: 'Enter Your account number'
-                font_size: "15dp"
                 helper_text_mode: 'on_focus'
                 size_hint_y: None
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+
 
             MDTextField:
                 id: bank_name
                 hint_text: 'Enter bank name '
                 multiline: False
                 helper_text_mode: 'on_focus'
+                size_hint_y:None
                 font_size: "15dp"
-                size_hint_y: None
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
 
-            MDRaisedButton:
+            MDRectangleFlatButton:
                 text: "Next"
                 on_release: root.add_data(account_holder_name.text, spinner_id.text, account_number.text, bank_name.text)
                 md_bg_color: 0.043, 0.145, 0.278, 1
@@ -3412,13 +3725,15 @@ KV = '''
         orientation: 'vertical'
         spacing: dp(20)
         padding: dp(50)
+
         MDLabel:
             text:""
             size_hint_y: None
             height:dp(40)
+
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
+            spacing: dp(25)
             padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
@@ -3433,52 +3748,70 @@ KV = '''
                 halign: 'center'
                 font_size: "20dp"
                 font_name: "Roboto-Bold"
+
             MDTextField:
                 id: ifsc_code
                 hint_text: 'Enter Bank ID '
                 multiline: False
-                helper_text: 'Enter Your ifsc code'
-                font_size: "15dp"
+                helper_text: 'Enter valid Bank ID'
                 helper_text_mode: 'on_focus'
-                size_hint_y: None
+                size_hint_y:None
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
 
             MDTextField:
                 id: branch_name
                 hint_text: 'Enter branch name'
                 hint_text_mode: 'on_focus'
+                hint_text_mode: 'on_focus'
                 multiline: False
                 halign: 'left'
-                theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
                 multiline: False
-                font_name: "Roboto-Bold"
                 font_size: "15dp"
-            MDGridLayout:
-                cols: 2
-                spacing: 10
-
-                CheckBox:
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: "29dp"
+                spacing:dp(5)
+                pos_hint: {'center_x': 0.6, 'center_y': 0.4}
+                MDCheckbox:
                     id: check
-                    size_hint: (None, None)
-                    width: 50
-                    bold: True
-                    color: (195/255,110/255,108/255,1)
+                    size_hint: None, None
+                    size: "30dp", "30dp"
+                    active: False
                     on_active: root.on_checkbox_active(self, self.active)
 
                 MDLabel:
                     text: "I Agree Terms and Conditions"
-                    multiline: False
+                    size: "30dp", "30dp"
+                    theme_text_color: "Custom"
+                    text_color: 0, 0, 0, 1
+                    halign: "left"
+                    valign: "center"
+                    on_touch_down: app.root.get_screen("LenderScreenIndividualBankForm2").show_terms_dialog() if self.collide_point(*args[1].pos) else None
 
 
-            MDRaisedButton:
-                text: "Submit"
-                on_release: root.go_to_lender_dashboard(ifsc_code.text, branch_name.text)
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
+            GridLayout:
+                cols: 1
+                spacing:dp(30)
+                MDRectangleFlatButton:
+                    text: "Next"
+                    on_release: root.go_to_lender_dashboard(ifsc_code.text, branch_name.text)
+                    md_bg_color: 0.043, 0.145, 0.278, 1
+                    pos_hint: {'right': 1, 'y': 0.5}
+                    text_color: 1, 1, 1, 1
+                    size_hint: 1, None
+                    height: "50dp"
+                    font_name: "Roboto-Bold"
 
 '''
 
@@ -3561,7 +3894,7 @@ class LenderScreen(Screen):
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if there are missing fields
 
-        if not name or len(name.split()) < 2:
+        if not name or len(name.split()) < 2 or not re.match(r'^[a-zA-Z\s]+$', name):
             self.show_validation_error("Please enter a valid full name with at least a first name and last name.")
             return
 
@@ -3805,12 +4138,12 @@ class LenderScreen1(Screen):
             return  # Prevent further execution if there are missing fields
 
         # Check if mobile number is provided and has exactly 10 digits
-        if not mobile_number or not re.match(r'^\d{10}$', mobile_number):
+        if not mobile_number or not re.match(r'^\d{10}$|^\d{12}$', mobile_number):
             self.show_validation_error("Please enter a valid 10-digit mobile number.")
             return
 
         # Check if alternate email is provided and is valid
-        if alternate_email and not re.match(r'^[\w\.-]+@[\w\.-]+.', alternate_email):
+        if alternate_email and not re.match(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', alternate_email):
             self.show_validation_error("Please enter a valid email address for alternate email.")
             return
         cursor.execute('select * from fin_users')
@@ -4121,9 +4454,9 @@ class LenderScreen3(Screen):
                 self.unique_list.append(i)
         print(self.unique_list)
         if len(self.unique_list) >= 1:
-            self.ids.spinner_id2.values = ['Select Duration At Address'] + self.unique_list
+            self.ids.spinner_id2.values = ['Select Staying Address'] + self.unique_list
         else:
-            self.ids.spinner_id2.values = ['Select Duration At Address']
+            self.ids.spinner_id2.values = ['Select Staying Address']
 
     def refresh(self):
         pass
@@ -4176,7 +4509,7 @@ class LenderScreen3(Screen):
         if not spinner_id1 or spinner_id1 == 'Select Present Address':
             self.show_validation_error("Please Select Your Present Address.")
             return
-        if not spinner_id2 or spinner_id2 == 'Select Duration At Address':
+        if not spinner_id2 or spinner_id2 == 'Select Staying Address':
             self.show_validation_error("Please Select Your Duration At Address.")
             return
         if len(street_address2) < 3:
@@ -5644,10 +5977,10 @@ class LenderScreen6(Screen):
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if there are missing fields
 
-        if spinner not in spinner:
+        if spinner not in spinner == 'Select Loan Type':
             self.show_validation_error('Select valid Loan type')
             return
-        if spinner2 not in spinner2:
+        if spinner2 not in spinner2 == 'Select Lending Period':
             self.show_validation_error('Select valid Lending Period')
             return
         if spinner == 'Individual':
@@ -5809,16 +6142,16 @@ class LenderScreenInstitutionalForm1(Screen):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if there are missing fields
-        if len(business_name) < 3:
+        if not re.match(r'^[a-zA-Z\s]+$', business_name):
             self.show_validation_error('Enter a valid business Name')
             return
         if len(business_address) < 3:
             self.show_validation_error('Enter a valid business address')
             return
-        if business_type not in business_type:
+        if business_type not in business_type == 'Select Business Type':
             self.show_validation_error('Select valid business type')
             return
-        if no_of_employees_working not in no_of_employees_working:
+        if no_of_employees_working not in no_of_employees_working == 'Select No.Of Employees Working':
             self.show_validation_error('Select valid no of employees')
             return
         cursor.execute('select * from fin_users')
@@ -6015,7 +6348,7 @@ class LenderScreenInstitutionalForm2(Screen):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if there are missing fields
-        if len(industry_type) < 3:
+        if not re.match(r'^[a-zA-Z]{3,}$', industry_type):
             self.show_validation_error("Enter a valid industryy type.")
             return
         if len(last_six_months_turnover) < 3 or not last_six_months_turnover.isdigit():
@@ -6326,10 +6659,10 @@ class LenderScreenIndividualForm1(Screen):
         else:
             self.ids.spinner1.values = ['Select Employment Type']
 
-        spinner_data = app_tables.fin_occupation_type.search()
+        spinner_data = app_tables.fin_lendor_organization_type.search()
         data_list = []
         for i in spinner_data:
-            data_list.append(i['occupation_type'])
+            data_list.append(i['lendor_organization_type'])
         unique_list = []
         for i in data_list:
             if i not in unique_list:
@@ -6396,17 +6729,17 @@ class LenderScreenIndividualForm1(Screen):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
-        if spinner1 not in spinner1:
+        if spinner1 not in spinner1 == 'Select Employment Type':
             self.show_validation_error('Select a valid employment type')
             return
-        if len(company_name) < 3:
+        if not re.match(r'^[a-zA-Z\s]{3,}$', company_name):
             self.show_validation_error('Enter a valid company name')
             return
-        if spinner2 not in spinner2:
+        if spinner2 not in spinner2 == 'Select Organisation Type':
             self.show_validation_error('Select a valid organisation type')
             return
-        if spinner3 not in spinner3:
-            self.show_validation_error('Select a valid company type')
+        if spinner3 not in spinner3 == 'Select Occupation Type':
+            self.show_validation_error('Select a valid occupation  type')
             return
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
@@ -6434,10 +6767,10 @@ class LenderScreenIndividualForm1(Screen):
         user_email = anvil.server.call('another_method')
         if user_email in id_list:
             index = id_list.index(user_email)
-            data[index]['lendor_employee_type'] = spinner1
+            data[index]['employment_type'] = spinner1
             data[index]['company_name'] = company_name
-            data[index]['lendor_organization_type'] = spinner2
-            data[index]['company_type'] = spinner3
+            data[index]['organization_type'] = spinner2
+            data[index]['occupation_type'] = spinner3
         else:
             print('email not found')
         sm = self.manager
@@ -6626,7 +6959,7 @@ class LenderScreenIndividualForm2(Screen):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
-        if len(designation) < 1:
+        if len(designation) < 1 or not designation.isalpha():
             self.show_validation_error("Please Enter Valid designation.")
             return
         if len(annual_salary) < 3 and not annual_salary.isdigit():
@@ -6762,16 +7095,16 @@ class LenderScreenIndividualForm3(Screen):
         if len(company_address) < 3:
             self.show_validation_error("Please Enter Valid Company Address.")
             return
-        if len(company_pincode) < 3:
+        if len(company_pincode) < 3 or not company_pincode.isdigit():
             self.show_validation_error("Please Enter Valid Company Pincode.")
             return
-        if len(company_country) < 3:
+        if len(company_country) < 3 or not re.match(r'^[a-zA-Z]+$', company_country):
             self.show_validation_error("Please Enter Valid Company Country.")
             return
         if len(landmark) < 3:
             self.show_validation_error("Please Enter Valid Landmark.")
             return
-        if not business_number.isdigit() or len(business_number) != 10:
+        if not business_number.isdigit() or len(business_number) not in (10, 12):
             self.show_validation_error("Please Enter Valid Business Number.")
             return
         cursor.execute('select * from fin_users')
@@ -6919,7 +7252,7 @@ class LenderScreen7(Screen):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
-        if marital_status_id not in marital_status_id:
+        if marital_status_id not in marital_status_id == 'Select Marital Status':
             self.show_validation_error('Select a valid Marital status')
             return
         if marital_status_id == 'Un-Married' or marital_status_id == 'Not Married':
@@ -7070,17 +7403,17 @@ class LenderScreen8(Screen):
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
 
-        if not father_ph_no.isdigit() or len(father_ph_no) != 10:
+        if not father_ph_no.isdigit() or len(father_ph_no) not in (10, 12):
             self.show_validation_error("Please Enter Valid Father Number.")
             return
-        if len(father_name) < 3:
+        if not re.match(r'^[a-zA-Z\s]{3,}$', father_name):
             self.show_validation_error("Please Enter Valid Father Name.")
             return
         if len(father_occupation) < 3:
             self.show_validation_error("Please Enter Valid Father Occupation.")
             return
-        if len(father_name) < 3:
-            self.show_validation_error("Please Enter Valid Father Address.")
+        if not father_age.isdigit():
+            self.show_validation_error("Please enter a valid age for the father.")
             return
         try:
             dob = datetime.strptime(father_dob, "%Y-%m-%d")
@@ -7237,18 +7570,18 @@ class LenderScreen9(Screen):
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
 
-        if not mother_ph_no.isdigit() and len(mother_ph_no) != 10:
+        if not mother_ph_no.isdigit() and len(mother_ph_no) not in (10, 12):
             self.show_validation_error("Please Enter Valid Mother Number.")
             return
 
-        if len(mother_name) < 3:
+        if not re.match(r'^[a-zA-Z\s]{3,}$', mother_name) < 3:
             self.show_validation_error("Please Enter Valid Mother Name.")
             return
         if len(mother_occupation) < 3:
             self.show_validation_error("Please Enter Valid Mother Occupation.")
             return
-        if len(mother_age) < 3:
-            self.show_validation_error("Please Enter Valid Mother Address.")
+        if mother_age.isdigit:
+            self.show_validation_error("Please Enter Valid Mother Age.")
             return
         try:
             dob = datetime.strptime(mother_dob, "%Y-%m-%d")
@@ -7346,7 +7679,7 @@ class LenderScreen9(Screen):
 class LenderScreen10(Screen):
     def on_date_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
-        self.ids.spouse_date_textfield.input_type = 'number'
+        self.ids.spouse_marriage_date.input_type = 'number'
 
     def on_spouse_mobile_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
@@ -7363,7 +7696,7 @@ class LenderScreen10(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def add_data(self, spouse_name, spouse_date_textfield, spouse_mobile):
+    def add_data(self, spouse_name, spouse_marriage_date, spouse_mobile):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -7383,23 +7716,23 @@ class LenderScreen10(Screen):
         # Perform the actual action (e.g., fetching loan requests)
         # You can replace the sleep with your actual logic
         Clock.schedule_once(
-            lambda dt: self.perform_data_addition_action(spouse_name, spouse_date_textfield, spouse_mobile
+            lambda dt: self.perform_data_addition_action(spouse_name, spouse_marriage_date, spouse_mobile
                                                          , modal_view), 2)
 
-    def perform_data_addition_action(self, spouse_name, spouse_date_textfield, spouse_mobile,
+    def perform_data_addition_action(self, spouse_name, spouse_marriage_date, spouse_mobile,
                                      modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
 
-        if not all([spouse_name, spouse_date_textfield, spouse_mobile]):
+        if not all([spouse_name, spouse_marriage_date, spouse_mobile]):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
-        if len(spouse_mobile) < 3:
+        if not re.match(r'^[a-zA-Z\s]{3,}$', spouse_name):
             self.show_validation_error("Please Enter Valid Name.")
             return
         try:
-            dob = datetime.strptime(spouse_date_textfield, "%Y-%m-%d")
+            dob = datetime.strptime(spouse_marriage_date, "%Y-%m-%d")
             today = datetime.today()
             age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
 
@@ -7412,7 +7745,7 @@ class LenderScreen10(Screen):
             self.show_validation_error("Invalid date format. Please use YYYY-MM-DD")
             return
 
-        if not spouse_mobile.isdigit() or len(spouse_mobile) != 10:
+        if not spouse_mobile.isdigit() or len(spouse_mobile) not in (10, 12):
             self.show_validation_error("Please Enter Valid Number.")
             return
         cursor.execute('select * from fin_users')
@@ -7427,7 +7760,7 @@ class LenderScreen10(Screen):
             log_index = status.index('logged')
             cursor.execute(
                 "UPDATE fin_registration_table SET spouse_name = ?,spouse_date_textfield = ?, spouse_mobile = ? WHERE customer_id = ?",
-                (spouse_name, spouse_date_textfield, spouse_mobile, row_id_list[log_index]))
+                (spouse_name, spouse_marriage_date, spouse_mobile, row_id_list[log_index]))
             conn.commit()
         else:
             # Handle the case where the user is not logged in
@@ -7445,7 +7778,7 @@ class LenderScreen10(Screen):
                 index2 = cus_id_list2.index(cus_id_list[index])
                 data2[index2]['guarantor_name'] = spouse_name
                 data2[index2]['guarantor_mobile_no'] = int(spouse_mobile)
-                data2[index2]['guarantor_marriage_dates'] = str(spouse_date_textfield)
+                data2[index2]['guarantor_marriage_dates'] = str(spouse_marriage_date)
             else:
                 print('customer_id is not valid')
 
@@ -7547,7 +7880,7 @@ class LenderScreen11(Screen):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
-        if len(spouse_company_name) < 3:
+        if not re.match(r'^[a-zA-Z\s]{3,}$', spouse_company_name):
             self.show_validation_error('Enter a valid company name')
             return
         if len(spouse_company_address) < 3:
@@ -8004,8 +8337,16 @@ class LenderScreen14(Screen):
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
 
-        if not person_ph_no.isdigit() and len(person_ph_no) != 10:
+        if not person_ph_no.isdigit() and len(person_ph_no) not in (10, 12):
             self.show_validation_error("Please Enter Valid Mother Number.")
+            return
+        if not re.match(r'^[a-zA-Z]+$', relation_name):
+            self.show_validation_error("Relation name should contain only letters.")
+            return
+
+        # Validate person_name
+        if not re.match(r'^[a-zA-Z]+$', person_name):
+            self.show_validation_error("Person name should contain only letters.")
             return
         try:
             dob = datetime.strptime(person_dob, "%Y-%m-%d")
@@ -8161,16 +8502,16 @@ class LenderScreenIndividualBankForm1(Screen):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
-        if len(account_holder_name) < 3:
+        if not re.match(r'^[a-zA-Z]{3,}$', account_holder_name):
             self.show_validation_error('Enter a valid account name')
             return
-        if account_type not in account_type:
+        if account_type not in account_type == 'Select Account Type':
             self.show_validation_error('Enter a valid account type')
             return
         if len(account_number) < 3 or not account_number.isdigit():
             self.show_validation_error('Enter a valid account number')
             return
-        if len(bank_name) < 3:
+        if not re.match(r'^[a-zA-Z]{3,}$', bank_name):
             self.show_validation_error('Enter a valid bank name')
             return
         cursor.execute('select * from fin_users')
@@ -8250,11 +8591,16 @@ class LenderScreenIndividualBankForm1(Screen):
 
 
 class LenderScreenIndividualBankForm2(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.check = None
+
     def on_checkbox_active(self, checkbox, value):
         if value:
             self.check = True
         else:
             self.check = False
+
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
         anim = Animation(y=modal_height - loading_label.height, duration=1) + \
@@ -8297,10 +8643,11 @@ class LenderScreenIndividualBankForm2(Screen):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
-        if len(bank_id) < 3:
-            self.show_validation_error('Enter a valid bank ID')
+        if not re.match(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{3,}$', bank_id):
+            self.show_validation_error(
+                "Bank ID should contain at least 3 characters, including both numbers and letters.")
             return
-        if len(branch_name) < 3:
+        if not branch_name.isalpha() or len(branch_name) < 3:
             self.show_validation_error('Enter a valid branch name')
             return
         if self.check != True:
@@ -8338,6 +8685,7 @@ class LenderScreenIndividualBankForm2(Screen):
             data[index]['account_bank_branch'] = branch_name
             data[index]['usertype'] = b
             data[index]['registration_approve'] = True
+            data[index]['last_confirm'] = True
         else:
             print('email not found')
         sm = self.manager
@@ -8362,6 +8710,20 @@ class LenderScreenIndividualBankForm2(Screen):
         )
         dialog.open()
 
+    def show_terms_dialog(self):
+        dialog = MDDialog(
+            title="Terms and Conditions",
+            text="Agreements, Privacy Policy and Applicant should accept following:Please note that any information concealed (as what we ask for), would be construed as illegitimate action on your part and an intentional attempt to hide material information which if found in future, would attract necessary action (s) at your sole cost. Hence, request to be truthful to your best knowledge while sharing your details)",
+            size_hint=(0.8, 0.5),
+            buttons=[
+                MDFlatButton(
+                    text="OK",
+                    on_release=lambda *args: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
     def go_to_dashboard(self):
         self.manager.current = 'DashScreen'
 
@@ -8380,4 +8742,3 @@ class LenderScreenIndividualBankForm2(Screen):
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'LenderScreenIndividualBankForm1'
-

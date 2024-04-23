@@ -52,6 +52,10 @@ KV = """
             helper_text: 'Enter a valid name'
             helper_text_mode: 'on_focus'
             icon_left: 'account'
+            hint_text_color: 0, 0, 0, 1
+            hint_text_color_normal: "black"
+            text_color_normal: "black"
+            helper_text_color_normal: "black"
             font_name: "Roboto-Bold"
             pos_hint: {'center_y': 0.1}
 
@@ -63,6 +67,10 @@ KV = """
             helper_text_mode: 'on_focus'
             icon_left: 'cellphone'
             font_name: "Roboto-Bold"
+            hint_text_color: 0, 0, 0, 1
+            hint_text_color_normal: "black"
+            text_color_normal: "black"
+            helper_text_color_normal: "black"
             input_type: 'number'  
             on_touch_down: root.on_mobile_number_touch_down()
 
@@ -73,6 +81,10 @@ KV = """
             helper_text: 'Enter a valid email'
             helper_text_mode: 'on_focus'
             icon_left: 'email'
+            hint_text_color: 0, 0, 0, 1
+            hint_text_color_normal: "black"
+            text_color_normal: "black"
+            helper_text_color_normal: "black"
             font_name: "Roboto-Bold"
 
         MDTextField:
@@ -80,6 +92,10 @@ KV = """
             hint_text: "Enter Your Password"
             icon_left: 'lock-outline'
             helper_text_mode: 'on_focus'
+            hint_text_color: 0, 0, 0, 1
+            hint_text_color_normal: "black"
+            text_color_normal: "black"
+            helper_text_color_normal: "black"
             multiline: False
             helper_text: "Password must be greater than 8 characters"
             password: True
@@ -92,6 +108,10 @@ KV = """
             helper_text_mode: 'on_focus'
             icon_left: 'lock-outline'
             password: True
+            hint_text_color: 0, 0, 0, 1
+            hint_text_color_normal: "black"
+            text_color_normal: "black"
+            helper_text_color_normal: "black"
             font_name: "Roboto-Bold"
 
         BoxLayout:
@@ -295,9 +315,9 @@ class SignupScreen(Screen):
             anvil_email.append(i['email_user'])
 
         # Other input validations
-        # Name validation
-        if not name or len(name.split()) < 2 or not re.match(r'^[a-zA-Z\s]{4,}$', name):
-            validation_errors.append((self.ids.name, "Please enter a valid full name with at least a first name and last name"))
+        if not name or len(name.split()) < 2 or not re.match(r'^[a-zA-Z\s]+$', name):
+            validation_errors.append(
+                (self.ids.name, "Please enter a valid first name and last name consisting of letters only"))
         else:
             self.ids.name.helper_text = ''
 

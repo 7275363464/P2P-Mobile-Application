@@ -170,7 +170,7 @@ Landing = '''
                     Color:
                         rgba: 155/255, 160/255, 162/255, 1  # Change the color to blue (R, G, B, A)
             MDRaisedButton:
-                text: "Start Invest"
+                text: "Proceed to Registration"
                 font_name: "Roboto-Bold"
                 font_size:dp(17)
                 padding:dp(15)

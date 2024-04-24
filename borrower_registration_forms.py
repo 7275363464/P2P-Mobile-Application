@@ -5,7 +5,7 @@ from kivy.animation import Animation
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.lang import Builder
-from kivymd.uix.button import MDRectangleFlatButton
+from kivymd.uix.button import MDRectangleFlatButton, MDFlatButton
 from kivy.metrics import dp
 from kivymd.uix.label import MDLabel
 from kivymd.uix.menu import MDDropdownMenu
@@ -24,7 +24,7 @@ import sqlite3
 from kivymd.uix.pickers import MDDatePicker
 from kivy.utils import platform
 from kivy.clock import mainthread
-from datetime import datetime
+from datetime import datetime, date
 from kivymd.uix.snackbar import Snackbar
 from kivy.uix.modalview import ModalView
 from kivy.clock import Clock
@@ -173,6 +173,7 @@ Borrower = '''
                     hint_text_color_normal: "black"
                     text_color_normal: "black"
                     helper_text_color_normal: "black"
+                    on_touch_down: root.on_date_touch_down()
             MDLabel:
                 text:""
                 size_hint_y: None
@@ -1277,7 +1278,7 @@ Borrower = '''
         MDCard:
             orientation: "vertical"
             size_hint: None, None
-            size: "280dp", "480dp"
+            size: "280dp", "550dp"
             pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
             MDLabel:
@@ -1579,32 +1580,7 @@ Borrower = '''
                 text: 'Address'
                 halign: 'center'
                 bold: True
-
-            MDTextField:
-                id: country
-                hint_text: 'Enter Country Name'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDTextField:
-                id: state
-                hint_text: 'Enter State Name'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                size_hint_y: None
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
+                
             MDTextField:
                 id: city
                 hint_text: 'Enter City Name'
@@ -1626,6 +1602,31 @@ Borrower = '''
                 size_hint_y: None  
                 input_type: 'number'  
                 on_touch_down: root.on_mobile_number_touch_down()
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+            
+            MDTextField:
+                id: state
+                hint_text: 'Enter State Name'
+                multiline: False
+                helper_text_mode: 'on_focus'
+                size_hint_y: None
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                
+            MDTextField:
+                id: country
+                hint_text: 'Enter Country Name'
+                multiline: False
+                helper_text_mode: 'on_focus'
                 font_size: "15dp"
                 theme_text_color: "Custom"
                 hint_text_color: 0, 0, 0, 1
@@ -2079,10 +2080,10 @@ Borrower = '''
             MDLabel:
                 text:"Upload College ID:"
                 halign: 'left'
-                font_size: "15dp"
+                font_size: "25dp"
                 font_name: "Roboto-Bold"
                 size_hint_y: None
-                height:dp(5)
+                height:dp(15)
 
             BoxLayout:
                 orientation: 'horizontal'
@@ -2121,6 +2122,8 @@ Borrower = '''
                 text_color: 0, 0, 0, 1  # Black text color
                 valign: 'middle'  # Align the label text vertically in the center
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint_y: None
+                height:dp(25)
 
             MDTextField:
                 id:  college_address
@@ -2585,7 +2588,7 @@ Borrower = '''
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
+            spacing: dp(30)
             padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
@@ -2690,12 +2693,12 @@ Borrower = '''
     MDBoxLayout:
         orientation: 'vertical'
         spacing: dp(20)
-        padding: dp(50)
+        padding: dp(30)
 
         MDLabel:
             text:""
             size_hint_y: None
-            height:dp(40)
+            height:dp(35)
 
         MDBoxLayout:
             orientation: 'vertical'
@@ -2712,13 +2715,14 @@ Borrower = '''
             MDLabel:
                 text: ""
                 size_hint_y: None
-                height:dp(50)
+                height:dp(20)
 
             MDLabel:
                 text: 'Employment Details'
                 halign: 'center'
                 bold: True   
                 size_hint_y: None
+                height:dp(30)
 
             MDTextField:              
                 id: annual_salary
@@ -2753,7 +2757,7 @@ Borrower = '''
             MDLabel:
                 text: "Upload Employee ID"
                 font_size: dp(15)
-                halign: 'center'
+                halign: 'left'
                 size_hint_y: None
                 height: dp(20)
                 bold: True
@@ -2797,12 +2801,12 @@ Borrower = '''
                 valign: 'middle'  # Align the label text vertically in the center
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 size_hint_y: None
-                height: dp(40)
+                height:dp(15)
 
             MDLabel:
                 text: "Upload Last 6 months Bank Statements"
                 font_size: dp(15)
-                halign: 'center'
+                halign: 'left'
                 size_hint_y: None
                 height: dp(20)
                 bold: True
@@ -2846,7 +2850,7 @@ Borrower = '''
                 valign: 'middle'  # Align the label text vertically in the center
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 size_hint_y: None
-                height: dp(40)
+                height:dp(15)
 
             GridLayout:
                 cols: 1
@@ -2879,11 +2883,11 @@ Borrower = '''
         MDLabel:
             text:""
             size_hint_y: None
-            height:dp(40)
+            height:dp(50)
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
+            spacing: dp(20)
             padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
@@ -2896,8 +2900,8 @@ Borrower = '''
             MDLabel:
                 text: 'Employment Details'
                 halign: 'center'
-                font_size: "25dp"
                 font_name: "Roboto-Bold"
+                size_hint_y: None
 
             MDTextField:              
                 id:company_address
@@ -2991,12 +2995,12 @@ Borrower = '''
     MDBoxLayout:
         orientation: 'vertical'
         spacing: dp(20)
-        padding: dp(50)
+        padding: dp(30)
 
         MDLabel:
             text:""
             size_hint_y: None
-            height:dp(40)
+            height:dp(60)
 
         MDBoxLayout:
             orientation: 'vertical'
@@ -3017,7 +3021,7 @@ Borrower = '''
                 font_name: "Roboto-Bold"
 
             MDLabel:
-                text:"Select Your Marrital Status Type:"
+                text:"Select Marrital Status Type:"
                 halign: 'left'
                 font_size: "15dp"
                 font_name: "Roboto-Bold"
@@ -3184,7 +3188,7 @@ Borrower = '''
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
+            spacing: dp(25)
             padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
@@ -3198,22 +3202,9 @@ Borrower = '''
                 text: 'Spouse Details'
                 halign: 'center'
                 bold:True
-
-            MDTextField:
-                id: spouse_company_name
-                hint_text: 'Enter Spouse Company Name '
-                multiline: False
-                helper_text: 'Enter Valid Spouse Company Name '
-                helper_text_mode: 'on_focus'
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
+            
             MDLabel:
-                text:"Select Your Spouse Profession Type:"
+                text:"Select Spouse Profession Type:"
                 halign: 'left'
                 font_size: "15dp"
                 font_name: "Roboto-Bold"
@@ -3236,12 +3227,25 @@ Borrower = '''
                     Line:
                         width: 0.7
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+                        
+            MDTextField:
+                id: spouse_company_name
+                hint_text: 'Enter Spouse Company Name'
+                multiline: False
+                helper_text: 'Enter Valid Spouse Company Name (if working)'
+                helper_text_mode: 'on_focus'
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
 
             MDTextField:
                 id: spouse_annual_salary
                 hint_text: 'Enter Annual Salary'
                 multiline: False
-                helper_text: 'Enter valid Annual Salary'
+                helper_text: 'Enter valid Annual Salary (if working)'
                 helper_text_mode: 'on_focus'
                 input_type: 'number'
                 on_touch_down: root.on_spouse_annual_salary_touch_down()
@@ -3410,7 +3414,7 @@ Borrower = '''
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
+            spacing: dp(25)
             padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
@@ -3460,7 +3464,7 @@ Borrower = '''
                 size_hint_y: None
                 height: "29dp"
                 spacing:dp(5)
-                pos_hint: {'center_x': 0.6, 'center_y': 0.4}
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 MDCheckbox:
                     id: check
                     size_hint: None, None
@@ -3475,6 +3479,7 @@ Borrower = '''
                     text_color: 0, 0, 0, 1
                     halign: "left"
                     valign: "center"
+                    on_touch_down: app.root.get_screen("BorrowerScreen19").show_terms_dialog() if self.collide_point(*args[1].pos) else None
 
             GridLayout:
                 cols: 1
@@ -3912,7 +3917,7 @@ Borrower = '''
 
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(20)
+        spacing: dp(25)
         padding: dp(20)
 
         MDLabel:
@@ -3922,7 +3927,7 @@ Borrower = '''
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(30)
+            spacing: dp(15)
             padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
@@ -3947,7 +3952,20 @@ Borrower = '''
 
             MDTextField:
                 id: street_address
-                hint_text: 'Enter Street Name'
+                hint_text: 'Enter Street Address1'
+                multiline: False
+                helper_text: 'Enter valid address'
+                helper_text_mode: 'on_focus'
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                
+            MDTextField:
+                id: street_address2
+                hint_text: 'Enter Street Address2'
                 multiline: False
                 helper_text: 'Enter valid address'
                 helper_text_mode: 'on_focus'
@@ -3982,7 +4000,7 @@ Borrower = '''
                         width: 0.7
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
             MDLabel:
-                text:"Select Your Address Duration:"
+                text:"Select How long you are staying at this address:"
                 halign: 'left'
                 font_size: "15dp"
                 font_name: "Roboto-Bold"
@@ -3991,7 +4009,7 @@ Borrower = '''
 
             Spinner:
                 id: spinner_id
-                text: " Select Address Duration"
+                text: "Select How long you are staying"
                 font_size: "15dp"
                 multiline: False
                 size_hint: 1 , None
@@ -4010,7 +4028,7 @@ Borrower = '''
                 spacing:dp(30)
                 MDRectangleFlatButton:
                     text: "Next"
-                    on_release: root.add_data(street_address.text, spinner_id.text, spinner_id2.text)
+                    on_release: root.add_data(street_address.text, spinner_id.text, spinner_id2.text,street_address2.text)
                     md_bg_color: 0.043, 0.145, 0.278, 1
                     pos_hint: {'right': 1, 'y': 0.5}
                     text_color: 1, 1, 1, 1
@@ -4278,21 +4296,6 @@ class BorrowerScreen(Screen):
         # Change keyboard mode to numeric when the mobile number text input is touched
         self.ids.date_textfield.input_type = 'number'
 
-    def validate_input(self, name, gender, date_of_birth):
-        errors = []
-
-        # Validate full name
-        if not name or len(name.strip()) < 3:
-            errors.append("Please enter a valid full name (at least 3 characters)")
-
-        # Validate gender (optional, depending on your requirements)
-        if gender not in self.unique_gender:
-            errors.append("Please select a valid gender")
-
-        # Validate date of birth
-
-        return errors
-
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
         anim = Animation(y=modal_height - loading_label.height, duration=1) + \
@@ -4342,12 +4345,19 @@ class BorrowerScreen(Screen):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         # Close the modal view
         modal_view.dismiss()
-        validation_errors = self.validate_input(name, gender, date_of_birth)  # Define validation_errors here
 
         if validation_errors:
             for error in validation_errors:
                 self.show_validation_error(error)
             return
+        if not name or len(name.split()) < 2 or name.isdigit():
+            self.show_validation_errors('Please Enter  Valid Full Name')
+            return
+
+        if gender not in self.unique_gender:
+            self.show_validation_errors('Please Select Valid Gender Type')
+            return
+
         try:
             dob = datetime.strptime(date_of_birth, "%Y-%m-%d")
             today = datetime.now()
@@ -4404,10 +4414,6 @@ class BorrowerScreen(Screen):
         sm.add_widget(borrower_screen)
         sm.transition.direction = 'left'  # Set the transition direction explicitly
         sm.current = 'BorrowerScreen1'
-
-    def show_validation_error(self, error_text):
-        # Show validation errors in a snackbar
-        Snackbar(text=error_text, pos_hint={'top': 1}, md_bg_color=[1, 0, 0, 1]).open()
 
     def show_validation_errors(self, error_message):
         dialog = MDDialog(
@@ -4577,6 +4583,7 @@ class BorrowerScreen1(Screen):
     def perform_data_addition_action1(self, mobile_number, alternate_email, modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
+        user_email = anvil.server.call('another_method')
         if not all([mobile_number, alternate_email]):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
@@ -4584,7 +4591,7 @@ class BorrowerScreen1(Screen):
         if not mobile_number.isdigit() or len(mobile_number) != 10:
             self.show_validation_error("Please Enter Valid Mobile Number with 10 digit number")
             return
-        if not alternate_email.endswith('@gmail.com'):
+        if not alternate_email.endswith('@gmail.com') or user_email == alternate_email:
             self.show_validation_error("Please Enter Valid Alternate Email.")
             return
 
@@ -8141,23 +8148,21 @@ class BorrowerScreen16(Screen):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
-        if len(spouse_mobile) < 3:
-            self.show_validation_error("Please Enter Valid Name.")
+        if len(spouse_name) < 3:
+            self.show_validation_error("Please Enter Spouse Valid Name.")
             return
         try:
-            dob = datetime.strptime(spouse_date_textfield, "%Y-%m-%d")
-            today = datetime.now()
-            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
-            if dob > today:
-                self.show_validation_error("Enter a Valid Marriage Date")
-                return
-
+            dob = datetime.strptime(spouse_date_textfield, "%Y-%m-%d").date()  # Convert to date object
+            #today = datetime.now().date()
+            #if dob > today:
+                #self.show_validation_error("Enter a Valid Marriage Date")
+                #return
         except ValueError:
             self.show_validation_error("Please enter a valid Marriage Date in format YYYY-MM-DD")
             return
 
-        if not spouse_mobile.isdigit() or len(spouse_mobile) != 10:
-            self.show_validation_error("Please Enter Valid Number.")
+        if len(spouse_mobile) != 10 or not spouse_mobile.isdigit():
+            self.show_validation_error("Please Enter Spouse Valid Mobile Number.")
             return
 
         cursor.execute('select * from fin_users')
@@ -8303,14 +8308,10 @@ class BorrowerScreen17(Screen):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
 
-        if not all([spouse_company_name, spouse_company_address, spouse_annual_salary]):
+        if not all([spouse_company_address]):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
-
-        if len(spouse_annual_salary) < 3:
-            self.show_validation_error('Enter a valid annual salary')
-            return
 
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
@@ -8450,7 +8451,7 @@ class BorrowerScreen18(Screen):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
-        if len(account_holder_name) < 3 or not account_holder_name.isdigit():
+        if len(account_holder_name) < 3 or account_holder_name.isdigit():
             self.show_validation_error('Enter a valid account name')
             return
         if account_type not in self.unique_list:
@@ -8638,6 +8639,20 @@ class BorrowerScreen19(Screen):
         sm.add_widget(borrower_screen)
         sm.transition.direction = 'left'  # Set the transition direction explicitly
         sm.current = 'DashboardScreen'
+
+    def show_terms_dialog(self):
+        dialog = MDDialog(
+            title="Terms and Conditions",
+            text="Agreements, Privacy Policy and Applicant should accept following:Please note that any information concealed (as what we ask for), would be construed as illegitimate action on your part and an intentional attempt to hide material information which if found in future, would attract necessary action (s) at your sole cost. Hence, request to be truthful to your best knowledge while sharing your details)",
+            size_hint=(0.8, 0.5),
+            buttons=[
+                MDFlatButton(
+                    text="OK",
+                    on_release=lambda *args: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
 
     def show_validation_error(self, error_message):
         dialog = MDDialog(
@@ -9323,9 +9338,9 @@ class BorrowerScreen24(Screen):
                 self.unique_list.append(i)
         print(self.unique_list)
         if len(self.unique_list) >= 1:
-            self.ids.spinner_id.values = ['Select Address Duration'] + self.unique_list
+            self.ids.spinner_id.values = ['Select How long you are staying'] + self.unique_list
         else:
-            self.ids.spinner_id.values = ['Select Address Duration']
+            self.ids.spinner_id.values = ['Select How long you are staying']
 
         spinner_data1 = app_tables.fin_present_address.search()
         data_list1 = []
@@ -9352,7 +9367,7 @@ class BorrowerScreen24(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def add_data(self, street, spinner_id, spinner_id2):
+    def add_data(self, street, spinner_id, spinner_id2, street_address2):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -9372,14 +9387,14 @@ class BorrowerScreen24(Screen):
         # Perform the actual action (e.g., fetching loan requests)
         # You can replace the sleep with your actual logic
         Clock.schedule_once(
-            lambda dt: self.perform_data_addition_action1(street, spinner_id, spinner_id2,
+            lambda dt: self.perform_data_addition_action1(street, spinner_id, spinner_id2,street_address2,
                                                           modal_view),
             2)
 
-    def perform_data_addition_action1(self, street, spinner_id, spinner_id2, modal_view):
+    def perform_data_addition_action1(self, street, spinner_id, spinner_id2,street_address2, modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
-        if not all([street, spinner_id, spinner_id2]):
+        if not all([street, spinner_id, spinner_id2,street_address2]):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing

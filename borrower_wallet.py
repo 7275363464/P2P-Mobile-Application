@@ -238,7 +238,7 @@ class WalletScreen(Screen):
 
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'LenderDashboard'
+        self.manager.current = 'DashboardScreen'
 
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.on_back_button)

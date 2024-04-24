@@ -58,3 +58,17 @@ def loan_amount_text():
         current_text = globals().get('text', None)
         print(current_text)
         return current_text
+
+@anvil.server.callable
+def view_loan(new_text):
+    # Acquire the lock before updating the global variable
+    with lock:
+        globals()['num'] = new_text
+    return new_text
+
+@anvil.server.callable
+def view_loan_text():
+    with lock:
+        current_text = globals().get('num', None)
+        print(current_text)
+        return current_text

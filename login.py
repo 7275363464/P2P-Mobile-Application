@@ -263,7 +263,7 @@ class LoginScreen(Screen):
         threading.Thread(target=self.perform_database_operations, args=(entered_email, entered_password)).start()
 
     def perform_database_operations(self, entered_email, entered_password):
-        conn = sqlite3.connect("fin_user_profile.db")
+        conn = sqlite3.connect("fin_user.db")
         cursor = conn.cursor()
 
         cursor.execute('''

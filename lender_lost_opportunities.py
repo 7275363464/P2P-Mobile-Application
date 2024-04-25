@@ -187,7 +187,7 @@ lost_opportunities = '''
     '''
 
 Builder.load_string(lost_opportunities)
-conn = sqlite3.connect('fin_user_profile.db')
+conn = sqlite3.connect('fin_user.db')
 cursor = conn.cursor()
 
 

@@ -190,7 +190,7 @@ class SignupScreen(Screen):
 
         try:
             # Connect to the SQLite database
-            conn = sqlite3.connect("fin_user_profile.db")
+            conn = sqlite3.connect("fin_user.db")
             cursor = conn.cursor()
 
             cursor.execute('SELECT user_id FROM fin_users ORDER BY user_id DESC LIMIT 1')
@@ -300,7 +300,7 @@ class SignupScreen(Screen):
         email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
 
         # Check for existing email in the database
-        conn = sqlite3.connect("fin_user_profile.db")
+        conn = sqlite3.connect("fin_user.db")
         cursor = conn.cursor()
         cursor.execute('''
             SELECT * FROM fin_users

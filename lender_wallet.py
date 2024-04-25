@@ -219,7 +219,11 @@ class LenderWalletScreen(Screen):
 
     def disbrsed_loan(self, instance):
         print("amount paid")
-        self.manager.get_screen('ViewLoansProfileScreenLR').paynow()
+        view_loan_text = anvil.server.call("view_loan_text")
+        if view_loan_text == "view_loan_text":
+            self.manager.get_screen('ViewUnderScreenLR').paynow()
+        else:
+            self.manager.get_screen('ViewLoansProfileScreenLR').paynow()
 
 
     def highlight_button(self, button_type):

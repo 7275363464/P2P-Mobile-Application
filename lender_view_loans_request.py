@@ -1144,6 +1144,9 @@ class ViewLoansProfileScreenLR(Screen):
 
         lender_customer_id = []
         processing_fee = []
+        emi_payment_type = []
+        loan_disbursed_timestamp = []
+        tenure = []
         for i in data:
             loan_id_list.append(i['loan_id'])
             disbursed.append(i['lender_accepted_timestamp'])
@@ -1152,11 +1155,15 @@ class ViewLoansProfileScreenLR(Screen):
             loan_amount.append(i['loan_amount'])
             lender_customer_id.append(i['lender_customer_id'])
             processing_fee.append(i['total_processing_fee_amount'])
+            emi_payment_type.append(i['emi_payment_type'])
+            loan_disbursed_timestamp.append(i['loan_disbursed_timestamp'])
+            tenure.append(i['tenure'])
 
+        index = 0
         if loan_id in loan_id_list:
             index = loan_id_list.index(loan_id)
 
-        loan_amount_text = float(self.ids.amount.text) - processing_fee[index]
+        loan_amount_text = float(self.ids.amount.text) + processing_fee[index]
 
         b_index = -1
         l_index = -1
@@ -1195,6 +1202,30 @@ class ViewLoansProfileScreenLR(Screen):
             data[index]['loan_disbursed_timestamp'] = paid_time
             wallet[b_index]['wallet_amount'] += float(loan_amount_text)
             wallet[l_index]['wallet_amount'] -= float(loan_amount_text)
+            print(emi_payment_type[index])
+            print(emi_payment_type[index] == "Monthly")
+            if emi_payment_type[index] == "Monthly":
+                first_emi_due_date = (loan_disbursed_timestamp[index] + timedelta(days=30)).date()
+                print(first_emi_due_date)
+                data[index]['emi_due_date'] = first_emi_due_date
+            elif emi_payment_type[index] == "Three Months":
+                first_emi_due_date = (loan_disbursed_timestamp[index] + timedelta(days=90)).date()
+                data[index]['emi_due_date'] = first_emi_due_date
+            elif emi_payment_type[index] == "Six Months":
+                first_emi_due_date = (loan_disbursed_timestamp[index] + timedelta(days=180)).date()
+                data[index]['emi_due_date'] = first_emi_due_date
+            elif emi_payment_type[index] == "One Time":
+                if tenure[index]:
+                    # Add the tenure in months to the loan_disbursed_timestamp
+                    first_emi_due_date = (loan_disbursed_timestamp[index] + timedelta(days=30 * tenure[index])).date()
+                    data[index]['emi_due_date'] = first_emi_due_date
+                else:
+                    # Handle the case where tenure is not provided (raise an exception or set to None)
+                    first_emi_due_date = None
+            else:
+                # Handle other cases or raise an exception as needed
+                first_emi_due_date = None
+
             app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
                                                        customer_id=wallet_customer_id[l_index],
                                                        user_email=wallet_email[l_index],

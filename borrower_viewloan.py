@@ -731,7 +731,7 @@ class OpenLoanVLB(Screen):
             if loan['loan_id'] == loan_id:
                 loan_status = loan['loan_updated_status']
                 break
-        if loan_status == 'under process' or loan_status == 'extension' or loan_status == 'foreclosure':
+        if loan_status == 'disbursed' or loan_status == 'extension' or loan_status == 'foreclosure':
             # Open the screen for approved loans
 
             sm = self.manager

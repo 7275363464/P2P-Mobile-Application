@@ -71,6 +71,10 @@ KV = """
                 hint_text_color: 0.043, 0.145, 0.278, 1  # Indigo color for hint text
                 helper_text_mode: "on_focus"
                 icon_right: "account"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
                 font_name: "Roboto-Bold"
                 pos_hint: {'center_x': 0.5, 'center_y': 0.57}
                 theme_text_color: "Custom"
@@ -89,6 +93,10 @@ KV = """
                 size_hint_y: None
                 height: "30dp"
                 width: dp(200)
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
                 pos_hint: {'center_x': 0.5, 'center_y': 0.46}
                 on_text_validate: app.validate_password()
                 theme_text_color: "Custom"

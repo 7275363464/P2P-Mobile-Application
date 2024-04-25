@@ -28,140 +28,90 @@ Builder.load_string(
         md_bg_color: 0.043, 0.145, 0.278, 1
 
     MDBoxLayout:
+        id: box1
         orientation: 'vertical'
         spacing: dp(30)
         padding: dp(30)
         MDLabel:
-            text: ""
+            text: 'Available Balance'
+            halign: 'center'
             size_hint_y: None
-            height: dp(20)
+            height: dp(30)
 
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(50)
-            padding: dp(30)
-            md_bg_color: 253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 0, 0, 0, 1  
-                Line:
-                    width: 0.5  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 10)
-
+        GridLayout:
+            cols: 2
+            spacing: dp(20)
+            pos_hint: {'center_x': 0.7, 'center_y':0.3}
+            size_hint_y: None
+            height: dp(30)
+            MDIcon:
+                icon: 'currency-inr'
+                halign: 'center'
             MDLabel:
-                text: 'Available Balance'
+                id: total_amount
                 halign: 'left'
+                font_size: dp(25)
                 bold: True
-            MDBoxLayout:
-                orientation: 'horizontal'
-                size_hint: None, None
-                width: "190dp"
-                height: "10dp"
-                pos_hint: {'center_x': 0.3, 'center_y': 0.2}
 
-                MDIcon:
-                    icon: 'currency-inr'
-                    halign: 'left'
-                    bold: True
-                MDLabel:
-                    id: total_amount
-                    halign: 'left'
-                    bold: True
-                    canvas.before:
-                        Color:
-                            rgba: 0, 0, 0, 1
-                        Line:
-                            width: 1
-                            points: [self.x, self.y - dp(5), self.x + self.width, self.y - dp(5)]
+        GridLayout:
+            cols: 2
+            spacing: dp(20)
+            size_hint_y: None
+            height: dp(50)
+            pos_hint: {'center_x': 0.6}
+            MDRectangleFlatIconButton:
+                text: "Deposit"
+                id: deposit_button_grid
+                line_color: 0, 0, 0, 0
+                icon: "cash"
+                text_color: 0, 0, 0, 1
+                md_bg_color:1,1,1,1
+                font_name:"Roboto-Bold"
+                on_release: root.highlight_button('deposit')
+            MDRectangleFlatIconButton:
+                id: withdraw_button_grid
+                text: "Withdraw"
+                icon: "cash"
+                line_color: 0, 0, 0, 0
+                text_color: 0, 0, 0, 1
+                md_bg_color: 1,1,1,1
+                font_name:"Roboto-Bold"
+                on_release: root.highlight_button('withdraw')
+        MDLabel:
+            id: enter_amount
+            text: 'Enter Amount'
+            bold: True
+            size_hint_y: None
+            height: dp(5)
+        MDTextField:
+            id: enter_amount
+            multiline: False
+            helper_text: 'Enter valid Amount'
+            helper_text_mode: 'on_focus'
+            size_hint_y:None
+            font_size: "15dp"
+            theme_text_color: "Custom"
+            hint_text_color: 0, 0, 0, 1
+            hint_text_color_normal: "black"
+            text_color_normal: "black"
+            helper_text_color_normal: "black"
+            on_touch_down: root.on_amount_touch_down()
 
-        MDFloatLayout:
-            orientation: 'vertical'
-            spacing: dp(50)
-            padding: dp(30)
-            md_bg_color: 253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 0, 0, 0, 1  # Border color (black in this example)
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-            GridLayout:
-                id: grid1
-                cols: 2
-                spacing: dp(20)
-                padding: dp(20)
-                pos_hint: {'center_x': 0.5, 'center_y': 0.95}
-                size_hint: 1, None
-                height: "10dp"
-                MDRoundFlatButton:
-                    text: "Deposit"
-                    id: deposit_button_grid
-                    md_bg_color: 253/255, 254/255, 254/255, 1
-                    theme_text_color: 'Custom'
-                    text_color: 0, 0, 0, 1
-                    size_hint: 1, None
-                    height: "50dp"
-                    font_name: "Roboto-Bold"
-                    on_release: root.highlight_button('deposit')
-                MDRoundFlatButton:
-                    text: "Withdraw"
-                    id: withdraw_button_grid
-                    md_bg_color: 253/255, 254/255, 254/255, 1
-                    theme_text_color: 'Custom'
-                    text_color: 0, 0, 0, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    size_hint: 1, None
-                    height: "50dp"
-                    font_name: "Roboto-Bold"
-                    on_release: root.highlight_button('withdraw')
-
-            MDBoxLayout:
-                id: box1
-                orientation: 'horizontal'
-                size_hint: None, None
-                width: "250dp"
-                height: "60dp"
-                pos_hint: {'center_x': 0.5, 'center_y': 0.2}
-
-                MDLabel:
-                    text: 'Enter Amount'
-                    halign: 'left'
-                    bold: True 
-
-                MDTextField:
-                    id: enter_amount      
-                    helper_text_mode: "on_focus"
-                    icon_left: 'currency-inr'
-                    font_name: "Roboto-Bold"  
-
-        MDBoxLayout:
-            id: box
-            orientation: 'horizontal'
-            spacing: dp(10)
+        MDFlatButton:
+            text: "View Transaction History >"
+            theme_text_color: "Custom"
+            text_color: "black"
+            pos_hint: {'center_x': 0.5}
             padding: dp(10)
-            md_bg_color: 253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 0, 0, 0, 1  
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-            GridLayout:
-                id: grid2
-                cols: 2
-                spacing: dp(5)
-                padding: dp(20)
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                size_hint: 1, None
-                height: "5dp"
-                MDLabel:
-                    text: 'View Transaction History'
-                    halign: 'left'
-                    bold: True
-                MDIcon:
-                    icon: 'chevron-right'
-                    halign: 'right'
-                    bold: True
+            md_bg_color: 140/255, 140/255, 140/255, 1
+        GridLayout:
+            id: box
+            cols: 1
+            spacing: dp(20)
+            size_hint_y: None
+            height: dp(50)
+            pos_hint: {'center_x': 0.74}
+
 
         MDRoundFlatButton:
             text: "Submit"
@@ -173,6 +123,10 @@ Builder.load_string(
             height: "40dp"
             pos_hint: {'center_x': 0.5}
             on_release: root.submit()
+        MDLabel:
+			text:''
+            size_hint_y:None
+            height:dp(20)
 
     """
 )
@@ -197,7 +151,7 @@ class LenderWalletScreen(Screen):
         index = 0
         if email in w_email:
             index = w_email.index(email)
-            self.ids.total_amount.text = str(round(w_amount[index],2))
+            self.ids.total_amount.text = str(round(w_amount[index], 2))
         else:
             print("no email found")
 
@@ -205,17 +159,20 @@ class LenderWalletScreen(Screen):
             button = MDRoundFlatButton(
                 text="Loan Disbursement",
                 size_hint_y=None,
-                height=30,
-                font_size=14,
+                height=40,
+                font_size=16,
                 theme_text_color='Custom',
                 text_color=(1, 1, 1, 1),
                 font_name="Roboto-Bold",
-                md_bg_color= (0.043, 0.145, 0.278, 1)
+                md_bg_color=(0.043, 0.145, 0.278, 1)
             )
             button.bind(on_release=self.disbrsed_loan)
             self.ids.box.add_widget(button)
         elif loan_amount_text != None and w_amount[index] < loan_amount_text:
             print("Amount Not Sufficient")
+
+    def on_amount_touch_down(self):
+        self.ids.enter_amount.input_type = 'number'
 
     def disbrsed_loan(self, instance):
         print("amount paid")
@@ -225,17 +182,16 @@ class LenderWalletScreen(Screen):
         else:
             self.manager.get_screen('ViewLoansProfileScreenLR').paynow()
 
-
     def highlight_button(self, button_type):
         if button_type == 'deposit':
-            self.ids.deposit_button_grid.md_bg_color = 0.043, 0.145, 0.278, 1
-            self.ids.withdraw_button_grid.md_bg_color = 253 / 255, 254 / 255, 254 / 255, 1
+            self.ids.deposit_button_grid.md_bg_color = 0, 0, 0, 1
+            self.ids.withdraw_button_grid.md_bg_color = 1, 1, 1, 1
             self.ids.deposit_button_grid.text_color = 1, 1, 1, 1
             self.ids.withdraw_button_grid.text_color = 0, 0, 0, 1
             self.type = 'deposit'
         elif button_type == 'withdraw':
-            self.ids.deposit_button_grid.md_bg_color = 253 / 255, 254 / 255, 254 / 255, 1
-            self.ids.withdraw_button_grid.md_bg_color = 0.043, 0.145, 0.278, 1
+            self.ids.deposit_button_grid.md_bg_color = 1, 1, 1, 1
+            self.ids.withdraw_button_grid.md_bg_color = 0, 0, 0, 1
             self.ids.withdraw_button_grid.text_color = 1, 1, 1, 1
             self.ids.deposit_button_grid.text_color = 0, 0, 0, 1
             self.type = 'withdraw'
@@ -273,7 +229,6 @@ class LenderWalletScreen(Screen):
 
     def open_dashboard_screen(self, dialog):
         dialog.dismiss()
-        self.refresh()
         self.manager.current = 'LenderWalletScreen'
 
     def submit(self):
@@ -311,11 +266,14 @@ class LenderWalletScreen(Screen):
                 data[index]['wallet_amount'] = int(enter_amount) + w_amount[index]
                 self.show_success_dialog(f'Amount {enter_amount} Deposited to the this wallet ID {w_id[index]}')
                 self.ids.enter_amount.text = ''
-                app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id, customer_id=w_customer_id[index], user_email=email,
-                                                           transaction_type=self.type, amount=int(enter_amount), status='success', wallet_id=w_id[index],
+                app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                           customer_id=w_customer_id[index], user_email=email,
+                                                           transaction_type=self.type, amount=int(enter_amount),
+                                                           status='success', wallet_id=w_id[index],
                                                            transaction_time_stamp=transaction_date_time)
             else:
                 print("no email found")
+            self.refresh()
 
         elif self.type == 'withdraw':
             data = app_tables.fin_wallet.search()
@@ -365,8 +323,10 @@ class LenderWalletScreen(Screen):
                     self.ids.enter_amount.text = ''
             else:
                 print("no email found")
+        self.refresh()
 
     def refresh(self):
+        self.ids.box1.clear_widgets()
         current_loan_amount = anvil.server.call('loan_amount_text')
         self.__init__(loan_amount_text=current_loan_amount)
 

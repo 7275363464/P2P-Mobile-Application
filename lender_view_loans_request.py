@@ -1163,7 +1163,7 @@ class ViewLoansProfileScreenLR(Screen):
         if loan_id in loan_id_list:
             index = loan_id_list.index(loan_id)
 
-        loan_amount_text = float(self.ids.amount.text) + processing_fee[index]
+        loan_amount_text = float(self.ids.amount.text) - processing_fee[index]
 
         b_index = -1
         l_index = -1
@@ -1207,18 +1207,18 @@ class ViewLoansProfileScreenLR(Screen):
             if emi_payment_type[index] == "Monthly":
                 first_emi_due_date = (loan_disbursed_timestamp[index] + timedelta(days=30)).date()
                 print(first_emi_due_date)
-                data[index]['emi_due_date'] = first_emi_due_date
+                data[index]['first_emi_payment_due_date'] = first_emi_due_date
             elif emi_payment_type[index] == "Three Months":
                 first_emi_due_date = (loan_disbursed_timestamp[index] + timedelta(days=90)).date()
-                data[index]['emi_due_date'] = first_emi_due_date
+                data[index]['first_emi_payment_due_date'] = first_emi_due_date
             elif emi_payment_type[index] == "Six Months":
                 first_emi_due_date = (loan_disbursed_timestamp[index] + timedelta(days=180)).date()
-                data[index]['emi_due_date'] = first_emi_due_date
+                data[index]['first_emi_payment_due_date'] = first_emi_due_date
             elif emi_payment_type[index] == "One Time":
                 if tenure[index]:
                     # Add the tenure in months to the loan_disbursed_timestamp
                     first_emi_due_date = (loan_disbursed_timestamp[index] + timedelta(days=30 * tenure[index])).date()
-                    data[index]['emi_due_date'] = first_emi_due_date
+                    data[index]['first_emi_payment_due_date'] = first_emi_due_date
                 else:
                     # Handle the case where tenure is not provided (raise an exception or set to None)
                     first_emi_due_date = None

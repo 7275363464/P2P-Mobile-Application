@@ -2,7 +2,7 @@ import sqlite3
 
 
 def create_user_table():
-    conn = sqlite3.connect("fin_user_profile.db")
+    conn = sqlite3.connect("fin_user.db")
     cursor = conn.cursor()
 
     cursor.execute('''
@@ -23,7 +23,7 @@ def create_user_table():
 
 
 def create_registration_table():
-    conn = sqlite3.connect("fin_user_profile.db")
+    conn = sqlite3.connect("fin_user.db")
     cursor = conn.cursor()
 
     # Commit the changes and close the connection

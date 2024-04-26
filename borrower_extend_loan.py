@@ -5,6 +5,8 @@ from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
+from kivymd.uix.button import MDFlatButton
+from kivymd.uix.dialog import MDDialog
 from kivymd.uix.list import *
 from kivy.lang import Builder
 from kivy.core.window import Window
@@ -68,7 +70,7 @@ extension_loan_request = """
                         id: box1
                         orientation: 'vertical'
                         size_hint_y: None
-                        height: dp(800)
+                        height: dp(700)
                         padding: [10, 0,0,0]
                         canvas.before:
                             Color:
@@ -76,39 +78,6 @@ extension_loan_request = """
                             Line:
                                 width:0.7
                                 rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
-
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "User ID :" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: user1
-                                text: "" 
-                                height:dp(50)
-                                size_hint_y:None
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Loan ID :" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: loan_id
-                                text: "" 
-                                halign: "left"
-                                height:dp(50)
-                                size_hint_y:None
 
                         MDGridLayout:
                             cols: 2
@@ -126,6 +95,7 @@ extension_loan_request = """
                                 size_hint_y:None
                                 height:dp(50)
                                 halign: "left"
+
                         MDGridLayout:
                             cols: 2
                             spacing: dp(10)
@@ -213,8 +183,8 @@ extension_loan_request = """
                             MDLabel:
                                 text: "Extension Allowed :" 
                                 size_hint_y:None
-                                height:dp(50)
                                 bold: True
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 id: extension_allowed
@@ -222,6 +192,18 @@ extension_loan_request = """
                                 height:dp(50)
                                 size_hint_y:None
                                 halign: "left"
+                            MDLabel:
+                                id: user1
+                                color:1,1,1,1      
+                                font_size:dp(1)
+                                text: "" 
+                                height:dp(1)
+                            MDLabel:
+                                id: loan_id
+                                color:1,1,1,1      
+                                font_size:dp(1)
+                                text: "" 
+                                height:dp(1)
                         MDGridLayout:
                             cols: 2
                             spacing: dp(10)
@@ -229,8 +211,8 @@ extension_loan_request = """
                             MDLabel:
                                 text: "Extension Fee :" 
                                 size_hint_y:None
-                                height:dp(50)
                                 bold: True
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 id: extension_fee
@@ -245,15 +227,18 @@ extension_loan_request = """
                             MDLabel:
                                 text: "Extension Months :" 
                                 size_hint_y:None
-                                height:dp(50)
                                 bold: True
+                                height:dp(50)
                                 halign: "left"
                             MDTextField:
                                 hint_text: ""
                                 id: extension_months
-                                height:dp(50)
                                 size_hint_y:None
                                 halign: "left"
+                                height:dp(50)
+                                input_type: 'number'
+                                on_touch_down: root.on_extension_months()
+                                
                         MDFloatLayout:
                             MDRaisedButton:
                                 id:extension_request
@@ -266,7 +251,7 @@ extension_loan_request = """
                                 text: "Next"
                                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                                 font_size:dp(15)
-
+                            
 <ExtendLoansScreen>
     BoxLayout:
         orientation: 'vertical'
@@ -299,7 +284,7 @@ extension_loan_request = """
                         id: box1
                         orientation: 'vertical'
                         size_hint_y: None
-                        height: dp(900)
+                        height: dp(700)
                         padding: [10, 0,0,0]
                         canvas.before:
                             Color:
@@ -307,22 +292,6 @@ extension_loan_request = """
                             Line:
                                 rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
 
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Loan ID :" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: loan_id
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
                         MDGridLayout:
                             cols: 2
                             spacing: dp(10)
@@ -339,6 +308,12 @@ extension_loan_request = """
                                 size_hint_y:None
                                 height:dp(50)
                                 halign: "left"
+                            MDLabel:
+                                id: loan_id
+                                color:1,1,1,1      
+                                font_size:dp(1)
+                                text: "" 
+                                height:dp(1)
 
                         MDGridLayout:
                             cols: 2
@@ -427,6 +402,7 @@ extension_loan_request = """
                                 id: kyc_checkbox
                                 size_hint_x: None
                                 width: "20dp"
+                                on_active: root.on_checkbox_active(self, self.active)
                             MDLabel:
                                 text: "I Agree Terms and Conditions"
                                 multiline: False
@@ -434,6 +410,7 @@ extension_loan_request = """
                                 halign: 'left'
                                 valign: 'center'
                                 bold: True
+                                on_touch_down: app.root.get_screen("LenderScreenIndividualBankForm2").show_terms_dialog() if self.collide_point(*args[1].pos) else None
 
                         MDFloatLayout:
                             MDRaisedButton:
@@ -449,6 +426,7 @@ extension_loan_request = """
 Builder.load_string(extension_loan_request)
 date = datetime.today()
 print(date)
+
 
 class ExtensionLoansRequest(Screen):
     def __init__(self, **kwargs):
@@ -586,16 +564,24 @@ class ExtensionLoansProfileScreen(Screen):
     def initialize_with_value(self, value, data):
         emi1 = app_tables.fin_emi_table.search()
         profile = app_tables.fin_user_profile.search()
+        extension_months = ''
         profile_customer_id = [i['customer_id'] for i in profile]
         profile_mobile_number = [i['mobile'] for i in profile]
-
+        loan_id=[i['loan_id'] for i in data]
         product = app_tables.fin_product_details.search()
-        extension_details = {i['product_name']: (i['extension_allowed'], i['extension_fee'],i['min_extension_months']) for i in product}
+        extension_details = {i['product_name']: (i['extension_allowed'], i['extension_fee'], i['min_extension_months'])
+                             for i in product}
 
         loan_details = {i['loan_id']: (
-        i['borrower_customer_id'], i['loan_amount'], i['tenure'], i['product_name'], i['interest_rate'],
-        i['borrower_full_name']) for i in data}
+            i['borrower_customer_id'], i['loan_amount'], i['tenure'], i['product_name'], i['interest_rate'],
+            i['borrower_full_name']) for i in data}
         emi_loan = [i['emi_number'] for i in emi1 if i['loan_id'] == value]
+        if emi_loan:
+            highest_number = max(emi_loan)
+            total_payment = highest_number
+        else:
+            total_payment = 0
+        self.total_payments_made = total_payment
         if value in loan_details:
             borrower_customer_id, loan_amount, tenure, product_name, interest_rate, borrower_name = loan_details[value]
             extension_allowed, extension_fee, product_id = extension_details.get(product_name, ('No', 0, None))
@@ -611,15 +597,15 @@ class ExtensionLoansProfileScreen(Screen):
             self.ids.loan_id.text = str(value)
             self.ids.loan_amount.text = str(loan_amount)
             self.ids.user1.text = str(borrower_customer_id)
-            self.ids.interest.text = f"{interest_rate}%"
+            self.ids.interest.text = str(interest_rate)
             self.ids.tenure.text = str(tenure)
             self.ids.product_name.text = str(product_name)
             self.ids.extension_allowed.text = str(extension_allowed)
-            extension_fee_display = f"{extension_fee}%" if extension_fee != 'No' else 'N/A'
 
             # Now you can assign extension_fee_display to the corresponding text field in your UI
-            self.ids.extension_fee.text = extension_fee_display
+            self.ids.extension_fee.text = str(extension_fee)
             self.ids.name.text = str(borrower_name)
+            self.ids.extension_months.text = str(extension_months)
 
             # Check if the button exists in ids before accessing its attributes
             if extension_allowed == 'Yes':
@@ -640,9 +626,14 @@ class ExtensionLoansProfileScreen(Screen):
                 print("Either emi_loan or minimum_months is empty.")
         else:
             print(f"Loan with ID '{value}' not found in loan details.")
+
     def show_popup(self, title, content):
         popup = Popup(title=title, content=Label(text=content), size_hint=(None, None), size=(400, 200))
         popup.open()
+
+    def on_extension_months(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.extension_months.input_type = 'number'
 
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
@@ -670,12 +661,29 @@ class ExtensionLoansProfileScreen(Screen):
         self.manager.current = 'ExtensionLoansRequest'
 
     def on_extend(self):
-        loan_id = self.ids.loan_id.text
-        extension_fee = self.ids.extension_fee.text
-        sm = self.manager
-        profile = ExtendLoansScreen(name='ExtendLoansScreen')
-        sm.add_widget(profile)  # Add the screen to the ScreenManager
-        sm.current = 'ExtendLoansScreen'
+        extension_months = self.ids.extension_months.text
+        if extension_months.isdigit():
+            extension_months = int(extension_months)
+            if 0 < extension_months <= 6:
+                # Proceed to the next screen
+                loan_id = self.ids.loan_id.text
+                extension_fee = self.ids.extension_fee.text
+                sm = self.manager
+                profile = ExtendLoansScreen(name='ExtendLoansScreen')
+                sm.add_widget(profile)  # Add the screen to the ScreenManager
+                sm.current = 'ExtendLoansScreen'
+            else:
+                # Show error message if extension months are not between 0 and 6
+                self.show_popup("Invalid Extension Months", "Please enter a number between 1 and 6.")
+        else:
+            # Show error message if extension months is not a valid positive integer
+            self.show_popup("Invalid Extension Months", "Please enter a valid positive integer.")
+    def on_text_validate(self, instance):
+        extension_months = instance.text
+        if not extension_months.isdigit() or int(extension_months) <= 0:
+            self.show_popup("Invalid Extension Months", "Please enter a valid number of extension months.")
+            # Clear the invalid value from the field
+            instance.text = ''
 
     def on_keyboard(self, window, key, *args):
         if key == 27:  # Key code for the 'Escape' key
@@ -691,7 +699,18 @@ class ExtendLoansScreen(Screen):
     loan_id = ""
     loan_amount = ""
     extension_fee = ""
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.check = None
 
+    def on_checkbox_active(self, checkbox, value):
+        if value:
+            self.check = True
+        else:
+            self.check = False
+        if self.check != True:
+            self.show_validation_error('Select The Terms and Conditions')
+            return
     def on_back_button_press(self):
         self.manager.current = 'ExtensionLoansProfileScreen'
         # Assuming you have these labels in your Kivy app
@@ -713,7 +732,7 @@ class ExtendLoansScreen(Screen):
         tenure = str(self.root_screen.ids.tenure.text)
         loan_extension_months = str(self.root_screen.ids.extension_months.text)
         extension_amount = float(extension_fee) * float(loan_amount) / 100
-        self.ids.extension_amount.text = f"{str(extension_amount)}"
+        self.ids.extension_amount.text = str(extension_amount)
 
         emi = app_tables.fin_product_details.search()
         if emi:
@@ -752,6 +771,7 @@ class ExtendLoansScreen(Screen):
             self.ids.finial_repayment_amount.text = f"{remaining_loan_amount:.2f}"
         else:
             self.show_popup("Error", "No payment data found")
+
     def on_pre_leave(self):
         # Unbind the back button event when leaving the screen
         Window.bind(on_keyboard=self.on_keyboard)
@@ -775,6 +795,7 @@ class ExtendLoansScreen(Screen):
         return True
 
     date = datetime.today()
+
     def add_data(self):
         # self.root_screen = self.manager.get_screen('ExtensionLoansProfileScreen')
         loan_id = str(self.root_screen.ids.loan_id.text)
@@ -794,7 +815,7 @@ class ExtendLoansScreen(Screen):
             borrower_name = data[0]['borrower_full_name']
             customer_id = data[0]['borrower_customer_id']
             email = data[0]['borrower_email_id']
-        emi= app_tables.fin_emi_table.search(loan_id=loan_id)
+        emi = app_tables.fin_emi_table.search(loan_id=loan_id)
         if emi:
             emi_number = emi[0]['emi_number']
         # loan_status=str(self.root_screen.ids.loan_status.text)
@@ -826,6 +847,21 @@ class ExtendLoansScreen(Screen):
         # Navigate to the previous screen with a slide transition
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'ExtensionLoansProfileScreen'
+
+    def show_terms_dialog(self):
+        dialog = MDDialog(
+            title="Terms and Conditions",
+            text="Agreements, Privacy Policy and Applicant should accept following:Please note that any information concealed (as what we ask for), would be construed as illegitimate action on your part and an intentional attempt to hide material information which if found in future, would attract necessary action (s) at your sole cost. Hence, request to be truthful to your best knowledge while sharing your details)",
+            size_hint=(0.8, 0.5),
+            buttons=[
+                MDFlatButton(
+                    text="OK",
+                    on_release=lambda *args: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
 
 
 class MyScreenManager(ScreenManager):

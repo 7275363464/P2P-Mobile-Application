@@ -655,15 +655,18 @@ class LoansDetailsB(Screen):
         # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
         return anvil.server.call('another_method')
 
+
 class ViewProfileScreenFB(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.check_box = None
+
     def checkbox_callback1(self, checkbox, value):
         if value:
             self.check_box = True
         else:
             self.check_box = False
+
     def initialize_with_value(self, value, data):
         emi1 = app_tables.fin_emi_table.search()
         pro_details = app_tables.fin_product_details.search()
@@ -812,12 +815,12 @@ class ForecloseDetails(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.check = None
+
     def checkbox_callback(self, checkbox, value):
         if value:
             self.check = True
         else:
             self.check = False
-
 
     def initialize_with_value(self, value):
         data1 = app_tables.fin_foreclosure.search()
@@ -942,8 +945,6 @@ class ForecloseDetails(Screen):
             total_due_amount = round(total_due_amount, 2)
             self.ids.total_due_amount.text = str(total_due_amount)
 
-
-
     date = datetime.today()
 
     def add_data(self, loan_id, outstanding_amount, foreclose_fee, foreclose_amount, reason, total_due_amount, totalamount, monthly_emi1):
@@ -951,6 +952,7 @@ class ForecloseDetails(Screen):
         if len(self.ids.reason.text) < 3:
             self.show_validation_error('You Must need to enter a reason for foreclosure')
             return
+
         if self.check != True:
             self.show_validation_error('You need to select Terms and Conditions')
             return
@@ -1026,10 +1028,12 @@ class ForecloseDetails(Screen):
             ]
         )
         dialog.open()
+
     def open_dashboard_screen(self, dialog):
 
         dialog.dismiss()
         self.manager.current = 'DashboardScreen'
+
 class MyScreenManager(ScreenManager):
     pass
 

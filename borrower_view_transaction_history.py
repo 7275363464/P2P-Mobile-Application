@@ -19,7 +19,6 @@ if platform == 'android':
         request_permissions, check_permission, Permission)
 
 view_transaction_history = '''
-
 <WindowManager>:
     TransactionBH:
     ViewProfileScreenBTH:
@@ -40,186 +39,187 @@ view_transaction_history = '''
 
 
 <ViewProfileScreenBTH>:
+
+    MDTopAppBar:
+        title: "Transaction Details"
+        elevation: 2
+        left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+        md_bg_color: 0.043, 0.145, 0.278, 1
+        halign: 'left'
+        pos_hint: {'top': 1}
+
     MDBoxLayout:
         orientation: 'vertical'
-        MDTopAppBar:
-            title: "View Profile"
-            elevation: 3
-            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
-            md_bg_color: 0.043, 0.145, 0.278, 1
+        spacing: dp(80)
+        size_hint_y: None
+        height: dp(450)
 
-        ScrollView:
-            MDBoxLayout:
-                orientation: 'vertical'
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(50)
+            padding: dp(15)
+            size_hint_y: None
+            height: self.minimum_height
+
+            canvas.before:
+                Color:
+                    rgba: 230/255, 245/255, 255/255, 1 
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [5, 5, 5, 5]
+            MDGridLayout:
+                cols: 2
+
+                MDLabel:
+                    text: '     Amount:'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
+            MDGridLayout:
+                cols: 2
+                MDIconButton:
+                    icon: 'currency-inr'
+                    halign: 'left'
+                    size_hint_y: None
+                    height: dp(1)
+
+                MDLabel:
+                    id: amount
+                    halign: 'left'
+
+            MDLabel:
+                text: ''
+                halign: 'left'
                 size_hint_y: None
-                height: self.minimum_height
-                BoxLayout:
-                    id: box1
-                    orientation: 'vertical'
-                    size_hint_y: None
-                    MDLabel:
-                        text: "Transaction details"
-                        halign: "center"
-                        bold: True
-                MDBoxLayout:
-                    orientation: 'vertical'
-                    size_hint_y: None
-                    height: self.minimum_height
-                    padding: dp(20)
+                height: dp(20)
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: '     Transaction ID'
+                    halign: 'left'
+                    bold: True
 
-                    BoxLayout:
-                        id: box1
-                        orientation: 'vertical'
-                        size_hint_y: None
-                        height: dp(800)
+                MDLabel:
+                    id: transaction_id
+                    halign: 'left'
+                    text_color: 140/255, 140/255, 140/255, 1
 
-                        padding: [10, 0,0,0]
-                        canvas.before:
-                            Color:
-                                rgba: 0, 0, 0, 1  # Blue color for the box
-                            Line:
-                                rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: '     User Email'
+                    halign: 'left' 
+                    bold: True
 
-                        MDGridLayout:
-                            cols: 2
-                            spacing: 5
-                            MDLabel:
-                                text: "Transaction ID"
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id : transaction_id
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
+                MDLabel:
+                    id: user_email
+                    halign: 'left'
+                    text_color: 140/255, 140/255, 140/255, 1
 
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "User Email" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: user_email
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: '     Receiver Email'
+                    halign: 'left'
+                    bold: True
 
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Receiver Email" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: receiver_email
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
+                MDLabel:
+                    id: receiver_email
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
 
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Wallet ID" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: wallet_id
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Transaction Type" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: transaction_type
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Amount" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: vtamount
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Date and Time" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: date_time
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: "     Transaction Type" 
+                    halign: 'left'
+                    bold: True
+                MDLabel:
+                    id: transaction_type
+                    halign: "left"
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
 
 
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: '     Published Date'
+                    halign: 'left'
+                    bold: True
 
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "status" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: status
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
+                MDLabel:
+                    id: date_time
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: '     Status'
+                    halign: 'left'
+
+                    bold: True
+
+                MDLabel:
+                    id: status
+                    halign: 'left' 
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(30)
+            padding: dp(15)
+            size_hint_y: None
+            height: dp(100)
+            canvas.before:
+                Color:
+                    rgba: 249/255, 249/255, 247/255, 1 
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [25, 25, 25, 25]
+            MDLabel:
+                text: ''
+                halign: 'left'
+                size_hint_y: None
+                height: dp(5)
+            MDGridLayout:
+                cols: 3
+
+                MDLabel:
+                    text: '     Total'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1  
+                    bold: True
+                MDIconButton:
+                    icon: 'currency-inr'
+                    halign: 'center' 
+                    bold: True   
+
+                MDLabel:
+                    id: amount_1
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
+
+            MDLabel:
+                text: ''
+                halign: 'center'
+                size_hint_y: None
+                height: dp(65)
+
 
 '''
 
 Builder.load_string(view_transaction_history)
+
+
 class TransactionBH(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -333,9 +333,9 @@ class TransactionBH(Screen):
         # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
         return anvil.server.call('another_method')
 
-
     def on_back_button_press(self):
         self.manager.current = 'DashboardScreenLF'
+
 
 class ViewProfileScreenBTH(Screen):
     def initialize_with_value(self, value, data):
@@ -346,6 +346,7 @@ class ViewProfileScreenBTH(Screen):
         wallet_id = []
         transaction_type = []
         amount = []
+        amount1 = []
         date_time = []
         status = []
         for i in data:
@@ -355,6 +356,7 @@ class ViewProfileScreenBTH(Screen):
             wallet_id.append(i['wallet_id'])
             transaction_type.append(i['transaction_type'])
             amount.append(i['amount'])
+            amount1.append(i['amount'])
             date_time.append(i['transaction_time_stamp'])
             status.append(i['status'])
 
@@ -363,12 +365,11 @@ class ViewProfileScreenBTH(Screen):
             self.ids.transaction_id.text = str(transaction_id[index])
             self.ids.user_email.text = str(user_email[index])
             self.ids.receiver_email.text = str(receiver_email[index])
-            self.ids.wallet_id.text = str(wallet_id[index])
             self.ids.transaction_type.text = str(transaction_type[index])
-            self.ids.vtamount.text = str(amount[index])
-            self.ids.date_time.text = str(date_time[index])
+            self.ids.amount.text = str(amount[index])
+            self.ids.amount_1.text = str(amount1[index])
+            self.ids.date_time.text = str(date_time[index].date())
             self.ids.status.text = str(status[index])
-
 
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
@@ -389,10 +390,6 @@ class ViewProfileScreenBTH(Screen):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'TransactionBH'
 
+
 class MyScreenManager(ScreenManager):
     pass
-
-
-
-
-

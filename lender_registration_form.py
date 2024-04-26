@@ -302,7 +302,7 @@ KV = '''
                 font_name: "Roboto-Bold"
                 size_hint_y: None
                 height:dp(5)
-            
+
             MDLabel:
                 text:""
                 size_hint_y: None
@@ -2572,7 +2572,7 @@ KV = '''
                 hint_text_color: 0, 0, 0, 1
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
-                
+
             MDLabel:
                 text: 'Upload Employee ID:'
                 halign: 'left'
@@ -3666,7 +3666,7 @@ KV = '''
                 hint_text_color: 0, 0, 0, 1
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
-                input_type: 'number'
+
             MDLabel:
                 text: 'Select Account Type:'
                 halign: 'left'
@@ -3705,7 +3705,7 @@ KV = '''
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
-
+                input_type: 'number'
 
             MDTextField:
                 id: bank_name
@@ -5995,7 +5995,9 @@ class LenderScreen6(Screen):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if there are missing fields
-
+        if investment > 100000:
+            self.show_validation_error("Investment amount should not exceed 100,000.")
+            return
         if spinner not in spinner == 'Select Loan Type':
             self.show_validation_error('Select valid Loan type')
             return
@@ -6978,7 +6980,7 @@ class LenderScreenIndividualForm2(Screen):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
-        if len(designation) < 1 or not designation.isalpha():
+        if not re.match(r'^[a-zA-Z\s]{2,}$', designation):
             self.show_validation_error("Please Enter Valid designation.")
             return
         if len(annual_salary) < 3 and not annual_salary.isdigit():

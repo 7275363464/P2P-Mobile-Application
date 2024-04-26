@@ -238,7 +238,7 @@ extension_loan_request = """
                                 height:dp(50)
                                 input_type: 'number'
                                 on_touch_down: root.on_extension_months()
-                                
+
                         MDFloatLayout:
                             MDRaisedButton:
                                 id:extension_request
@@ -251,7 +251,7 @@ extension_loan_request = """
                                 text: "Next"
                                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                                 font_size:dp(15)
-                            
+
 <ExtendLoansScreen>
     BoxLayout:
         orientation: 'vertical'
@@ -410,7 +410,7 @@ extension_loan_request = """
                                 halign: 'left'
                                 valign: 'center'
                                 bold: True
-                                on_touch_down: app.root.get_screen("LenderScreenIndividualBankForm2").show_terms_dialog() if self.collide_point(*args[1].pos) else None
+                                on_touch_down: app.root.get_screen("ExtendLoansScreen").show_terms_dialog() if self.collide_point(*args[1].pos) else None
 
                         MDFloatLayout:
                             MDRaisedButton:
@@ -567,7 +567,7 @@ class ExtensionLoansProfileScreen(Screen):
         extension_months = ''
         profile_customer_id = [i['customer_id'] for i in profile]
         profile_mobile_number = [i['mobile'] for i in profile]
-        loan_id=[i['loan_id'] for i in data]
+        loan_id = [i['loan_id'] for i in data]
         product = app_tables.fin_product_details.search()
         extension_details = {i['product_name']: (i['extension_allowed'], i['extension_fee'], i['min_extension_months'])
                              for i in product}
@@ -664,7 +664,7 @@ class ExtensionLoansProfileScreen(Screen):
         extension_months = self.ids.extension_months.text
         if extension_months.isdigit():
             extension_months = int(extension_months)
-            if 0 < extension_months <= 6:
+            if 1 < extension_months <= 6:
                 # Proceed to the next screen
                 loan_id = self.ids.loan_id.text
                 extension_fee = self.ids.extension_fee.text
@@ -678,6 +678,7 @@ class ExtensionLoansProfileScreen(Screen):
         else:
             # Show error message if extension months is not a valid positive integer
             self.show_popup("Invalid Extension Months", "Please enter a valid positive integer.")
+
     def on_text_validate(self, instance):
         extension_months = instance.text
         if not extension_months.isdigit() or int(extension_months) <= 0:
@@ -699,6 +700,7 @@ class ExtendLoansScreen(Screen):
     loan_id = ""
     loan_amount = ""
     extension_fee = ""
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.check = None
@@ -711,6 +713,7 @@ class ExtendLoansScreen(Screen):
         if self.check != True:
             self.show_validation_error('Select The Terms and Conditions')
             return
+
     def on_back_button_press(self):
         self.manager.current = 'ExtensionLoansProfileScreen'
         # Assuming you have these labels in your Kivy app
@@ -797,7 +800,6 @@ class ExtendLoansScreen(Screen):
     date = datetime.today()
 
     def add_data(self):
-        # self.root_screen = self.manager.get_screen('ExtensionLoansProfileScreen')
         loan_id = str(self.root_screen.ids.loan_id.text)
         extension_fee = float(self.root_screen.ids.extension_fee.text)
         loan_extension_months = float(self.root_screen.ids.extension_months.text)
@@ -818,27 +820,47 @@ class ExtendLoansScreen(Screen):
         emi = app_tables.fin_emi_table.search(loan_id=loan_id)
         if emi:
             emi_number = emi[0]['emi_number']
-        # loan_status=str(self.root_screen.ids.loan_status.text)
-        if loan_id and email and emi_number and loan_amount and customer_id and extension_fee and loan_extension_months and extension_amount and finial_repayment and borrower_name and new_emi and reason:
-            app_tables.fin_extends_loan.add_row(loan_id=loan_id,
-                                                borrower_full_name=borrower_name,
-                                                loan_amount=loan_amount,
-                                                borrower_customer_id=customer_id,
-                                                borrower_email_id=email,
-                                                extend_fee=extension_fee,
-                                                emi_number=emi_number,
-                                                final_repayment_amount=finial_repayment,
-                                                extension_amount=extension_amount,
-                                                new_emi=new_emi,
-                                                total_extension_months=loan_extension_months,
-                                                reason=reason,
-                                                status="under process",
-                                                extension_request_date=date
-                                                )
+
+        # Validate reason field
+        if not reason:
+            self.show_validation_error("Reason is required.")
+            return
+
+        # Check if all required fields are filled
+        if loan_id and email and emi_number and loan_amount and customer_id and extension_fee and loan_extension_months and extension_amount and finial_repayment and borrower_name and new_emi:
+            # Add data to the table
+            app_tables.fin_extends_loan.add_row(
+                loan_id=loan_id,
+                borrower_full_name=borrower_name,
+                loan_amount=loan_amount,
+                borrower_customer_id=customer_id,
+                borrower_email_id=email,
+                extend_fee=extension_fee,
+                emi_number=emi_number,
+                final_repayment_amount=finial_repayment,
+                extension_amount=extension_amount,
+                new_emi=new_emi,
+                total_extension_months=loan_extension_months,
+                reason=reason,
+                status="under process",
+                extension_request_date=date
+            )
+            # Navigate to DashboardScreen after adding data
             sm = self.manager
             profile = ExtendLoansScreen(name='DashboardScreen')
             sm.add_widget(profile)  # Add the screen to the ScreenManager
             sm.current = 'DashboardScreen'
+        else:
+            self.show_popup("Error", "Please fill all the required fields.")
+
+    def show_validation_error(self, message):
+        popup = Popup(
+            title="Validation Error",
+            content=Label(text=message),
+            size_hint=(None, None),
+            size=(400, 200)
+        )
+        popup.open()
 
     def on_start(self):
         Window.softinput_mode = "below_target"
@@ -861,7 +883,6 @@ class ExtendLoansScreen(Screen):
             ]
         )
         dialog.open()
-
 
 
 class MyScreenManager(ScreenManager):

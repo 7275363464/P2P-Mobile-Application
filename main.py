@@ -11,7 +11,7 @@ from homepage import MainScreen
 
 import anvil.server
 
-anvil.server.connect("server_ZPLBUSN6GM4U7FXC3PP7EHHP-OZATT3SDKEEAAR6A") #published
+anvil.server.connect("server_2V5FMRORVEQOP72ZVQWSBAPD-OZATT3SDKEEAAR6A") #published
 #anvil.server.connect("server_SCQAA7522N262HFSYZ7GLPPK-DVKXHXN3FMGIYIJX")
 class MyApp(MDApp):
     def build(self):

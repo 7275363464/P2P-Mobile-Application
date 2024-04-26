@@ -302,6 +302,11 @@ KV = '''
                 font_name: "Roboto-Bold"
                 size_hint_y: None
                 height:dp(5)
+            
+            MDLabel:
+                text:""
+                size_hint_y: None
+                height:dp(20)
 
             GridLayout:
                 cols: 1
@@ -655,7 +660,7 @@ KV = '''
         MDLabel:
             text:""
             size_hint_y: None
-            height:dp(50)
+            height:dp(40)
 
         MDBoxLayout:
             orientation: 'vertical'
@@ -2527,7 +2532,7 @@ KV = '''
                     rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
             MDLabel:
-                text: ''
+                text: 'Lender Registration Forms'
                 halign: 'center'
                 font_size: "20dp"
                 font_name: "Roboto-Bold"
@@ -2567,7 +2572,7 @@ KV = '''
                 hint_text_color: 0, 0, 0, 1
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
-                input_type: 'number'
+                
             MDLabel:
                 text: 'Upload Employee ID:'
                 halign: 'left'
@@ -2731,6 +2736,10 @@ KV = '''
                 hint_text_color: 0,0,0, 1
                 font_name: "Roboto-Bold"
                 font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
 
             MDTextField:
                 id: company_pin_code
@@ -2740,6 +2749,10 @@ KV = '''
                 helper_text_mode: 'on_focus'
                 hint_text_color: 0,0,0, 1
                 font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
                 font_name: "Roboto-Bold"
                 input_type: 'number'  
                 on_touch_down: root.on_company_pin_code_touch_down()
@@ -2751,7 +2764,10 @@ KV = '''
                 helper_text: 'Enter valid Company Country'
                 multiline: False
                 helper_text_mode: 'on_focus'
-                hint_text_color: 0,0,0, 1
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
                 font_size: "15dp"
                 font_name: "Roboto-Bold"
 
@@ -2762,7 +2778,10 @@ KV = '''
                 font_size: "15dp"
                 helper_text: 'Enter valid landmark'
                 helper_text_mode: 'on_focus'
-                text_color: 0,0,0, 1
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
                 font_name: "Roboto-Bold"
 
             MDTextField:

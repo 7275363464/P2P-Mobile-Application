@@ -15,7 +15,6 @@ from kivymd.uix.label import MDLabel
 from kivymd.uix.list import ThreeLineAvatarIconListItem, IconLeftWidget
 import anvil.users
 from anvil.tables import app_tables
-import server
 
 if platform == 'android':
     from kivy.uix.button import Button
@@ -27,7 +26,7 @@ if platform == 'android':
 
 import anvil.server
 
-kv = '''
+borrower_view_loan = '''
 <WindowManager>:
     DashboardScreenVLB:
     OpenLoanVLB:
@@ -227,7 +226,7 @@ kv = '''
             spacing: dp(40)
             padding: dp(15)
             size_hint_y: None
-            height: self.minimum_height
+            height: dp(450)
 
             canvas.before:
                 Color:
@@ -243,7 +242,8 @@ kv = '''
                     text: '     Required amount:'
                     halign: 'left'
                     theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1 
+                    text_color: 0, 0, 0, 1 
+                    bold: True
             MDGridLayout:
                 cols: 2
                 MDIconButton:
@@ -267,11 +267,14 @@ kv = '''
                     text: '     Product Name'
                     halign: 'left'
                     theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
+
 
                 MDLabel:
                     id: pro_name
                     halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
 
             MDGridLayout:
                 cols: 2
@@ -279,11 +282,13 @@ kv = '''
                     text: '     Borrower Name'
                     halign: 'left'
                     theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
 
                 MDLabel:
                     id: b_name
                     halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
 
             MDGridLayout:
                 cols: 2
@@ -291,56 +296,64 @@ kv = '''
                     text: '     Phone Number'
                     halign: 'left'
                     theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
 
                 MDLabel:
                     id: phone_num
                     halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
                     text: '     Interest(%)'
                     halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
+
 
                 MDLabel:
                     id: int_rate
                     halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
                     text: '     Duration(M)'
                     halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
 
                 MDLabel:
                     id: tenure
                     halign: 'left' 
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
             MDGridLayout:
                 cols: 2
                 MDLabel:
                     text: '     Published Date'
                     halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
 
                 MDLabel:
                     id: date
                     halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
             MDGridLayout:
                 cols: 2
                 MDLabel:
                     text: '     Loan Status'
                     halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
 
                 MDLabel:
                     id: updated_status
                     halign: 'left' 
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
             MDLabel:
                 text: ''
                 halign: 'left'
@@ -352,7 +365,7 @@ kv = '''
             spacing: dp(30)
             padding: dp(15)
             size_hint_y: None
-            height: self.minimum_height
+            height: dp(140)
             canvas.before:
                 Color:
                     rgba: 249/255, 249/255, 247/255, 1 
@@ -372,7 +385,7 @@ kv = '''
                     text: '     Total'
                     halign: 'left'
                     theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1  
+                    text_color: 0, 0, 0, 1  
                     bold: True
                 MDIconButton:
                     icon: 'currency-inr'
@@ -382,7 +395,6 @@ kv = '''
                 MDLabel:
                     id: amount_1
                     halign: 'left'
-
             MDLabel:
                 text: ''
                 halign: 'left'
@@ -392,10 +404,10 @@ kv = '''
                 text: ''
                 halign: 'left'
                 size_hint_y: None
-                height: dp(15) 
+                height: dp(1) 
 
 '''
-Builder.load_string(kv)
+Builder.load_string(borrower_view_loan)
 
 
 class DashboardScreenVLB(Screen):

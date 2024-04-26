@@ -5989,21 +5989,25 @@ class LenderScreen6(Screen):
     def perform_data_addition_action4(self, spinner, spinner2, investment, modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
-
         # Check for missing fields
         if not all([spinner, spinner2, investment]):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if there are missing fields
-        if investment > 100000:
-            self.show_validation_error("Investment amount should not exceed 100,000.")
-            return
+
         if spinner not in spinner == 'Select Loan Type':
             self.show_validation_error('Select valid Loan type')
             return
         if spinner2 not in spinner2 == 'Select Lending Period':
             self.show_validation_error('Select valid Lending Period')
             return
+        if investment.isdigit():
+            investment = float(investment)
+            if  investment <= 100000:
+                self.show_validation_error("Investment amount must be greater than or equal to 1 lakh.")
+            else:
+                self.show_validation_error("Invalid investment amount.")
+
         if spinner == 'Individual':
             sm = self.manager
             lender_screen = LenderScreenIndividualForm1(name='LenderScreenIndividualForm1')

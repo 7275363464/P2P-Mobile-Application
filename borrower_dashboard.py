@@ -152,7 +152,7 @@ user_helpers = """
                     MDLabel:
                         text: "Online Cash Advance"
                         bold: True
-                        font_size: 25
+                        font_size: dp(20)
                         theme_text_color: "Custom"
                         text_color: 1, 1, 1, 1
                         padding:dp(20), dp(5)
@@ -160,7 +160,7 @@ user_helpers = """
 
                     MDLabel:
                         text: "Fast, easy, secure,\\nlow prime rate"
-                        font_size: 20
+                        font_size: dp(18)
                         theme_text_color: "Custom"
                         text_color: 1, 1, 1, 1
                         padding: dp(20), dp(5)
@@ -176,7 +176,7 @@ user_helpers = """
                         MDLabel:
                             text: "Explore"
                             bold: True
-                            font_size: 22
+                            font_size: dp(18)
                             theme_text_color: "Custom"
                             text_color: 1, 1, 1, 1
                             padding: dp(0), dp(5)  # Adjust the left padding as needed
@@ -197,6 +197,7 @@ user_helpers = """
                     text:"Features"
                     size_hint_y: 0.15
                     bold: True
+                    halign:"center"  
                 MDCard:
                     pos_hint:{"top": 1}
                     #md_bg_color: "#9ccf0e"
@@ -225,7 +226,7 @@ user_helpers = """
 
                             MDLabel:
                                 text: "New Loan \\nRequests"
-                                font_size:dp(16)
+                                font_size:dp(12)
                                 bold: True
                                 theme_text_color: "Custom"
                                 text_color: 0, 0, 0, 1
@@ -251,7 +252,7 @@ user_helpers = """
 
                             MDLabel:
                                 text: "View Loans"
-                                font_size:dp(16)
+                                font_size:dp(12)
                                 bold: True
                                 theme_text_color: "Custom"
                                 text_color: 0, 0, 0, 1
@@ -277,7 +278,7 @@ user_helpers = """
 
                             MDLabel:
                                 text: "Today's Dues"
-                                font_size:dp(16)
+                                font_size:dp(12)
                                 bold: True
                                 theme_text_color: "Custom"
                                 text_color: 0, 0, 0, 1
@@ -302,7 +303,7 @@ user_helpers = """
 
                             MDLabel:
                                 text: "Application \\nTracker"
-                                font_size:dp(16)
+                                font_size:dp(12)
                                 bold: True
                                 theme_text_color: "Custom"
                                 text_color: 0, 0, 0, 1
@@ -328,7 +329,7 @@ user_helpers = """
 
                             MDLabel:
                                 text: "View Transaction \\nHistory"
-                                font_size:dp(16)
+                                font_size:dp(12)
                                 bold: True
                                 theme_text_color: "Custom"
                                 text_color: 0, 0, 0, 1
@@ -353,7 +354,7 @@ user_helpers = """
 
                             MDLabel:
                                 text: "Loan \\nForeclose"
-                                font_size:dp(16)
+                                font_size:dp(12)
                                 bold: True
                                 theme_text_color: "Custom"
                                 text_color: 0, 0, 0, 1
@@ -378,7 +379,7 @@ user_helpers = """
 
                             MDLabel:
                                 text: "Extended \\nLoan Request"
-                                font_size:dp(16)
+                                font_size:dp(12)
                                 bold: True
                                 theme_text_color: "Custom"
                                 text_color: 0, 0, 0, 1
@@ -391,6 +392,7 @@ user_helpers = """
                     text:"Special promotion"
                     size_hint_y: 0.15
                     bold: True
+                    halign:"center"  
                 MDCard:
                     pos_hint:{"top": 1}
                     #md_bg_color: "#320ecf"
@@ -413,7 +415,7 @@ user_helpers = """
 
                             MDLabel:
                                 text:"New Invite Profit"  
-                                font_size:16 
+                                font_size:dp(10)
                                 size_hint_y: 0.2
                                 bold: True
                                 halign:"center"  
@@ -430,7 +432,7 @@ user_helpers = """
                                     keep_ratio: False 
                             MDLabel:
                                 text:"Cashback bonus"
-                                font_size:16
+                                font_size:dp(10)
                                 size_hint_y: 0.2 
                                 bold: True
                                 halign:"center"     
@@ -762,9 +764,9 @@ class DashboardScreen(Screen):
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
         Window.bind(on_keyboard=self.on_back_button)
-
-        profile = app_tables.fin_user_profile.search()
         log_email = anvil.server.call('another_method')
+        profile = app_tables.fin_user_profile.search(email_user=log_email)
+
         print(log_email)
 
         email_user = []
@@ -1126,7 +1128,7 @@ class ProfileScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         email = self.get_email()
-        data = app_tables.fin_user_profile.search()
+        data = app_tables.fin_user_profile.search(email_user=email)
         name = []
         email1 = []
         mobile_no = []

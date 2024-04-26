@@ -10,6 +10,7 @@ from kivymd.uix.button import MDRaisedButton, MDFlatButton, MDRoundFlatButton
 from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
 import anvil
 from kivymd.uix.dialog import MDDialog
+from lender_view_transaction_history import TransactionLH
 
 Builder.load_string(
     """
@@ -78,7 +79,6 @@ Builder.load_string(
                 font_name:"Roboto-Bold"
                 on_release: root.highlight_button('withdraw')
         MDLabel:
-            id: enter_amount
             text: 'Enter Amount'
             bold: True
             size_hint_y: None
@@ -104,6 +104,7 @@ Builder.load_string(
             pos_hint: {'center_x': 0.5}
             padding: dp(10)
             md_bg_color: 140/255, 140/255, 140/255, 1
+            on_release: root.view_transaction_history()
         GridLayout:
             id: box
             cols: 1
@@ -173,6 +174,14 @@ class LenderWalletScreen(Screen):
 
     def on_amount_touch_down(self):
         self.ids.enter_amount.input_type = 'number'
+    def view_transaction_history(self):
+        sm = self.manager
+        # Create a new instance of the LenderWalletScreen
+        wallet_screen = TransactionLH(name='TransactionLH')
+        # Add the LenderWalletScreen to the existing ScreenManager
+        sm.add_widget(wallet_screen)
+        # Switch to the LenderWalletScreen
+        sm.current = 'TransactionLH'
 
     def disbrsed_loan(self, instance):
         print("amount paid")
@@ -264,7 +273,7 @@ class LenderWalletScreen(Screen):
             if email in w_email:
                 index = w_email.index(email)
                 data[index]['wallet_amount'] = int(enter_amount) + w_amount[index]
-                self.show_success_dialog(f'Amount {enter_amount} Deposited to the this wallet ID {w_id[index]}')
+                self.show_success_dialog(f'Amount {enter_amount} Deposited Successfully')
                 self.ids.enter_amount.text = ''
                 app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
                                                            customer_id=w_customer_id[index], user_email=email,
@@ -305,7 +314,7 @@ class LenderWalletScreen(Screen):
                 if w_amount[index] >= int(self.ids.enter_amount.text):
                     data[index]['wallet_amount'] = w_amount[index] - int(self.ids.enter_amount.text)
                     self.show_success_dialog(
-                        f'Amount {self.ids.enter_amount.text} Withdraw from this wallet ID {w_id[index]}')
+                        f'Amount {self.ids.enter_amount.text} Withdraw Successfully')
                     self.ids.enter_amount.text = ''
                     app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
                                                                customer_id=w_customer_id[index], user_email=email,

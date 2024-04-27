@@ -3,12 +3,14 @@ import anvil.server
 from kivy.config import value
 from kivy.lang import Builder
 from kivy.core.window import Window
+from kivy.metrics import dp
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
-from kivymd.uix.button import MDFlatButton
+from kivymd.uix.button import MDFlatButton, MDRectangleFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.list import *
 from kivy.lang import Builder
+from datetime import datetime
 from kivy.core.window import Window
 import anvil.users
 import server
@@ -165,7 +167,7 @@ extension_loan_request = """
                             spacing: dp(10)
                             padding: dp(10)
                             MDLabel:
-                                text: "Interest Rate :" 
+                                text: "Interest Rate (%):" 
                                 size_hint_y:None
                                 bold: True
                                 height:dp(50)
@@ -204,12 +206,18 @@ extension_loan_request = """
                                 font_size:dp(1)
                                 text: "" 
                                 height:dp(1)
+                            MDLabel:
+                                id: total_payment
+                                color:1,1,1,1      
+                                font_size:dp(1)
+                                text: "" 
+                                height:dp(1)
                         MDGridLayout:
                             cols: 2
                             spacing: dp(10)
                             padding: dp(10)
                             MDLabel:
-                                text: "Extension Fee :" 
+                                text: "Extension Fee(%) :" 
                                 size_hint_y:None
                                 bold: True
                                 height:dp(50)
@@ -320,7 +328,7 @@ extension_loan_request = """
                             spacing: dp(10)
                             padding: dp(10)
                             MDLabel:
-                                text: "Extension Fee :" 
+                                text: "Extension Fee(%) :" 
                                 size_hint_y:None
                                 height:dp(50)
                                 bold: True
@@ -393,6 +401,9 @@ extension_loan_request = """
                                 id: reason
                                 size_hint_y:None
                                 height:dp(50)
+                        MDLabel:
+                            text: " " 
+                            size_hint_y:None
 
                         MDGridLayout:
                             cols: 2
@@ -575,13 +586,6 @@ class ExtensionLoansProfileScreen(Screen):
         loan_details = {i['loan_id']: (
             i['borrower_customer_id'], i['loan_amount'], i['tenure'], i['product_name'], i['interest_rate'],
             i['borrower_full_name']) for i in data}
-        emi_loan = [i['emi_number'] for i in emi1 if i['loan_id'] == value]
-        if emi_loan:
-            highest_number = max(emi_loan)
-            total_payment = highest_number
-        else:
-            total_payment = 0
-        self.total_payments_made = total_payment
         if value in loan_details:
             borrower_customer_id, loan_amount, tenure, product_name, interest_rate, borrower_name = loan_details[value]
             extension_allowed, extension_fee, product_id = extension_details.get(product_name, ('No', 0, None))
@@ -597,12 +601,19 @@ class ExtensionLoansProfileScreen(Screen):
             self.ids.loan_id.text = str(value)
             self.ids.loan_amount.text = str(loan_amount)
             self.ids.user1.text = str(borrower_customer_id)
+            try:
+                interest_rate = float(interest_rate)
+            except ValueError:
+                interest_rate = 0
             self.ids.interest.text = str(interest_rate)
             self.ids.tenure.text = str(tenure)
             self.ids.product_name.text = str(product_name)
             self.ids.extension_allowed.text = str(extension_allowed)
-
-            # Now you can assign extension_fee_display to the corresponding text field in your UI
+            try:
+                extension_fee = float(extension_fee)
+            except ValueError:
+                extension_fee = 0
+                # Now you can assign extension_fee_display to the corresponding text field in your UI
             self.ids.extension_fee.text = str(extension_fee)
             self.ids.name.text = str(borrower_name)
             self.ids.extension_months.text = str(extension_months)
@@ -614,19 +625,38 @@ class ExtensionLoansProfileScreen(Screen):
                 self.show_popup("Extension Warning", "Your extension is not allowed")
                 self.ids.extension_request.disabled = True
 
-            # Retrieve minimum extension months based on the product_id
-            minimum_months = [i['min_extension_months'] for i in product if i['product_name'] == product_name]
-            print(minimum_months)
-            if emi_loan and minimum_months:
-                if emi_loan[0] >= minimum_months[0]:
-                    self.ids.extension_request.disabled = False
-                else:
-                    self.ids.extension_request.disabled = True
-            else:
-                print("Either emi_loan or minimum_months is empty.")
-        else:
-            print(f"Loan with ID '{value}' not found in loan details.")
+            emi_loan = [i for i in emi1 if i['loan_id'] == value]
+            print(emi_loan)
 
+            # Sort the emi_loan list based on the payment date in descending order
+            sorted_emi_loan = sorted(emi_loan, key=lambda x: datetime.strptime(x['next_payment'].isoformat(), '%Y-%m-%d'), reverse=True)
+
+
+            if sorted_emi_loan:
+                # Retrieve the latest emi number from the first element of the sorted list
+                latest_emi_number = sorted_emi_loan[0]['emi_number']
+                # Retrieve the minimum extension months from the first element of the product list
+                minimum_months = [i['min_extension_months'] for i in product if i['product_name'] == product_name]
+                print(minimum_months)
+                if minimum_months:
+                    minimum_months = minimum_months[0]
+                    if latest_emi_number >= minimum_months:
+                        # Enable the extension request button
+                        self.ids.extension_request.disabled = False
+                    else:
+                        # Disable the extension request button
+                        self.ids.extension_request.disabled = True
+                else:
+                    # No minimum extension months found
+                    self.ids.extension_request.disabled = True
+                    print("Minimum extension months not found.")
+            else:
+                # No emi_loan found
+                self.ids.extension_request.disabled = True
+                print("No emi_loan found.")
+
+            # Display the total payment
+            self.ids.total_payment.text = str(latest_emi_number)
     def show_popup(self, title, content):
         popup = Popup(title=title, content=Label(text=content), size_hint=(None, None), size=(400, 200))
         popup.open()
@@ -742,7 +772,7 @@ class ExtendLoansScreen(Screen):
             roi = emi[0]['roi']
             roi = float(roi)
         else:
-            self.show_popup("Error", "ROI not found for the selected category")
+            self.show_validation_error("ROI not found for the selected category")
             return
 
         monthly_interest_rate = (roi / 100) / 12
@@ -750,7 +780,7 @@ class ExtendLoansScreen(Screen):
         try:
             total_tenure = total_tenure[0]['emi_number']
         except IndexError:
-            self.show_popup("Error", "EMI number not found for the loan")
+            self.show_validation_error( "EMI number not found for the loan")
             return
 
         remaining_tenure = (float(tenure) - float(total_tenure)) + float(loan_extension_months)
@@ -766,14 +796,14 @@ class ExtendLoansScreen(Screen):
             if total_payment is not None:
                 total_payment = float(total_payment)
             else:
-                self.show_popup("Error", "Invalid total payment EMI number")
+                self.show_validation_error("Invalid total payment EMI number")
                 return
 
             emi_paid = total_payment * emi
             remaining_loan_amount = (float(loan_amount) - emi_paid) + float(extension_amount)
             self.ids.finial_repayment_amount.text = f"{remaining_loan_amount:.2f}"
         else:
-            self.show_popup("Error", "No payment data found")
+            self.show_validation_error("No payment data found")
 
     def on_pre_leave(self):
         # Unbind the back button event when leaving the screen
@@ -845,22 +875,33 @@ class ExtendLoansScreen(Screen):
                 status="under process",
                 extension_request_date=date
             )
+            # Clear the data after submitting
+
+            self.root_screen.ids.extension_months.text = ""
+            self.ids.reason.text = ""
             # Navigate to DashboardScreen after adding data
             sm = self.manager
             profile = ExtendLoansScreen(name='DashboardScreen')
             sm.add_widget(profile)  # Add the screen to the ScreenManager
             sm.current = 'DashboardScreen'
         else:
-            self.show_popup("Error", "Please fill all the required fields.")
+            self.show_validation_error("Please fill all the required fields.")
 
-    def show_validation_error(self, message):
-        popup = Popup(
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
             title="Validation Error",
-            content=Label(text=message),
-            size_hint=(None, None),
-            size=(400, 200)
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
         )
-        popup.open()
+        dialog.open()
 
     def on_start(self):
         Window.softinput_mode = "below_target"

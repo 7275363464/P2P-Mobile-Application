@@ -1,5 +1,6 @@
 from anvil.tables import app_tables
 from kivy.factory import Factory
+from kivy.metrics import dp
 from kivy.uix.popup import Popup
 from kivymd.app import MDApp
 from kivy.lang import Builder
@@ -10,6 +11,8 @@ import anvil.server
 from kivy.uix.screenmanager import Screen, SlideTransition
 from kivy.utils import platform
 from kivy.clock import mainthread
+from kivymd.uix.button import MDRectangleFlatButton
+from kivymd.uix.dialog import MDDialog
 from kivymd.uix.filemanager import MDFileManager
 from lender_lost_opportunities import LostOpportunitiesScreen
 from lender_view_transaction_history import TransactionLH
@@ -445,6 +448,7 @@ user_helpers1 = """
             elevation: 2
             pos_hint: {'top': 1}
             left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            right_action_items: [['refresh', lambda x: root.refresh()]]
             title_align: 'center'
             md_bg_color: 0.043, 0.145, 0.278, 1
 
@@ -661,7 +665,7 @@ user_helpers1 = """
                                 height:dp(50)
                                 bold: True
                                 halign: "left"
-                            MDTextField:
+                            MDLabel:
                                 id: email        
                                 text: "" 
                                 size_hint_y:None
@@ -1069,6 +1073,10 @@ class LenderDashboard(Screen):
 class ViewProfileScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.refresh_profile_data()  # Initial data retrieval
+        Clock.schedule_interval(self.refresh_profile_data, 0)  # Schedule data refresh every 60 seconds
+
+    def refresh_profile_data(self, dt=None):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
         name = []
@@ -1105,6 +1113,9 @@ class ViewProfileScreen(Screen):
         # Make a call to the Anvil server function
         # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
         return anvil.server.call('profile')
+
+    def refresh(self):
+        pass
 
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
@@ -1175,7 +1186,7 @@ class ViewProfileScreen(Screen):
     def on_back_button(self, instance, key, scancode, codepoint, modifier):
         # Handle the back button event
         if key == 27:  # 27 is the keycode for the hardware back button on Android
-            self.go_back()
+            self.on_back_button_press()
             return True  # Consume the event, preventing further handling
         return False  # Continue handling the event
 
@@ -1248,18 +1259,58 @@ class ViewEditScreen(Screen):
         success = self.update_profile_data(name, email, mobile_no, dob, city, gender)
 
         if success:
-            self.show_popup("Database Update Sucessfully.")
+            # If the update was successful, reload the profile data
+            self.reload_profile_data()
+            self.show_validation_error("Database Update Sucessfully.")
             # If the update was successful, navigate back to the dashboard screen
-            self.manager.add_widget(Factory.LenderDashboard(name='LenderDashboard'))
-            self.manager.current = 'LenderDashboard'
+            self.manager.add_widget(Factory.DashboardScreen(name='DashboardScreen'))
+            self.manager.current = 'DashboardScreen'
+
         else:
             # Handle the case where the update failed (e.g., display an error message)
             self.on_back_button_press()
 
-    def show_popup(self, text):
-        content = MDLabel(text=text)
-        popup = Popup(title="DataBase", content=content, size_hint=(None, None), size=(400, 200))
-        popup.open()
+    def reload_profile_data(self):
+        # Refresh the data in the ProfileScreen
+        email = self.get_email()
+        data = app_tables.fin_user_profile.search(email_user=email)
+        name = []
+        email1 = []
+        mobile_no = []
+        dob = []
+        city = []
+        gender = []
+        for row in data:
+            name.append(row['full_name'])
+            email1.append(row['email_user'])
+            mobile_no.append(row['mobile'])
+            dob.append(row['date_of_birth'])
+            city.append(row['city'])
+            gender.append(row['gender'])
+        if email in email1:
+            index = email1.index(email)
+            self.ids.name.text = str(name[index])
+            self.ids.email.text = str(email1[index])
+            self.ids.mobile_no.text = str(mobile_no[index])
+            self.ids.dob.text = str(dob[index])
+            self.ids.city.text = str(city[index])
+            self.ids.gender.text = str(gender[index])
+
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
 
     def update_profile_data(self, name, email, mobile_no, dob, city, gender):
         user_profiles = app_tables.fin_user_profile.search(email_user=email)

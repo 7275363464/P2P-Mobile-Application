@@ -363,25 +363,28 @@ class BorrowerDuesScreen(Screen):
             extra_amount = 0
             print(loan_status[index])
             print(extra_amount)
-            if (today_date - shechule_date[value]).days >= 6 and (today_date - shechule_date[value]).days < 10:
+            if (today_date - shechule_date[value]).days >= 6 and (today_date - shechule_date[value]).days < 16:
                 days_left = (today_date - shechule_date[value]).days
-                if days_left > 9:
+                if days_left > 6:
                     days_left = (today_date - shechule_date[value]).days - 6
+                else:
+                    days_left = 0
                 product_index = product_id.index(loan_product[index])
                 lapsed_percentage = lapsed_fee[product_index] + days_left
                 lapsed_amount = (loan_amount[index] * lapsed_percentage / 12) / 100
                 print(lapsed_amount)
                 print(lapsed_percentage)
+                print(days_left)
                 total_amount = monthly_emi[index] + extra_amount
                 self.ids.extra.text = "Extra Payment (Lapsed)"
-                self.ids.extra_amount.text = str(extra_amount + lapsed_amount)
-                self.ids.total_amount.text = str(total_amount + lapsed_amount)
+                self.ids.extra_amount.text = str(round(extra_amount + lapsed_amount, 2))
+                self.ids.total_amount.text = str(round(total_amount + lapsed_amount, 2))
                 data1[index]['loan_state_status'] = "lapsed"
 
 
-            elif (today_date - shechule_date[value]).days >= 10 and (today_date - shechule_date[value]).days < 98:
+            elif (today_date - shechule_date[value]).days >= 16 and (today_date - shechule_date[value]).days < 106:
                 default_amount = 0
-                days_left = (today_date - shechule_date[value]).days - 10
+                days_left = (today_date - shechule_date[value]).days - 16
                 product_index = product_id.index(loan_product[index])
                 default_percentage = default_fee_percentage[product_index] + days_left
                 print(days_left)
@@ -401,9 +404,9 @@ class BorrowerDuesScreen(Screen):
                 print(default_type[product_index] == 'Non Performing Asset (₹)')
                 print(default_type[product_index])
 
-            elif (today_date - shechule_date[value]).days >= 98:
+            elif (today_date - shechule_date[value]).days >= 106:
                 npa_amount = 0
-                days_left = (today_date - shechule_date[value]).days - 98
+                days_left = (today_date - shechule_date[value]).days - 106
                 product_index = product_id.index(loan_product[index])
                 npa_percentage = npa_percentage[product_index] + days_left
                 print(npa_percentage)
@@ -448,10 +451,12 @@ class BorrowerDuesScreen(Screen):
                 if next_emi is not None:
                     next_payment_amount = next_emi['payment_amount']
                     extend_amount += next_payment_amount
-                if (today_date - shechule_date[value]).days >= 6 and (today_date - shechule_date[value]).days < 10:
+                if (today_date - shechule_date[value]).days >= 6 and (today_date - shechule_date[value]).days < 16:
                     days_left = (today_date - shechule_date[value]).days
-                    if days_left > 9:
+                    if days_left > 6:
                         days_left = (today_date - shechule_date[value]).days - 6
+                    else:
+                        days_left = 0
                     product_index = product_id.index(loan_product[index])
                     lapsed_percentage = lapsed_fee[product_index] + days_left
                     lapsed_amount = (loan_amount[index] * lapsed_percentage / 12) / 100
@@ -462,7 +467,7 @@ class BorrowerDuesScreen(Screen):
                     data1[index]['loan_state_status'] = "lapsed"
                 elif (today_date - shechule_date[value]).days >= 10 and (today_date - shechule_date[value]).days < 98:
                     default_amount = 0
-                    days_left = (today_date - shechule_date[value]).days - 10
+                    days_left = (today_date - shechule_date[value]).days - 16
                     product_index = product_id.index(loan_product[index])
                     default_percentage = default_fee_percentage[product_index] + days_left
                     print(default_percentage)
@@ -478,9 +483,9 @@ class BorrowerDuesScreen(Screen):
                     data1[index]['loan_state_status'] = "default"
                     print(default_amount)
 
-                elif (today_date - shechule_date[value]).days >= 98:
+                elif (today_date - shechule_date[value]).days >= 106:
                     npa_amount = 0
-                    days_left = (today_date - shechule_date[value]).days - 98
+                    days_left = (today_date - shechule_date[value]).days - 106
                     product_index = product_id.index(loan_product[index])
                     npa_percentage = npa_percentage[product_index] + days_left
                     print(npa_percentage)
@@ -513,10 +518,12 @@ class BorrowerDuesScreen(Screen):
                 print(foreclose_amount1, emi_amount1)
                 print(emi_amount1)
                 print(foreclose_amount1)
-                if (today_date - shechule_date[value]).days >= 6 and (today_date - shechule_date[value]).days < 10:
+                if (today_date - shechule_date[value]).days >= 6 and (today_date - shechule_date[value]).days < 16:
                     days_left = (today_date - shechule_date[value]).days
-                    if days_left > 9:
+                    if days_left > 6:
                         days_left = (today_date - shechule_date[value]).days - 6
+                    else:
+                        days_left = 0
                     product_index = product_id.index(loan_product[index])
                     lapsed_percentage = lapsed_fee[product_index] + days_left
                     lapsed_amount = (loan_amount[index] * lapsed_percentage / 12) / 100
@@ -528,9 +535,9 @@ class BorrowerDuesScreen(Screen):
                     data1[index]['loan_updated_status'] = "closed"
                     emi_data[index]['next_payment'] = None
 
-                elif (today_date - shechule_date[value]).days >= 10 and (today_date - shechule_date[value]).days < 98:
+                elif (today_date - shechule_date[value]).days >= 16 and (today_date - shechule_date[value]).days < 106:
                     default_amount = 0
-                    days_left = (today_date - shechule_date[value]).days - 10
+                    days_left = (today_date - shechule_date[value]).days - 16
                     product_index = product_id.index(loan_product[index])
                     default_percentage = default_fee_percentage[product_index] + days_left
                     print(default_percentage)
@@ -546,9 +553,9 @@ class BorrowerDuesScreen(Screen):
                     data1[index]['loan_state_status'] = "default"
                     data1[index]['loan_updated_status'] = "closed"
 
-                elif (today_date - shechule_date[value]).days >= 98:
+                elif (today_date - shechule_date[value]).days >= 106:
                     npa_amount = 0
-                    days_left = (today_date - shechule_date[value]).days - 98
+                    days_left = (today_date - shechule_date[value]).days - 106
                     product_index = product_id.index(loan_product[index])
                     npa_percentage = npa_percentage[product_index] + days_left
                     print(npa_percentage)
@@ -563,7 +570,6 @@ class BorrowerDuesScreen(Screen):
                     self.ids.extra.text = "Extra Payment (Default)"
                     data1[index]['loan_state_status'] = "default"
                     data1[index]['loan_updated_status'] = "closed"
-
 
                 else:
                     self.ids.extra.text = "Extra Payment"

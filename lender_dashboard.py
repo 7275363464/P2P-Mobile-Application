@@ -1261,10 +1261,10 @@ class ViewEditScreen(Screen):
         if success:
             # If the update was successful, reload the profile data
             self.reload_profile_data()
-            self.show_validation_error("Database Update Sucessfully.")
+            #self.show_validation_error("Database Update Sucessfully.")
             # If the update was successful, navigate back to the dashboard screen
-            self.manager.add_widget(Factory.DashboardScreen(name='DashboardScreen'))
-            self.manager.current = 'DashboardScreen'
+            self.manager.add_widget(Factory.LenderDashboard(name='LenderDashboard'))
+            self.manager.current = 'LenderDashboard'
 
         else:
             # Handle the case where the update failed (e.g., display an error message)

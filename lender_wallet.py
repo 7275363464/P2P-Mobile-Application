@@ -158,10 +158,9 @@ class LenderWalletScreen(Screen):
 
         if loan_amount_text is not None and w_amount[index] >= loan_amount_text:
             button = MDRoundFlatButton(
-                text="Loan Disbursement",
+                text="   Loan Disbursement   ",
                 size_hint_y=None,
-                height=40,
-                font_size=16,
+                height="40dp",
                 theme_text_color='Custom',
                 text_color=(1, 1, 1, 1),
                 font_name="Roboto-Bold",

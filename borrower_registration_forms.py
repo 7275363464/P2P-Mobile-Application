@@ -1661,7 +1661,7 @@ Borrower = '''
 
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(30)
+        spacing: dp(20)
         padding: dp(30)
 
         MDLabel:
@@ -2080,7 +2080,7 @@ Borrower = '''
             MDLabel:
                 text:"Upload College ID:"
                 halign: 'left'
-                font_size: "25dp"
+                font_size: "15dp"
                 font_name: "Roboto-Bold"
                 size_hint_y: None
                 height:dp(15)

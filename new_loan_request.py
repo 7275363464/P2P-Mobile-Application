@@ -1324,10 +1324,12 @@ class NewloanScreen2(Screen):
 
             p = loan_amount
             t = self.loan_tenure
-            monthly_interest_rate = float(int(interest_rate) / 100) / 12
+            monthly_interest_rate = float((interest_rate) / 100) / 12
             emi_denominator = ((1 + monthly_interest_rate) ** t) - 1
+            if emi_denominator <= 0:
+                raise ValueError("EMI calculation error: Invalid loan tenure or interest rate.")
             emi_numerator = p * monthly_interest_rate * ((1 + monthly_interest_rate) ** t)
-            Monthly_EMI = emi_numerator / emi_denominator
+            Monthly_EMI = emi_numerator / emi_denominator  # Resulting monthly EMI
 
             self.emi_type = self.root_screen.ids.group_id4.text.strip()
             print("Selected emi_type:", self.emi_type)  # Debug print

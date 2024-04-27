@@ -438,7 +438,6 @@ Builder.load_string(extension_loan_request)
 date = datetime.today()
 print(date)
 
-
 class ExtensionLoansRequest(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -484,7 +483,7 @@ class ExtensionLoansRequest(Screen):
             index_list = []
             for i in range(s):
                 c += 1
-                if loan_status[c] == 'disbursed' and customer_id[c] == cos_id:
+                if loan_status[c] == 'disbursed' and customer_id[c] == cos_id :
                     index_list.append(c)
             b = 1
             k = -1
@@ -622,44 +621,55 @@ class ExtensionLoansProfileScreen(Screen):
             if extension_allowed == 'Yes':
                 self.ids.extension_request.disabled = False
             else:
-                self.show_popup("Extension Warning", "Your extension is not allowed")
+                self.show_popup("Your extension is not allowed")
                 self.ids.extension_request.disabled = True
 
             emi_loan = [i for i in emi1 if i['loan_id'] == value]
             print(emi_loan)
 
             # Sort the emi_loan list based on the payment date in descending order
-            sorted_emi_loan = sorted(emi_loan, key=lambda x: datetime.strptime(x['next_payment'].isoformat(), '%Y-%m-%d'), reverse=True)
-
+            if emi_loan:
+                sorted_emi_loan = sorted(emi_loan,
+                                         key=lambda x: datetime.strptime(x['next_payment'].isoformat(), '%Y-%m-%d') if
+                                         x['next_payment'] is not None else datetime.min, reverse=True)
+            else:
+                sorted_emi_loan = []
 
             if sorted_emi_loan:
-                # Retrieve the latest emi number from the first element of the sorted list
                 latest_emi_number = sorted_emi_loan[0]['emi_number']
-                # Retrieve the minimum extension months from the first element of the product list
                 minimum_months = [i['min_extension_months'] for i in product if i['product_name'] == product_name]
                 print(minimum_months)
                 if minimum_months:
                     minimum_months = minimum_months[0]
                     if latest_emi_number >= minimum_months:
-                        # Enable the extension request button
                         self.ids.extension_request.disabled = False
                     else:
-                        # Disable the extension request button
                         self.ids.extension_request.disabled = True
                 else:
-                    # No minimum extension months found
                     self.ids.extension_request.disabled = True
                     print("Minimum extension months not found.")
+                # Display the total payment
+                self.ids.total_payment.text = str(latest_emi_number)
             else:
-                # No emi_loan found
+                # Handle the case where sorted_emi_loan is empty
                 self.ids.extension_request.disabled = True
                 print("No emi_loan found.")
 
-            # Display the total payment
-            self.ids.total_payment.text = str(latest_emi_number)
-    def show_popup(self, title, content):
-        popup = Popup(title=title, content=Label(text=content), size_hint=(None, None), size=(400, 200))
-        popup.open()
+    def show_popup(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
 
     def on_extension_months(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
@@ -704,15 +714,15 @@ class ExtensionLoansProfileScreen(Screen):
                 sm.current = 'ExtendLoansScreen'
             else:
                 # Show error message if extension months are not between 0 and 6
-                self.show_popup("Invalid Extension Months", "Please enter a number between 1 and 6.")
+                self.show_popup( "Please enter a number between 1 and 6.")
         else:
             # Show error message if extension months is not a valid positive integer
-            self.show_popup("Invalid Extension Months", "Please enter a valid positive integer.")
+            self.show_popup( "Please enter a valid positive integer.")
 
     def on_text_validate(self, instance):
         extension_months = instance.text
         if not extension_months.isdigit() or int(extension_months) <= 0:
-            self.show_popup("Invalid Extension Months", "Please enter a valid number of extension months.")
+            self.show_popup( "Please enter a valid number of extension months.")
             # Clear the invalid value from the field
             instance.text = ''
 
@@ -740,9 +750,8 @@ class ExtendLoansScreen(Screen):
             self.check = True
         else:
             self.check = False
-        if self.check != True:
+        if not self.check:
             self.show_validation_error('Select The Terms and Conditions')
-            return
 
     def on_back_button_press(self):
         self.manager.current = 'ExtensionLoansProfileScreen'
@@ -847,6 +856,9 @@ class ExtendLoansScreen(Screen):
             borrower_name = data[0]['borrower_full_name']
             customer_id = data[0]['borrower_customer_id']
             email = data[0]['borrower_email_id']
+            lender_id=data[0]['lender_customer_id']
+            lender_email=data[0]['lender_email_id']
+            lender_name=data[0]['lender_full_name']
         emi = app_tables.fin_emi_table.search(loan_id=loan_id)
         if emi:
             emi_number = emi[0]['emi_number']
@@ -857,9 +869,12 @@ class ExtendLoansScreen(Screen):
             return
 
         # Check if all required fields are filled
-        if loan_id and email and emi_number and loan_amount and customer_id and extension_fee and loan_extension_months and extension_amount and finial_repayment and borrower_name and new_emi:
+        if loan_id and lender_name and lender_id and lender_email and email and emi_number and loan_amount and customer_id and extension_fee and loan_extension_months and extension_amount and finial_repayment and borrower_name and new_emi:
             # Add data to the table
             app_tables.fin_extends_loan.add_row(
+                lender_email_id=lender_email,
+                lender_customer_id=lender_id,
+                lender_full_name=lender_name,
                 loan_id=loan_id,
                 borrower_full_name=borrower_name,
                 loan_amount=loan_amount,

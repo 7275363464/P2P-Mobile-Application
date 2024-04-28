@@ -655,18 +655,15 @@ class LoansDetailsB(Screen):
         # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
         return anvil.server.call('another_method')
 
-
 class ViewProfileScreenFB(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.check_box = None
-
     def checkbox_callback1(self, checkbox, value):
         if value:
             self.check_box = True
         else:
             self.check_box = False
-
     def initialize_with_value(self, value, data):
         emi1 = app_tables.fin_emi_table.search()
         pro_details = app_tables.fin_product_details.search()
@@ -677,6 +674,7 @@ class ViewProfileScreenFB(Screen):
         tenure = []
         interest = []
         credit = []
+        min_months =[]
 
         for i in data:
             loan_id.append(i['loan_id'])
@@ -721,13 +719,13 @@ class ViewProfileScreenFB(Screen):
 
             minimum_months = [i['min_months'] for i in pro_details if i['product_id'] == data[index]['product_id']]
             print(minimum_months)
-            if emi_loan and minimum_months:
-                if emi_loan[0] >= minimum_months[0]:
-                    self.ids.foreclose_button.disabled = False
-                else:
-                    self.ids.foreclose_button.disabled = True
+            print(emi_loan)
+            if total_payment >= minimum_months[0]:
+                self.ids.foreclose_button.disabled = False
             else:
-                print("Either emi_loan or minimum_months is empty.")
+                self.ids.foreclose_button.disabled = True
+
+            print(minimum_months[0], total_payment)
 
     def show_success_dialog(self, text):
         dialog = MDDialog(
@@ -815,12 +813,12 @@ class ForecloseDetails(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.check = None
-
     def checkbox_callback(self, checkbox, value):
         if value:
             self.check = True
         else:
             self.check = False
+
 
     def initialize_with_value(self, value):
         data1 = app_tables.fin_foreclosure.search()
@@ -945,6 +943,8 @@ class ForecloseDetails(Screen):
             total_due_amount = round(total_due_amount, 2)
             self.ids.total_due_amount.text = str(total_due_amount)
 
+
+
     date = datetime.today()
 
     def add_data(self, loan_id, outstanding_amount, foreclose_fee, foreclose_amount, reason, total_due_amount, totalamount, monthly_emi1):
@@ -952,7 +952,6 @@ class ForecloseDetails(Screen):
         if len(self.ids.reason.text) < 3:
             self.show_validation_error('You Must need to enter a reason for foreclosure')
             return
-
         if self.check != True:
             self.show_validation_error('You need to select Terms and Conditions')
             return
@@ -985,7 +984,7 @@ class ForecloseDetails(Screen):
             print(loan_id, outstanding_amount, foreclose_amount, foreclose_fee, interest_rate[index], reason,
                   total_due_amount, borrower_name1[index], loan_amount[index], totalamount, monthly_emi1, date,total_payment )
             app_tables.fin_foreclosure.add_row(loan_id=loan_id, outstanding_amount=float(outstanding_amount),
-                                               foreclose_fee=int(foreclose_fee),
+                                               foreclose_fee=float(foreclose_fee),
                                                foreclose_amount=float(foreclose_amount),
                                                reason=reason, status='under process',
                                                total_due_amount=float(total_due_amount),
@@ -1028,12 +1027,10 @@ class ForecloseDetails(Screen):
             ]
         )
         dialog.open()
-
     def open_dashboard_screen(self, dialog):
 
         dialog.dismiss()
         self.manager.current = 'DashboardScreen'
-
 class MyScreenManager(ScreenManager):
     pass
 

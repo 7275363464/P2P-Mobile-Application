@@ -233,7 +233,7 @@ user_helpers2 = """
             halign: 'center'
 
         MDLabel:
-            text: "Your Today Due application has been requested and you will be notified once it is approved."
+            text: "The payment has been successfully completed. Your transaction has been processed"
             font_style: 'Body1'
             halign: 'center'
             size_hint_y: None

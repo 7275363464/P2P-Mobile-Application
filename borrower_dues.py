@@ -366,12 +366,12 @@ class BorrowerDuesScreen(Screen):
             if (today_date - shechule_date[value]).days >= 6 and (today_date - shechule_date[value]).days < 16:
                 days_left = (today_date - shechule_date[value]).days
                 if days_left > 6:
-                    days_left = (today_date - shechule_date[value]).days - 6
+                    days_left = (today_date - shechule_date[value]).days - 7
                 else:
                     days_left = 0
                 product_index = product_id.index(loan_product[index])
                 lapsed_percentage = lapsed_fee[product_index] + days_left
-                lapsed_amount = (loan_amount[index] * lapsed_percentage / 12) / 100
+                lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
                 print(lapsed_amount)
                 print(lapsed_percentage)
                 print(days_left)
@@ -384,13 +384,13 @@ class BorrowerDuesScreen(Screen):
 
             elif (today_date - shechule_date[value]).days >= 16 and (today_date - shechule_date[value]).days < 106:
                 default_amount = 0
-                days_left = (today_date - shechule_date[value]).days - 16
+                days_left = (today_date - shechule_date[value]).days - 17
                 product_index = product_id.index(loan_product[index])
                 default_percentage = default_fee_percentage[product_index] + days_left
                 print(days_left)
                 print(default_percentage)
                 if default_type[product_index] == 'Non Performing Asset (%)':
-                    default_amount = (loan_amount[index] * default_percentage / 12) / 100
+                    default_amount = (monthly_emi[index] * default_percentage) / 100
                 elif default_type[product_index] == 'Non Performing Asset (₹)':
                     default_amount = default_fee_amount[product_index] * days_left
 
@@ -406,13 +406,13 @@ class BorrowerDuesScreen(Screen):
 
             elif (today_date - shechule_date[value]).days >= 106:
                 npa_amount = 0
-                days_left = (today_date - shechule_date[value]).days - 106
+                days_left = (today_date - shechule_date[value]).days - 107
                 product_index = product_id.index(loan_product[index])
                 npa_percentage = npa_percentage[product_index] + days_left
                 print(npa_percentage)
                 print(days_left)
                 if npa_type[product_index] == 'Non Performing Asset (%)':
-                    npa_amount = (loan_amount[index] * npa_percentage / 12) / 100
+                    npa_amount = (monthly_emi[index] * npa_percentage) / 100
                 elif npa_type[product_index] == 'Non Performing Asset (₹)':
                     npa_amount = default_fee_amount[product_index]
                 total_amount = monthly_emi[index] + extra_amount
@@ -454,12 +454,12 @@ class BorrowerDuesScreen(Screen):
                 if (today_date - shechule_date[value]).days >= 6 and (today_date - shechule_date[value]).days < 16:
                     days_left = (today_date - shechule_date[value]).days
                     if days_left > 6:
-                        days_left = (today_date - shechule_date[value]).days - 6
+                        days_left = (today_date - shechule_date[value]).days - 7
                     else:
                         days_left = 0
                     product_index = product_id.index(loan_product[index])
                     lapsed_percentage = lapsed_fee[product_index] + days_left
-                    lapsed_amount = (loan_amount[index] * lapsed_percentage / 12) / 100
+                    lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
                     self.ids.extra_amount.text = str(extend_amount + lapsed_amount)
                     self.ids.emi_amount.text = str(new_emi_amount)
                     self.ids.total_amount.text = str(total_amount + lapsed_amount)
@@ -467,13 +467,13 @@ class BorrowerDuesScreen(Screen):
                     data1[index]['loan_state_status'] = "lapsed"
                 elif (today_date - shechule_date[value]).days >= 10 and (today_date - shechule_date[value]).days < 98:
                     default_amount = 0
-                    days_left = (today_date - shechule_date[value]).days - 16
+                    days_left = (today_date - shechule_date[value]).days - 17
                     product_index = product_id.index(loan_product[index])
                     default_percentage = default_fee_percentage[product_index] + days_left
                     print(default_percentage)
                     print(days_left)
                     if default_type[product_index] == 'Non Performing Asset (%)':
-                        default_amount = (loan_amount[index] * default_percentage/12) / 100
+                        default_amount = (monthly_emi[index] * default_percentage) / 100
                     elif default_type[product_index] == 'Non Performing Asset (₹)':
                         default_amount = default_fee_amount[product_index]
                     self.ids.extra_amount.text = str(extend_amount + default_amount)
@@ -485,13 +485,13 @@ class BorrowerDuesScreen(Screen):
 
                 elif (today_date - shechule_date[value]).days >= 106:
                     npa_amount = 0
-                    days_left = (today_date - shechule_date[value]).days - 106
+                    days_left = (today_date - shechule_date[value]).days - 107
                     product_index = product_id.index(loan_product[index])
                     npa_percentage = npa_percentage[product_index] + days_left
                     print(npa_percentage)
                     print(days_left)
                     if npa_type[product_index] == 'Non Performing Asset (%)':
-                        npa_amount = (loan_amount[index] * npa_percentage / 12) / 100
+                        npa_amount = (monthly_emi[index] * npa_percentage) / 100
                     elif npa_type[product_index] == 'Non Performing Asset (₹)':
                         npa_amount = default_fee_amount[product_index]
                     self.ids.extra_amount.text = str(extend_amount + npa_amount)
@@ -521,12 +521,12 @@ class BorrowerDuesScreen(Screen):
                 if (today_date - shechule_date[value]).days >= 6 and (today_date - shechule_date[value]).days < 16:
                     days_left = (today_date - shechule_date[value]).days
                     if days_left > 6:
-                        days_left = (today_date - shechule_date[value]).days - 6
+                        days_left = (today_date - shechule_date[value]).days - 7
                     else:
                         days_left = 0
                     product_index = product_id.index(loan_product[index])
                     lapsed_percentage = lapsed_fee[product_index] + days_left
-                    lapsed_amount = (loan_amount[index] * lapsed_percentage / 12) / 100
+                    lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
                     self.ids.extra_amount.text = str(foreclose_amount1 + lapsed_amount)
                     self.ids.emi_amount.text = str(emi_amount1)
                     self.ids.total_amount.text = str(total_amount + lapsed_amount)
@@ -537,13 +537,13 @@ class BorrowerDuesScreen(Screen):
 
                 elif (today_date - shechule_date[value]).days >= 16 and (today_date - shechule_date[value]).days < 106:
                     default_amount = 0
-                    days_left = (today_date - shechule_date[value]).days - 16
+                    days_left = (today_date - shechule_date[value]).days - 17
                     product_index = product_id.index(loan_product[index])
                     default_percentage = default_fee_percentage[product_index] + days_left
                     print(default_percentage)
                     print(days_left)
                     if default_type[product_index] == 'Non Performing Asset (%)':
-                        default_amount = (loan_amount[index] * default_percentage / 12) / 100
+                        default_amount = (monthly_emi[index] * default_percentage) / 100
                     elif default_type[product_index] == 'Non Performing Asset (₹)':
                         default_amount = default_fee_amount[product_index]
                     self.ids.extra_amount.text = str(foreclose_amount1 + default_amount)
@@ -555,13 +555,13 @@ class BorrowerDuesScreen(Screen):
 
                 elif (today_date - shechule_date[value]).days >= 106:
                     npa_amount = 0
-                    days_left = (today_date - shechule_date[value]).days - 106
+                    days_left = (today_date - shechule_date[value]).days - 107
                     product_index = product_id.index(loan_product[index])
                     npa_percentage = npa_percentage[product_index] + days_left
                     print(npa_percentage)
                     print(days_left)
                     if npa_type[product_index] == 'Non Performing Asset (%)':
-                        npa_amount = (loan_amount[index] * npa_percentage / 12) / 100
+                        npa_amount = (monthly_emi[index] * npa_percentage) / 100
                     elif npa_type[product_index] == 'Non Performing Asset (₹)':
                         npa_amount = default_fee_amount[product_index]
                     self.ids.extra_amount.text = str(foreclose_amount1 + npa_amount)

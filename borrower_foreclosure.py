@@ -819,7 +819,6 @@ class ForecloseDetails(Screen):
         else:
             self.check = False
 
-
     def initialize_with_value(self, value):
         data1 = app_tables.fin_foreclosure.search()
         data = app_tables.fin_loan_details.search()
@@ -861,15 +860,17 @@ class ForecloseDetails(Screen):
         for i in emi1:
             if i['loan_id'] == value:
                 emi_num = i['emi_number']
-                break  # Break the loop once the EMI number is found
+                break
 
-        total_amount = 0
-        if emi_num is not None:  # Check if emi_num is found
-            total_amount = month_emi[index2] * emi_num
-            print(month_emi[index2], emi_num)
-
-
-        self.ids.totalamount.text = str(total_amount)
+        total_payment = 0
+        emi_loan = [i['emi_number'] for i in emi1 if i['loan_id'] == value]
+        print(emi_loan)
+        if emi_loan:
+            number = max(emi_loan)
+            total_payment = number
+            total_amount = month_emi[index2] * total_payment
+            print(month_emi[index2], total_payment)
+            self.ids.totalamount.text = str(total_amount)
 
         if value in loan_id1:
             index3 = loan_id1.index(value)
@@ -887,14 +888,14 @@ class ForecloseDetails(Screen):
 
         if value in loan_id1:
             index5 = loan_id1.index(value)
-            overall_outstanding_amount = loan_amount[index5] - (monthly_installment * emi_num)
-            print(loan_amount[index5], monthly_installment, emi_num)
+            overall_outstanding_amount = loan_amount[index5] - (monthly_installment * total_payment)
+            print(loan_amount[index5], monthly_installment, total_payment)
             overall_outstanding_amount = round(overall_outstanding_amount, 2)
             self.ids.overall_amount.text = str(overall_outstanding_amount)
 
         if value in loan_id1:
             index6 = loan_id1.index(value)
-            outstanding_months = tenure[index6] - emi_num
+            outstanding_months = tenure[index6] - total_payment
             overall_monthly_installment = monthly_installment * outstanding_months
             print(monthly_installment, outstanding_months)
             overall_monthly_installment = round(overall_monthly_installment, 2)
@@ -943,12 +944,10 @@ class ForecloseDetails(Screen):
             total_due_amount = round(total_due_amount, 2)
             self.ids.total_due_amount.text = str(total_due_amount)
 
-
-
     date = datetime.today()
 
     def add_data(self, loan_id, outstanding_amount, foreclose_fee, foreclose_amount, reason, total_due_amount, totalamount, monthly_emi1):
-
+        index = 0
         if len(self.ids.reason.text) < 3:
             self.show_validation_error('You Must need to enter a reason for foreclosure')
             return
@@ -995,7 +994,8 @@ class ForecloseDetails(Screen):
                                                interest_rate=interest_rate[index],
                                                borrower_name=borrower_name1[index],
                                                loan_amount=loan_amount[index])
-        self.show_success_dialog(f"This Loan ID {loan_id} has been submitted")
+        data[index]['loan_updated_status'] = 'foreclosure'
+        self.show_success_dialog(f"Your foreclosure request has been successfully submitted. You will receive a notification once it is approved.")
 
     def show_success_dialog(self, text):
         dialog = MDDialog(

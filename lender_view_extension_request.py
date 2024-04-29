@@ -237,7 +237,7 @@ lender_view_extension = """
                         id: box1
                         orientation: 'vertical'
                         size_hint_y: None
-                        height: dp(900)
+                        height: dp(550)
 
                         padding: [10, 0,0,0]
                         canvas.before:
@@ -253,12 +253,15 @@ lender_view_extension = """
                             MDLabel:
                                 text: "Loan ID" 
                                 size_hint_y:None
-                                bold: True
-                                halign: "left"
                                 height:dp(50)
+                                halign: "left"
+                                bold: True
                             MDLabel:
                                 id: loanid
                                 text: ""
+                                halign: "left"
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "Borrower Name" 
@@ -269,6 +272,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: name
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "Loan Amount" 
@@ -279,6 +284,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: amount
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "Extension Fee(%)" 
@@ -289,6 +296,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: extension
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "Extension Amount" 
@@ -299,9 +308,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: extension_amount
                                 text: "" 
-                                halign: "left"
-
-                                text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "Remaining Amount" 
@@ -312,6 +320,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: remaining_amount
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "Reason For Extension" 
@@ -322,6 +332,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: reason
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "New EMI" 
@@ -332,6 +344,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: interest
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
 
                             MDRaisedButton:
@@ -384,7 +398,7 @@ lender_view_extension = """
                         id: box1
                         orientation: 'vertical'
                         size_hint_y: None
-                        height: dp(900)
+                        height: dp(550)
 
                         padding: [10, 0,0,0]
                         canvas.before:
@@ -406,6 +420,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: loanid
                                 text: ""
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "Borrower Name" 
@@ -416,6 +432,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: name
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "Loan Amount" 
@@ -426,6 +444,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: amount
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "Extension Fee(%)" 
@@ -436,6 +456,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: extension
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "Extension Amount" 
@@ -446,6 +468,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: extension_amount
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
 
                             MDLabel:
@@ -457,6 +481,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: remaining_amount
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "Reason For Extension" 
@@ -467,6 +493,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: reason
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "New EMI" 
@@ -477,6 +505,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: interest
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                         MDLabel:
                             text: "Your Extension Loan has been approved" 
@@ -516,7 +546,7 @@ lender_view_extension = """
                         id: box1
                         orientation: 'vertical'
                         size_hint_y: None
-                        height: dp(900)
+                        height: dp(550)
 
                         padding: [10, 0,0,0]
                         canvas.before:
@@ -538,6 +568,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: loanid
                                 text: ""
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "Borrower Name" 
@@ -548,6 +580,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: name
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "Loan Amount" 
@@ -558,6 +592,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: amount
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "Extension Fee(%)" 
@@ -568,6 +604,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: extension
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "Extension Amount" 
@@ -578,6 +616,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: extension_amount
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
 
                             MDLabel:
@@ -589,6 +629,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: remaining_amount
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "Reason For Extension" 
@@ -599,6 +641,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: reason
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                             MDLabel:
                                 text: "New EMI" 
@@ -609,6 +653,8 @@ lender_view_extension = """
                             MDLabel:
                                 id: interest
                                 text: "" 
+                                size_hint_y:None
+                                height:dp(50)
                                 halign: "left"
                         MDLabel:
                             text: "Your Extension Loan has been rejected" 
@@ -1412,17 +1458,29 @@ class ViewProfileE(Screen):
         self.manager.current = 'NewExtension'
 
     def accept_request(self):
-        data = app_tables.fin_extends_loan.search()
         loan_id = self.ids.loanid.text
         print(loan_id)
-        loan_idlist = []
-        for i in data:
-            loan_idlist.append(i['loan_id'])
-        print(loan_idlist)
-        if loan_id in loan_idlist:
-            index = loan_idlist.index(loan_id)
-            data[index]['status'] = 'approved'
+
+        # Fetch the records from both tables based on loan_id
+        extends_loan_records = app_tables.fin_extends_loan.search(loan_id=loan_id)
+        loan_details_records = app_tables.fin_loan_details.search(loan_id=loan_id)
+
+        # Check if records exist for the given loan_id in both tables
+        if extends_loan_records and loan_details_records:
+            # Update 'status' in fin_extends_loan table for each record
+            for extends_loan_record in extends_loan_records:
+                extends_loan_record['status'] = 'approved'
+                extends_loan_record.update()
+
+            # Update 'loan_updated_status' in fin_loan_details table for each record
+            for loan_details_record in loan_details_records:
+                loan_details_record['loan_updated_status'] = 'extension'
+                loan_details_record.update()
+
+            # Switch to the 'NewExtension' screen
             self.manager.current = 'NewExtension'
+        else:
+            print("No data found for loan_id:", loan_id)
 
     def reject_request(self):
         data = app_tables.fin_extends_loan.search()

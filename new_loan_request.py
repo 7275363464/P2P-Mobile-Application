@@ -285,6 +285,7 @@ user_helpers2 = """
                     text: " "  
                 MDLabel:
                     text: " "
+
 <NewloanScreen1>:
     MDTopAppBar:
         title: "New Loan Request"
@@ -324,10 +325,12 @@ user_helpers2 = """
             padding: dp(25)
             spacing: dp(10)
             MDLabel:
-                text: "Loan Amount :"
-                bold:True
-                halign:"left"
-                font_size:dp(16)
+                text: "Loan Amount"
+                bold: True
+                size_hint_y:None
+                height:dp(50)
+                halign: "left"
+
             MDTextField:
                 id: text_input1
                 width: dp(250)
@@ -335,6 +338,8 @@ user_helpers2 = """
                 hint_text: "Enter amount"
                 size_hint: None, None
                 halign:"left"
+                input_type: 'number'  
+                on_touch_down: root.on_amount_touch_down()
                 size: "180dp", "45dp"
                 on_text: root.validate_amount(text_input1,self.text)
                 background_color: 1, 1, 1, 0 
@@ -354,16 +359,21 @@ user_helpers2 = """
             padding: dp(25)
             spacing: dp(10)   
             MDLabel:
-                text: "Interest Rate(%) :"
-                bold:True
+                text: "Interest\\nRate(%)"
                 font_size:dp(16)
-                halign:"left"
+                bold: True
+                size_hint_y:None
+                height:dp(50)
+                halign: "left"
+
 
             MDLabel:
                 id: roi
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 text: " "
-                halign:"left"
+                size_hint_y:None
+                height:dp(50)
+                halign: "left"
         MDLabel:
             text:""
 
@@ -374,16 +384,21 @@ user_helpers2 = """
             spacing: dp(10)
 
             MDLabel:
-                text: "Processing Fee(%) :"
+                text: "Processing\\nFee(%)"
                 bold:True
                 font_size:dp(16)
                 halign:"left"
+                size_hint_y:None
+                height:dp(50)
+                halign: "left"
 
             MDLabel:
                 id: processing_fee
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 text: ""
-                halign:"left"
+                size_hint_y:None
+                height:dp(50)
+                halign: "left"
 
         MDLabel:
             text:""
@@ -394,16 +409,20 @@ user_helpers2 = """
             spacing: dp(10)
 
             MDLabel:
-                text: "Loan Period (Months):"
+                text: "Loan Period (Months)"
                 font_size:dp(16)
                 bold:True
-                halign:"left"
+                size_hint_y:None
+                height:dp(50)
+                halign: "left"
 
             MDTextField:
                 id: text_input2
                 size_hint_x: 0.91
                 multiline: False
                 halign:"left"
+                input_type: 'number'  
+                on_touch_down: root.on_loan_touch_down()
                 hint_text: "Enter loan period"
                 on_text: root.validate_tenure(text_input2,self.text)
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
@@ -430,7 +449,9 @@ user_helpers2 = """
                 font_size: dp(16)
                 text: "EMI Type"
                 bold: True
-                halign:"left"
+                size_hint_y:None
+                height:dp(50)
+                halign: "left"
 
             Spinner:
                 id: group_id4
@@ -522,152 +543,159 @@ user_helpers2 = """
 <NewloanScreen2>:
     MDTopAppBar:
         title: "View Details"
-        elevation: 2
+        elevation: 3
+        left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
         pos_hint: {'top': 1}
-
         title_align: 'center'
         md_bg_color: 0.043, 0.145, 0.278, 1
+
     BoxLayout:
-        pos_hint: {'center_x':0.5, 'center_y':0.4}
-        padding: dp(20)
-        spacing: dp(20)
         orientation: 'vertical'
+        spacing: dp(45)
+        size_hint_y: None
+        height: self.minimum_height
 
         BoxLayout:
-            orientation: "vertical"
-
-
+            orientation: 'vertical'
+            spacing: dp(10)
+            padding: dp(20)
             size_hint_y: None
-            height: self.minimum_height
+            height: dp(520)
 
+            canvas.before:
+                Color:
+                    rgba: 230/255, 245/255, 255/255, 1 
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [5, 5, 5, 5]
 
-            Image:
-                source:"LOGO.png"
-                size_hint:None,None
-                size:"50dp","50dp"
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-        MDGridLayout:
-            cols: 1
-
-            MDLabel:
-                text: "Loan Summary"
-                halign: "center"
-                font_size:dp(20)
-                bold: True
-                underline:"True"
-
-        MDGridLayout:
-            cols: 2
-            spacing:dp(30)
-            padding:dp(50)
+            MDGridLayout:
+                cols: 1
+                MDLabel:
+                    text: "Loan Summary"
+                    halign: "center"
+                    font_size:dp(20)
+                    size_hint_y:None
+                    height:dp(50)
+                    bold: True
+                    underline:"True"
 
             MDLabel:
-                text: "Loan Amount"
-                bold:True
-                halign:"left"
+                text: ''
+                halign: 'left'
+                size_hint_y: None
+                height: dp(20)
 
-            MDLabel:
-                id: loan_amount
-                text: ""
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                halign:"left"
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: "Loan Amount"
+                    size_hint_y:None
+                    height:dp(50)
+                    bold: True
+                    halign: "left"
+                MDLabel:
+                    id: loan_amount
+                    text: ""
+                    font_size:dp(20)
+                    size_hint_y:None
+                    height:dp(50)
+                    bold: True
+                    halign: "left"
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
 
-        MDGridLayout:
-            cols: 2
-            spacing:dp(30)
-            padding:dp(50)
 
-            MDLabel:
-                text: "Total Interest Amount"
-                bold:True
-                halign:"left"
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: "Total Interest\\nAmount"
+                    size_hint_y:None
+                    height:dp(50)
+                    bold: True
+                    halign: "left"
+                MDLabel:
+                    id: total_interest_amount
+                    size_hint_y:None
+                    height:dp(50)
+                    bold: True
+                    font_size:dp(20)
+                    halign: "left"
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
 
-            MDLabel:
-                id: total_interest_amount
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                text: " "
-                halign:"left"
-        MDGridLayout:
-            cols: 2
-            spacing:dp(30)
-            padding:dp(50)
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: " Total Processing\\nFee Amount "
+                    size_hint_y:None
+                    height:dp(50)
+                    bold: True
+                    halign: "left"
 
-            MDLabel:
-                text: " Total Processing Fee Amount "
-                bold:True
-                halign:"left"
+                MDLabel:
+                    id: total_processing_fee_amount
+                    size_hint_y:None
+                    height:dp(50)
+                    halign: "left"
+                    bold: True
+                    font_size:dp(20)
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
 
-            MDLabel:
-                id: total_processing_fee_amount
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                text: ""
-                halign:"left"
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: "Monthly EMI"
+                    size_hint_y:None
+                    height:dp(50)
+                    bold: True
+                    halign: "left"
 
-        MDGridLayout:
-            cols: 2
-            spacing:dp(30)
-            padding:dp(50)
+                MDLabel:
+                    id: monthly_emi
+                    size_hint_y:None
+                    height:dp(50)
+                    font_size:dp(20)
+                    bold: True
+                    halign: "left"
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
 
-            MDLabel:
-                text: "Monthly EMI"
-                bold:True
-                halign:"left"
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: "Total Repayment\\nAmount"
+                    size_hint_y:None
+                    height:dp(50)
+                    bold: True
+                    halign: "left"
 
-            MDLabel:
-                id: monthly_emi
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                text: ""
-                halign:"left"
+                MDLabel:
+                    id: total
+                    size_hint_y:None
+                    height:dp(50)
+                    font_size:dp(20)
+                    bold: True
+                    halign: "left"
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
 
-        MDGridLayout:
-            cols: 2
-            spacing:dp(30)
-            padding:dp(50)
 
-            MDLabel:
-                text: "Total Repayment Amount"
-                bold:True
-                halign:"left"
 
-            MDLabel:
-                id: total
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                text: " "
-                halign:"left"
-
-        MDLabel:
-            text: " "
-        MDLabel:
-            text: " "
         MDFloatLayout:
-            GridLayout:
-                cols: 3
-                spacing:dp(20)
-                padding:dp(20)
-                pos_hint: {'center_x': 0.5, 'center_y': 1}
-                size_hint: 1, None
+            MDRaisedButton:
+                text: "Send Request"
+                on_release: root.send_request()
+                md_bg_color: 0.043, 0.145, 0.278, 1
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                font_size:dp(15)
+                size_hint: 0.4, None
                 height: "50dp"
-                MDRaisedButton:
-                    text: "Back"
-                    on_release: app.root.current = "NewloanScreen1"
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    theme_text_color: 'Custom'
-                    text_color: 1, 1, 1, 1
-                    size_hint: 1, None
-                    height: "50dp"
-                    font_name: "Roboto-Bold"
-                MDRaisedButton:
-                    text: "Send request"
-                    on_release: root.send_request()
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    size_hint: 1, None
-                    height: "50dp"
-                    font_name: "Roboto-Bold"
-
+                font_name: "Roboto-Bold"
         MDLabel:
-            text: " "
+            text: ''
 
 <NewloanScreen3>:
     MDTopAppBar:
@@ -1006,9 +1034,6 @@ class NewloanScreen(Screen):
         except Exception as e:
             print(f"Error: {e}")
 
-
-
-
     def clear_data(self):
         # Clear the text of spinners
         self.ids.group_id1.text = "Select Group"
@@ -1016,6 +1041,7 @@ class NewloanScreen(Screen):
         self.ids.group_id3.text = "Select product name"
         # Clear the text of labels or any other widgets if needed
         self.ids.product_description.text = ""
+
     def on_pre_leave(self):
         Window.unbind(on_keyboard=self.on_back_button)
 
@@ -1099,6 +1125,14 @@ class NewloanScreen1(Screen):
     product_categories = ""
     credit_limit = ""
     product_description = ""
+
+    def on_amount_touch_down(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.text_input1.input_type = 'number'
+
+    def on_loan_touch_down(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.text_input2.input_type = 'number'
 
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.on_back_button)
@@ -1362,9 +1396,12 @@ class NewloanScreen2(Screen):
 
     def on_back_button(self, instance, key, scancode, codepoint, modifier):
         if key == 27:
-            self.go_back()
+            self.on_back_button_press()
             return True
         return False
+
+    def on_back_button_press(self):
+        self.manager.current = 'NewloanScreen1'
 
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')
@@ -1489,7 +1526,6 @@ class NewloanScreen2(Screen):
         self.root_screen.ids.text_input1.text = ""
         self.root_screen.ids.text_input2.text = ""
         self.root_screen.ids.group_id4.text = "Select EMI Type"
-
 
     def show_success_dialog(self, text):
         dialog = MDDialog(

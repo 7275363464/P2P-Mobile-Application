@@ -942,7 +942,6 @@ lender_foreclouser = '''
                                 halign: "center"
                                 bold: True                                
 
-
 '''
 
 Builder.load_string(lender_foreclouser)
@@ -1798,24 +1797,30 @@ class ViewProfileScreenLF(Screen):
         if self.check != True:
             self.show_validation_error('You need to select Terms and Conditions')
             return
-        data = app_tables.fin_foreclosure.search()
-        loan = app_tables.fin_loan_details.search()
+
         loan_id = self.ids.loan1.text
         print(loan_id)
-        loan_list_id = []
-        loan_idlist = []
-        for i in data:
-            loan_idlist.append(i['loan_id'])
-        for i in loan:
-            loan_list_id.append(i['loan_id'])
-        print(loan_idlist)
-        if loan_id in loan_idlist:
-            index = loan_idlist.index(loan_id)
-            data[index]['status'] = 'approved'
+
+        # Fetch data from both tables
+        foreclosure_records = app_tables.fin_foreclosure.search(loan_id=loan_id)
+        loan_records = app_tables.fin_loan_details.search(loan_id=loan_id)
+
+        # Check if records exist for the given loan_id in both tables
+        if foreclosure_records and loan_records:
+            # Update 'status' in fin_foreclosure table for each record
+            for record in foreclosure_records:
+                record['status'] = 'approved'
+                record.update()
+
+            # Update 'loan_updated_status' in fin_loan_details table for each record
+            for record in loan_records:
+                record['loan_updated_status'] = 'foreclosure'
+                record.update()
+
+            # Switch to the 'DashboardScreenLF' screen
             self.manager.current = 'DashboardScreenLF'
-        if loan_id in loan_list_id:
-            index1 = loan_list_id.index(loan_id)
-            loan[index1]['loan_updated_status'] = 'foreclosure'
+        else:
+            print("No data found for loan_id:", loan_id)
 
     def show_validation_error(self, error_message):
         dialog = MDDialog(
@@ -1835,23 +1840,17 @@ class ViewProfileScreenLF(Screen):
 
     def rejected_click(self):
         data = app_tables.fin_foreclosure.search()
-        loan = app_tables.fin_loan_details.search()
         loan_id = self.ids.loan1.text
         print(loan_id)
-        loan_list_id = []
+
         loan_idlist = []
         for i in data:
             loan_idlist.append(i['loan_id'])
-        for i in loan:
-            loan_list_id.append(i['loan_id'])
         print(loan_idlist)
         if loan_id in loan_idlist:
             index = loan_idlist.index(loan_id)
             data[index]['status'] = 'rejected'
             self.manager.current = 'DashboardScreenLF'
-        if loan_id in loan_list_id:
-            index1 = loan_list_id.index(loan_id)
-            loan[index1]['loan_updated_status'] = 'disbursed'
 
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method

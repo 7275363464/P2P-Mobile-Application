@@ -60,7 +60,7 @@ lender_today_due = '''
                         id: box1
                         orientation: 'vertical'
                         size_hint_y: None
-                        height: dp(650)
+                        height: dp(500)
                         padding: [10, 0, 0, 0]
                         canvas.before:
                             Color:

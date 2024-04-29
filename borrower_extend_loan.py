@@ -410,9 +410,10 @@ extension_loan_request = """
                             spacing: dp(10)
                             padding: dp(10)
                             MDCheckbox:
-                                id: kyc_checkbox
-                                size_hint_x: None
+                                id: check
+                                size_hint: None, None
                                 width: "20dp"
+                                active: False
                                 on_active: root.on_checkbox_active(self, self.active)
                             MDLabel:
                                 text: "I Agree Terms and Conditions"
@@ -657,7 +658,7 @@ class ExtensionLoansProfileScreen(Screen):
 
     def show_popup(self, error_message):
         dialog = MDDialog(
-            title="Validation Error",
+            title="Warning",
             text=error_message,
             size_hint=(0.8, None),
             height=dp(200),
@@ -717,11 +718,11 @@ class ExtensionLoansProfileScreen(Screen):
                 self.show_popup( "Please enter a number between 1 and 6.")
         else:
             # Show error message if extension months is not a valid positive integer
-            self.show_popup( "Please enter a valid positive integer.")
+            self.show_popup( "Please enter extension months.")
 
     def on_text_validate(self, instance):
         extension_months = instance.text
-        if not extension_months.isdigit() or int(extension_months) <= 0:
+        if not extension_months.isdigit() or int(extension_months) <= 1:
             self.show_popup( "Please enter a valid number of extension months.")
             # Clear the invalid value from the field
             instance.text = ''
@@ -750,8 +751,6 @@ class ExtendLoansScreen(Screen):
             self.check = True
         else:
             self.check = False
-        if not self.check:
-            self.show_validation_error('Select The Terms and Conditions')
 
     def on_back_button_press(self):
         self.manager.current = 'ExtensionLoansProfileScreen'
@@ -868,6 +867,10 @@ class ExtendLoansScreen(Screen):
             self.show_validation_error("Reason is required.")
             return
 
+        if self.check != True:
+            self.show_validation_error(' Please Read and Accept the  Terms and Conditions')
+            return
+
         # Check if all required fields are filled
         if loan_id and lender_name and lender_id and lender_email and email and emi_number and loan_amount and customer_id and extension_fee and loan_extension_months and extension_amount and finial_repayment and borrower_name and new_emi:
             # Add data to the table
@@ -894,6 +897,7 @@ class ExtendLoansScreen(Screen):
 
             self.root_screen.ids.extension_months.text = ""
             self.ids.reason.text = ""
+            self.show_validation_errors("Your extension request has been successfully submitted. You will receive a notification once it is approved.")
             # Navigate to DashboardScreen after adding data
             sm = self.manager
             profile = ExtendLoansScreen(name='DashboardScreen')
@@ -901,10 +905,25 @@ class ExtendLoansScreen(Screen):
             sm.current = 'DashboardScreen'
         else:
             self.show_validation_error("Please fill all the required fields.")
+    def show_validation_errors(self,error_message):
+        dialog = MDDialog(
+            title="Sucessfully Submitted",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
 
     def show_validation_error(self, error_message):
         dialog = MDDialog(
-            title="Validation Error",
+            title="Warning",
             text=error_message,
             size_hint=(0.8, None),
             height=dp(200),

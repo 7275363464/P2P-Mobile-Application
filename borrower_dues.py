@@ -389,9 +389,9 @@ class BorrowerDuesScreen(Screen):
                 default_percentage = default_fee_percentage[product_index] + days_left
                 print(days_left)
                 print(default_percentage)
-                if default_type[product_index] == 'Non Performing Asset (%)':
+                if default_type[product_index] == 'Default fee (%)':
                     default_amount = (monthly_emi[index] * default_percentage) / 100
-                elif default_type[product_index] == 'Non Performing Asset (₹)':
+                elif default_type[product_index] == 'Default fee (₹)':
                     default_amount = default_fee_amount[product_index] * days_left
 
                 total_amount = monthly_emi[index] + extra_amount
@@ -465,16 +465,16 @@ class BorrowerDuesScreen(Screen):
                     self.ids.total_amount.text = str(total_amount + lapsed_amount)
                     self.ids.extra.text = "Extra Payment (Lapsed)"
                     data1[index]['loan_state_status'] = "lapsed"
-                elif (today_date - shechule_date[value]).days >= 10 and (today_date - shechule_date[value]).days < 98:
+                elif (today_date - shechule_date[value]).days >= 16 and (today_date - shechule_date[value]).days < 98:
                     default_amount = 0
                     days_left = (today_date - shechule_date[value]).days - 17
                     product_index = product_id.index(loan_product[index])
                     default_percentage = default_fee_percentage[product_index] + days_left
                     print(default_percentage)
                     print(days_left)
-                    if default_type[product_index] == 'Non Performing Asset (%)':
+                    if default_type[product_index] == 'Default fee (%)':
                         default_amount = (monthly_emi[index] * default_percentage) / 100
-                    elif default_type[product_index] == 'Non Performing Asset (₹)':
+                    elif default_type[product_index] == 'Default fee (₹)':
                         default_amount = default_fee_amount[product_index]
                     self.ids.extra_amount.text = str(extend_amount + default_amount)
                     self.ids.emi_amount.text = str(new_emi_amount)
@@ -542,9 +542,9 @@ class BorrowerDuesScreen(Screen):
                     default_percentage = default_fee_percentage[product_index] + days_left
                     print(default_percentage)
                     print(days_left)
-                    if default_type[product_index] == 'Non Performing Asset (%)':
+                    if default_type[product_index] == 'Default fee (%)':
                         default_amount = (monthly_emi[index] * default_percentage) / 100
-                    elif default_type[product_index] == 'Non Performing Asset (₹)':
+                    elif default_type[product_index] == 'Default fee (₹)':
                         default_amount = default_fee_amount[product_index]
                     self.ids.extra_amount.text = str(foreclose_amount1 + default_amount)
                     self.ids.emi_amount.text = str(emi_amount1)

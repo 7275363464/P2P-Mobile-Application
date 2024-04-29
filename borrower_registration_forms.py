@@ -2286,7 +2286,7 @@ Borrower = '''
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
+            spacing: dp(15)
             padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:

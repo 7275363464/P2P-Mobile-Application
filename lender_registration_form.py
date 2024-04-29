@@ -137,6 +137,8 @@ KV = '''
                 id: spinner_id
                 text: "Select Gender"
                 font_size: "15dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 multiline: False
                 size_hint: 1 , None
                 height:"40dp"
@@ -383,8 +385,9 @@ KV = '''
                 padding: "10dp"
                 spacing: "10dp"
                 size_hint: None, None
-                size: dp(280), dp(50)  # Adjust size as needed
+                size: dp(200), dp(50)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
                 canvas:
                     Color:
                         rgba: 0, 0, 0, 1  # Border color (black in this example)
@@ -579,7 +582,7 @@ KV = '''
                 text: "Select Type Of Address"
                 bold: True
                 size_hint_y:None
-                height:dp(50)
+                height:dp(20)
                 halign: "left"
 
             Spinner:
@@ -589,6 +592,8 @@ KV = '''
                 size_hint: 1 , None
                 halign: "left"
                 height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 font_size: "15dp"
                 background_color: 0,0,0,0
                 background_normal:''
@@ -604,7 +609,7 @@ KV = '''
                 text: "How Long You Are Staying At This Address"
                 bold: True
                 size_hint_y:None
-                height:dp(50)
+                height:dp(20)
                 halign: "left"
 
             Spinner:
@@ -617,6 +622,8 @@ KV = '''
                 height:"40dp"
                 background_color: 0,0,0,0
                 background_normal:''
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 color: 0, 0, 0, 1
                 canvas.before:
                     Color:
@@ -624,21 +631,18 @@ KV = '''
                     Line:
                         width: 0.7
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)    
-            MDLabel:
-                text: ""
-                bold: True
-                height:dp(5)
-                size_hint_y:None
-
-            MDRectangleFlatButton:
-                text: "Next"
-                on_release: root.add_data(street_address1.text, street_address2.text, spinner_id1.text, spinner_id2.text)
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
+            GridLayout:
+                cols: 1
+                spacing:dp(30)
+                MDRectangleFlatButton:
+                    text: "Next"
+                    on_release: root.add_data(street_address1.text, street_address2.text, spinner_id1.text, spinner_id2.text)
+                    md_bg_color: 0.043, 0.145, 0.278, 1
+                    pos_hint: {'right': 1, 'y': 0.5}
+                    text_color: 1, 1, 1, 1
+                    size_hint: 1, None
+                    height: "50dp"
+                    font_name: "Roboto-Bold"
 
 
 <LenderScreen4>:
@@ -816,6 +820,8 @@ KV = '''
                 font_size: "15dp"
                 halign: "left"
                 height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 background_color: 0,0,0,0
                 background_normal:''
                 color: 0, 0, 0, 1
@@ -881,7 +887,7 @@ KV = '''
                 height:dp(0)
 
             MDLabel:
-                text: "Upload 10th class certificate"
+                text: "Upload 10th standard certificate"
                 halign: 'left'
                 bold:True
                 size_hint_y: None
@@ -980,7 +986,7 @@ KV = '''
                 halign: 'center'
                 bold: True
             MDLabel:
-                text: "Upload 10th class"
+                text: "Upload 10th standard"
                 halign: 'left'
                 bold: True
                 font_size: "15dp"
@@ -1119,7 +1125,7 @@ KV = '''
                     rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
             MDLabel:
-                text: "Upload 10th class Certificate"
+                text: "Upload 10th standard Certificate"
                 halign: 'left'
                 font_size: "15dp"
                 bold: True
@@ -1313,7 +1319,7 @@ KV = '''
                 halign: 'center'
                 bold: True
             MDLabel:
-                text: "Upload 10th class Certificate"
+                text: "Upload 10th standard Certificate"
                 halign: 'left'
                 bold: True
                 font_size: "15dp"
@@ -1562,7 +1568,7 @@ KV = '''
                 halign: 'center'
                 bold: True
             MDLabel:
-                text: "Upload 10th Class Certificate"
+                text: "Upload 10th standard Certificate"
                 halign: 'left'
                 font_size: "15dp"
                 bold: True
@@ -1870,6 +1876,8 @@ KV = '''
                 multiline: False
                 size_hint: 1 , None
                 height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 background_color: 0,0,0,0
                 background_normal:''
                 color: 0, 0, 0, 1
@@ -1909,6 +1917,8 @@ KV = '''
                 font_size: "15dp"
                 multiline: False
                 size_hint: 1 , None
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 height:"40dp"
                 background_color: 0,0,0,0
                 background_normal:''
@@ -2020,6 +2030,8 @@ KV = '''
                 multiline: False
                 size_hint: 1 , None
                 height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 background_color: 0,0,0,0
                 background_normal:''
                 color: 0, 0, 0, 1
@@ -2045,6 +2057,8 @@ KV = '''
                 multiline: False
                 size_hint: 1 , None
                 height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 background_color: 0,0,0,0
                 background_normal:''
                 font_size: "15dp"
@@ -2121,6 +2135,8 @@ KV = '''
                 hint_text_color: 0, 0, 0, 1
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
+                input_type: 'number'
+                on_touch_down: root.on_estd_touch_down()
                 helper_text_color_normal: "black"
                 font_size: "15dp"
 
@@ -2168,8 +2184,9 @@ KV = '''
                 padding: "10dp"
                 spacing: "10dp"
                 size_hint: None, None
-                size: dp(280), dp(50)  # Adjust size as needed
+                size: dp(200), dp(50)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
                 canvas:
                     Color:
                         rgba: 0, 0, 0, 1  # Border color (black in this example)
@@ -2310,8 +2327,9 @@ KV = '''
                 padding: "10dp"
                 spacing: "10dp"
                 size_hint: None, None
-                size: dp(280), dp(50)  # Adjust size as needed
+                size: dp(200), dp(50)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
                 canvas:
                     Color:
                         rgba: 0, 0, 0, 1  # Border color (black in this example)
@@ -2419,6 +2437,8 @@ KV = '''
                 background_color: 0,0,0,0
                 background_normal:''
                 font_size: "15dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 color: 0, 0, 0, 1
                 canvas.before:
                     Color:
@@ -2458,6 +2478,8 @@ KV = '''
                 background_color: 0,0,0,0
                 background_normal:''
                 font_size: "15dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 color: 0, 0, 0, 1
                 canvas.before:
                     Color:
@@ -2482,6 +2504,8 @@ KV = '''
                 background_color: 0,0,0,0
                 background_normal:''
                 font_size: "15dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 color: 0, 0, 0, 1
                 canvas.before:
                     Color:
@@ -2871,6 +2895,8 @@ KV = '''
                 size_hint: 1 , None
                 font_size: "15dp"
                 height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 background_color: 0,0,0,0
                 background_normal:''
                 color: 0, 0, 0, 1
@@ -2955,21 +2981,6 @@ KV = '''
                 font_size: "15dp"
 
             MDTextField:
-                id: father_age
-                hint_text: 'Enter Father Age'
-                helper_text: 'Enter valid Father Age'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-                input_type: 'number'  
-                on_touch_down: root.on_father_age_touch_down()
-
-            MDTextField:
                 id: father_dob
                 hint_text: "Enter Father D.O.B"
                 helper_text: 'YYYY-MM-DD'
@@ -2984,7 +2995,20 @@ KV = '''
                 font_size: "15dp"
                 input_type:'number'
                 on_touch_down: root.on_date_touch_down()
-
+            
+            MDTextField:
+                id: father_address
+                hint_text: 'Enter Father Address'
+                helper_text: 'Enter valid Father Address'
+                multiline: False
+                helper_text_mode: 'on_focus'
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                font_size: "15dp"
+                font_name: "Roboto-Bold"
+                
             MDTextField:
                 id: father_occupation
                 hint_text: 'Enter Father Occupation'
@@ -3016,7 +3040,7 @@ KV = '''
 
             MDRectangleFlatButton:
                 text: "Next"
-                on_release: root.add_data(father_name.text, father_age.text, father_occupation.text, father_ph_no.text, father_dob.text)
+                on_release: root.add_data(father_name.text, father_address.text, father_occupation.text, father_ph_no.text, father_dob.text)
                 md_bg_color: 0.043, 0.145, 0.278, 1
                 pos_hint: {'right': 1, 'y': 0.5}
                 text_color: 1, 1, 1, 1
@@ -3082,24 +3106,9 @@ KV = '''
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
-
+            
             MDTextField:
-                id: mother_age
-                hint_text: 'Enter Mother Address'
-                helper_text: 'Enter valid Mother Address'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-                input_type: 'number'  
-                on_touch_down: root.on_mother_age_touch_down()
-
-            MDTextField:
-                id: Mother_dob
+                id: mother_dob
                 hint_text: "Enter Father D.O.B"
                 helper_text: 'YYYY-MM-DD'
                 font_name: "Roboto-Bold"
@@ -3110,7 +3119,19 @@ KV = '''
                 input_type:'number'
                 font_size: "15dp"
                 on_touch_down: root.on_date_touch_down()
-
+            MDTextField:
+                id: mother_address
+                hint_text: 'Enter Mother Address'
+                helper_text: 'Enter valid Mother Address'
+                multiline: False
+                helper_text_mode: 'on_focus'
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                font_size: "15dp"
+                font_name: "Roboto-Bold"
+                
             MDTextField:
                 id: mother_occupation
                 hint_text: 'Enter Mother Occupation'
@@ -3141,7 +3162,7 @@ KV = '''
 
             MDRectangleFlatButton:
                 text: "Next"
-                on_release: root.add_data(mother_name.text, mother_age.text, mother_occupation.text, mother_ph_no.text, mother_dob.text)
+                on_release: root.add_data(mother_name.text, mother_address.text, mother_occupation.text, mother_ph_no.text, mother_dob.text)
                 md_bg_color: 0.043, 0.145, 0.278, 1
                 pos_hint: {'right': 1, 'y': 0.5}
                 text_color: 1, 1, 1, 1
@@ -3503,7 +3524,7 @@ KV = '''
                     rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
             MDLabel:
-                text: 'Borrower Registration Form'
+                text: 'Lender Registration Form'
                 halign: 'center'
                 font_size: "20dp"
                 font_name: "Roboto-Bold"
@@ -3654,19 +3675,6 @@ KV = '''
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
 
-            MDTextField:
-                id: designation
-                hint_text: 'Enter Designation'
-                multiline: False
-                helper_text: "Enter Valid designation"
-                helper_text_mode: 'on_focus'
-                height:self.minimum_height
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-
             MDLabel:
                 text: 'Select Account Type:'
                 halign: 'left'
@@ -3682,6 +3690,8 @@ KV = '''
                 multiline: False
                 size_hint: 1 , None
                 height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 background_color: 0,0,0,0
                 background_normal:''
                 color: 0, 0, 0, 1
@@ -3801,7 +3811,7 @@ KV = '''
                 size_hint_y: None
                 height: "29dp"
                 spacing:dp(5)
-                pos_hint: {'center_x': 0.6, 'center_y': 0.4}
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 MDCheckbox:
                     id: check
                     size_hint: None, None
@@ -6327,6 +6337,9 @@ class LenderScreenInstitutionalForm2(Screen):
     def exit_manager(self, *args):
         self.file_manager.close()
 
+    def on_estd_touch_down(self):
+        self.ids.year_of_estd.input_type = 'number'
+
     def request_media_images_permission(self):
         request_permissions([Permission.READ_MEDIA_IMAGES], self.permission_callback)
 
@@ -7302,10 +7315,10 @@ class LenderScreen7(Screen):
             sm.current = 'LenderScreen13'
         elif marital_status_id == 'Other':
             sm = self.manager
-            borrower_screen = LenderScreen14(name='LenderScreen14')
+            borrower_screen = LenderScreen13(name='LenderScreen13')
             sm.add_widget(borrower_screen)
             sm.transition.direction = 'left'
-            sm.current = 'LenderScreen14'
+            sm.current = 'LenderScreen13'
 
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
@@ -7375,10 +7388,6 @@ class LenderScreen8(Screen):
         # Change keyboard mode to numeric when the mobile number text input is touched
         self.ids.father_dob.input_type = 'number'
 
-    def on_father_age_touch_down(self):
-        # Change keyboard mode to numeric when the mobile number text input is touched
-        self.ids.father_age.input_type = 'number'
-
     def on_father_ph_no_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
         self.ids.father_ph_no.input_type = 'number'
@@ -7394,7 +7403,7 @@ class LenderScreen8(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def add_data(self, father_name, father_age, father_occupation, father_ph_no, father_dob):
+    def add_data(self, father_name, father_address, father_occupation, father_ph_no, father_dob):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -7414,16 +7423,16 @@ class LenderScreen8(Screen):
         # Perform the actual action (e.g., fetching loan requests)
         # You can replace the sleep with your actual logic
         Clock.schedule_once(
-            lambda dt: self.perform_data_addition_action(father_name, father_age, father_occupation, father_ph_no,
+            lambda dt: self.perform_data_addition_action(father_name, father_address, father_occupation, father_ph_no,
                                                          father_dob,
                                                          modal_view), 2)
 
-    def perform_data_addition_action(self, father_name, father_age, father_occupation, father_ph_no, father_dob,
+    def perform_data_addition_action(self, father_name, father_address, father_occupation, father_ph_no, father_dob,
                                      modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
         # Check for missing fields
-        if not all([father_name, father_age, father_occupation, father_ph_no, father_dob]):
+        if not all([father_name, father_address, father_occupation, father_ph_no, father_dob]):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
@@ -7437,8 +7446,8 @@ class LenderScreen8(Screen):
         if len(father_occupation) < 3:
             self.show_validation_error("Please Enter Valid Father Occupation.")
             return
-        if not father_age.isdigit():
-            self.show_validation_error("Please enter a valid age for the father.")
+        if not re.match(r'^[a-zA-Z\s]{3,}$', father_address):
+            self.show_validation_error("Please enter valid father Age.")
             return
         try:
             dob = datetime.strptime(father_dob, "%Y-%m-%d")
@@ -7463,8 +7472,8 @@ class LenderScreen8(Screen):
         if 'logged' in status:
             log_index = status.index('logged')
             cursor.execute(
-                "UPDATE fin_registration_table SET father_name = ?, father_age = ?, father_occupation = ?, father_ph_no = ? WHERE customer_id = ?",
-                (father_name, father_age, father_occupation, father_ph_no, row_id_list[log_index]))
+                "UPDATE fin_registration_table SET father_name = ?, father_address = ?, father_occupation = ?, father_ph_no = ? WHERE customer_id = ?",
+                (father_name, father_address, father_occupation, father_ph_no, row_id_list[log_index]))
             conn.commit()
         else:
             # Handle the case where the user is not logged in
@@ -7481,7 +7490,7 @@ class LenderScreen8(Screen):
             if cus_id_list[index] in cus_id_list2:
                 index2 = cus_id_list2.index(cus_id_list[index])
                 data2[index2]['guarantor_name'] = father_name
-                data2[index2]['guarantor_address'] = father_age
+                data2[index2]['guarantor_address'] = father_address
                 data2[index2]['guarantor_mobile_no'] = int(father_ph_no)
                 data2[index2]['guarantor_profession'] = father_occupation
                 data2[index2]['guarantor_date_of_births'] = father_dob
@@ -7538,10 +7547,6 @@ class LenderScreen9(Screen):
         # Change keyboard mode to numeric when the mobile number text input is touched
         self.ids.mother_dob.input_type = 'number'
 
-    def on_mother_age_touch_down(self):
-        # Change keyboard mode to numeric when the mobile number text input is touched
-        self.ids.mother_age.input_type = 'number'
-
     def on_mother_ph_no_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
         self.ids.mother_ph_no.input_type = 'number'
@@ -7557,7 +7562,7 @@ class LenderScreen9(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def add_data(self, mother_name, mother_age, mother_occupation, mother_ph_no, mother_dob):
+    def add_data(self, mother_name, mother_address, mother_occupation, mother_ph_no, mother_dob):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -7577,20 +7582,17 @@ class LenderScreen9(Screen):
         # Perform the actual action (e.g., fetching loan requests)
         # You can replace the sleep with your actual logic
         Clock.schedule_once(
-            lambda dt: self.perform_data_addition_action(mother_name, mother_age, mother_occupation, mother_ph_no,
+            lambda dt: self.perform_data_addition_action(mother_name, mother_address, mother_occupation, mother_ph_no,
                                                          mother_dob,
                                                          modal_view), 2)
 
-    def on_father_age_touch_down(self):
-        # Change keyboard mode to numeric when the mobile number text input is touched
-        self.ids.mother_age.input_type = 'number'
 
-    def perform_data_addition_action(self, mother_name, mother_age, mother_occupation, mother_ph_no, mother_dob,
+    def perform_data_addition_action(self, mother_name, mother_address, mother_occupation, mother_ph_no, mother_dob,
                                      modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
         # Check for missing fields
-        if not all([mother_name, mother_age, mother_occupation, mother_ph_no, mother_dob]):
+        if not all([mother_name, mother_address, mother_occupation, mother_ph_no, mother_dob]):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
@@ -7599,14 +7601,14 @@ class LenderScreen9(Screen):
             self.show_validation_error("Please Enter Valid Mother Number.")
             return
 
-        if not re.match(r'^[a-zA-Z\s]{3,}$', mother_name) < 3:
+        if not re.match(r'^[a-zA-Z\s]{3,}$', mother_name):
             self.show_validation_error("Please Enter Valid Mother Name.")
             return
-        if len(mother_occupation) < 3:
+        if not re.match(r'^[a-zA-Z\s]{3,}$', mother_occupation):
             self.show_validation_error("Please Enter Valid Mother Occupation.")
             return
-        if mother_age.isdigit:
-            self.show_validation_error("Please Enter Valid Mother Age.")
+        if not re.match(r'^[a-zA-Z\s]{3,}$', mother_address):
+            self.show_validation_error("Please Enter Valid Mother Address.")
             return
         try:
             dob = datetime.strptime(mother_dob, "%Y-%m-%d")
@@ -7631,8 +7633,8 @@ class LenderScreen9(Screen):
         if 'logged' in status:
             log_index = status.index('logged')
             cursor.execute(
-                "UPDATE fin_registration_table SET mother_name = ?, mother_age = ?, mother_occupation = ?, mother_ph_no = ? WHERE customer_id = ?",
-                (mother_name, mother_age, mother_occupation, mother_ph_no, row_id_list[log_index]))
+                "UPDATE fin_registration_table SET mother_name = ?, mother_address = ?, mother_occupation = ?, mother_ph_no = ? WHERE customer_id = ?",
+                (mother_name, mother_address, mother_occupation, mother_ph_no, row_id_list[log_index]))
             conn.commit()
         else:
             # Handle the case where the user is not logged in
@@ -7649,7 +7651,7 @@ class LenderScreen9(Screen):
             if cus_id_list[index] in cus_id_list2:
                 index2 = cus_id_list2.index(cus_id_list[index])
                 data2[index2]['guarantor_name'] = mother_name
-                data2[index2]['guarantor_address'] = mother_age
+                data2[index2]['guarantor_address'] = mother_address
                 data2[index2]['guarantor_mobile_no'] = int(mother_ph_no)
                 data2[index2]['guarantor_profession'] = mother_occupation
                 data2[index2]['guarantor_date_of_births'] = mother_dob
@@ -7759,6 +7761,12 @@ class LenderScreen10(Screen):
         try:
             dob = datetime.strptime(spouse_marriage_date, "%Y-%m-%d")
             today = datetime.today()
+
+            # Check if dob is less than today's date
+            if dob > today:
+                self.show_validation_error("Date of birth cannot be in the future.")
+                return
+
             age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
 
             # Check if age is less than 18
@@ -8365,12 +8373,12 @@ class LenderScreen14(Screen):
         if not person_ph_no.isdigit() and len(person_ph_no) not in (10, 12):
             self.show_validation_error("Please Enter Valid Mother Number.")
             return
-        if not re.match(r'^[a-zA-Z]+$', relation_name):
-            self.show_validation_error("Relation name should contain only letters.")
+        if not re.match(r'^[a-zA-Z\s]{3,}$', relation_name):
+            self.show_validation_error("Relation name should contain only letters and spaces.")
             return
 
         # Validate person_name
-        if not re.match(r'^[a-zA-Z]+$', person_name):
+        if not re.match(r'^[a-zA-Z\s]{3,}$', person_name):
             self.show_validation_error("Person name should contain only letters.")
             return
         try:

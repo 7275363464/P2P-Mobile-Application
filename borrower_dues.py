@@ -650,10 +650,11 @@ class BorrowerDuesScreen(Screen):
             index = loan_id.index(value)
 
         next_payment_date = None
-        b_index = -1
-        l_index = -1
+        b_index = 0
+        l_index = 0
 
         index1 = 0
+        print(lender_customer_id[index] in wallet_customer_id and int(cos_id1[index]) in wallet_customer_id)
         if lender_customer_id[index] in wallet_customer_id and int(cos_id1[index]) in wallet_customer_id:
             b_index = wallet_customer_id.index(int(cos_id1[index]))
             l_index = wallet_customer_id.index(lender_customer_id[index])
@@ -661,7 +662,8 @@ class BorrowerDuesScreen(Screen):
         print(value)
         print(wallet_amount[b_index], float(total))
         print(wallet_amount[b_index] >= float(total))
-        if wallet_amount[b_index] >= float(total):
+        print(wallet[b_index]['wallet_amount'])
+        if wallet[b_index]['wallet_amount'] >= float(total):
             wallet[b_index]['wallet_amount'] -= float(total)
             wallet[l_index]['wallet_amount'] += float(total)
 

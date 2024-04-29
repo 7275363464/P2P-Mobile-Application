@@ -1835,17 +1835,23 @@ class ViewProfileScreenLF(Screen):
 
     def rejected_click(self):
         data = app_tables.fin_foreclosure.search()
+        loan = app_tables.fin_loan_details.search()
         loan_id = self.ids.loan1.text
         print(loan_id)
-
+        loan_list_id = []
         loan_idlist = []
         for i in data:
             loan_idlist.append(i['loan_id'])
+        for i in loan:
+            loan_list_id.append(i['loan_id'])
         print(loan_idlist)
         if loan_id in loan_idlist:
             index = loan_idlist.index(loan_id)
             data[index]['status'] = 'rejected'
             self.manager.current = 'DashboardScreenLF'
+        if loan_id in loan_list_id:
+            index1 = loan_list_id.index(loan_id)
+            loan[index1]['loan_updated_status'] = 'disbursed'
 
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method

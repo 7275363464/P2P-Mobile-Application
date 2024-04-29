@@ -1,4 +1,6 @@
 import os
+import re
+
 import anvil.server
 from anvil.tables import app_tables
 from kivy.animation import Animation
@@ -1661,7 +1663,7 @@ Borrower = '''
 
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(20)
+        spacing: dp(30)
         padding: dp(30)
 
         MDLabel:
@@ -1672,7 +1674,7 @@ Borrower = '''
         MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(10)
-            padding: dp(30)  # Reduce the top padding
+            padding: dp(30) # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -1686,13 +1688,13 @@ Borrower = '''
                 halign: 'center'
                 font_size: "20dp"
                 font_name: "Roboto-Bold"
+                size_hint_y: None
+                height:dp(50)
 
             MDLabel:
                 text: 'Father Details'
                 halign: 'center'
                 bold: True
-                size_hint_y: None
-                height:dp(50)
 
             MDTextField:
                 id: father_name
@@ -1700,29 +1702,41 @@ Borrower = '''
                 helper_text: 'Enter valid Father Name'
                 multiline: False
                 helper_text_mode: 'on_focus'
-                hint_text_color: 0,0,0, 1
-                font_name: "Roboto-Bold"
-                font_size: "15dp"
-                theme_text_color: "Custom"
                 hint_text_color: 0, 0, 0, 1
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
+                font_name: "Roboto-Bold"
+                font_size: "15dp"
 
             MDTextField:
-                id: father_age
+                id: father_dob
+                hint_text: "Enter Father D.O.B"
+                helper_text: 'YYYY-MM-DD'
+                helper_text_mode: "on_error"
+                font_name: "Roboto-Bold"
+                theme_text_color: 'Custom'
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                height:self.minimum_height
+                font_size: "15dp"
+                input_type:'number'
+                on_touch_down: root.on_date_touch_down()
+
+            MDTextField:
+                id: father_address
                 hint_text: 'Enter Father Address'
                 helper_text: 'Enter valid Father Address'
                 multiline: False
                 helper_text_mode: 'on_focus'
-                hint_text_color: 0,0,0, 1
-                font_name: "Roboto-Bold"
-                font_size: "15dp"
-                theme_text_color: "Custom"
                 hint_text_color: 0, 0, 0, 1
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
+                font_size: "15dp"
+                font_name: "Roboto-Bold"
 
             MDTextField:
                 id: father_occupation
@@ -1730,62 +1744,38 @@ Borrower = '''
                 helper_text: 'Enter valid Father Occupation'
                 multiline: False
                 helper_text_mode: 'on_focus'
-                hint_text_color: 0,0,0, 1
-                font_name: "Roboto-Bold"
-                font_size: "15dp"
-                theme_text_color: "Custom"
                 hint_text_color: 0, 0, 0, 1
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
+                font_size: "15dp"
+                font_name: "Roboto-Bold"
 
             MDTextField:
                 id: father_ph_no
                 hint_text: 'Enter Father Phone NO'
                 multiline: False
+                font_size: "15dp"
                 helper_text: 'Enter valid PH No'
                 helper_text_mode: 'on_focus'
-                text_color: 0,0,0, 1
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
                 font_name: "Roboto-Bold"
                 input_type: 'number'  
                 on_touch_down: root.on_father_ph_no_touch_down()
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
 
-            MDTextField:
-                id: father_dob
-                hint_text: 'Enter Father D.O.B'
-                helper_text: 'YYYY-MM-DD'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                hint_text_color: 0,0,0, 1
+
+            MDRectangleFlatButton:
+                text: "Next"
+                on_release: root.add_data(father_name.text, father_address.text, father_occupation.text, father_ph_no.text, father_dob.text)
+                md_bg_color: 0.043, 0.145, 0.278, 1
+                pos_hint: {'right': 1, 'y': 0.5}
+                text_color: 1, 1, 1, 1
+                size_hint: 1, None
+                height: "50dp"
                 font_name: "Roboto-Bold"
-                input_type:'number'
-                on_touch_down: root.on_date_touch_down()
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            GridLayout:
-                cols: 1
-                spacing: dp(30)
-                padding: [0, "30dp", 0, 0]
-                MDRectangleFlatButton:
-                    text: "Next"
-                    on_release: root.add_data(father_name.text, father_age.text, father_occupation.text, father_ph_no.text, father_dob.text)
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    text_color: 1, 1, 1, 1
-                    size_hint: 1, None
-                    height: "50dp"
-                    font_name: "Roboto-Bold"
 
 <BorrowerScreen6>:
     MDTopAppBar:
@@ -1810,7 +1800,7 @@ Borrower = '''
         MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(10)
-            padding: dp(30)  # Reduce the top padding
+            padding: dp(30) # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -1832,59 +1822,15 @@ Borrower = '''
                 size_hint_y: None
                 height:dp(50)
 
-
             MDTextField:
                 id: mother_name
                 hint_text: 'Enter Mother Name'
-                helper_text: 'Enter Valid Mother Name'
+                helper_text: 'Enter valid Mother Name'
                 multiline: False
                 helper_text_mode: 'on_focus'
-                halign: 'left'
+                hint_text_color: 0,0,0, 1
+                font_name: "Roboto-Bold"
                 font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDTextField:
-                id: mother_age
-                hint_text: 'Enter Mother Address'
-                helper_text: 'Enter Valid Mother Address'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                halign: 'left'
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDTextField:
-                id: mother_occupation
-                hint_text: 'Enter Mother Occupation'
-                helper_text: 'Enter Valid Mother Occupation'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                halign: 'left'
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDTextField:
-                id: mother_ph_no
-                hint_text: 'Enter Mother Phone No'
-                helper_text: 'Enter Valid Mother Phone No'
-                helper_text_mode: 'on_focus'
-                halign: 'left'
-                input_type: 'number'  
-                on_touch_down: root.on_mother_ph_no_touch_down()
-                font_size: "15dp"
-                theme_text_color: "Custom"
                 hint_text_color: 0, 0, 0, 1
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
@@ -1892,32 +1838,66 @@ Borrower = '''
 
             MDTextField:
                 id: mother_dob
-                hint_text: 'Enter Mother D.O.B'
+                hint_text: "Enter Mother D.O.B"
                 helper_text: 'YYYY-MM-DD'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                input_type:'number'
-                on_touch_down: root.on_date_touch_down()
-                font_size: "15dp"
-                theme_text_color: "Custom"
+                font_name: "Roboto-Bold"
                 hint_text_color: 0, 0, 0, 1
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
+                input_type:'number'
+                font_size: "15dp"
+                on_touch_down: root.on_date_touch_down()
+            MDTextField:
+                id: mother_address
+                hint_text: 'Enter Mother Address'
+                helper_text: 'Enter valid Mother Address'
+                multiline: False
+                helper_text_mode: 'on_focus'
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                font_size: "15dp"
+                font_name: "Roboto-Bold"
 
-            GridLayout:
-                cols: 1
-                spacing: dp(30)
-                padding: [0, "30dp", 0, 0]
-                MDRectangleFlatButton:
-                    text: "Next"
-                    on_release: root.add_data(mother_name.text, mother_age.text, mother_occupation.text, mother_ph_no.text, mother_dob.text)
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    text_color: 1, 1, 1, 1
-                    size_hint: 1, None
-                    height: "50dp"
-                    font_name: "Roboto-Bold"
+            MDTextField:
+                id: mother_occupation
+                hint_text: 'Enter Mother Occupation'
+                helper_text: 'Enter valid Mother Occupation'
+                multiline: False
+                helper_text_mode: 'on_focus'
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                font_size: "15dp"
+                font_name: "Roboto-Bold"
+
+            MDTextField:
+                id: mother_ph_no
+                hint_text: 'Enter Mother Phone NO'
+                multiline: False
+                font_size: "15dp"
+                helper_text: 'Enter valid PH No'
+                helper_text_mode: 'on_focus'
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                font_name: "Roboto-Bold"
+                input_type: 'number'  
+                on_touch_down: root.on_mother_ph_no_touch_down()
+
+            MDRectangleFlatButton:
+                text: "Next"
+                on_release: root.add_data(mother_name.text, mother_address.text, mother_occupation.text, mother_ph_no.text, mother_dob.text)
+                md_bg_color: 0.043, 0.145, 0.278, 1
+                pos_hint: {'right': 1, 'y': 0.5}
+                text_color: 1, 1, 1, 1
+                size_hint: 1, None
+                height: "50dp"
+                font_name: "Roboto-Bold"
 
 <BorrowerScreen7>:
     MDTopAppBar:
@@ -2045,7 +2025,7 @@ Borrower = '''
                     rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
             MDLabel:
-                text: 'Student Type'
+                text: 'Student Details'
                 halign: 'center'
                 bold: True
                 size_hint_y: None
@@ -2346,6 +2326,7 @@ Borrower = '''
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
+                input_type: 'number'
 
             MDTextField:
                 id: last_six_months_turnover
@@ -2500,7 +2481,7 @@ Borrower = '''
                 helper_text_color_normal: "black"
 
             MDLabel:
-                text: "Upload Prrof Of Verification"
+                text: "Upload Proof Of Verification"
                 halign: 'left'
                 font_size: "15dp"
                 font_name: "Roboto-Bold"
@@ -3362,6 +3343,7 @@ Borrower = '''
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
+                input_type: 'number'
 
             MDTextField:
                 id: bank_name
@@ -3927,7 +3909,7 @@ Borrower = '''
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(15)
+            spacing: dp(25)
             padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
@@ -4210,6 +4192,7 @@ Borrower = '''
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
+                input_type: 'number'
 
             MDTextField:
                 id: corp
@@ -6167,10 +6150,6 @@ class BorrowerScreen5(Screen):
         # Change keyboard mode to numeric when the mobile number text input is touched
         self.ids.father_dob.input_type = 'number'
 
-    def on_father_age_touch_down(self):
-        # Change keyboard mode to numeric when the mobile number text input is touched
-        self.ids.father_age.input_type = 'number'
-
     def on_father_ph_no_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
         self.ids.father_ph_no.input_type = 'number'
@@ -6186,7 +6165,7 @@ class BorrowerScreen5(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def add_data(self, father_name, father_age, father_occupation, father_ph_no, father_dob):
+    def add_data(self, father_name, father_address, father_occupation, father_ph_no, father_dob):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -6206,31 +6185,31 @@ class BorrowerScreen5(Screen):
         # Perform the actual action (e.g., fetching loan requests)
         # You can replace the sleep with your actual logic
         Clock.schedule_once(
-            lambda dt: self.perform_data_addition_action(father_name, father_age, father_occupation, father_ph_no,
+            lambda dt: self.perform_data_addition_action(father_name, father_address, father_occupation, father_ph_no,
                                                          father_dob,
                                                          modal_view), 2)
 
-    def perform_data_addition_action(self, father_name, father_age, father_occupation, father_ph_no, father_dob,
+    def perform_data_addition_action(self, father_name, father_address, father_occupation, father_ph_no, father_dob,
                                      modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
         # Check for missing fields
-        if not all([father_name, father_age, father_occupation, father_ph_no, father_dob]):
+        if not all([father_name, father_address, father_occupation, father_ph_no, father_dob]):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
 
-        if not father_ph_no.isdigit() or len(father_ph_no) != 10:
+        if not father_ph_no.isdigit() or len(father_ph_no) not in (10, 12):
             self.show_validation_error("Please Enter Valid Father Number.")
             return
-        if len(father_name) < 3:
+        if not re.match(r'^[a-zA-Z\s]{3,}$', father_name):
             self.show_validation_error("Please Enter Valid Father Name.")
             return
         if len(father_occupation) < 3:
             self.show_validation_error("Please Enter Valid Father Occupation.")
             return
-        if len(father_name) < 3:
-            self.show_validation_error("Please Enter Valid Father Address.")
+        if not re.match(r'^[a-zA-Z\s]{3,}$', father_address):
+            self.show_validation_error("Please enter valid father Age.")
             return
         try:
             dob = datetime.strptime(father_dob, "%Y-%m-%d")
@@ -6255,8 +6234,8 @@ class BorrowerScreen5(Screen):
         if 'logged' in status:
             log_index = status.index('logged')
             cursor.execute(
-                "UPDATE fin_registration_table SET father_name = ?, father_age = ?, father_occupation = ?, father_ph_no = ? WHERE customer_id = ?",
-                (father_name, father_age, father_occupation, father_ph_no, row_id_list[log_index]))
+                "UPDATE fin_registration_table SET father_name = ?, father_address = ?, father_occupation = ?, father_ph_no = ? WHERE customer_id = ?",
+                (father_name, father_address, father_occupation, father_ph_no, row_id_list[log_index]))
             conn.commit()
         else:
             # Handle the case where the user is not logged in
@@ -6273,7 +6252,7 @@ class BorrowerScreen5(Screen):
             if cus_id_list[index] in cus_id_list2:
                 index2 = cus_id_list2.index(cus_id_list[index])
                 data2[index2]['guarantor_name'] = father_name
-                data2[index2]['guarantor_address'] = father_age
+                data2[index2]['guarantor_address'] = father_address
                 data2[index2]['guarantor_mobile_no'] = int(father_ph_no)
                 data2[index2]['guarantor_profession'] = father_occupation
                 data2[index2]['guarantor_date_of_births'] = father_dob
@@ -6330,10 +6309,6 @@ class BorrowerScreen6(Screen):
         # Change keyboard mode to numeric when the mobile number text input is touched
         self.ids.mother_dob.input_type = 'number'
 
-    def on_mother_age_touch_down(self):
-        # Change keyboard mode to numeric when the mobile number text input is touched
-        self.ids.mother_age.input_type = 'number'
-
     def on_mother_ph_no_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
         self.ids.mother_ph_no.input_type = 'number'
@@ -6349,7 +6324,7 @@ class BorrowerScreen6(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def add_data(self, mother_name, mother_age, mother_occupation, mother_ph_no, mother_dob):
+    def add_data(self, mother_name, mother_address, mother_occupation, mother_ph_no, mother_dob):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -6369,31 +6344,31 @@ class BorrowerScreen6(Screen):
         # Perform the actual action (e.g., fetching loan requests)
         # You can replace the sleep with your actual logic
         Clock.schedule_once(
-            lambda dt: self.perform_data_addition_action(mother_name, mother_age, mother_occupation, mother_ph_no,
+            lambda dt: self.perform_data_addition_action(mother_name, mother_address, mother_occupation, mother_ph_no,
                                                          mother_dob,
                                                          modal_view), 2)
 
-    def perform_data_addition_action(self, mother_name, mother_age, mother_occupation, mother_ph_no, mother_dob,
+    def perform_data_addition_action(self, mother_name, mother_address, mother_occupation, mother_ph_no, mother_dob,
                                      modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
         # Check for missing fields
-        if not all([mother_name, mother_age, mother_occupation, mother_ph_no, mother_dob]):
+        if not all([mother_name, mother_address, mother_occupation, mother_ph_no, mother_dob]):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
 
-        if not mother_ph_no.isdigit() and len(mother_ph_no) != 10:
+        if not mother_ph_no.isdigit() and len(mother_ph_no) not in (10, 12):
             self.show_validation_error("Please Enter Valid Mother Number.")
             return
 
-        if len(mother_name) < 3:
+        if not re.match(r'^[a-zA-Z\s]{3,}$', mother_name):
             self.show_validation_error("Please Enter Valid Mother Name.")
             return
-        if len(mother_occupation) < 3:
+        if not re.match(r'^[a-zA-Z\s]{3,}$', mother_occupation):
             self.show_validation_error("Please Enter Valid Mother Occupation.")
             return
-        if len(mother_age) < 3:
+        if not re.match(r'^[a-zA-Z\s]{3,}$', mother_address):
             self.show_validation_error("Please Enter Valid Mother Address.")
             return
         try:
@@ -6419,8 +6394,8 @@ class BorrowerScreen6(Screen):
         if 'logged' in status:
             log_index = status.index('logged')
             cursor.execute(
-                "UPDATE fin_registration_table SET mother_name = ?, mother_age = ?, mother_occupation = ?, mother_ph_no = ? WHERE customer_id = ?",
-                (mother_name, mother_age, mother_occupation, mother_ph_no, row_id_list[log_index]))
+                "UPDATE fin_registration_table SET mother_name = ?, mother_address = ?, mother_occupation = ?, mother_ph_no = ? WHERE customer_id = ?",
+                (mother_name, mother_address, mother_occupation, mother_ph_no, row_id_list[log_index]))
             conn.commit()
         else:
             # Handle the case where the user is not logged in
@@ -6437,7 +6412,7 @@ class BorrowerScreen6(Screen):
             if cus_id_list[index] in cus_id_list2:
                 index2 = cus_id_list2.index(cus_id_list[index])
                 data2[index2]['guarantor_name'] = mother_name
-                data2[index2]['guarantor_address'] = mother_age
+                data2[index2]['guarantor_address'] = mother_address
                 data2[index2]['guarantor_mobile_no'] = int(mother_ph_no)
                 data2[index2]['guarantor_profession'] = mother_occupation
                 data2[index2]['guarantor_date_of_births'] = mother_dob
@@ -9243,24 +9218,6 @@ class BorrowerScreen23(Screen):
         if len(person_name) < 3:
             self.show_validation_error('Enter a valid person profession')
             return
-
-        cursor.execute('select * from fin_users')
-        rows = cursor.fetchall()
-        row_id_list = []
-        status = []
-        for row in rows:
-            row_id_list.append(row[0])
-            status.append(row[-1])
-
-        if 'logged' in status:
-            log_index = status.index('logged')
-            cursor.execute(
-                "UPDATE fin_registration_table SET mother_name = ?, mother_age = ?, mother_occupation = ?, mother_ph_no = ? WHERE customer_id = ?",
-                (person_ph_no, person_ph_no, person_proffession, person_ph_no, row_id_list[log_index]))
-            conn.commit()
-        else:
-            # Handle the case where the user is not logged in
-            print("User is not logged in.")
 
         data = app_tables.fin_user_profile.search()
         data2 = app_tables.fin_guarantor_details.search()

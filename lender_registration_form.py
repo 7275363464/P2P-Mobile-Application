@@ -453,8 +453,9 @@ KV = '''
                 padding: "10dp"
                 spacing: "10dp"
                 size_hint: None, None
-                size: dp(280), dp(50)  # Adjust size as needed
+                size: dp(200), dp(50)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
                 canvas:
                     Color:
                         rgba: 0, 0, 0, 1  # Border color (black in this example)
@@ -517,18 +518,18 @@ KV = '''
 
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(25)
-        padding: dp(20)
+        spacing: dp(20)
+        padding: dp(50)
 
         MDLabel:
             text:""
             size_hint_y: None
-            height:dp(50)
+            height:dp(30)
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(15)
-            padding: dp(30)
+            spacing: dp(20)
+            padding: dp(30) 
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
                 Color:
@@ -631,18 +632,16 @@ KV = '''
                     Line:
                         width: 0.7
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)    
-            GridLayout:
-                cols: 1
-                spacing:dp(30)
-                MDRectangleFlatButton:
-                    text: "Next"
-                    on_release: root.add_data(street_address1.text, street_address2.text, spinner_id1.text, spinner_id2.text)
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    text_color: 1, 1, 1, 1
-                    size_hint: 1, None
-                    height: "50dp"
-                    font_name: "Roboto-Bold"
+
+            MDRectangleFlatButton:
+                text: "Next"
+                on_release: root.add_data(street_address1.text, street_address2.text, spinner_id1.text, spinner_id2.text)
+                md_bg_color: 0.043, 0.145, 0.278, 1
+                pos_hint: {'right': 1, 'y': 0.5}
+                text_color: 1, 1, 1, 1
+                size_hint: 1, None
+                height: "50dp"
+                font_name: "Roboto-Bold"
 
 
 <LenderScreen4>:
@@ -658,17 +657,17 @@ KV = '''
     MDBoxLayout:
         orientation: 'vertical'
         orientation: 'vertical'
-        spacing: dp(30)
-        padding: dp(30)
+        spacing: dp(20)
+        padding: dp(50)
 
         MDLabel:
             text:""
             size_hint_y: None
-            height:dp(40)
+            height:dp(30)
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
+            spacing: dp(20)
             padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
@@ -2995,7 +2994,7 @@ KV = '''
                 font_size: "15dp"
                 input_type:'number'
                 on_touch_down: root.on_date_touch_down()
-            
+
             MDTextField:
                 id: father_address
                 hint_text: 'Enter Father Address'
@@ -3008,7 +3007,7 @@ KV = '''
                 helper_text_color_normal: "black"
                 font_size: "15dp"
                 font_name: "Roboto-Bold"
-                
+
             MDTextField:
                 id: father_occupation
                 hint_text: 'Enter Father Occupation'
@@ -3106,7 +3105,7 @@ KV = '''
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
-            
+
             MDTextField:
                 id: mother_dob
                 hint_text: "Enter Father D.O.B"
@@ -3131,7 +3130,7 @@ KV = '''
                 helper_text_color_normal: "black"
                 font_size: "15dp"
                 font_name: "Roboto-Bold"
-                
+
             MDTextField:
                 id: mother_occupation
                 hint_text: 'Enter Mother Occupation'
@@ -3193,7 +3192,7 @@ KV = '''
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
+            spacing: dp(25)
             padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
@@ -3253,15 +3252,19 @@ KV = '''
                 input_type: 'number'
                 on_touch_down: root.on_spouse_mobile_touch_down()
 
-            MDRectangleFlatButton:
-                text: 'Next'
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
-                on_release: root.add_data(spouse_name.text, spouse_marriage_date.text, spouse_mobile.text)
+            GridLayout:
+                cols: 1
+                spacing:dp(30)
+                padding: [0, "30dp", 0, 0]
+                MDRectangleFlatButton:
+                    text: 'Next'
+                    md_bg_color: 0.043, 0.145, 0.278, 1
+                    theme_text_color: 'Custom'
+                    text_color: 1, 1, 1, 1
+                    size_hint: 1, None
+                    height: "50dp"
+                    font_name: "Roboto-Bold"
+                    on_release: root.add_data(spouse_name.text, spouse_marriage_date.text, spouse_mobile.text)
 
 
 <LenderScreen11>:
@@ -3286,7 +3289,7 @@ KV = '''
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
+            spacing: dp(25)
             padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
@@ -3301,6 +3304,33 @@ KV = '''
                 halign: 'center'
                 bold:True
 
+            MDLabel:
+                text:"Select Spouse Profession Type:"
+                halign: 'left'
+                font_size: "15dp"
+                font_name: "Roboto-Bold"
+                size_hint_y: None
+                height:dp(20)
+
+            Spinner:
+                id: spouse_profession
+                text: "Select Spouse Profession"
+                multiline: False
+                size_hint: 1 , None
+                font_size: "15dp"
+                height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
+                background_color: 0,0,0,0
+                background_normal:''
+                color: 0, 0, 0, 1
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  
+                    Line:
+                        width: 0.7
+                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+
             MDTextField:
                 id: spouse_company_name
                 hint_text: 'Enter Spouse Company Name'
@@ -3313,19 +3343,6 @@ KV = '''
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
                 height:self.minimum_height
-                font_size: "15dp"
-
-            MDTextField:
-                id: spouse_profession
-                hint_text: 'Enter Spouse Profession '
-                multiline: False
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-                helper_text: "Enter valid Spouse Profession"
-                helper_text_mode: 'on_focus'
-                font_name: "Roboto-Bold"
                 font_size: "15dp"
 
             MDTextField:
@@ -3343,15 +3360,19 @@ KV = '''
                 input_type: 'number'
                 on_touch_down: root.on_spouse_annual_salary_touch_down()
 
-            MDRectangleFlatButton:
-                text: 'Next'
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
-                on_release: root.add_data(spouse_company_name.text, spouse_profession.text, spouse_annual_salary.text)
+            GridLayout:
+                cols: 1
+                spacing:dp(30)
+                padding: [0, "30dp", 0, 0]
+                MDRectangleFlatButton:
+                    text: 'Next'
+                    md_bg_color: 0.043, 0.145, 0.278, 1
+                    theme_text_color: 'Custom'
+                    text_color: 1, 1, 1, 1
+                    size_hint: 1, None
+                    height: "50dp"
+                    font_name: "Roboto-Bold"
+                    on_release: root.add_data(spouse_company_name.text, spouse_profession.text, spouse_annual_salary.text)
 
 <LenderScreen12>:
     MDTopAppBar:
@@ -6013,7 +6034,7 @@ class LenderScreen6(Screen):
             return
         if investment.isdigit():
             investment = float(investment)
-            if  investment <= 100000:
+            if investment <= 100000:
                 self.show_validation_error("Investment amount must be greater than or equal to 1 lakh.")
             else:
                 self.show_validation_error("Invalid investment amount.")
@@ -7451,11 +7472,7 @@ class LenderScreen8(Screen):
             return
         try:
             dob = datetime.strptime(father_dob, "%Y-%m-%d")
-            today = datetime.now()
-            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
-            if age < 18:
-                self.show_validation_error("Enter a Valid Date of Birth Age must be Greater Than 18")
-                return
+
 
         except ValueError:
             self.show_validation_error("Please enter a valid date of birth in the format YYYY-MM-DD")
@@ -7586,7 +7603,6 @@ class LenderScreen9(Screen):
                                                          mother_dob,
                                                          modal_view), 2)
 
-
     def perform_data_addition_action(self, mother_name, mother_address, mother_occupation, mother_ph_no, mother_dob,
                                      modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
@@ -7612,11 +7628,7 @@ class LenderScreen9(Screen):
             return
         try:
             dob = datetime.strptime(mother_dob, "%Y-%m-%d")
-            today = datetime.now()
-            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
-            if age < 18:
-                self.show_validation_error("Enter a Valid Date of Birth Age must be Greater Than 18")
-                return
+
 
         except ValueError:
             self.show_validation_error("Please enter a valid date of birth in the format YYYY-MM-DD")
@@ -7758,29 +7770,23 @@ class LenderScreen10(Screen):
         if not re.match(r'^[a-zA-Z\s]{3,}$', spouse_name):
             self.show_validation_error("Please Enter Valid Name.")
             return
+        if not spouse_mobile.isdigit() or len(spouse_mobile) not in (10, 12):
+            self.show_validation_error("Please Enter Valid Number.")
+            return
         try:
-            dob = datetime.strptime(spouse_marriage_date, "%Y-%m-%d")
-            today = datetime.today()
+            dob = datetime.strptime(spouse_marriage_date, "%Y-%m-%d").date()
+            today = datetime.today().date()
 
             # Check if dob is less than today's date
             if dob > today:
-                self.show_validation_error("Date of birth cannot be in the future.")
+                self.show_validation_error("Spouse's marriage date must be less than today's date.")
                 return
 
-            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
-
-            # Check if age is less than 18
-            if age < 18:
-                self.show_validation_error("You must be at least 18 years old to register.")
-                return
 
         except ValueError:
             self.show_validation_error("Invalid date format. Please use YYYY-MM-DD")
             return
 
-        if not spouse_mobile.isdigit() or len(spouse_mobile) not in (10, 12):
-            self.show_validation_error("Please Enter Valid Number.")
-            return
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -7861,6 +7867,21 @@ class LenderScreen10(Screen):
 
 
 class LenderScreen11(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        spinner_data = app_tables.fin_spouse_profession.search()
+        data_list = []
+        for i in spinner_data:
+            data_list.append(i['spouse_profession'])
+        unique_list = []
+        for i in data_list:
+            if i not in unique_list:
+                unique_list.append(i)
+        print(unique_list)
+        if len(unique_list) >= 1:
+            self.ids.spouse_profession.values = ['Select Spouse Profession Type'] + unique_list
+        else:
+            self.ids.spouse_profession.values = ['Select Spouse Profession Type']
 
     def on_spouse_annual_salary_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
@@ -7881,7 +7902,7 @@ class LenderScreen11(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def add_data(self, spouse_company_name, spouse_company_address, spouse_annual_salary):
+    def add_data(self, spouse_company_name, spouse_profession, spouse_annual_salary):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -7900,28 +7921,23 @@ class LenderScreen11(Screen):
 
         # Perform the actual action (e.g., fetching loan requests)
         # You can replace the sleep with your actual logic
-        Clock.schedule_once(lambda dt: self.perform_data_addition_action(spouse_company_name, spouse_company_address,
+        Clock.schedule_once(lambda dt: self.perform_data_addition_action(spouse_company_name, spouse_profession,
                                                                          spouse_annual_salary,
                                                                          modal_view), 2)
 
-    def perform_data_addition_action(self, spouse_company_name, spouse_company_address, spouse_annual_salary
+    def perform_data_addition_action(self, spouse_company_name, spouse_profession, spouse_annual_salary
                                      , modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
 
-        if not all([spouse_company_name, spouse_company_address, spouse_annual_salary]):
+        if not all([spouse_company_name, spouse_profession, spouse_annual_salary]):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
-        if not re.match(r'^[a-zA-Z\s]{3,}$', spouse_company_name):
-            self.show_validation_error('Enter a valid company name')
+        if spouse_profession not in spouse_profession == 'Select Spouse Profession':
+            self.show_validation_error('Select a valid Spouse Profession')
             return
-        if len(spouse_company_address) < 3:
-            self.show_validation_error('Enter a valid company name')
-            return
-        if len(spouse_annual_salary) < 3 or not spouse_annual_salary.isdigit():
-            self.show_validation_error('Enter a valid annual salary')
-            return
+
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -7934,7 +7950,7 @@ class LenderScreen11(Screen):
             log_index = status.index('logged')
             cursor.execute(
                 "UPDATE fin_registration_table SET spouse_company_name = ?,spouse_company_address = ?, spouse_annual_salary = ? WHERE customer_id = ?",
-                (spouse_company_name, spouse_company_address, spouse_annual_salary,
+                (spouse_company_name, spouse_profession, spouse_annual_salary,
                  row_id_list[log_index]))
             conn.commit()
         else:
@@ -7952,7 +7968,7 @@ class LenderScreen11(Screen):
                 index2 = cus_id_list2.index(cus_id_list[index])
                 data2[index2]['guarantor_company_name'] = spouse_company_name
                 data2[index2]['guarantor_annual_earning'] = spouse_annual_salary
-                data2[index2]['guarantor_profession'] = spouse_company_address
+                data2[index2]['guarantor_profession'] = spouse_profession
             else:
                 print('customer_id is not valid')
 
@@ -8405,7 +8421,7 @@ class LenderScreen14(Screen):
         if 'logged' in status:
             log_index = status.index('logged')
             cursor.execute(
-                "UPDATE fin_registration_table SET mother_name = ?, mother_age = ?, mother_occupation = ?, mother_ph_no = ? WHERE customer_id = ?",
+                "UPDATE fin_registration_table SET mother_name = ?, mother_address = ?, mother_occupation = ?, mother_ph_no = ? WHERE customer_id = ?",
                 (person_ph_no, person_ph_no, person_proffession, person_ph_no, row_id_list[log_index]))
             conn.commit()
         else:

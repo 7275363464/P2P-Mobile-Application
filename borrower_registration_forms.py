@@ -149,6 +149,8 @@ Borrower = '''
                 multiline: False
                 size_hint: 1 , None
                 height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 background_color: 0,0,0,0
                 background_normal:''
                 color: 0, 0, 0, 1
@@ -560,6 +562,8 @@ Borrower = '''
                 multiline: False
                 size_hint: 1 , None
                 height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 background_color: 0,0,0,0
                 background_normal:''
                 color: 0, 0, 0, 1
@@ -1956,6 +1960,8 @@ Borrower = '''
                 text: "Select Profession type"
                 font_size: "15dp"
                 multiline: False
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 size_hint: 1 , None
                 height:"40dp"
                 background_color: 0,0,0,0
@@ -2202,6 +2208,8 @@ Borrower = '''
                 font_size: "15dp"
                 size_hint: 1 , None
                 height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 background_color: 0,0,0,0
                 background_normal:''
                 color: 0, 0, 0, 1
@@ -2240,6 +2248,8 @@ Borrower = '''
                 multiline: False
                 size_hint: 1 , None
                 height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 background_color: 0,0,0,0
                 background_normal:''
                 color: 0, 0, 0, 1
@@ -2286,7 +2296,7 @@ Borrower = '''
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(15)
+            spacing: dp(10)
             padding: dp(30)  # Reduce the top padding
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
@@ -2613,6 +2623,8 @@ Borrower = '''
                 multiline: False
                 size_hint: 1 , None
                 height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 background_color: 0,0,0,0
                 background_normal:''
                 color: 0, 0, 0, 1
@@ -2637,6 +2649,8 @@ Borrower = '''
                 multiline: False
                 size_hint: 1 , None
                 height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 background_color: 0,0,0,0
                 background_normal:''
                 color: 0, 0, 0, 1
@@ -2909,6 +2923,8 @@ Borrower = '''
                 text: " Select Occupation Type"
                 font_size: "15dp"
                 multiline: False
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 size_hint: 1 , None
                 height:"40dp"
                 background_color: 0,0,0,0
@@ -3016,6 +3032,8 @@ Borrower = '''
                 multiline: False
                 size_hint: 1 , None
                 height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 background_color: 0,0,0,0
                 background_normal:''
                 color: 0, 0, 0, 1
@@ -3199,6 +3217,8 @@ Borrower = '''
                 multiline: False
                 size_hint: 1 , None
                 height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 background_color: 0,0,0,0
                 background_normal:''
                 color: 0, 0, 0, 1
@@ -3318,6 +3338,8 @@ Borrower = '''
                 font_size: "15dp"
                 multiline: False
                 size_hint: 1 , None
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 height:"40dp"
                 background_color: 0,0,0,0
                 background_normal:''
@@ -3971,6 +3993,8 @@ Borrower = '''
                 multiline: False
                 size_hint: 1 , None
                 height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 background_color: 0,0,0,0
                 background_normal:''
                 color: 0, 0, 0, 1
@@ -3995,6 +4019,8 @@ Borrower = '''
                 font_size: "15dp"
                 multiline: False
                 size_hint: 1 , None
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 height:"40dp"
                 background_color: 0,0,0,0
                 background_normal:''
@@ -4076,6 +4102,8 @@ Borrower = '''
                 font_size: "15dp"
                 multiline: False
                 size_hint: 1 , None
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 height:"40dp"
                 background_color: 0,0,0,0
                 background_normal:''
@@ -4169,6 +4197,8 @@ Borrower = '''
                 font_size: "15dp"
                 multiline: False
                 size_hint: 1 , None
+                width: dp(200)
+                text_size: self.width - dp(20), None
                 height:"40dp"
                 background_color: 0,0,0,0
                 background_normal:''
@@ -8128,10 +8158,10 @@ class BorrowerScreen16(Screen):
             return
         try:
             dob = datetime.strptime(spouse_date_textfield, "%Y-%m-%d").date()  # Convert to date object
-            # today = datetime.now().date()
-            # if dob > today:
-            # self.show_validation_error("Enter a Valid Marriage Date")
-            # return
+            today = datetime.now().date()
+            if dob > today:
+                self.show_validation_error("Spouse's marriage date must be less than today's date.")
+                return
         except ValueError:
             self.show_validation_error("Please enter a valid Marriage Date in format YYYY-MM-DD")
             return

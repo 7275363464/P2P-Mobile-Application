@@ -71,12 +71,12 @@ user_helpers2 = """
             cols: 2
             padding: dp(20)
             MDLabel:
-                text: "Loan ID"
+                text: "Borrower Name"
                 font_size:dp(16)
                 bold:True
 
             MDLabel:
-                id: loan
+                id: borrower_name
                 background_color: 1, 1, 1, 0 
                 color: 0, 0, 0, 1
                 line_color_normal: 0, 0, 0, 1 
@@ -303,6 +303,7 @@ class BorrowerDuesScreen(Screen):
         user_profile = app_tables.fin_user_profile.search()
 
         loan_id = []
+        borrower_name = []
         cos_id1 = []
         loan_amount = []
         loan_status = []
@@ -317,6 +318,7 @@ class BorrowerDuesScreen(Screen):
         loan_product = []
         for i in data1:
             loan_id.append(i['loan_id'])
+            borrower_name.append(i['borrower_full_name'])
             cos_id1.append(i['borrower_customer_id'])
             loan_amount.append(i['loan_amount'])
             loan_status.append(i['loan_updated_status'])
@@ -333,7 +335,7 @@ class BorrowerDuesScreen(Screen):
 
         if value in loan_id:
             index = loan_id.index(value)
-            self.ids.loan.text = str(loan_id[index])
+            self.ids.borrower_name.text = str(borrower_name[index])
             self.ids.loan_amount1.text = str(loan_amount[index])
             self.ids.tenure.text = str(tenure[index])
             self.ids.interest_rate.text = str(interest[index])
@@ -376,7 +378,7 @@ class BorrowerDuesScreen(Screen):
                 print(lapsed_percentage)
                 print(days_left)
                 total_amount = monthly_emi[index] + extra_amount
-                self.ids.extra.text = "Extra Payment (Lapsed)"
+                self.ids.extra.text = "Extra Payment (Late payment Fee)"
                 self.ids.extra_amount.text = str(round(extra_amount + lapsed_amount, 2))
                 self.ids.total_amount.text = str(round(total_amount + lapsed_amount, 2))
                 data1[index]['loan_state_status'] = "lapsed"
@@ -463,7 +465,7 @@ class BorrowerDuesScreen(Screen):
                     self.ids.extra_amount.text = str(extend_amount + lapsed_amount)
                     self.ids.emi_amount.text = str(new_emi_amount)
                     self.ids.total_amount.text = str(total_amount + lapsed_amount)
-                    self.ids.extra.text = "Extra Payment (Lapsed)"
+                    self.ids.extra.text = "Extra Payment (Late payment Fee)"
                     data1[index]['loan_state_status'] = "lapsed"
                 elif (today_date - shechule_date[value]).days >= 16 and (today_date - shechule_date[value]).days < 98:
                     default_amount = 0
@@ -530,7 +532,7 @@ class BorrowerDuesScreen(Screen):
                     self.ids.extra_amount.text = str(foreclose_amount1 + lapsed_amount)
                     self.ids.emi_amount.text = str(emi_amount1)
                     self.ids.total_amount.text = str(total_amount + lapsed_amount)
-                    self.ids.total.text = "Total Amount (Lapsed)"
+                    self.ids.total.text = "Total Amount (Late payment Fee)"
                     data1[index]['loan_state_status'] = "lapsed"
                     data1[index]['loan_updated_status'] = "closed"
                     emi_data[index]['next_payment'] = None
@@ -811,14 +813,17 @@ class DuesScreen(Screen):
         for i in range(s):
             a += 1
             if loan_status[i] == "disbursed" or loan_status[i] == "extension" or loan_status[i] == "foreclosure":
-                if loan_id[i] not in emi_loan_id and today_date >= schedule_date[i]:
+                if loan_id[i] not in emi_loan_id and schedule_date[i] != None and today_date >= schedule_date[i] :
                     index_list.append(i)
                     shedule_date[loan_id[i]] = schedule_date[i]
+
                 elif loan_id[i] in emi_loan_id:
                     last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(loan_id[i])
                     if today_date >= next_payment[last_index]:
                         index_list.append(i)
                         shedule_date[loan_id[i]] = next_payment[last_index]
+
+                print(today_date , schedule_date[i])
 
         print(index_list)
         print(shedule_date)

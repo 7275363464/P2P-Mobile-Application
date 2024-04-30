@@ -1482,10 +1482,14 @@ class NewloanScreen2(Screen):
                 loan_id = self.generate_loan_id()
                 email = anvil.server.call('another_method')
                 customer = app_tables.fin_user_profile.search(email_user=email)
-                customer_id = customer[0]['customer_id']
-                borrower_name = customer[0]['full_name']
-                print(borrower_name)
-                print(customer_id)
+                if customer:
+                    customer_id = customer[0]['customer_id']
+                    borrower_name = customer[0]['full_name']
+                    # Rest of the code remains unchanged
+                    print(borrower_name)
+                    print(customer_id)
+                else:
+                    print("Customer not found.")
                 print(email)
                 product_id = app_tables.fin_product_details.search(product_name=product_name)
                 product_id = product_id[0]['product_id']

@@ -318,7 +318,7 @@ class SignupScreen(Screen):
         # Other input validations
         if not name or len(name.split()) < 2 or not re.match(r'^[a-zA-Z\s]+$', name):
             validation_errors.append(
-                (self.ids.name, "Please enter a valid first name and last name consisting of letters only"))
+                (self.ids.name, "Please enter a valid first name and last name"))
         else:
             self.ids.name.helper_text = ''
 

@@ -784,7 +784,7 @@ class DuesScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        today_date = datetime.now(timezone.utc).date()
+        today_date = datetime.datetime.now(utc).date()
         data = app_tables.fin_loan_details.search()
         emi_data = app_tables.fin_emi_table.search()
         loan_id = []
@@ -813,17 +813,14 @@ class DuesScreen(Screen):
         for i in range(s):
             a += 1
             if loan_status[i] == "disbursed" or loan_status[i] == "extension" or loan_status[i] == "foreclosure":
-                if loan_id[i] not in emi_loan_id and schedule_date[i] != None and today_date >= schedule_date[i] :
+                if loan_id[i] not in emi_loan_id and schedule_date[i] is not None and today_date >= schedule_date[i]:
                     index_list.append(i)
                     shedule_date[loan_id[i]] = schedule_date[i]
-
                 elif loan_id[i] in emi_loan_id:
                     last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(loan_id[i])
-                    if today_date >= next_payment[last_index]:
+                    if next_payment[last_index] is not None and today_date >= next_payment[last_index]:
                         index_list.append(i)
                         shedule_date[loan_id[i]] = next_payment[last_index]
-
-                print(today_date , schedule_date[i])
 
         print(index_list)
         print(shedule_date)

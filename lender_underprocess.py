@@ -1425,11 +1425,11 @@ class ViewUnderScreenRL(Screen):
             status.append(i['loan_updated_status'])
         profile_customer_id = []
         profile_mobile_number = []
-
+        bessem_value = []
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
-
+            bessem_value.append(i['bessem_value'])
         index = 0
 
         if value in loan_id:
@@ -1443,7 +1443,7 @@ class ViewUnderScreenRL(Screen):
             self.ids.limit.text = str(credit_limit[index])
             self.ids.date.text = str(date_of_apply[index])
             self.ids.status.text = str(status[index])
-
+            self.ids.bessem_value.text=str(bessem_value[index])
         if customer_id[index] in profile_customer_id:
             index2 = profile_customer_id.index(customer_id[index])
 

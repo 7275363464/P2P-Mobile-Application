@@ -37,7 +37,7 @@ view_loan_request = """
             left_action_items: [['arrow-left', lambda x: root.go_back()]]
             right_action_items: [['refresh', lambda x: root.refresh()]]
             md_bg_color: 0.043, 0.145, 0.278, 1
-            title_align: 'center'
+            title_align: 'left'
         MDScrollView:
 
             MDList:
@@ -50,7 +50,7 @@ view_loan_request = """
         elevation: 3
         left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
         pos_hint: {'top': 1}
-        title_align: 'center'
+        title_align: 'left'
         md_bg_color: 0.043, 0.145, 0.278, 1
 
     MDBoxLayout:
@@ -108,7 +108,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: pro_name
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -121,7 +121,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: b_name
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -134,20 +134,20 @@ view_loan_request = """
 
                 MDLabel:
                     id: phone_num
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
             
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Bessem Value'
+                    text: '     Ascend Score'
                     halign: 'left'
                     bold: True
 
                 MDLabel:
-                    id: bessem_value
-                    halign: 'center'
+                    id: Ascend_Score
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -161,7 +161,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: int_rate
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -174,7 +174,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: tenure
-                    halign: 'center' 
+                    halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -187,7 +187,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: limit
-                    halign: 'center' 
+                    halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -201,7 +201,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: date
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -214,7 +214,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: status
-                    halign: 'center' 
+                    halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -293,8 +293,8 @@ view_loan_request = """
         md_bg_color: 0.043, 0.145, 0.278, 1
         left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
         pos_hint: {'top': 1}
-        title_align: 'center'
-        halign:"center"
+        title_align: 'left'
+        halign:"left"
 
     MDBoxLayout:
         orientation: 'vertical'
@@ -351,7 +351,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: pro_name
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -364,7 +364,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: b_name
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -377,19 +377,19 @@ view_loan_request = """
 
                 MDLabel:
                     id: phone_num
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Bessem Value'
+                    text: '     Ascend Score'
                     halign: 'left'
                     bold: True
 
                 MDLabel:
-                    id: bessem_value
-                    halign: 'center'
+                    id: Ascend_Score
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -403,7 +403,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: int_rate
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -416,7 +416,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: tenure
-                    halign: 'center' 
+                    halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -429,7 +429,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: limit
-                    halign: 'center' 
+                    halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -443,7 +443,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: date
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -456,7 +456,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: status
-                    halign: 'center' 
+                    halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
             MDLabel:
@@ -525,7 +525,7 @@ view_loan_request = """
         elevation: 3
         left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
         pos_hint: {'top': 1}
-        title_align: 'center'
+        title_align: 'left'
         md_bg_color: 0.043, 0.145, 0.278, 1
 
     MDBoxLayout:
@@ -583,7 +583,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: pro_name
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -596,7 +596,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: b_name
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -609,20 +609,20 @@ view_loan_request = """
 
                 MDLabel:
                     id: phone_num
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
             
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Bessem Value'
+                    text: '     Ascend Score'
                     halign: 'left'
                     bold: True
 
                 MDLabel:
-                    id: bessem_value
-                    halign: 'center'
+                    id: Ascend_Score
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -635,7 +635,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: int_rate
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -648,7 +648,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: tenure
-                    halign: 'center' 
+                    halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -661,7 +661,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: limit
-                    halign: 'center' 
+                    halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -675,7 +675,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: date
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -688,7 +688,7 @@ view_loan_request = """
 
                 MDLabel:
                     id: status
-                    halign: 'center' 
+                    halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
             MDLabel:
@@ -905,11 +905,11 @@ class ViewLoansProfileScreen(Screen):
         self.loan_id = value
         profile_customer_id = []
         profile_mobile_number = []
-        bessem_value=[]
+        ascend_score = []
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
-            bessem_value.append(i['bessem_value'])
+            ascend_score.append(i['bessem_value'])
         customer_id = []
         loan_id = []
         tenure = []
@@ -950,7 +950,7 @@ class ViewLoansProfileScreen(Screen):
             self.ids.status.text = str(loan_status[index])
             self.ids.limit.text = str(credit_limit[index])
             self.ids.phone_num.text = str(profile_mobile_number[number])
-            self.ids.bessem_value.text=str(bessem_value[number])
+            self.ids.Ascend_Score.text=str(ascend_score[number])
     def email_user(self):
         return anvil.server.call('another_method')
 
@@ -1145,11 +1145,11 @@ class ViewLoansProfileScreenLR(Screen):
         self.loan_id = value
         profile_customer_id = []
         profile_mobile_number = []
-        bessem_value=[]
+        ascend_score = []
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
-            bessem_value.append(i['bessem_value'])
+            ascend_score.append(i['bessem_value'])
         customer_id = []
         loan_id = []
         tenure = []
@@ -1190,7 +1190,7 @@ class ViewLoansProfileScreenLR(Screen):
             self.ids.status.text = str(loan_status[index])
             self.ids.limit.text = str(credit_limit[index])
             self.ids.phone_num.text = str(profile_mobile_number[number])
-            self.ids.bessem_value.text=str(bessem_value[number])
+            self.ids.Ascend_Score.text=str(ascend_score[number])
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
         Window.bind(on_keyboard=self.on_back_button)
@@ -1437,11 +1437,11 @@ class ViewLoansProfileScreenRL(Screen):
         self.loan_id = value
         profile_customer_id = []
         profile_mobile_number = []
-        bessem_value = []
+        ascend_score = []
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
-            bessem_value.append(i['bessem_value'])
+            ascend_score.append(i['bessem_value'])
         customer_id = []
         loan_id = []
         tenure = []
@@ -1482,7 +1482,7 @@ class ViewLoansProfileScreenRL(Screen):
             self.ids.status.text = str(loan_status[index])
             self.ids.limit.text = str(credit_limit[index])
             self.ids.phone_num.text = str(profile_mobile_number[number])
-            self.ids.bessem_value.text=str(bessem_value[index])
+            self.ids.Ascend_Score.text=str(ascend_score[index])
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
         Window.bind(on_keyboard=self.on_back_button)

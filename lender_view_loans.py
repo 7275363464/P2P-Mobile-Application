@@ -271,7 +271,7 @@ view_loans = '''
 
                 MDLabel:
                     id: pro_name
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -284,7 +284,7 @@ view_loans = '''
 
                 MDLabel:
                     id: b_name
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -297,7 +297,7 @@ view_loans = '''
 
                 MDLabel:
                     id: phone_num
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -310,7 +310,7 @@ view_loans = '''
 
                 MDLabel:
                     id: int_rate
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -323,7 +323,7 @@ view_loans = '''
 
                 MDLabel:
                     id: tenure
-                    halign: 'center' 
+                    halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -336,7 +336,7 @@ view_loans = '''
 
                 MDLabel:
                     id: limit
-                    halign: 'center' 
+                    halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -350,7 +350,7 @@ view_loans = '''
 
                 MDLabel:
                     id: date
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -363,7 +363,7 @@ view_loans = '''
 
                 MDLabel:
                     id: status
-                    halign: 'center' 
+                    halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
             MDLabel:
@@ -477,7 +477,7 @@ view_loans = '''
 
                 MDLabel:
                     id: pro_name
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -490,7 +490,7 @@ view_loans = '''
 
                 MDLabel:
                     id: b_name
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -503,7 +503,7 @@ view_loans = '''
 
                 MDLabel:
                     id: phone_num
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -516,7 +516,7 @@ view_loans = '''
 
                 MDLabel:
                     id: int_rate
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -529,7 +529,7 @@ view_loans = '''
 
                 MDLabel:
                     id: tenure
-                    halign: 'center' 
+                    halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -542,7 +542,7 @@ view_loans = '''
 
                 MDLabel:
                     id: limit
-                    halign: 'center' 
+                    halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -556,7 +556,7 @@ view_loans = '''
 
                 MDLabel:
                     id: date
-                    halign: 'center'
+                    halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
@@ -569,7 +569,7 @@ view_loans = '''
 
                 MDLabel:
                     id: status
-                    halign: 'center' 
+                    halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
             MDLabel:

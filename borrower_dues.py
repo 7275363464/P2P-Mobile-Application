@@ -172,14 +172,7 @@ user_helpers2 = """
                 background_color: 1, 1, 1, 0 
                 color: 0, 0, 0, 1
                 line_color_normal: 0, 0, 0, 1  # Set the line color to black
-                color: 0, 0, 0, 1    
-            MDLabel:
-                id: loan
-                text: "" 
-                background_color: 1, 1, 1, 0 
-                color: 0, 0, 0, 1
-                line_color_normal: 0, 0, 0, 1  # Set the line color to black
-                color: 0, 0, 0, 1    
+                color: 0, 0, 0, 1       
 
         MDGridLayout:
             cols: 2

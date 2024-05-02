@@ -3751,15 +3751,19 @@ KV = '''
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
 
-            MDRectangleFlatButton:
-                text: "Next"
-                on_release: root.add_data(account_holder_name.text, spinner_id.text, account_number.text, bank_name.text)
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
+            GridLayout:
+                cols: 1
+                spacing:dp(30)
+                padding: [0, "30dp", 0, 0]
+                MDRectangleFlatButton:
+                    text: "Next"
+                    on_release: root.add_data(account_holder_name.text, spinner_id.text, account_number.text, bank_name.text)
+                    md_bg_color: 0.043, 0.145, 0.278, 1
+                    pos_hint: {'right': 1, 'y': 0.5}
+                    text_color: 1, 1, 1, 1
+                    size_hint: 1, None
+                    height: "50dp"
+                    font_name: "Roboto-Bold"
 
 <LenderScreenIndividualBankForm2>:
     MDTopAppBar:

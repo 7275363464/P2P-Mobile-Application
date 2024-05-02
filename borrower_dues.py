@@ -1,7 +1,7 @@
 import anvil
 from anvil.tables import app_tables
 from kivy import properties
-
+from pytz import utc
 from kivy.core.window import Window
 from kivy.properties import ListProperty, Clock
 from kivy.uix.modalview import ModalView
@@ -22,7 +22,7 @@ from datetime import datetime, timezone, timedelta, date
 from kivymd.uix.spinner import MDSpinner
 import anvil.tables.query as q
 from borrower_wallet import WalletScreen
-
+from datetime import datetime
 user_helpers2 = """
 <WindowManager>:
     BorrowerDuesScreen:
@@ -172,7 +172,14 @@ user_helpers2 = """
                 background_color: 1, 1, 1, 0 
                 color: 0, 0, 0, 1
                 line_color_normal: 0, 0, 0, 1  # Set the line color to black
-                color: 0, 0, 0, 1           
+                color: 0, 0, 0, 1    
+            MDLabel:
+                id: loan
+                text: "" 
+                background_color: 1, 1, 1, 0 
+                color: 0, 0, 0, 1
+                line_color_normal: 0, 0, 0, 1  # Set the line color to black
+                color: 0, 0, 0, 1    
 
         MDGridLayout:
             cols: 2
@@ -270,7 +277,7 @@ class BorrowerDuesScreen(Screen):
     def initialize_with_value(self, value, shechule_date):
         print(value)
         self.loan_id = value
-        today_date = datetime.now(timezone.utc).date()
+        today_date = datetime.now(tz=utc).date()
         emi_data = app_tables.fin_emi_table.search()
         emi_loan_id = []
         emi_num = []
@@ -451,7 +458,7 @@ class BorrowerDuesScreen(Screen):
                 next_emi = app_tables.fin_emi_table.get(loan_id=str(value), emi_number=next_emi_num)
 
                 if next_emi is not None:
-                    next_payment_amount = next_emi['payment_amount']
+                    next_payment_amount = next_emi['amount_paid']
                     extend_amount += next_payment_amount
                 if (today_date - shechule_date[value]).days >= 6 and (today_date - shechule_date[value]).days < 16:
                     days_left = (today_date - shechule_date[value]).days
@@ -580,7 +587,7 @@ class BorrowerDuesScreen(Screen):
                     self.ids.total_amount.text = str(total_amount)
                     data1[index]['loan_updated_status'] = "closed"
 
-    date = datetime.today()
+
 
     def go_to_paynow(self):
         emi_data = app_tables.fin_emi_table.search()
@@ -784,7 +791,7 @@ class DuesScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        today_date = datetime.datetime.now(utc).date()
+        today_date = datetime.now(tz=utc).date()
         data = app_tables.fin_loan_details.search()
         emi_data = app_tables.fin_emi_table.search()
         loan_id = []
@@ -824,7 +831,7 @@ class DuesScreen(Screen):
 
         print(index_list)
         print(shedule_date)
-        today_date = datetime.now(timezone.utc).date()
+        today_date = datetime.now(tz=utc).date()
 
         for i in index_list:
             item = ThreeLineAvatarIconListItem(

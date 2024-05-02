@@ -137,6 +137,20 @@ view_loan_request = """
                     halign: 'center'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+            
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: '     Bessem Value'
+                    halign: 'left'
+                    bold: True
+
+                MDLabel:
+                    id: bessem_value
+                    halign: 'center'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
+
 
             MDGridLayout:
                 cols: 2
@@ -585,6 +599,19 @@ view_loan_request = """
                     halign: 'center'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+            
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: '     Bessem Value'
+                    halign: 'left'
+                    bold: True
+
+                MDLabel:
+                    id: bessem_value
+                    halign: 'center'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
 
             MDGridLayout:
                 cols: 2
@@ -865,9 +892,11 @@ class ViewLoansProfileScreen(Screen):
         self.loan_id = value
         profile_customer_id = []
         profile_mobile_number = []
+        bessem_value=[]
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
+            bessem_value.append(i['bessem_value'])
         customer_id = []
         loan_id = []
         tenure = []
@@ -908,7 +937,7 @@ class ViewLoansProfileScreen(Screen):
             self.ids.status.text = str(loan_status[index])
             self.ids.limit.text = str(credit_limit[index])
             self.ids.phone_num.text = str(profile_mobile_number[number])
-
+            self.ids.bessem_value.text=str(bessem_value[index])
     def email_user(self):
         return anvil.server.call('another_method')
 
@@ -1103,9 +1132,11 @@ class ViewLoansProfileScreenLR(Screen):
         self.loan_id = value
         profile_customer_id = []
         profile_mobile_number = []
+        bessem_value=[]
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
+            bessem_value.append(i['bessem_value'])
         customer_id = []
         loan_id = []
         tenure = []
@@ -1146,7 +1177,7 @@ class ViewLoansProfileScreenLR(Screen):
             self.ids.status.text = str(loan_status[index])
             self.ids.limit.text = str(credit_limit[index])
             self.ids.phone_num.text = str(profile_mobile_number[number])
-
+            self.ids.bessem_value.text=str(bessem_value[index])
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
         Window.bind(on_keyboard=self.on_back_button)

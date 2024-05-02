@@ -698,8 +698,8 @@ class OpenLoanVLB(Screen):
             index_list = []
             for i in range(s):
                 c += 1
-                if loan_status[c] == 'disbursed' or loan_status[c] == 'foreclosure' or loan_status[c] == 'extension' and \
-                        customer_id[c] == cos_id:
+                if (loan_status[c] == 'disbursed' and customer_id[c] == cos_id or loan_status[c] == 'foreclosure' and \
+                        customer_id[c] == cos_id or loan_status[c] == 'extension' and customer_id[c] == cos_id):
                     index_list.append(c)
 
             b = 1

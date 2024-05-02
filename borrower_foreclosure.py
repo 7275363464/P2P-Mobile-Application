@@ -83,7 +83,7 @@ loan_forecloseB = '''
                         id: box1
                         orientation: 'vertical'
                         size_hint_y: None
-                        height: dp(850)
+                        height: dp(750)
 
                         padding: [10, 0,0,0]
                         canvas.before:
@@ -91,23 +91,6 @@ loan_forecloseB = '''
                                 rgba: 0, 0, 0, 1  # Blue color for the box
                             Line:
                                 rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
-
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Loan ID:" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: loan
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
 
                         MDGridLayout:
                             cols: 2
@@ -125,7 +108,12 @@ loan_forecloseB = '''
                                 size_hint_y:None
                                 height:dp(50)
                                 halign: "left"
-
+                            MDLabel:
+                                id: loan
+                                color:1,1,1,1      
+                                font_size:dp(1)
+                                text: "" 
+                                height:dp(1)
                         MDGridLayout:
                             cols: 2
                             spacing: dp(10)
@@ -265,32 +253,26 @@ loan_forecloseB = '''
                                 on_release: root.on_foreclose_press(loan.text)
                                 size_hint: 1, None
 
-
 <ForecloseDetails>
     BoxLayout:
         orientation: 'vertical'
         padding: dp(10)  
-        spacing: dp(20) 
+        spacing: dp(15) 
         ScrollView:
             do_scroll_x: False
             BoxLayout:
                 orientation: "vertical"
                 padding: dp(10) 
-                spacing: dp(25)   
+                spacing: dp(30)     
                 size_hint_y: None
                 height: self.minimum_height
-                GridLayout:
-                    cols: 2
-                    size_hint_y: None
-                    padding: dp(10)
-                    spacing: dp(33)  
-
-                    MDLabel:
-                        text: "Loan Foreclosure For LoanA/C:"
-                        bold: True
-                    MDLabel:
-                        id: loan_id_label1
-                        bold:True
+                MDLabel:
+                    id: loan_id_label1
+                    color:1,1,1,1      
+                    font_size:dp(1)
+                    text: "" 
+                    height:dp(1)
+                    bold:True
 
                 MDLabel:
                     text: "Foreclosure  Details"
@@ -350,6 +332,11 @@ loan_forecloseB = '''
                         id: monthly_emi1
                         halign: "left"
                         text: ""
+                MDLabel:
+                    text: ""
+                    size_hint_y: None
+                    height: dp(2)
+
                 Widget:
                     size_hint_y: None
                     canvas:
@@ -364,8 +351,9 @@ loan_forecloseB = '''
                 GridLayout:
                     cols: 2
                     size_hint_y: None
-                    padding: dp(10)
-                    spacing: dp(52)
+                    padding: dp(6)
+                    spacing: dp(50)
+                    height:dp(90)
 
                     MDLabel:
                         text: "Over all Outstanding Amount"
@@ -401,6 +389,10 @@ loan_forecloseB = '''
                         id: total_amount
                         halign: "left"
                         text: ""
+                MDLabel:
+                    text: ""
+                    size_hint_y: None
+                    height: dp(6)
 
                 Widget:
                     size_hint_y: None
@@ -418,8 +410,9 @@ loan_forecloseB = '''
                 GridLayout:
                     cols: 2
                     size_hint_y: None
-                    padding: dp(10)
-                    spacing: dp(45)
+                    padding: dp(6)
+                    spacing: dp(40)
+                    height:dp(70)
 
                     MDLabel:
                         text: "Outstanding Amount"
@@ -458,7 +451,10 @@ loan_forecloseB = '''
                         id: total_due_amount
                         halign: "left"
                         text: ""
-
+                MDLabel:
+                    text: ""
+                    size_hint_y: None
+                    height: dp(2)
                 Widget:
                     size_hint_y: None
                     canvas:

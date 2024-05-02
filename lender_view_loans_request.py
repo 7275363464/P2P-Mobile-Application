@@ -950,7 +950,7 @@ class ViewLoansProfileScreen(Screen):
             self.ids.status.text = str(loan_status[index])
             self.ids.limit.text = str(credit_limit[index])
             self.ids.phone_num.text = str(profile_mobile_number[number])
-            self.ids.bessem_value.text=str(bessem_value[index])
+            self.ids.bessem_value.text=str(bessem_value[number])
     def email_user(self):
         return anvil.server.call('another_method')
 
@@ -1190,7 +1190,7 @@ class ViewLoansProfileScreenLR(Screen):
             self.ids.status.text = str(loan_status[index])
             self.ids.limit.text = str(credit_limit[index])
             self.ids.phone_num.text = str(profile_mobile_number[number])
-            self.ids.bessem_value.text=str(bessem_value[index])
+            self.ids.bessem_value.text=str(bessem_value[number])
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
         Window.bind(on_keyboard=self.on_back_button)

@@ -742,6 +742,7 @@ class ExtendLoansScreen(Screen):
     loan_amount = ""
     extension_fee = ""
 
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.check = None
@@ -893,6 +894,7 @@ class ExtendLoansScreen(Screen):
                 status="under process",
                 extension_request_date=date
             )
+            data[0]['loan_updated_status']='extension'
             # Clear the data after submitting
 
             self.root_screen.ids.extension_months.text = ""

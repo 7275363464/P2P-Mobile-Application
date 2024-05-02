@@ -471,7 +471,7 @@ class ViewProfileTD(Screen):
                 next_emi = app_tables.fin_emi_table.get(loan_id=str(value), emi_number=next_emi_num)
 
                 if next_emi is not None:
-                    next_payment_amount = next_emi['payment_amount']
+                    next_payment_amount = next_emi['amount_paid']
                     extend_amount += next_payment_amount
                 if (today_date - shechule_date[value]).days >= 6 and (today_date - shechule_date[value]).days < 16:
                     days_left = (today_date - shechule_date[value]).days

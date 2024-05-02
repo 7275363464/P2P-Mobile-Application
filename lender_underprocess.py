@@ -137,6 +137,19 @@ view_loans = """
                     halign: 'center'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: '     Bessem Value'
+                    halign: 'left'
+                    bold: True
+
+                MDLabel:
+                    id: bessem_value
+                    halign: 'center'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
+
 
             MDGridLayout:
                 cols: 2
@@ -365,6 +378,18 @@ view_loans = """
                     halign: 'center'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: '     Bessem Value'
+                    halign: 'left'
+                    bold: True
+
+                MDLabel:
+                    id: bessem_value
+                    halign: 'center'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
 
             MDGridLayout:
                 cols: 2
@@ -584,6 +609,19 @@ view_loans = """
                     halign: 'center'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: '     Bessem Value'
+                    halign: 'left'
+                    bold: True
+
+                MDLabel:
+                    id: bessem_value
+                    halign: 'center'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
+
 
             MDGridLayout:
                 cols: 2
@@ -886,11 +924,11 @@ class ViewUnderScreen(Screen):
             status.append(i['loan_updated_status'])
         profile_customer_id = []
         profile_mobile_number = []
-
+        bessem_value=[]
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
-
+            bessem_value.append(i['bessem_value'])
         index = 0
 
         if value in loan_id:
@@ -904,7 +942,7 @@ class ViewUnderScreen(Screen):
             self.ids.limit.text = str(credit_limit[index])
             self.ids.date.text = str(date_of_apply[index])
             self.ids.status.text = str(status[index])
-
+            self.ids.bessem_value.text=str(bessem_value[index])
         if customer_id[index] in profile_customer_id:
             index2 = profile_customer_id.index(customer_id[index])
 
@@ -1105,10 +1143,12 @@ class ViewUnderScreenLR(Screen):
             status.append(i['loan_updated_status'])
         profile_customer_id = []
         profile_mobile_number = []
+        bessem_value=[]
 
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
+            bessem_value.append(i['bessem_value'])
 
         index = 0
 
@@ -1123,6 +1163,7 @@ class ViewUnderScreenLR(Screen):
             self.ids.limit.text = str(credit_limit[index])
             self.ids.date.text = str(date_of_apply[index])
             self.ids.status.text = str(status[index])
+            self.ids.bessem_value.text=str(bessem_value[index])
 
         if customer_id[index] in profile_customer_id:
             index2 = profile_customer_id.index(customer_id[index])
@@ -1384,11 +1425,11 @@ class ViewUnderScreenRL(Screen):
             status.append(i['loan_updated_status'])
         profile_customer_id = []
         profile_mobile_number = []
-
+        bessem_value = []
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
-
+            bessem_value.append(i['bessem_value'])
         index = 0
 
         if value in loan_id:
@@ -1402,7 +1443,7 @@ class ViewUnderScreenRL(Screen):
             self.ids.limit.text = str(credit_limit[index])
             self.ids.date.text = str(date_of_apply[index])
             self.ids.status.text = str(status[index])
-
+            self.ids.bessem_value.text=str(bessem_value[index])
         if customer_id[index] in profile_customer_id:
             index2 = profile_customer_id.index(customer_id[index])
 

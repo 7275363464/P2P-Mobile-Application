@@ -1291,7 +1291,7 @@ class ViewLoansProfileScreenLR(Screen):
         else:
             transaction_id = 'TA0001'
         transaction_date_time = datetime.today()
-        if minutes_difference < 30 and wallet_amount[l_index] >= float(loan_amount_text):
+        if minutes_difference < 30 and wallet[l_index]['wallet_amount'] >= float(loan_amount_text):
             self.show_success_dialog(
                 f"Amount paid successfully {loan_amount_text} to this Loan ID {loan_id_list[index]}")
             data[index]['loan_updated_status'] = 'disbursed'

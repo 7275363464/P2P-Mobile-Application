@@ -71,12 +71,12 @@ user_helpers2 = """
             cols: 2
             padding: dp(20)
             MDLabel:
-                text: "Borrower Name"
+                text: "Loan ID"
                 font_size:dp(16)
                 bold:True
 
             MDLabel:
-                id: borrower_name
+                id: loan
                 background_color: 1, 1, 1, 0 
                 color: 0, 0, 0, 1
                 line_color_normal: 0, 0, 0, 1 
@@ -342,7 +342,7 @@ class BorrowerDuesScreen(Screen):
 
         if value in loan_id:
             index = loan_id.index(value)
-            self.ids.borrower_name.text = str(borrower_name[index])
+            self.ids.loan.text = str(loan_id[index])
             self.ids.loan_amount1.text = str(loan_amount[index])
             self.ids.tenure.text = str(tenure[index])
             self.ids.interest_rate.text = str(interest[index])
@@ -702,12 +702,10 @@ class BorrowerDuesScreen(Screen):
             )
             anvil.server.call('loan_text', None)
             sm = self.manager
-            # Create a new instance of the LenderWalletScreen
             wallet_screen = LastScreenWallet(name='LastScreenWallet')
-            # Add the LenderWalletScreen to the existing ScreenManager
             sm.add_widget(wallet_screen)
-            # Switch to the LenderWalletScreen
             sm.current = 'LastScreenWallet'
+
 
         elif wallet_amount[b_index] < float(total):
             self.show_success_dialog2(f"Insufficient Balance Please Deposit {float(total)}")

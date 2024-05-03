@@ -207,26 +207,24 @@ borrower_view_loan = '''
                 id: container3
 
 <ViewLoansScreenVLB>
-    MDTopAppBar:
-        title: "View Loan details"
-        elevation: 2
-        left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
-        md_bg_color: 0.043, 0.145, 0.278, 1
-        halign: 'left'
-        pos_hint: {'top': 1}
 
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(40)
-        size_hint_y: None
-        height: self.minimum_height
+
+    MDGridLayout:
+        cols: 1
+        MDTopAppBar:
+            title: "View Loan details"
+            elevation: 2
+            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            md_bg_color: 0.043, 0.145, 0.278, 1
+            halign: 'left'
+            pos_hint: {'top': 1}
 
         BoxLayout:
             orientation: 'vertical'
-            spacing: dp(40)
+            spacing: dp(50)
             padding: dp(15)
             size_hint_y: None
-            height: dp(450)
+            height: self.minimum_height
 
             canvas.before:
                 Color:
@@ -354,18 +352,14 @@ borrower_view_loan = '''
                     halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-            MDLabel:
-                text: ''
-                halign: 'left'
-                size_hint_y: None
-                height: dp(5)
+            
 
         BoxLayout:
             orientation: 'vertical'
             spacing: dp(30)
             padding: dp(15)
             size_hint_y: None
-            height: dp(140)
+            height: self.minimum_height
             canvas.before:
                 Color:
                     rgba: 249/255, 249/255, 247/255, 1 
@@ -395,16 +389,7 @@ borrower_view_loan = '''
                 MDLabel:
                     id: amount_1
                     halign: 'left'
-            MDLabel:
-                text: ''
-                halign: 'left'
-                size_hint_y: None
-                height: dp(5)
-            MDLabel:
-                text: ''
-                halign: 'left'
-                size_hint_y: None
-                height: dp(1) 
+             
 
 '''
 Builder.load_string(borrower_view_loan)

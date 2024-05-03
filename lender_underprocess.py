@@ -942,11 +942,12 @@ class ViewUnderScreen(Screen):
             self.ids.limit.text = str(credit_limit[index])
             self.ids.date.text = str(date_of_apply[index])
             self.ids.status.text = str(status[index])
-            self.ids.Ascend_Score.text=str(ascend_score[index])
+
         if customer_id[index] in profile_customer_id:
             index2 = profile_customer_id.index(customer_id[index])
 
             self.ids.phone_num.text = str(profile_mobile_number[index2])
+            self.ids.Ascend_Score.text = str(ascend_score[index2])
 
     def email_user(self):
         return anvil.server.call('another_method')
@@ -1163,12 +1164,13 @@ class ViewUnderScreenLR(Screen):
             self.ids.limit.text = str(credit_limit[index])
             self.ids.date.text = str(date_of_apply[index])
             self.ids.status.text = str(status[index])
-            self.ids.Ascend_Score.text=str(ascend_score[index])
+
 
         if customer_id[index] in profile_customer_id:
             index2 = profile_customer_id.index(customer_id[index])
 
             self.ids.phone_num.text = str(profile_mobile_number[index2])
+            self.ids.Ascend_Score.text = str(ascend_score[index2])
 
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
@@ -1443,11 +1445,12 @@ class ViewUnderScreenRL(Screen):
             self.ids.limit.text = str(credit_limit[index])
             self.ids.date.text = str(date_of_apply[index])
             self.ids.status.text = str(status[index])
-            self.ids.Ascend_Score.text=str(ascend_score[index])
+
         if customer_id[index] in profile_customer_id:
             index2 = profile_customer_id.index(customer_id[index])
 
             self.ids.phone_num.text = str(profile_mobile_number[index2])
+            self.ids.Ascend_Score.text = str(ascend_score[index])
 
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method

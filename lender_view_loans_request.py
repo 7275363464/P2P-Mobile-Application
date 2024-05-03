@@ -2,6 +2,7 @@ from anvil.tables import app_tables
 from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.factory import Factory
+from kivy.metrics import dp
 from kivy.uix.modalview import ModalView
 from kivymd.uix.label import MDLabel
 from kivymd.uix.list import *
@@ -16,7 +17,7 @@ from kivy.uix.screenmanager import Screen, SlideTransition
 from kivymd.app import MDApp
 from datetime import datetime, timedelta, timezone
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.button import MDFlatButton, MDRaisedButton
+from kivymd.uix.button import MDFlatButton, MDRaisedButton, MDRectangleFlatButton
 
 from borrower_wallet import WalletScreen
 from lender_wallet import LenderWalletScreen
@@ -137,7 +138,7 @@ view_loan_request = """
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-            
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -612,7 +613,7 @@ view_loan_request = """
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-            
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -950,7 +951,8 @@ class ViewLoansProfileScreen(Screen):
             self.ids.status.text = str(loan_status[index])
             self.ids.limit.text = str(credit_limit[index])
             self.ids.phone_num.text = str(profile_mobile_number[number])
-            self.ids.Ascend_Score.text=str(ascend_score[number])
+            self.ids.Ascend_Score.text = str(ascend_score[number])
+
     def email_user(self):
         return anvil.server.call('another_method')
 
@@ -1025,13 +1027,17 @@ class ViewLoansProfileScreen(Screen):
         approved_date = datetime.now()
         data = app_tables.fin_loan_details.search()
         loan_id = self.loan_id
+        borrower_name = None  # Initialize borrower_name to None
         print(loan_id)
+        print(borrower_name)
+        loan_idlist = [i['loan_id'] for i in data]  # Create a list of loan IDs from the data
 
-        loan_idlist = []
-        for i in data:
-            loan_idlist.append(i['loan_id'])
-        print(loan_idlist)
-        if loan_id in loan_idlist:
+        if loan_id in loan_idlist:  # Check if the loan ID exists in loan_idlist
+            for i in data:
+                if i['loan_id'] == loan_id:
+                    borrower_name = i['borrower_full_name']  # Get borrower name for this loan ID
+                    break  # No need to iterate further once we found the matching loan ID
+
             index = loan_idlist.index(loan_id)
             data[index]['loan_updated_status'] = 'approved'
             data[index]['lender_accepted_timestamp'] = approved_date
@@ -1043,21 +1049,22 @@ class ViewLoansProfileScreen(Screen):
             sm.add_widget(disbursed)
             sm.current = 'ViewLoansProfileScreenLR'
             self.manager.get_screen('ViewLoansProfileScreenLR').initialize_with_value(loan_id, data)
-            self.show_success_dialog1(f"This Loan ID {loan_id} is Approved")
-            return
+            self.show_success_dialog1(f"{borrower_name} Loan is Approved")
         else:
             pass
 
     def rejected_click(self):
         data = app_tables.fin_loan_details.search()
         loan_id = self.loan_id
+        borrower_name = None  # Initialize borrower_name to None
         print(loan_id)
+        print(borrower_name)
+        loan_idlist = [i['loan_id'] for i in data]  # Create a list of loan IDs from the data
 
-        loan_idlist = []
-        for i in data:
-            loan_idlist.append(i['loan_id'])
-        print(loan_idlist)
-        if loan_id in loan_idlist:
+        if loan_id in loan_idlist:  # Check if the loan ID exists in loan_idlist
+            for i in data:
+                if i['loan_id'] == loan_id:
+                    borrower_name = i['borrower_full_name']  # Get borrower name for this loan ID
             index = loan_idlist.index(loan_id)
             data[index]['loan_updated_status'] = 'rejected'
             sm = self.manager
@@ -1065,7 +1072,7 @@ class ViewLoansProfileScreen(Screen):
             sm.add_widget(disbursed)
             sm.current = 'ViewLoansProfileScreenRL'
             self.manager.get_screen('ViewLoansProfileScreenRL').initialize_with_value(loan_id, data)
-            self.show_success_dialog(f"This Loan ID {loan_id} is Rejected")
+            self.show_success_dialog(f"{borrower_name} Loan is Rejected")
             return
         else:
             pass
@@ -1073,7 +1080,8 @@ class ViewLoansProfileScreen(Screen):
     def show_success_dialog(self, text):
         dialog = MDDialog(
             text=text,
-            size_hint=(0.8, 0.3),
+            size_hint=(0.8, None),
+            height=dp(200),
             buttons=[
                 MDRaisedButton(
                     text="OK",
@@ -1088,7 +1096,8 @@ class ViewLoansProfileScreen(Screen):
     def show_success_dialog1(self, text):
         dialog = MDDialog(
             text=text,
-            size_hint=(0.8, 0.3),
+            size_hint=(0.8, None),
+            height=dp(200),
             buttons=[
                 MDRaisedButton(
                     text="OK",
@@ -1115,16 +1124,50 @@ class ViewLoansProfileScreen(Screen):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'ViewLoansRequest'
 
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Loan Status",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
 
 class ViewLoansProfileScreenLR(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.loan_id = None
 
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Loan Status",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
     def show_alert_dialog(self, alert_text):
         if not hasattr(self, 'dialog') or not self.dialog:
             self.dialog = MDDialog(
                 text=alert_text,
+                size_hint=(0.8, None),
+                height=dp(200),
                 buttons=[
                     MDFlatButton(
                         text="OK", on_release=self.close_dialog
@@ -1190,7 +1233,8 @@ class ViewLoansProfileScreenLR(Screen):
             self.ids.status.text = str(loan_status[index])
             self.ids.limit.text = str(credit_limit[index])
             self.ids.phone_num.text = str(profile_mobile_number[number])
-            self.ids.Ascend_Score.text=str(ascend_score[number])
+            self.ids.Ascend_Score.text = str(ascend_score[number])
+
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
         Window.bind(on_keyboard=self.on_back_button)
@@ -1292,8 +1336,8 @@ class ViewLoansProfileScreenLR(Screen):
             transaction_id = 'TA0001'
         transaction_date_time = datetime.today()
         if minutes_difference < 30 and wallet[l_index]['wallet_amount'] >= float(loan_amount_text):
-            self.show_success_dialog(
-                f"Amount paid successfully {loan_amount_text} to this Loan ID {loan_id_list[index]}")
+            self.show_validation_error(
+                f"Amount paid successfully {loan_amount_text}")
             data[index]['loan_updated_status'] = 'disbursed'
             data[index]['loan_disbursed_timestamp'] = paid_time
             wallet[b_index]['wallet_amount'] += float(loan_amount_text)
@@ -1313,7 +1357,8 @@ class ViewLoansProfileScreenLR(Screen):
             elif emi_payment_type[index].strip() == "One Time":
                 if tenure[index]:
                     # Add the tenure in months to the loan_disbursed_timestamp
-                    first_emi_due_date = (data[index]['loan_disbursed_timestamp'] + timedelta(days=30 * tenure[index])).date()
+                    first_emi_due_date = (
+                                data[index]['loan_disbursed_timestamp'] + timedelta(days=30 * tenure[index])).date()
                     data[index]['first_emi_payment_due_date'] = first_emi_due_date
                 else:
                     # Handle the case where tenure is not provided (raise an exception or set to None)
@@ -1346,7 +1391,7 @@ class ViewLoansProfileScreenLR(Screen):
 
         elif minutes_difference < 30 and wallet_amount[l_index] < float(loan_amount_text):
 
-            self.show_success_dialog2(f"Insufficient Balance Please Deposit {float(loan_amount_text)}")
+            self.show_validation_error(f"Insufficient Balance Please Deposit {float(loan_amount_text)}")
             anvil.server.call('loan_text', loan_amount_text)
 
             sm = self.manager
@@ -1358,7 +1403,7 @@ class ViewLoansProfileScreenLR(Screen):
             sm.current = 'LenderWalletScreen'
 
         elif minutes_difference > 30:
-            self.show_success_dialog3(f"Time Out You Must Finish Before 30 Minutes")
+            self.show_validation_error(f"Time Out You Must Finish Before 30 Minutes")
             data[index]['loan_updated_status'] = 'lost opportunities'
             self.manager.current = 'ViewLoansRequest'
             return
@@ -1366,7 +1411,8 @@ class ViewLoansProfileScreenLR(Screen):
     def show_success_dialog(self, text):
         dialog = MDDialog(
             text=text,
-            size_hint=(0.8, 0.3),
+            size_hint=(0.8, None),
+            height=dp(200),
             buttons=[
                 MDRaisedButton(
                     text="OK",
@@ -1381,7 +1427,8 @@ class ViewLoansProfileScreenLR(Screen):
     def show_success_dialog2(self, text):
         dialog = MDDialog(
             text=text,
-            size_hint=(0.8, 0.3),
+            size_hint=(0.8, None),
+            height=dp(200),
             buttons=[
                 MDRaisedButton(
                     text="OK",
@@ -1396,7 +1443,8 @@ class ViewLoansProfileScreenLR(Screen):
     def show_success_dialog3(self, text):
         dialog = MDDialog(
             text=text,
-            size_hint=(0.8, 0.3),
+            size_hint=(0.8, None),
+            height=dp(200),
             buttons=[
                 MDRaisedButton(
                     text="OK",
@@ -1482,7 +1530,8 @@ class ViewLoansProfileScreenRL(Screen):
             self.ids.status.text = str(loan_status[index])
             self.ids.limit.text = str(credit_limit[index])
             self.ids.phone_num.text = str(profile_mobile_number[number])
-            self.ids.Ascend_Score.text=str(ascend_score[index])
+            self.ids.Ascend_Score.text = str(ascend_score[number])
+
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
         Window.bind(on_keyboard=self.on_back_button)

@@ -13,8 +13,8 @@ from kivymd.uix.list import ThreeLineAvatarIconListItem, IconLeftWidget
 lender_view_transaction_history = '''
 
 <WindowManager>:
-    TransactionBH:
-    ViewProfileScreenBTH:
+    TransactionLH:
+    ViewProfileScreenLTH:
 
 <TransactionLH>
     BoxLayout:
@@ -33,24 +33,20 @@ lender_view_transaction_history = '''
 
 <ViewProfileScreenLTH>:
 
-    MDTopAppBar:
-        title: "Transaction Details"
-        elevation: 2
-        left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
-        md_bg_color: 0.043, 0.145, 0.278, 1
-        halign: 'left'
-        pos_hint: {'top': 1}
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(80)
-        size_hint_y: None
-        height: dp(450)
-
-        BoxLayout:
+    MDGridLayout:
+        cols:1
+        MDTopAppBar:
+            title: "Lender Transaction Details"
+            elevation: 2
+            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            md_bg_color: 0.043, 0.145, 0.278, 1
+            halign: 'left'
+            pos_hint: {'top': 1} 
+    
+        MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(50)
-            padding: dp(15)
+            padding: dp(20)
             size_hint_y: None
             height: self.minimum_height
 
@@ -69,7 +65,6 @@ lender_view_transaction_history = '''
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 0, 0, 0, 1
-                    bold: True
             MDGridLayout:
                 cols: 2
                 MDIconButton:
@@ -81,6 +76,7 @@ lender_view_transaction_history = '''
                 MDLabel:
                     id: amount
                     halign: 'left'
+                    text_color: 140/255, 140/255, 140/255, 1
 
             MDLabel:
                 text: ''
@@ -92,12 +88,12 @@ lender_view_transaction_history = '''
                 MDLabel:
                     text: '     Transaction ID'
                     halign: 'left'
+                    theme_text_color: 'Custom'  
                     bold: True
 
                 MDLabel:
                     id: transaction_id
                     halign: 'left'
-                    theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
             MDGridLayout:
@@ -105,12 +101,12 @@ lender_view_transaction_history = '''
                 MDLabel:
                     text: '     User Email'
                     halign: 'left'
+                    theme_text_color: 'Custom'  
                     bold: True
 
                 MDLabel:
                     id: user_email
                     halign: 'left'
-                    theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
             MDGridLayout:
@@ -118,12 +114,12 @@ lender_view_transaction_history = '''
                 MDLabel:
                     text: '     Receiver Email'
                     halign: 'left'
+                    theme_text_color: 'Custom'  
                     bold: True
 
                 MDLabel:
                     id: receiver_email
                     halign: 'left'
-                    theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
             MDGridLayout:
@@ -131,11 +127,11 @@ lender_view_transaction_history = '''
                 MDLabel:
                     text: "     Transaction Type" 
                     halign: 'left'
+                    theme_text_color: 'Custom'  
                     bold: True
                 MDLabel:
                     id: transaction_type
                     halign: "left"
-                    theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
 
@@ -144,32 +140,32 @@ lender_view_transaction_history = '''
                 MDLabel:
                     text: '     Published Date'
                     halign: 'left'
+                    theme_text_color: 'Custom'  
                     bold: True
 
                 MDLabel:
                     id: date_time
                     halign: 'left'
-                    theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
             MDGridLayout:
                 cols: 2
                 MDLabel:
                     text: '     Status'
                     halign: 'left'
+                    theme_text_color: 'Custom'  
                     bold: True
 
                 MDLabel:
                     id: status
                     halign: 'left' 
-                    theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
-        BoxLayout:
+        MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(30)
             padding: dp(15)
             size_hint_y: None
-            height: dp(100)
+            height: self.minimum_height
             canvas.before:
                 Color:
                     rgba: 249/255, 249/255, 247/255, 1 
@@ -199,14 +195,8 @@ lender_view_transaction_history = '''
                 MDLabel:
                     id: amount_1
                     halign: 'left'
-                    theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
 
-            MDLabel:
-                text: ''
-                halign: 'center'
-                size_hint_y: None
-                height: dp(65)
 
 
 

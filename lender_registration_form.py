@@ -3335,7 +3335,7 @@ KV = '''
                 id: spouse_company_name
                 hint_text: 'Enter Spouse Company Name'
                 multiline: False
-                helper_text: "Enter Valid Spouse Company Name"
+                helper_text: "Enter Valid Spouse Company Name (if working)"
                 helper_text_mode: 'on_focus'
                 font_name: "Roboto-Bold"
                 hint_text_color: 0, 0, 0, 1
@@ -3354,7 +3354,7 @@ KV = '''
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
                 multiline: False
-                helper_text: 'Enter valid Annual Salary'
+                helper_text: 'Enter valid Annual Salary (if working)'
                 helper_text_mode: 'on_focus'
                 font_name: "Roboto-Bold"
                 input_type: 'number'
@@ -7934,7 +7934,7 @@ class LenderScreen11(Screen):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
 
-        if not all([spouse_company_name, spouse_profession, spouse_annual_salary]):
+        if not all([spouse_profession]):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
@@ -8424,10 +8424,7 @@ class LenderScreen14(Screen):
 
         if 'logged' in status:
             log_index = status.index('logged')
-            cursor.execute(
-                "UPDATE fin_registration_table SET mother_name = ?, mother_address = ?, mother_occupation = ?, mother_ph_no = ? WHERE customer_id = ?",
-                (person_ph_no, person_ph_no, person_proffession, person_ph_no, row_id_list[log_index]))
-            conn.commit()
+
         else:
             # Handle the case where the user is not logged in
             print("User is not logged in.")

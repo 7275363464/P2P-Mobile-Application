@@ -23,6 +23,7 @@ from kivymd.uix.spinner import MDSpinner
 import anvil.tables.query as q
 from borrower_wallet import WalletScreen
 from datetime import datetime
+
 user_helpers2 = """
 <WindowManager>:
     BorrowerDuesScreen:
@@ -67,21 +68,15 @@ user_helpers2 = """
             size_hint_y:None
             height:dp(1) 
 
-        MDGridLayout:
-            cols: 2
-            padding: dp(20)
-            MDLabel:
-                text: "Loan ID"
-                font_size:dp(16)
-                bold:True
-
             MDLabel:
                 id: loan
+                font_size:dp(1)
+                text: "" 
+                height:dp(1)
                 background_color: 1, 1, 1, 0 
                 color: 0, 0, 0, 1
-                line_color_normal: 0, 0, 0, 1 
-                color: 0, 0, 0, 1
-
+                line_color_normal: 0, 0, 0, 1  # Set the line color to black
+                color: 0, 0, 0, 1    
 
         MDGridLayout:
             cols: 2
@@ -90,6 +85,9 @@ user_helpers2 = """
                 text: "Loan Amount"
                 font_size:dp(16)
                 bold:True
+                height:dp(50)
+                size_hint_y:None
+                halign: "left"
 
             MDLabel:
                 id: loan_amount1
@@ -97,6 +95,9 @@ user_helpers2 = """
                 color: 0, 0, 0, 1
                 line_color_normal: 0, 0, 0, 1  
                 color: 0, 0, 0, 1
+                height:dp(50)
+                size_hint_y:None
+                halign: "left"
 
         MDGridLayout:
             cols: 2
@@ -105,6 +106,9 @@ user_helpers2 = """
                 text: "Tenure"
                 font_size:dp(16)
                 bold:True
+                height:dp(50)
+                size_hint_y:None
+                halign: "left"
 
             MDLabel:
                 id: tenure
@@ -112,6 +116,9 @@ user_helpers2 = """
                 color: 0, 0, 0, 1
                 line_color_normal: 0, 0, 0, 1  
                 color: 0, 0, 0, 1
+                height:dp(50)
+                size_hint_y:None
+                halign: "left"
 
         MDGridLayout:
             cols: 2
@@ -120,6 +127,9 @@ user_helpers2 = """
                 text: "Interest Rate"
                 font_size:dp(16)
                 bold:True
+                height:dp(50)
+                size_hint_y:None
+                halign: "left"
 
             MDLabel:
                 id: interest_rate
@@ -127,6 +137,9 @@ user_helpers2 = """
                 color: 0, 0, 0, 1
                 line_color_normal: 0, 0, 0, 1 
                 color: 0, 0, 0, 1
+                height:dp(50)
+                size_hint_y:None
+                halign: "left"
 
         MDGridLayout:
             cols: 2
@@ -135,6 +148,9 @@ user_helpers2 = """
                 text: "Account Number"
                 font_size:dp(16)
                 bold:True
+                height:dp(50)
+                size_hint_y:None
+                halign: "left"
 
             MDLabel:
                 id:account_number
@@ -142,6 +158,9 @@ user_helpers2 = """
                 color: 0, 0, 0, 1
                 line_color_normal: 0, 0, 0, 1 
                 color: 0, 0, 0, 1
+                height:dp(50)
+                size_hint_y:None
+                halign: "left"
 
         MDGridLayout:
             cols: 2
@@ -150,9 +169,15 @@ user_helpers2 = """
                 text: "Emi Amount"
                 font_size:dp(16)
                 bold:True
+                height:dp(50)
+                size_hint_y:None
+                halign: "left"
 
             MDLabel:
                 id:emi_amount
+                height:dp(50)
+                size_hint_y:None
+                halign: "left"
                 background_color: 1, 1, 1, 0 
                 color: 0, 0, 0, 1
                 line_color_normal: 0, 0, 0, 1 
@@ -166,13 +191,20 @@ user_helpers2 = """
                 text: "Extra Payment"
                 font_size:dp(16)
                 bold:True
+                height:dp(50)
+                size_hint_y:None
+                halign: "left"
 
             MDLabel:
                 id: extra_amount
                 background_color: 1, 1, 1, 0 
                 color: 0, 0, 0, 1
                 line_color_normal: 0, 0, 0, 1  # Set the line color to black
-                color: 0, 0, 0, 1       
+                color: 0, 0, 0, 1
+                height:dp(50)
+                size_hint_y:None
+                halign: "left"    
+
 
         MDGridLayout:
             cols: 2
@@ -182,13 +214,21 @@ user_helpers2 = """
                 text: "Total Amount"
                 font_size:dp(16)
                 bold:True
+                height:dp(50)
+                size_hint_y:None
+                halign: "left"   
 
             MDLabel:
                 id:total_amount
+                height:dp(50)
+                size_hint_y:None
+                halign: "left"   
                 background_color: 1, 1, 1, 0 
                 color: 0, 0, 0, 1
                 line_color_normal: 0, 0, 0, 1  # Set the line color to black
                 color: 0, 0, 0, 1            
+        MDLabel:
+            text: " " 
         MDLabel:
             text: " "             
         MDFloatLayout:
@@ -579,8 +619,6 @@ class BorrowerDuesScreen(Screen):
                     self.ids.emi_amount.text = str(emi_amount1)
                     self.ids.total_amount.text = str(total_amount)
                     data1[index]['loan_updated_status'] = "closed"
-
-
 
     def go_to_paynow(self):
         emi_data = app_tables.fin_emi_table.search()

@@ -2,11 +2,12 @@ from datetime import datetime
 
 from anvil.tables import app_tables
 from kivy.core.window import Window
+from kivy.metrics import dp
 from kivy.uix.button import Button
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivymd.app import MDApp
-from kivymd.uix.button import MDRaisedButton, MDFlatButton, MDRoundFlatButton
+from kivymd.uix.button import MDRaisedButton, MDFlatButton, MDRoundFlatButton, MDRectangleFlatButton
 from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
 import anvil
 from kivymd.uix.dialog import MDDialog
@@ -111,7 +112,7 @@ Builder.load_string(
             spacing: dp(20)
             size_hint_y: None
             height: dp(50)
-            pos_hint: {'center_x': 0.74}
+            pos_hint: {'center_x': 0.65}
 
 
         MDRoundFlatButton:
@@ -158,12 +159,12 @@ class LenderWalletScreen(Screen):
 
         if loan_amount_text is not None and w_amount[index] >= loan_amount_text:
             button = MDRoundFlatButton(
-                text="   Loan Disbursement   ",
-                size_hint_y=None,
+                text="       Loan Disbursement       ",
                 height="40dp",
                 theme_text_color='Custom',
                 text_color=(1, 1, 1, 1),
                 font_name="Roboto-Bold",
+                pos_hint={'center_x': 0.5},
                 md_bg_color=(0.043, 0.145, 0.278, 1)
             )
             button.bind(on_release=self.disbrsed_loan)
@@ -242,9 +243,9 @@ class LenderWalletScreen(Screen):
     def submit(self):
         enter_amount = self.ids.enter_amount.text
         if self.type == None:
-            self.show_success_dialog('Please Select Transaction Type')
+            self.show_validation_error3('Please Select Transaction Type')
         elif self.ids.enter_amount.text == '' and not self.ids.enter_amount.text.isdigit():
-            self.show_success_dialog('Enter Valid Amount')
+            self.show_validation_error3('Enter Valid Amount')
         elif self.type == 'deposit':
             data = app_tables.fin_wallet.search()
             transaction = app_tables.fin_wallet_transactions.search()
@@ -272,7 +273,7 @@ class LenderWalletScreen(Screen):
             if email in w_email:
                 index = w_email.index(email)
                 data[index]['wallet_amount'] = int(enter_amount) + w_amount[index]
-                self.show_success_dialog(f'Amount {enter_amount} Deposited Successfully')
+                self.show_validation_error(f'Amount {enter_amount} Deposited Successfully')
                 self.ids.enter_amount.text = ''
                 app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
                                                            customer_id=w_customer_id[index], user_email=email,
@@ -312,7 +313,7 @@ class LenderWalletScreen(Screen):
                 index = w_email.index(email)
                 if w_amount[index] >= int(self.ids.enter_amount.text):
                     data[index]['wallet_amount'] = w_amount[index] - int(self.ids.enter_amount.text)
-                    self.show_success_dialog(
+                    self.show_validation_error(
                         f'Amount {self.ids.enter_amount.text} Withdraw Successfully')
                     self.ids.enter_amount.text = ''
                     app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
@@ -321,7 +322,7 @@ class LenderWalletScreen(Screen):
                                                                status='success', wallet_id=w_id[index],
                                                                transaction_time_stamp=transaction_date_time)
                 else:
-                    self.show_success_dialog(
+                    self.show_validation_error2(
                         f'Insufficient Amount {self.ids.enter_amount.text} Please Deposit Required Money')
                     app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
                                                                customer_id=w_customer_id[index], user_email=email,
@@ -338,6 +339,53 @@ class LenderWalletScreen(Screen):
         current_loan_amount = anvil.server.call('loan_amount_text')
         self.__init__(loan_amount_text=current_loan_amount)
 
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Transaction Success",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
+    def show_validation_error2(self, error_message):
+        dialog = MDDialog(
+            title="Transaction Failure",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
+    def show_validation_error3(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
     def email(self):
         return anvil.server.call('another_method')
 

@@ -208,26 +208,20 @@ view_loans = '''
                 id: container6
 
 <ViewLoansProfileScreens>
-    MDTopAppBar:
-        title: "Lender View Loan"
-        elevation: 2
-        left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
-        md_bg_color: 0.043, 0.145, 0.278, 1
-        halign: 'left'
-        pos_hint: {'top': 1}
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(40)
-        size_hint_y: None
-        height: self.minimum_height
-
-        BoxLayout:
+    MDGridLayout:
+        cols: 1
+        MDTopAppBar:
+            title: "Lender View Loan"
+            elevation: 2
+            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            md_bg_color: 0.043, 0.145, 0.278, 1
+            pos_hint: {'top': 1}
+        MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(20)
+            spacing: dp(40)
             padding: dp(10)
             size_hint_y: None
-            height: dp(450)
+            height: self.minimum_height
 
             canvas.before:
                 Color:
@@ -240,7 +234,7 @@ view_loans = '''
                 cols: 2
 
                 MDLabel:
-                    text: '     Required amount:'
+                    text: '     Amount:'
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 0, 0, 0, 1
@@ -255,7 +249,10 @@ view_loans = '''
 
                 MDLabel:
                     id: amount
+                    bold: True
                     halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
 
             MDLabel:
                 text: ''
@@ -297,6 +294,18 @@ view_loans = '''
 
                 MDLabel:
                     id: phone_num
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: '     Ascend Score'
+                    halign: 'left'
+                    bold: True
+
+                MDLabel:
+                    id: ascend
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
@@ -371,12 +380,12 @@ view_loans = '''
                 halign: 'left'
                 size_hint_y: None
                 height: dp(5)
-        BoxLayout:
+        MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(30)
             padding: dp(15)
             size_hint_y: None
-            height: dp(140)
+            height: self.minimum_height
             canvas.before:
                 Color:
                     rgba: 249/255, 249/255, 247/255, 1 
@@ -396,7 +405,8 @@ view_loans = '''
                     text: '     Total'
                     halign: 'left'
                     theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1  
+                    text_color: 0, 0, 0, 1 
+                    font_size: dp(25)  
                     bold: True
                 MDIconButton:
                     icon: 'currency-inr'
@@ -405,35 +415,26 @@ view_loans = '''
 
                 MDLabel:
                     id: amount_1
+                    bold: True
                     halign: 'left'
-
-            MDLabel:
-                text: ''
-                halign: 'center'
-                size_hint_y: None
-                height: dp(35)
 
 <ViewLoansProfileScreens2>
-    MDTopAppBar:
-        title: "View Loan details"
-        elevation: 2
-        left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
-        md_bg_color: 0.043, 0.145, 0.278, 1
-        halign: 'left'
-        pos_hint: {'top': 1}
+    MDGridLayout:
+        cols: 1
+    
+        MDTopAppBar:
+            title: "View Loan details"
+            elevation: 2
+            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            md_bg_color: 0.043, 0.145, 0.278, 1
+            pos_hint: {'top': 1}
 
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(40)
-        size_hint_y: None
-        height: self.minimum_height
-
-        BoxLayout:
+        MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(20)
+            spacing: dp(40)
             padding: dp(10)
             size_hint_y: None
-            height: dp(450)
+            height: self.minimum_height
 
             canvas.before:
                 Color:
@@ -446,7 +447,7 @@ view_loans = '''
                 cols: 2
 
                 MDLabel:
-                    text: '     Required amount:'
+                    text: '     Amount:'
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 0, 0, 0, 1
@@ -461,7 +462,10 @@ view_loans = '''
 
                 MDLabel:
                     id: amount
+                    bold: True
                     halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
 
             MDLabel:
                 text: ''
@@ -503,6 +507,19 @@ view_loans = '''
 
                 MDLabel:
                     id: phone_num
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
+                    
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: '     Ascend Score'
+                    halign: 'left'
+                    bold: True
+
+                MDLabel:
+                    id: ascend
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
@@ -577,12 +594,12 @@ view_loans = '''
                 halign: 'left'
                 size_hint_y: None
                 height: dp(5)
-        BoxLayout:
+        MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(30)
             padding: dp(15)
             size_hint_y: None
-            height: dp(140)
+            height: self.minimum_height
             canvas.before:
                 Color:
                     rgba: 249/255, 249/255, 247/255, 1 
@@ -602,7 +619,8 @@ view_loans = '''
                     text: '     Total'
                     halign: 'left'
                     theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1  
+                    text_color: 0, 0, 0, 1 
+                    font_size: dp(25) 
                     bold: True
                 MDIconButton:
                     icon: 'currency-inr'
@@ -611,13 +629,8 @@ view_loans = '''
 
                 MDLabel:
                     id: amount_1
+                    bold: True
                     halign: 'left'
-
-            MDLabel:
-                text: ''
-                halign: 'center'
-                size_hint_y: None
-                height: dp(35)
     '''
 
 Builder.load_string(view_loans)
@@ -646,9 +659,11 @@ class ALlLoansScreen(Screen):
 
         profile_customer_id = []
         profile_mobile_number = []
+        ascend_score = []
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
+            ascend_score.append(i['bessem_value'])
 
         c = -1
         index_list = []
@@ -1065,10 +1080,11 @@ class ViewLoansProfileScreens(Screen):
             status.append(i['loan_updated_status'])
         profile_customer_id = []
         profile_mobile_number = []
-
+        ascend_score = []
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
+            ascend_score.append(i['bessem_value'])
 
         index = 0
 
@@ -1088,6 +1104,7 @@ class ViewLoansProfileScreens(Screen):
             index2 = profile_customer_id.index(customer_id[index])
 
             self.ids.phone_num.text = str(profile_mobile_number[index2])
+            self.ids.ascend.text = str(ascend_score[index2])
 
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
@@ -1137,6 +1154,7 @@ class ViewLoansProfileScreens2(Screen):
         credit_limit = []
         date_of_apply = []
         status = []
+
         for i in data:
             customer_id.append(i['borrower_customer_id'])
             loan_id.append(i['loan_id'])
@@ -1151,10 +1169,11 @@ class ViewLoansProfileScreens2(Screen):
             status.append(i['loan_updated_status'])
         profile_customer_id = []
         profile_mobile_number = []
-
+        ascend_score = []
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
+            ascend_score.append(i['bessem_value'])
 
         index = 0
 
@@ -1174,6 +1193,7 @@ class ViewLoansProfileScreens2(Screen):
             index2 = profile_customer_id.index(customer_id[index])
 
             self.ids.phone_num.text = str(profile_mobile_number[index2])
+            self.ids.ascend.text = str(ascend_score[index2])
 
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method

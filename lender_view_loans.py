@@ -1084,7 +1084,7 @@ class ViewLoansProfileScreens(Screen):
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
-            ascend_score.app
+            ascend_score.append(i['bessem_value'])
 
         index = 0
 

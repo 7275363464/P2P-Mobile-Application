@@ -173,7 +173,7 @@ class WalletScreen(Screen):
             )
             button.bind(on_release=self.disbrsed_loan)
             self.ids.box.add_widget(button)
-        elif loan_amount_text != None and w_amount[index] < loan_amount_text:
+        elif loan_amount_text != None and w_amount[index] < float(loan_amount_text):
             print("Amount Not Sufficient")
 
     def on_amount_touch_down(self):

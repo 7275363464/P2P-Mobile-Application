@@ -31,152 +31,151 @@ lender_today_due = '''
                 id: container
 <ViewProfileTD>:
 
-    BoxLayout:
-        pos_hint: {'center_x':0.5, 'center_y':0.5}
-        elevation: 2
-
-        spacing: dp(20)
-        orientation: 'vertical'
+    GridLayout:
+        cols: 1
 
         MDTopAppBar:
             title:"Today's Dues"
             md_bg_color:0.043, 0.145, 0.278, 1
             theme_text_color: 'Custom'
-            text_color: 1,1,1,1 # Set color to white
+            text_color: 1,1,1,1 
             size_hint:1,None
             elevation: 3
             left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
-            pos_hint: {'center_x': 0.5, 'center_y': 0.96}
+            right_action_items: [['wallet']]
+            pos_hint: {'top': 1} 
 
-        MDLabel:
-            text: "" 
-            size_hint_y:None
-            height:dp(1) 
+        MDBoxLayout:
+            orientation: 'vertical'
+            spacing: dp(40)
+            padding: dp(30)
 
-        MDGridLayout:
-            cols: 2
-            padding: dp(20)
+            canvas.before:
+                Color:
+                    rgba: 230/255, 245/255, 255/255, 1 
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [5, 5, 5, 5]
+
+            MDGridLayout:
+                cols: 2
+
+                MDLabel:
+                    text: 'Loan Amount:'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
+            MDGridLayout:
+                cols: 2
+                MDIconButton:
+                    icon: 'currency-inr'
+                    halign: 'left'
+                    size_hint_y: None
+                    height: dp(1)
+
+                MDLabel:
+                    id: loan_amount1
+                    halign: 'left'
+                    bold: True
+                    text_color: 140/255, 140/255, 140/255, 1
             MDLabel:
-                text: "Borrower Name"
-                font_size:dp(16)
-                bold:True
+                text: ''
+                halign: 'left'
+                size_hint_y: None
+                height: dp(5)
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Borrower Name'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    bold: True
 
-            MDLabel:
-                id: borrower_name
-                background_color: 1, 1, 1, 0 
-                color: 0, 0, 0, 1
-                line_color_normal: 0, 0, 0, 1 
-                color: 0, 0, 0, 1
+                MDLabel:
+                    id: name
+                    halign: 'left'
+                    text_color: 140/255, 140/255, 140/255, 1    
+                
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Tenure'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    bold: True
 
+                MDLabel:
+                    id: tenure
+                    halign: 'left'
+                    text_color: 140/255, 140/255, 140/255, 1
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Interest Rate'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    bold: True
 
-        MDGridLayout:
-            cols: 2
-            padding: dp(20)
-            MDLabel:
-                text: "Loan Amount"
-                font_size:dp(16)
-                bold:True
+                MDLabel:
+                    id: interest_rate
+                    halign: 'left'
+                    text_color: 140/255, 140/255, 140/255, 1
+                    
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Account Number'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    bold: True
 
-            MDLabel:
-                id: loan_amount1
-                background_color: 1, 1, 1, 0 
-                color: 0, 0, 0, 1
-                line_color_normal: 0, 0, 0, 1  
-                color: 0, 0, 0, 1
+                MDLabel:
+                    id: account_number
+                    halign: 'left'
+                    text_color: 140/255, 140/255, 140/255, 1
+                    
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Emi Amount'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    bold: True
 
-        MDGridLayout:
-            cols: 2
-            padding: dp(20)
-            MDLabel:
-                text: "Tenure"
-                font_size:dp(16)
-                bold:True
+                MDLabel:
+                    id: emi_amount
+                    halign: 'left'
+                    text_color: 140/255, 140/255, 140/255, 1
+                    
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    id: extra
+                    text: 'Extra Payment'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    bold: True
 
-            MDLabel:
-                id: tenure
-                background_color: 1, 1, 1, 0 
-                color: 0, 0, 0, 1
-                line_color_normal: 0, 0, 0, 1  
-                color: 0, 0, 0, 1
+                MDLabel:
+                    id: extra_amount
+                    halign: 'left'
+                    text_color: 140/255, 140/255, 140/255, 1
+            
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Total Amount'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    bold: True
 
-        MDGridLayout:
-            cols: 2
-            padding: dp(20)
-            MDLabel:
-                text: "Interest Rate"
-                font_size:dp(16)
-                bold:True
-
-            MDLabel:
-                id: interest_rate
-                background_color: 1, 1, 1, 0 
-                color: 0, 0, 0, 1
-                line_color_normal: 0, 0, 0, 1 
-                color: 0, 0, 0, 1
-
-        MDGridLayout:
-            cols: 2
-            padding: dp(20)
-            MDLabel:
-                text: "Account Number"
-                font_size:dp(16)
-                bold:True
-
-            MDLabel:
-                id:account_number
-                background_color: 1, 1, 1, 0 
-                color: 0, 0, 0, 1
-                line_color_normal: 0, 0, 0, 1 
-                color: 0, 0, 0, 1
-
-        MDGridLayout:
-            cols: 2
-            padding: dp(20)
-            MDLabel:
-                text: "Emi Amount"
-                font_size:dp(16)
-                bold:True
-
-            MDLabel:
-                id:emi_amount
-                background_color: 1, 1, 1, 0 
-                color: 0, 0, 0, 1
-                line_color_normal: 0, 0, 0, 1 
-                color: 0, 0, 0, 1
-
-        MDGridLayout:
-            cols: 2
-            padding: dp(20)
-            MDLabel:
-                id: extra
-                text: "Extra Payment"
-                font_size:dp(16)
-                bold:True
-
-            MDLabel:
-                id: extra_amount
-                background_color: 1, 1, 1, 0 
-                color: 0, 0, 0, 1
-                line_color_normal: 0, 0, 0, 1  
-                color: 0, 0, 0, 1           
-
-        MDGridLayout:
-            cols: 2
-            padding: dp(20)
-            MDLabel:
-                id: total
-                text: "Total Amount"
-                font_size:dp(16)
-                bold:True
-
-            MDLabel:
-                id:total_amount
-                background_color: 1, 1, 1, 0 
-                color: 0, 0, 0, 1
-                line_color_normal: 0, 0, 0, 1 
-                color: 0, 0, 0, 1            
-        MDLabel:
-            text: " "    
+                MDLabel:
+                    id: total_amount
+                    halign: 'left'
+                    text_color: 140/255, 140/255, 140/255, 1
+                 
 '''
 Builder.load_string(lender_today_due)
 date = datetime.today().date()
@@ -190,7 +189,9 @@ class TodayDuesTD(Screen):
         data = app_tables.fin_emi_table.search()
         data1 = app_tables.fin_loan_details.search()
         today_date = datetime.now(timezone.utc).date()
+        profile = app_tables.fin_user_profile.search()
         loan_id = []
+        customer_id = []
         loan_status = []
         borrower_name = []
         schedule_date = []
@@ -199,6 +200,7 @@ class TodayDuesTD(Screen):
         for i in data1:
             s += 1
             loan_id.append(i['loan_id'])
+            customer_id.append(i['borrower_customer_id'])
             loan_status.append(i['loan_updated_status'])
             borrower_name.append(i['borrower_full_name'])
             schedule_date.append(i['first_emi_payment_due_date'])
@@ -210,6 +212,11 @@ class TodayDuesTD(Screen):
             emi_loan_id.append(i['loan_id'])
             emi_num.append(i['emi_number'])
             next_payment.append(i['next_payment'])
+        profile_customer_id = []
+        profile_mobile_number = []
+        for i in profile:
+            profile_customer_id.append(i['customer_id'])
+            profile_mobile_number.append(i['mobile'])
         index_list = []
         a = -1
         shedule_date = {}
@@ -229,8 +236,16 @@ class TodayDuesTD(Screen):
         print(shedule_date)
         today_date = datetime.now(timezone.utc).date()
 
+        b = 1
+        k = -1
+        for i in reversed(index_list):
+            b += 1
+            k += 1
+            if customer_id[i] in profile_customer_id:
+                number = profile_customer_id.index(customer_id[i])
+            else:
+                number = 0
 
-        for i in index_list:
             item = ThreeLineAvatarIconListItem(
 
                 IconLeftWidget(
@@ -355,7 +370,7 @@ class ViewProfileTD(Screen):
 
         if value in loan_id:
             index = loan_id.index(value)
-            self.ids.borrower_name.text = str(borrower_name[index])
+            self.ids.name.text = str(borrower_name[index])
             self.ids.loan_amount1.text = str(loan_amount[index])
             self.ids.tenure.text = str(tenure[index])
             self.ids.interest_rate.text = str(interest[index])

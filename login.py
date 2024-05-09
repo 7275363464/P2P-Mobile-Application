@@ -1,3 +1,4 @@
+import json
 import sqlite3
 import threading
 from anvil.tables import app_tables
@@ -307,29 +308,31 @@ class LoginScreen(Screen):
                 if (email_list[i] == entered_email) and (password_value) and (
                         registartion_approve[index] == True) and (user_type[index] == 'borrower'):
                     self.share_email_with_anvil(email_list[i])
+                    self.save_user_info(entered_email, user_type[index])  # Save user info to email.json
                     # Schedule the creation of borrower DashboardScreen on the main thread
                     Clock.schedule_once(lambda dt: self.show_dashboard('DashboardScreen'), 0)
                     self.hide_loading_spinner()
-                    # Added to exit the method after successful login as borrower
+                    return  # Added to exit the method after successful login as borrower
                 elif (email_list[i] == entered_email) and (password_value) and (
                         registartion_approve[index] == True) and (user_type[index] == 'lender'):
                     self.share_email_with_anvil(email_list[i])
+                    self.save_user_info(entered_email, user_type[index])  # Save user info to email.json
                     # Schedule the creation of lender DashboardScreen on the main thread
                     Clock.schedule_once(lambda dt: self.show_dashboard('LenderDashboard'), 0)
                     self.hide_loading_spinner()
-                    # Added to exit the method after successful login as lender
+                    return  # Added to exit the method after successful login as lender
                 elif (email_list[i] == entered_email) and (password_value):
                     self.share_email_with_anvil(email_list[i])
+                    self.save_user_info(entered_email, "default")  # Save user info to email.json
                     # Schedule the creation of default DashboardScreen on the main thread
                     Clock.schedule_once(lambda dt: self.show_dashboard('DashScreen'), 0)
                     self.hide_loading_spinner()
-                    # Added to exit the method after successful login with no specific user type
+                    return  # Added to exit the method after successful login with no specific user type
                 else:
                     # Schedule the error dialog on the main thread
                     Clock.schedule_once(lambda dt: self.show_error_dialog("Incorrect email/password"), 0)
                     self.hide_loading_spinner()
-                    # Added to exit the method after showing error dialog
-                    return
+                    return  # Added to exit the method after showing error dialog
 
         if user_data:
             password_value2 = bcrypt.checkpw(entered_password.encode('utf-8'), user_data[4].encode('utf-8'))
@@ -369,6 +372,17 @@ class LoginScreen(Screen):
             Clock.schedule_once(lambda dt: self.show_error_dialog("Enter valid Email and password"), 0)
             # Clock.schedule_once(lambda dt: self.hide_loading_spinner(), 0)
 
+    def save_user_info(self, email, user_type):
+        # Read existing email.json data
+        with open("emails.json", "r") as file:
+            data = json.load(file)
+
+        # Update or create entry for the current user
+        data[email] = {"user_type": user_type, "logged_status": True}
+
+        # Write updated data back to the file
+        with open("emails.json", "w") as file:
+            json.dump(data, file)
     def show_dashboard(self, screen_name):
         def switch_screen(dt):
 

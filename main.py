@@ -1,3 +1,4 @@
+import json
 
 from anvil.tables import app_tables
 from kivy.app import App
@@ -7,23 +8,54 @@ from kivy.metrics import dp
 from kivy.uix.spinner import SpinnerOption
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import ScreenManager, SlideTransition
+
+from borrower_dashboard import DashboardScreen
+from dashboard import DashScreen
 from homepage import MainScreen
 
 import anvil.server
+
+from lender_dashboard import LenderDashboard
 
 #anvil.server.connect("server_2V5FMRORVEQOP72ZVQWSBAPD-OZATT3SDKEEAAR6A") #published
 anvil.server.connect("server_SCQAA7522N262HFSYZ7GLPPK-DVKXHXN3FMGIYIJX")
 class MyApp(MDApp):
     def build(self):
-        sm = ScreenManager(transition=SlideTransition())
+        self.sm = ScreenManager(transition=SlideTransition())
+        self.load_initial_screen()
         main_screen = MainScreen(name='MainScreen')
         SpinnerOption.font_size = dp(10.5)
         SpinnerOption.background_color = [0.2, 0.4, 0.6, 1]
         SpinnerOption.font_name = "Roboto-Bold"
-        sm.add_widget(main_screen)
+        self.sm.add_widget(main_screen)
 
-        return sm
+        return self.sm
 
+    def load_initial_screen(self):
+        # Load initial screen based on logged status and user type
+        with open("emails.json", "r") as file:
+            user_data = json.load(file)
+        print("user_data:", user_data)  # Debug print
+
+        for email, data in user_data.items():
+            print("email:", email)  # Debug print
+            print("data type:", type(data))  # Debug print
+            print("data:", data)  # Debug print
+            if isinstance(data, dict) and data.get("logged_status", False):
+                user_type = data.get("user_type", "")
+                if user_type == "borrower":
+                    self.sm.add_widget(DashboardScreen(name='DashboardScreen'))
+                    self.sm.current = 'DashboardScreen'
+                elif user_type == "lender":
+                    self.sm.add_widget(LenderDashboard(name='LenderDashboard'))
+                    self.sm.current = 'LenderDashboard'
+                else:
+                    self.sm.add_widget(DashScreen(name='DashScreen'))
+                    self.sm.current = 'DashScreen'
+                break
+        else:
+            self.sm.add_widget(MainScreen(name='MainScreen'))
+            self.sm.current = 'MainScreen'
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.on_keyboard)
         Window.bind(on_keyboard=self.on_back_button)

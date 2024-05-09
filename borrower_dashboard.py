@@ -1,4 +1,5 @@
 import configparser
+import json
 import sqlite3
 import anvil
 from anvil.tables import app_tables
@@ -118,7 +119,7 @@ user_helpers = """
                         font_size: dp(15)
                         size_hint_y: None
                         height: self.texture_size[1]
-                        
+
             MDBoxLayout:
                 orientation: "vertical"
                 size_hint_y:0.47
@@ -272,7 +273,7 @@ user_helpers = """
                                     theme_text_color: "Custom"
                                     text_color: 0, 0, 0, 1
                                     halign: "center"
-                                    
+
                         MDBoxLayout:
                             orientation: 'vertical'
                             size_hint_y: None
@@ -307,7 +308,7 @@ user_helpers = """
                                     theme_text_color: "Custom"
                                     text_color: 0, 0, 0, 1
                                     halign: "center"
-                                    
+
                         MDBoxLayout:
                             orientation: 'vertical'
                             size_hint_y: None
@@ -380,7 +381,7 @@ user_helpers = """
                                     text_color: 0, 0, 0, 1
                                     halign: "center"
 
-                        
+
 
 <ProfileScreen>
     BoxLayout:
@@ -744,6 +745,7 @@ class DashboardScreen(Screen):
         self.ids.limit.text = f"Credit Limit : {limit[0] if limit else ''}"
         self.ids.date.text = f"Joined Date : {date[0] if date else ''}"
         self.ids.balance.text = f"Available Balance : {balance[0] if balance else ''}"
+
     def on_pre_leave(self):
         Window.unbind(on_keyboard=self.on_back_button)
 
@@ -979,7 +981,24 @@ class DashboardScreen(Screen):
         self.manager.current = 'LoansDetails'
 
     def logout(self):
-        self.manager.add_widget(Factory.MainScreen(name='MainScreen'))
+        # Clear user data
+        with open("emails.json", "r+") as file:
+            user_data = json.load(file)
+            # Check if user_data is a dictionary
+            if isinstance(user_data, dict):
+                for email, data in user_data.items():
+                    if isinstance(data, dict) and data.get("logged_status", False):
+                        data["logged_status"] = False
+                        data["user_type"] = ""
+                        break
+                # Move the cursor to the beginning of the file
+                file.seek(0)
+                # Write the updated data back to the file
+                json.dump(user_data, file, indent=4)
+                # Truncate any remaining data in the file
+                file.truncate()
+
+        # Switch to MainScreen
         self.manager.current = 'MainScreen'
 
     def go_to_profile(self):

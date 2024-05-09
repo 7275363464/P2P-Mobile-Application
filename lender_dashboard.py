@@ -1,3 +1,5 @@
+import json
+
 from anvil.tables import app_tables
 from kivy.factory import Factory
 from kivy.metrics import dp
@@ -809,8 +811,26 @@ class LenderDashboard(Screen):
         self.manager.current = 'MainScreen'
 
     def go_to_main_screen(self):
-        if self.manager.current != 'MainScreen':
-            self.manager.current = 'MainScreen'
+        # Clear user data
+        with open("emails.json", "r+") as file:
+            user_data = json.load(file)
+            # Check if user_data is a dictionary
+            if isinstance(user_data, dict):
+                for email, data in user_data.items():
+                    if isinstance(data, dict) and data.get("logged_status", False):
+                        data["logged_status"] = False
+                        data["user_type"] = ""
+                        break
+                # Move the cursor to the beginning of the file
+                file.seek(0)
+                # Write the updated data back to the file
+                json.dump(user_data, file, indent=4)
+                # Truncate any remaining data in the file
+                file.truncate()
+
+        # Switch to MainScreen
+        self.manager.current = 'MainScreen'
+
 
     def profile(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])

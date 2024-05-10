@@ -32,6 +32,14 @@ KV = """
     MDFloatLayout:
         id: login_screen
         md_bg_color:1,1,1,1
+        MDIconButton:
+            icon: "arrow-left"
+            pos_hint: {"center_y": .95}
+            user_font_size: "30sp"
+            theme_text_color: "Custom"
+            text_color: rgba(26, 24, 58, 255)
+            on_release: root.go_back()
+
         Image:
             source: "LOGO.png"
             pos_hint: {'center_x': 0.5, 'center_y': 0.93}
@@ -40,7 +48,7 @@ KV = """
 
         MDLabel:
             id: label1
-            text: 'Welcome Back!'
+            text: 'Welcome,'
             font_size:dp(23)
 
             halign: 'center'
@@ -49,7 +57,7 @@ KV = """
             pos_hint: {'center_x': 0.5, 'center_y': 0.81}
         MDLabel:
 
-            text: 'Login to continue'
+            text: 'Sign in to continue'
             color:6/255, 143/255, 236/255, 1
             font_size:dp(16)
             halign: 'center'
@@ -132,15 +140,6 @@ KV = """
             size_hint: 1, None
             height: "50dp"
             MDRaisedButton:
-                text: "Back"
-                on_release: app.root.current ='MainScreen'
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
-            MDRaisedButton:
                 text: "Login"
                 on_release: root.go_to_dashboard()
                 md_bg_color: 0.043, 0.145, 0.278, 1
@@ -165,14 +164,14 @@ KV = """
         orientation: 'horizontal'
         size_hint: None, None
         width: "190dp"
-        height: "35dp"
+        height: "15dp"
         pos_hint: {'center_x': 0.5, 'center_y': 0.2}
 
         MDTextButton:
-            text: "Already have an account? Sign Up"
+            text: "Already have an account? [color=#0699FF]Sign In[/color]"
             font_name: "Roboto"
-            font_size:dp(14)
-            font_size:dp(14)
+            font_size: dp(14)
+            markup: True
             theme_text_color: 'Secondary'
             halign: 'left'
             height: "50dp"
@@ -420,16 +419,23 @@ class LoginScreen(Screen):
         self.manager.current = 'SignupScreen'
 
     def on_pre_enter(self):
+        Window.bind(on_keyboard=self.on_keyboard)
         Window.bind(on_keyboard=self.on_back_button)
         # Clear input fields when navigating back to the login page
         self.ids.email.text = ""
         self.ids.password.text = ""
 
     def on_pre_leave(self):
-        Window.unbind(on_keyboard=self.on_back_button)
+        Window.bind(on_keyboard=self.on_keyboard)
+        Window.bind(on_keyboard=self.on_back_button)
+
+    def on_keyboard(self, window, key, *args):
+        if key == 27:  # Key code for the 'Escape' key
+            # Keyboard is closed, move the screen down
+            self.screen_manager.y = 0
+        return True
 
     def on_back_button(self, instance, key, scancode, codepoint, modifier):
-
         if key == 27:
             self.go_back()
             return True

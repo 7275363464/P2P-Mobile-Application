@@ -28,12 +28,13 @@ KV = """
     SignupScreen:
 
 <SignupScreen>:
-    canvas.before:
-        Color:
-            rgba:  1, 1, 1, 1
-        Rectangle:
-            size: self.size
-            pos: self.pos
+    MDIconButton:
+        icon: "arrow-left"
+        pos_hint: {"center_y": .95}
+        user_font_size: "30sp"
+        theme_text_color: "Custom"
+        text_color: rgba(26, 24, 58, 255)
+        on_release: root.go_back()
 
     BoxLayout:
         orientation: "vertical"
@@ -41,9 +42,10 @@ KV = """
         spacing: dp(5)
 
         MDLabel:
-            id: label1
-            text: 'SIGN UP'
-            font_size:dp(30)
+            text: "Create new account"
+            font_name: "Roboto"
+            font_size: "18sp"
+            color: rgba(0, 0, 0, 255)
             halign: 'center'
             bold: True
 
@@ -150,23 +152,12 @@ KV = """
 
 
         GridLayout:
-            cols: 2
+            cols: 1
             spacing: dp(30)
             padding: dp(20)
             size_hint: 1, None
             height: "50dp"  # Adjust the height to accommodate both sections
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        
-            MDRaisedButton:
-                text: "Back"
-                on_release: app.root.get_screen("MainScreen").manager.current = 'MainScreen'
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
-        
             MDRaisedButton:
                 text: "Signup"
                 on_release: root.go_to_login()
@@ -183,14 +174,14 @@ KV = """
             orientation: 'horizontal'
             size_hint: None, None
             width: "190dp"
-            height: "35dp"
+            height: "15dp"
             pos_hint: {'center_x': 0.5, 'center_y': 0.2}
     
-            MDTextButton:
-                text: "Already have an account? Sign In"
+            MDFlatButton:
+                text: "Already have an account? [color=#0699FF]Sign In[/color]"
                 font_name: "Roboto"
-                font_size:dp(14)
-                font_size:dp(14)
+                font_size: dp(14)
+                markup: True
                 theme_text_color: 'Secondary'
                 halign: 'left'
                 height: "50dp"
@@ -489,17 +480,26 @@ class SignupScreen(Screen):
             re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+=-])[A-Za-z\d!@#$%^&*()_+=-]+$', password))
 
     def on_pre_enter(self):
+        Window.bind(on_keyboard=self.on_keyboard)
         Window.bind(on_keyboard=self.on_back_button)
 
+
     def on_pre_leave(self):
+        Window.bind(on_keyboard=self.on_keyboard)
         Window.unbind(on_keyboard=self.on_back_button)
 
-    def on_back_button(self, instance, key, scancode, codepoint, modifier):
 
+    def on_back_button(self, instance, key, scancode, codepoint, modifier):
         if key == 27:
             self.go_back()
             return True
         return False
+
+    def on_keyboard(self, window, key, *args):
+        if key == 27:  # Key code for the 'Escape' key
+            # Keyboard is closed, move the screen down
+            self.screen_manager.y = 0
+        return True
 
     def on_start(self):
         Window.softinput_mode = "below_target"

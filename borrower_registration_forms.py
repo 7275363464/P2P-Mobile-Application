@@ -8624,9 +8624,13 @@ class BorrowerScreen19(Screen):
         user_id_list = [i['customer_id'] for i in data]
 
         index = 0
+        beseem = 0
         if user_email in id_list:
             index = id_list.index(user_email)
-            beseem = anvil.server.call('final_points_update_bessem_table', user_id_list[index])
+            try:
+                beseem = anvil.server.call('final_points_update_bessem_table', user_id_list[index])
+            except Exception as e:
+                print(f"An error occurred: {e}")
             data[index]['bank_id'] = bank_id
             data[index]['account_bank_branch'] = branch_name
             data[index]['usertype'] = b

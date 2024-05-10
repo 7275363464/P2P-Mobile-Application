@@ -168,21 +168,16 @@ KV = """
         height: "35dp"
         pos_hint: {'center_x': 0.5, 'center_y': 0.2}
 
-        MDLabel:
-            text: "Don't have an account?"
+        MDTextButton:
+            text: "Already have an account? Sign Up"
+            font_name: "Roboto"
+            font_size:dp(14)
             font_size:dp(14)
             theme_text_color: 'Secondary'
-            halign: 'center'
-            valign: 'center'
-
-        MDFlatButton:
-            text: "Sign Up"
-            font_size:dp(18)
-
-            theme_text_color: 'Custom'
+            halign: 'left'
+            height: "50dp"
             text_color: 0.043, 0.145, 0.278, 1
             on_release: root.go_to_signup()
-
 
 """
 Builder.load_string(KV)

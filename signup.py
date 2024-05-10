@@ -5,6 +5,7 @@ from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
+from kivy.metrics import dp
 from kivy.uix.modalview import ModalView
 from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
 from kivymd.app import MDApp
@@ -17,8 +18,9 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDRectangleFlatButton, MDFlatButton
 from dashboard import DashScreen
 import anvil.server
+from datetime import datetime, timedelta, timezone
 from kivymd.uix.spinner import MDSpinner
-
+from kivy.factory import Factory
 from login import LoginScreen
 
 KV = """
@@ -149,30 +151,52 @@ KV = """
 
         GridLayout:
             cols: 2
-            spacing: dp(20)
+            spacing: dp(30)
             padding: dp(20)
-            pos_hint: {'center_x': 0.50, 'center_y': 0.5}
             size_hint: 1, None
-            height: "50dp"
-
+            height: "50dp"  # Adjust the height to accommodate both sections
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        
             MDRaisedButton:
                 text: "Back"
                 on_release: app.root.get_screen("MainScreen").manager.current = 'MainScreen'
-                md_bg_color:0.043, 0.145, 0.278, 1
+                md_bg_color: 0.043, 0.145, 0.278, 1
                 theme_text_color: 'Custom'
                 text_color: 1, 1, 1, 1
                 size_hint: 1, None
                 height: "50dp"
                 font_name: "Roboto-Bold"
-
+        
             MDRaisedButton:
                 text: "Signup"
                 on_release: root.go_to_login()
                 md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
                 size_hint: 1, None
                 height: "50dp"
                 font_name: "Roboto-Bold"
+        
+        MDLabel:
+            text: ""  # Add an empty label for spacing
+        
+        BoxLayout:
+            id:box1
+            orientation: 'horizontal'
+            size_hint: None, None
+            width: "190dp"
+            height: "35dp"
+            pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+    
+            MDTextButton:
+                text: "Already have an account? Sign In"
+                font_name: "Roboto"
+                font_size:dp(14)
+                font_size:dp(14)
+                theme_text_color: 'Secondary'
+                halign: 'left'
+                height: "50dp"
+                text_color: 0.043, 0.145, 0.278, 1
+                on_release: root.go_to_signin()
+                
 
 """
 
@@ -182,6 +206,9 @@ class SignupScreen(Screen):
     create_user_table()
     create_registration_table()
 
+    def go_to_signin(self):
+        self.manager.add_widget(Factory.LoginScreen(name='LoginScreen'))
+        self.manager.current = 'LoginScreen'
     def on_mobile_number_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
         self.ids.mobile.input_type = 'number'
@@ -245,8 +272,9 @@ class SignupScreen(Screen):
             print(f"SQLite error: {e}")
 
     def add_data(self, user_id, email, password, name, number, enable):
+        approved_date = datetime.now()
         # Ensure 'YOUR_ANVIL_UPLINK_KEY' is replaced with your actual Anvil Uplink key
-        app_tables.users.add_row(email=email, password_hash=password, enabled=enable)
+        app_tables.users.add_row(email=email, password_hash=password, enabled=enable, signed_up=approved_date)
         app_tables.fin_user_profile.add_row(customer_id=user_id, email_user=email, full_name=name,
                                             mobile=number)
         app_tables.fin_guarantor_details.add_row(customer_id=user_id)
@@ -443,7 +471,8 @@ class SignupScreen(Screen):
         dialog = MDDialog(
             title="Terms and Conditions",
             text="I agree with terms and conditions",
-            size_hint=(0.8, 0.5),
+            size_hint=(0.8, None),
+            height=dp(200),
             buttons=[
                 MDFlatButton(
                     text="OK",

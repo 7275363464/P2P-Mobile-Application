@@ -5,6 +5,7 @@ from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
+from kivy.metrics import dp
 from kivy.uix.modalview import ModalView
 from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
 from kivymd.app import MDApp
@@ -17,8 +18,9 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDRectangleFlatButton, MDFlatButton
 from dashboard import DashScreen
 import anvil.server
+from datetime import datetime, timedelta, timezone
 from kivymd.uix.spinner import MDSpinner
-
+from kivy.factory import Factory
 from login import LoginScreen
 
 KV = """
@@ -26,12 +28,13 @@ KV = """
     SignupScreen:
 
 <SignupScreen>:
-    canvas.before:
-        Color:
-            rgba:  1, 1, 1, 1
-        Rectangle:
-            size: self.size
-            pos: self.pos
+    MDIconButton:
+        icon: "arrow-left"
+        pos_hint: {"center_y": .95}
+        user_font_size: "30sp"
+        theme_text_color: "Custom"
+        text_color: rgba(26, 24, 58, 255)
+        on_release: root.go_back()
 
     BoxLayout:
         orientation: "vertical"
@@ -39,9 +42,10 @@ KV = """
         spacing: dp(5)
 
         MDLabel:
-            id: label1
-            text: 'SIGN UP'
-            font_size:dp(30)
+            text: "Create new account"
+            font_name: "Roboto"
+            font_size: "18sp"
+            color: rgba(0, 0, 0, 255)
             halign: 'center'
             bold: True
 
@@ -148,31 +152,42 @@ KV = """
 
 
         GridLayout:
-            cols: 2
-            spacing: dp(20)
+            cols: 1
+            spacing: dp(30)
             padding: dp(20)
-            pos_hint: {'center_x': 0.50, 'center_y': 0.5}
             size_hint: 1, None
-            height: "50dp"
-
-            MDRaisedButton:
-                text: "Back"
-                on_release: app.root.get_screen("MainScreen").manager.current = 'MainScreen'
-                md_bg_color:0.043, 0.145, 0.278, 1
-                theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
-
+            height: "50dp"  # Adjust the height to accommodate both sections
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             MDRaisedButton:
                 text: "Signup"
                 on_release: root.go_to_login()
                 md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
                 size_hint: 1, None
                 height: "50dp"
                 font_name: "Roboto-Bold"
+        
+        MDLabel:
+            text: ""  # Add an empty label for spacing
+        
+        BoxLayout:
+            id:box1
+            orientation: 'horizontal'
+            size_hint: None, None
+            width: "190dp"
+            height: "15dp"
+            pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+    
+            MDFlatButton:
+                text: "Already have an account? [color=#0699FF]Sign In[/color]"
+                font_name: "Roboto"
+                font_size: dp(14)
+                markup: True
+                theme_text_color: 'Secondary'
+                halign: 'left'
+                height: "50dp"
+                text_color: 0.043, 0.145, 0.278, 1
+                on_release: root.go_to_signin()
+                
 
 """
 
@@ -182,6 +197,9 @@ class SignupScreen(Screen):
     create_user_table()
     create_registration_table()
 
+    def go_to_signin(self):
+        self.manager.add_widget(Factory.LoginScreen(name='LoginScreen'))
+        self.manager.current = 'LoginScreen'
     def on_mobile_number_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
         self.ids.mobile.input_type = 'number'
@@ -245,8 +263,9 @@ class SignupScreen(Screen):
             print(f"SQLite error: {e}")
 
     def add_data(self, user_id, email, password, name, number, enable):
+        approved_date = datetime.now()
         # Ensure 'YOUR_ANVIL_UPLINK_KEY' is replaced with your actual Anvil Uplink key
-        app_tables.users.add_row(email=email, password_hash=password, enabled=enable)
+        app_tables.users.add_row(email=email, password_hash=password, enabled=enable, signed_up=approved_date)
         app_tables.fin_user_profile.add_row(customer_id=user_id, email_user=email, full_name=name,
                                             mobile=number)
         app_tables.fin_guarantor_details.add_row(customer_id=user_id)
@@ -443,7 +462,8 @@ class SignupScreen(Screen):
         dialog = MDDialog(
             title="Terms and Conditions",
             text="I agree with terms and conditions",
-            size_hint=(0.8, 0.5),
+            size_hint=(0.8, None),
+            height=dp(200),
             buttons=[
                 MDFlatButton(
                     text="OK",
@@ -460,17 +480,26 @@ class SignupScreen(Screen):
             re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+=-])[A-Za-z\d!@#$%^&*()_+=-]+$', password))
 
     def on_pre_enter(self):
+        Window.bind(on_keyboard=self.on_keyboard)
         Window.bind(on_keyboard=self.on_back_button)
 
+
     def on_pre_leave(self):
+        Window.bind(on_keyboard=self.on_keyboard)
         Window.unbind(on_keyboard=self.on_back_button)
 
-    def on_back_button(self, instance, key, scancode, codepoint, modifier):
 
+    def on_back_button(self, instance, key, scancode, codepoint, modifier):
         if key == 27:
             self.go_back()
             return True
         return False
+
+    def on_keyboard(self, window, key, *args):
+        if key == 27:  # Key code for the 'Escape' key
+            # Keyboard is closed, move the screen down
+            self.screen_manager.y = 0
+        return True
 
     def on_start(self):
         Window.softinput_mode = "below_target"

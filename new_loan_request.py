@@ -5,6 +5,10 @@ from kivy.animation import Animation
 from kivy.uix.popup import Popup
 from kivymd.uix.list import OneLineListItem
 from kivy.app import App
+from kivy.uix.screenmanager import Screen, SlideTransition
+from kivymd.uix.label import MDLabel
+from kivy.metrics import dp
+
 from kivy.uix.screenmanager import Screen, ScreenManager, SlideTransition
 from kivy.factory import Factory
 
@@ -755,261 +759,165 @@ user_helpers2 = """
         MDLabel:
             text: " "             
 <MenuScreen>:
+    on_pre_enter: root.calculate_schedule()  # Calculate when entering the screen
+
     MDBoxLayout:
         orientation: 'vertical'
         spacing: dp(10)
 
 
         MDTopAppBar:
-            title: "Payment Schedule"
+            title: "Payment Schedule Table"
             elevation: 2
             pos_hint: {'top': 1}
             left_action_items: [['arrow-left', lambda x: root.go_back()]]
             title_align: 'center'
             md_bg_color: 0.043, 0.145, 0.278, 1
-        ScrollView:
-            MDList:
+
+        ScrollView:  # Add ScrollView here
+            do_scroll_x: True
+            do_scroll_y: True
+
+            MDGridLayout:
                 id: container
-
-<PaymentDetailsScreen>:
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(10)
-        MDTopAppBar:
-            title: "Payment Schedule"
-            elevation: 2
-            pos_hint: {'top': 1}
-            left_action_items: [['arrow-left', lambda x: root.go_to_menu_screen() ]]
-            title_align: 'center'
-            md_bg_color: 0.043, 0.145, 0.278, 1
-
-        MDGridLayout:
-            cols: 2
-
-            padding: dp(25)
-            spacing: dp(20)
-            MDLabel:
-                font_size: dp(16)
-                text: "Beginning Balance:"
-                bold: True
-                halign:"left"
-            MDLabel:
-                id: beginning_balance_label
-                text: " Rs. 0.00"
-                font_size: dp(11)
+                cols: 8  # Number of columns in your table
+                padding: dp(15)
+                spacing: dp(40)
+                size_hint_x: None
+                width: dp(1400)
                 size_hint_y: None
-                halign: "left"
-                padding: dp(5)
-                height: self.texture_size[1] + dp(10) if self.text else 0  # Adjust height to fit content
+                height: self.minimum_height
                 canvas.before:
                     Color:
-                        rgba: 1, 1, 1, 1  # Background color
-                    RoundedRectangle:
-                        size: self.size
-                        pos: self.pos
-                        radius: [15, 15, 15, 15]  # Adjust radius for rounded corners
-                    Color:
-                        rgba: 0.043, 0.145, 0.278, 1
+                        rgba: 0, 0, 0, 1
                     Line:
                         width: 0.25
-                        rectangle: (self.x, self.y, self.width, self.height)
+                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+
+                MDLabel:
+                    text: "Payment Schedule"
+                    bold: True
+                    font_size: dp(16)
+                    halign: "left"
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            width: 1
+                            rectangle: (self.x, self.y, self.width, self.height)
+                    size_hint_x: None
+                    width: dp(150)
 
 
-        MDGridLayout:
-            cols: 2
+                # Header row
 
-            padding: dp(25)
-            spacing: dp(20)
-            MDLabel:
-                font_size: dp(16)
-                text: "Scheduled Payment:"
-                bold: True
-                halign:"left"
-            MDLabel:
-                id: emi_label
-                text: "Rs. 0.00"
-                font_size: dp(11)
-                size_hint_y: None
-                halign: "left"
-                padding: dp(5)
-                height: self.texture_size[1] + dp(10) if self.text else 0  # Adjust height to fit content
-                canvas.before:
-                    Color:
-                        rgba: 1, 1, 1, 1  # Background color
-                    RoundedRectangle:
-                        size: self.size
-                        pos: self.pos
-                        radius: [15, 15, 15, 15]  # Adjust radius for rounded corners
-                    Color:
-                        rgba: 0.043, 0.145, 0.278, 1
-                    Line:
-                        width: 0.25
-                        rectangle: (self.x, self.y, self.width, self.height)
 
-        MDGridLayout:
-            cols: 2
+                MDLabel:
+                    text: "Beginning Balance"
+                    bold: True
+                    font_size: dp(16)
+                    halign: "center"
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            width: 1
+                            rectangle: (self.x, self.y, self.width, self.height)
+                    size_hint_x: None
+                    width: dp(150)
 
-            padding: dp(25)
-            spacing: dp(20)
-            MDLabel:
-                font_size: dp(16)
-                text: "Interest Amount:"
-                bold: True
-                halign:"left"
-            MDLabel:
-                id: interest_label
-                text: " Rs. 0.00"
-                font_size: dp(11)
-                size_hint_y: None
-                halign: "left"
-                padding: dp(5)
-                height: self.texture_size[1] + dp(10) if self.text else 0  # Adjust height to fit content
-                canvas.before:
-                    Color:
-                        rgba: 1, 1, 1, 1  # Background color
-                    RoundedRectangle:
-                        size: self.size
-                        pos: self.pos
-                        radius: [15, 15, 15, 15]  # Adjust radius for rounded corners
-                    Color:
-                        rgba: 0.043, 0.145, 0.278, 1
-                    Line:
-                        width: 0.25
-                        rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "EMI"
+                    bold: True
+                    font_size: dp(16)
+                    halign: "center"
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            width: 1
+                            rectangle: (self.x, self.y, self.width, self.height)
+                    size_hint_x: None
+                    width: dp(150)
 
-        MDGridLayout:
-            cols: 2
+                MDLabel:
+                    text: "Interest Amount"
+                    bold: True
+                    font_size: dp(16)
+                    halign: "center"
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            width: 1
+                            rectangle: (self.x, self.y, self.width, self.height)
+                    size_hint_x: None
+                    width: dp(150)
 
-            padding: dp(25)
-            spacing: dp(20)
-            MDLabel:
-                font_size: dp(16)
-                text: "Processing Amount:"
-                bold: True
-                halign:"left"
-            MDLabel:
-                id: processing_fee_label
-                text: " Rs. 0.00"
-                font_size: dp(11)
-                size_hint_y: None
-                halign: "left"
-                padding: dp(5)
-                height: self.texture_size[1] + dp(10) if self.text else 0  # Adjust height to fit content
-                canvas.before:
-                    Color:
-                        rgba: 1, 1, 1, 1  # Background color
-                    RoundedRectangle:
-                        size: self.size
-                        pos: self.pos
-                        radius: [15, 15, 15, 15]  # Adjust radius for rounded corners
-                    Color:
-                        rgba: 0.043, 0.145, 0.278, 1
-                    Line:
-                        width: 0.25
-                        rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "Processing Fee"
+                    bold: True
+                    font_size: dp(16)
+                    halign: "center"
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            width: 1
+                            rectangle: (self.x, self.y, self.width, self.height)
+                    size_hint_x: None
+                    width: dp(150)
 
-        MDGridLayout:
-            cols: 2
+                MDLabel:
+                    text: "Total Payment"
+                    bold: True
+                    font_size: dp(16)
+                    halign: "center"
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            width: 1
+                            rectangle: (self.x, self.y, self.width, self.height)
+                    size_hint_x: None
+                    width: dp(150)
 
-            padding: dp(25)
-            spacing: dp(20)
-            MDLabel:
-                font_size: dp(16)
-                text: "Principal Amount:"
-                bold: True
-                halign:"left"
-            MDLabel:
-                id: principal_label
-                text: " Rs. 0.00"
-                font_size: dp(11)
-                size_hint_y: None
-                halign: "left"
-                padding: dp(5)
-                height: self.texture_size[1] + dp(10) if self.text else 0  # Adjust height to fit content
-                canvas.before:
-                    Color:
-                        rgba: 1, 1, 1, 1  # Background color
-                    RoundedRectangle:
-                        size: self.size
-                        pos: self.pos
-                        radius: [15, 15, 15, 15]  # Adjust radius for rounded corners
-                    Color:
-                        rgba: 0.043, 0.145, 0.278, 1
-                    Line:
-                        width: 0.25
-                        rectangle: (self.x, self.y, self.width, self.height)
-        MDGridLayout:
-            cols: 2
+                MDLabel:
+                    text: "Principal"
+                    bold: True
+                    font_size: dp(16)
+                    halign: "center"
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            width: 1
+                            rectangle: (self.x, self.y, self.width, self.height)
+                    size_hint_x: None
+                    width: dp(150)
 
-            padding: dp(25)
-            spacing: dp(20)
-            MDLabel:
-                font_size: dp(16)
-                text: "Total Payment:"
-                bold: True
-                halign:"left"
-            MDLabel:
-                id: total_payment_label
-                text: " Rs. 0.00"
-                font_size: dp(11)
-                size_hint_y: None
-                halign: "left"
-                padding: dp(5)
-                height: self.texture_size[1] + dp(10) if self.text else 0  # Adjust height to fit content
-                canvas.before:
-                    Color:
-                        rgba: 1, 1, 1, 1  # Background color
-                    RoundedRectangle:
-                        size: self.size
-                        pos: self.pos
-                        radius: [15, 15, 15, 15]  # Adjust radius for rounded corners
-                    Color:
-                        rgba: 0.043, 0.145, 0.278, 1
-                    Line:
-                        width: 0.25
-                        rectangle: (self.x, self.y, self.width, self.height)
-
-        MDGridLayout:
-            cols: 2
-
-            padding: dp(25)
-            spacing: dp(20)
-            MDLabel:
-                font_size: dp(16)
-                text: "Ending Balance:"
-                bold: True
-                halign:"left"
-            MDLabel:
-                id: balance_label
-                text: " Rs. 0.00"
-                font_size: dp(11)
-                size_hint_y: None
-                halign: "left"
-                padding: dp(5)
-                height: self.texture_size[1] + dp(10) if self.text else 0  # Adjust height to fit content
-                canvas.before:
-                    Color:
-                        rgba: 1, 1, 1, 1  # Background color
-                    RoundedRectangle:
-                        size: self.size
-                        pos: self.pos
-                        radius: [15, 15, 15, 15]  # Adjust radius for rounded corners
-                    Color:
-                        rgba: 0.043, 0.145, 0.278, 1
-                    Line:
-                        width: 0.25
-                        rectangle: (self.x, self.y, self.width, self.height)
-
+                MDLabel:
+                    text: "Ending Balance"
+                    bold: True
+                    font_size: dp(16)
+                    halign: "center"
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            width: 1
+                            rectangle: (self.x, self.y, self.width, self.height)
+                    size_hint_x: None
+                    width: dp(150)
 
 
         MDRaisedButton:
             text: "Back"
-            on_press: root.manager.current = 'menu'
+            on_press: root.go_back()
             md_bg_color: 0.043, 0.145, 0.278, 1
             pos_hint: {'right': 1, 'y': 0.5}
             size_hint: 1, None
             height: "50dp"
-            font_name: "Roboto-Bold"
 
 """
 
@@ -1570,7 +1478,6 @@ Factory.register('PaymentDetailsScreen', cls=PaymentDetailsScreen)
 
 
 class MenuScreen(Screen):
-
     def __init__(self, loan_amount=0, loan_tenure=0, interest_rate=0, processing_fee=0, emi_type="", **kwargs):
         super().__init__(**kwargs)
 
@@ -1611,319 +1518,209 @@ class MenuScreen(Screen):
             self.calculate_six_months_payment()
 
     def calculate_schedule(self):
-        print("Calculating payment schedule...")
         container = self.ids.container
         container.clear_widgets()
 
-        # Calculate total interest and processing fee based on provided rates and loan tenure
+        header_texts = [
+            "Payment Schedule", "Beginning Balance", "EMI", "Interest Amount",
+            "Processing Fee", "Total Payment", "Principal", "Ending Balance"
+        ]
+
+        # Add header labels
+        for text in header_texts:
+            label = MDLabel(text=text, font_size=dp(14), halign="center", bold=True)
+            container.add_widget(label)
+
         monthly_interest_rate = (self.interest_rate / 100) / 12
-        total_processing_fee_amount = (self.processing_fee / 100) * self.loan_amount
+        monthly_emi = (self.loan_amount * monthly_interest_rate *
+                       ((1 + monthly_interest_rate) ** self.loan_tenure)) / (
+                              ((1 + monthly_interest_rate) ** self.loan_tenure) - 1)
+        total_processing_fee = (self.processing_fee / 100) * self.loan_amount
+        total_interest = (monthly_emi * self.loan_tenure) - self.loan_amount
 
-        print("Monthly Interest Rate:", monthly_interest_rate)
-        print("Total Processing Fee Amount:", total_processing_fee_amount)
-
-        # Check if loan tenure is zero or monthly interest rate is zero
-        if self.loan_tenure == 0 or monthly_interest_rate == 0:
-            print("Error: Loan tenure or monthly interest rate is zero.")
-            # Handle error condition here (e.g., display an error message)
-            return
-
-        # Calculate EMI
-        emi_numerator = self.loan_amount * monthly_interest_rate * ((1 + monthly_interest_rate) ** self.loan_tenure)
-        emi_denominator = ((1 + monthly_interest_rate) ** self.loan_tenure) - 1
-
-        if emi_denominator == 0:
-            print("Error: Denominator for EMI calculation is zero.")
-            # Handle error condition here (e.g., display an error message)
-            return
-
-        monthly_emi = emi_numerator / emi_denominator
-        total_interest_amount = monthly_emi * self.loan_tenure - self.loan_amount
-
-        print("Monthly EMI:", monthly_emi)
-        print("Total Interest Amount:", total_interest_amount)
-
-        # Initialize beginning balance
+        beginning_balance = self.loan_amount + total_processing_fee + total_interest
         loan_amount_beginning_balance = self.loan_amount
-        beginning_balance = monthly_emi * self.loan_tenure + total_interest_amount + total_processing_fee_amount
 
-        # Create and add payment items to the schedule
         for month in range(1, int(self.loan_tenure) + 1):
-            # Calculate total payment for the month
             monthly_interest = loan_amount_beginning_balance * monthly_interest_rate
-            monthly_processing_fee = (self.processing_fee / 100) * self.loan_amount / self.loan_tenure
-            total_payment = monthly_emi + monthly_interest + monthly_processing_fee
-
-            # Calculate principal for the month
+            monthly_processing_fee = total_processing_fee / self.loan_tenure
             principal = monthly_emi - monthly_interest
+            total_payment = monthly_emi + monthly_processing_fee + monthly_interest
 
-            # Calculate ending balance for subsequent months
             ending_balance = max(0, beginning_balance - total_payment)
             loan_amount_ending_balance = max(0, loan_amount_beginning_balance - principal)
 
-            # Print statements for each month
-            print(f"Month: {month}")
-            print("Monthly Interest:", monthly_interest)
-            print("Monthly Processing Fee:", monthly_processing_fee)
-            print("Principal:", principal)
-            print("Total Payment:", total_payment)
-            print("Ending Balance:", ending_balance)
-            print("loan amount Ending Balance:", loan_amount_ending_balance)
-            print("Beginning Balance:", beginning_balance)
-            print("loan amountBeginning Balance:", loan_amount_beginning_balance)
+            row_data = [
+                f"Month {month}",
+                f"Rs. {beginning_balance:.2f}",
+                f"Rs. {monthly_emi:.2f}",
+                f"Rs. {monthly_interest:.2f}",
+                f"Rs. {monthly_processing_fee:.2f}",
+                f"Rs. {total_payment:.2f}",
+                f"Rs. {principal:.2f}",
+                f"Rs. {ending_balance:.2f}",
+            ]
 
-            # Create and add payment item
-            payment_str = f"Payment Schedule {month}"
-            print("Adding payment item:", payment_str)
-            item = PaymentItem(payment_str=payment_str, loan_amount=self.loan_amount, emi_amount=monthly_emi,
-                               interest_amount=monthly_interest, processing_fee_amount=monthly_processing_fee,
-                               total_payment=total_payment, balance_amount=ending_balance, principal=principal,
-                               beginning_balance=beginning_balance)
-            container.add_widget(item)
+            for text in row_data:
+                label = MDLabel(text=text, font_size=dp(12), halign="center")
+                container.add_widget(label)
 
-            # Update beginning balance for the next month
             beginning_balance = ending_balance
             loan_amount_beginning_balance = loan_amount_ending_balance
-
-        print("Payment schedule calculation complete.")
 
     def calculate_one_time_payment(self):
-        print("Calculating one-time payment...")
         container = self.ids.container
         container.clear_widgets()
 
-        # Calculate total interest and processing fee based on provided rates and loan tenure
         monthly_interest_rate = (self.interest_rate / 100) / 12
-        total_processing_fee_amount = (self.processing_fee / 100) * self.loan_amount
+        total_processing_fee = (self.processing_fee / 100) * self.loan_amount
 
-        # Calculate EMI
         emi_numerator = self.loan_amount * monthly_interest_rate * ((1 + monthly_interest_rate) ** self.loan_tenure)
         emi_denominator = ((1 + monthly_interest_rate) ** self.loan_tenure) - 1
 
         if emi_denominator == 0:
-            print("Error: Denominator for EMI calculation is zero.")
-            # Handle error condition here (e.g., display an error message)
             return
 
         monthly_emi = emi_numerator / emi_denominator
+        total_interest = monthly_emi * self.loan_tenure - self.loan_amount
 
-        total_interest_amount = monthly_emi * self.loan_tenure - self.loan_amount
-        total_payment = monthly_emi + total_interest_amount + total_processing_fee_amount
-        beginning_balance = monthly_emi * self.loan_tenure + total_interest_amount + total_processing_fee_amount
+        total_payment = monthly_emi + total_interest + total_processing_fee
+        beginning_balance = monthly_emi * self.loan_tenure + total_interest + total_processing_fee
 
-        # Print one-time payment details
-        print("One-Time Payment:")
-        print("Monthly EMI:", monthly_emi)
-        print("Total Interest Amount:", total_interest_amount)
-        print("Total payment:", total_payment)
-        print("Total processing Amount:", total_processing_fee_amount)
+        row_data = [
+            "One Time",
+            f"Rs. {beginning_balance:.2f}",
+            f"Rs. {monthly_emi:.2f}",
+            f"Rs. {total_interest:.2f}",
+            f"Rs. {total_processing_fee:.2f}",
+            f"Rs. {total_payment:.2f}",
+            f"Rs. {self.loan_amount:.2f}",
+            f"Rs. {0:.2f}",  # Ending balance (0 for one-time payment)
+        ]
 
-        # Create and add one-time payment item
-        item = PaymentItem(payment_str="Payment Schedule 1", loan_amount=self.loan_amount, emi_amount=beginning_balance,
-                           interest_amount=total_interest_amount, processing_fee_amount=total_processing_fee_amount,
-                           total_payment=beginning_balance,
-                           balance_amount=0, principal=self.loan_amount,
-                           beginning_balance=beginning_balance)
-        container.add_widget(item)
-        print("One-time payment added.")
+        for text in row_data:
+            label = MDLabel(text=text, font_size=dp(12), halign="center")
+            container.add_widget(label)
 
     def calculate_three_months_payment(self):
-        print("Calculating payment for every three months...")
         container = self.ids.container
         container.clear_widgets()
 
-        # Calculate total interest and processing fee based on provided rates and loan tenure
         monthly_interest_rate = (self.interest_rate / 100) / 12
-        total_processing_fee_amount = (self.processing_fee / 100) * self.loan_amount
+        total_processing_fee = (self.processing_fee / 100) * self.loan_amount
 
-        # Calculate EMI
         emi_numerator = self.loan_amount * monthly_interest_rate * ((1 + monthly_interest_rate) ** self.loan_tenure)
         emi_denominator = ((1 + monthly_interest_rate) ** self.loan_tenure) - 1
 
         if emi_denominator == 0:
-            print("Error: Denominator for EMI calculation is zero.")
-            # Handle error condition here (e.g., display an error message)
             return
 
         monthly_emi = emi_numerator / emi_denominator
+        total_interest = (monthly_emi * self.loan_tenure) - self.loan_amount
 
-        total_interest_amount = monthly_emi * self.loan_tenure - self.loan_amount
+        beginning_balance = monthly_emi * self.loan_tenure + total_interest + total_processing_fee
 
-        # Calculate number of three-month periods
         num_periods = int(self.loan_tenure / 3)
-
-        # Initialize loan amount beginning balance
         loan_amount_beginning_balance = self.loan_amount
-        beginning_balance = monthly_emi * self.loan_tenure + total_interest_amount + total_processing_fee_amount
+
         for period in range(1, num_periods + 1):
-            # Calculate payments for this three-month period
             principal_sum = 0
             interest_sum = 0
             processing_fee_sum = 0
 
-            for month in range(1, 4):  # Calculate for each month in the three-month period
-                # Calculate total payment for the month
+            for month in range(3):
                 monthly_interest = loan_amount_beginning_balance * monthly_interest_rate
-                monthly_processing_fee = (self.processing_fee / 100) * self.loan_amount / self.loan_tenure
-
-                # Calculate principal for the month
                 principal = monthly_emi - monthly_interest
 
                 principal_sum += principal
                 interest_sum += monthly_interest
-                processing_fee_sum += monthly_processing_fee
-                total_payment = monthly_emi * 3 + interest_sum + processing_fee_sum
-            # Calculate ending balance for this three-month period
+                processing_fee_sum += total_processing_fee / self.loan_tenure
+
+            total_payment = (monthly_emi * 3) + processing_fee_sum + interest_sum
+
             ending_balance = max(0, beginning_balance - total_payment)
             loan_amount_ending_balance = max(0, loan_amount_beginning_balance - principal_sum)
 
-            # Create and add payment item for the three-month period
-            payment_str = f"Payment Schedule {period}"
-            item = PaymentItem(payment_str=payment_str, loan_amount=self.loan_amount,
-                               emi_amount=monthly_emi * 3, interest_amount=interest_sum,
-                               processing_fee_amount=processing_fee_sum, total_payment=total_payment,
-                               balance_amount=ending_balance, principal=principal_sum,
-                               beginning_balance=beginning_balance)
-            container.add_widget(item)
+            row_data = [
+                f"Period {period}",
+                f"Rs. {beginning_balance:.2f}",
+                f"Rs. {monthly_emi * 3:.2f}",
+                f"Rs. {interest_sum:.2f}",
+                f"Rs. {processing_fee_sum:.2f}",
+                f"Rs. {total_payment:.2f}",
+                f"Rs. {principal_sum:.2f}",
+                f"Rs. {ending_balance:.2f}",
+            ]
 
-            # Update loan amount beginning balance for the next three-month period
+            for text in row_data:
+                label = MDLabel(text=text, font_size=dp(12), halign="center")
+                container.add_widget(label)
+
             beginning_balance = ending_balance
             loan_amount_beginning_balance = loan_amount_ending_balance
-
-        # Calculate remaining months
-        remaining_months = int(self.loan_tenure - (num_periods * 3))
-        if remaining_months > 0:
-            # Calculate payments for remaining months
-            principal_sum = 0
-            interest_sum = 0
-            processing_fee_sum = 0
-
-            for month in range(1, remaining_months + 1):
-                # Calculate total payment for the month
-                monthly_interest = loan_amount_beginning_balance * monthly_interest_rate
-                monthly_processing_fee = (self.processing_fee / 100) * self.loan_amount / self.loan_tenure
-                # total_payment = monthly_emi + monthly_interest + monthly_processing_fee
-
-                # Calculate principal for the month
-                principal = monthly_emi - monthly_interest
-
-                principal_sum += principal
-                interest_sum += monthly_interest
-                processing_fee_sum += monthly_processing_fee
-                total_payment = monthly_emi * remaining_months + interest_sum + processing_fee_sum
-
-            # Calculate ending balance for the remaining months
-            ending_balance = max(0, beginning_balance - total_payment)
-
-            # Create and add payment item for the remaining months
-            payment_str = f"Payment Schedule {num_periods + 1}"
-            item = PaymentItem(payment_str=payment_str, loan_amount=self.loan_amount,
-                               emi_amount=monthly_emi * remaining_months, interest_amount=interest_sum,
-                               processing_fee_amount=processing_fee_sum, total_payment=total_payment,
-                               balance_amount=ending_balance, principal=principal_sum,
-                               beginning_balance=beginning_balance)
-            container.add_widget(item)
-
-        print("Payment calculation complete.")
 
     def calculate_six_months_payment(self):
-        print("Calculating payment for every three months...")
         container = self.ids.container
         container.clear_widgets()
 
-        # Calculate total interest and processing fee based on provided rates and loan tenure
         monthly_interest_rate = (self.interest_rate / 100) / 12
-        total_processing_fee_amount = (self.processing_fee / 100) * self.loan_amount
+        total_processing_fee = (self.processing_fee / 100) * self.loan_amount
 
-        # Calculate EMI
+        # Check for valid EMI calculation
         emi_numerator = self.loan_amount * monthly_interest_rate * ((1 + monthly_interest_rate) ** self.loan_tenure)
         emi_denominator = ((1 + monthly_interest_rate) ** self.loan_tenure) - 1
 
         if emi_denominator == 0:
-            print("Error: Denominator for EMI calculation is zero.")
-            # Handle error condition here (e.g., display an error message)
             return
 
         monthly_emi = emi_numerator / emi_denominator
+        total_interest = (monthly_emi * self.loan_tenure) - self.loan_amount
 
-        total_interest_amount = monthly_emi * self.loan_tenure - self.loan_amount
+        beginning_balance = monthly_emi * self.loan_tenure + total_processing_fee + total_interest
 
-        # Calculate number of three-month periods
+        # Calculate the number of six-month periods
         num_periods = int(self.loan_tenure / 6)
-
-        # Initialize loan amount beginning balance
         loan_amount_beginning_balance = self.loan_amount
-        beginning_balance = monthly_emi * self.loan_tenure + total_interest_amount + total_processing_fee_amount
+
+        # Loop over each six-month period to calculate payments
         for period in range(1, num_periods + 1):
-            # Calculate payments for this three-month period
             principal_sum = 0
             interest_sum = 0
             processing_fee_sum = 0
 
-            for month in range(1, 7):  # Calculate for each month in the three-month period
-                # Calculate total payment for the month
+            for month in range(6):
                 monthly_interest = loan_amount_beginning_balance * monthly_interest_rate
-                monthly_processing_fee = (self.processing_fee / 100) * self.loan_amount / self.loan_tenure
-
-                # Calculate principal for the month
                 principal = monthly_emi - monthly_interest
 
                 principal_sum += principal
                 interest_sum += monthly_interest
-                processing_fee_sum += monthly_processing_fee
-                total_payment = monthly_emi * 6 + interest_sum + processing_fee_sum
-            # Calculate ending balance for this three-month period
+                processing_fee_sum += total_processing_fee / self.loan_tenure
+
+            total_payment = (monthly_emi * 6) + processing_fee_sum + interest_sum
+
+            # Calculate ending balance for this period
             ending_balance = max(0, beginning_balance - total_payment)
             loan_amount_ending_balance = max(0, loan_amount_beginning_balance - principal_sum)
 
-            # Create and add payment item for the three-month period
-            payment_str = f"Payment Schedule {period}"
-            item = PaymentItem(payment_str=payment_str, loan_amount=self.loan_amount,
-                               emi_amount=monthly_emi * 6, interest_amount=interest_sum,
-                               processing_fee_amount=processing_fee_sum, total_payment=total_payment,
-                               balance_amount=ending_balance, principal=principal_sum,
-                               beginning_balance=beginning_balance)
-            container.add_widget(item)
+            # Prepare the row data for this period
+            row_data = [
+                f"Period {period}",
+                f"Rs. {beginning_balance:.2f}",
+                f"Rs. {monthly_emi * 6:.2f}",
+                f"Rs. {interest_sum:.2f}",
+                f"Rs. {processing_fee_sum:.2f}",
+                f"Rs. {total_payment:.2f}",
+                f"Rs. {principal_sum:.2f}",
+                f"Rs. {ending_balance:.2f}",
+            ]
 
-            # Update loan amount beginning balance for the next three-month period
+            # Add row data to the container
+            for text in row_data:
+                label = MDLabel(text=text, font_size=dp(12), halign="center")
+                container.add_widget(label)
+
             beginning_balance = ending_balance
             loan_amount_beginning_balance = loan_amount_ending_balance
-
-        # Calculate remaining months
-        remaining_months = int(self.loan_tenure - (num_periods * 3))
-        if remaining_months > 0:
-            # Calculate payments for remaining months
-            principal_sum = 0
-            interest_sum = 0
-            processing_fee_sum = 0
-
-            for month in range(1, remaining_months + 1):
-                # Calculate total payment for the month
-                monthly_interest = loan_amount_beginning_balance * monthly_interest_rate
-                monthly_processing_fee = (self.processing_fee / 100) * self.loan_amount / self.loan_tenure
-                # total_payment = monthly_emi + monthly_interest + monthly_processing_fee
-
-                # Calculate principal for the month
-                principal = monthly_emi - monthly_interest
-
-                principal_sum += principal
-                interest_sum += monthly_interest
-                processing_fee_sum += monthly_processing_fee
-                total_payment = monthly_emi * remaining_months + interest_sum + processing_fee_sum
-
-            # Calculate ending balance for the remaining months
-            ending_balance = max(0, beginning_balance - total_payment)
-
-            # Create and add payment item for the remaining months
-            payment_str = f"Payment Schedule {num_periods + 1}"
-            item = PaymentItem(payment_str=payment_str, loan_amount=self.loan_amount,
-                               emi_amount=monthly_emi * remaining_months, interest_amount=interest_sum,
-                               processing_fee_amount=processing_fee_sum, total_payment=total_payment,
-                               balance_amount=ending_balance, principal=principal_sum,
-                               beginning_balance=beginning_balance)
-            container.add_widget(item)
-
-        print("Payment calculation complete.")
 
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')

@@ -6,6 +6,7 @@ from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.factory import Factory
 from kivy.lang import Builder
+from datetime import datetime
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
 from kivymd.uix.label import MDLabel
@@ -25,8 +26,6 @@ import server
 KV = """
 <WindowManager>:
     LoginScreen:
-
-
 
 <LoginScreen>:
     MDFloatLayout:
@@ -142,7 +141,7 @@ KV = """
             MDRaisedButton:
                 text: "Login"
                 on_release: root.go_to_dashboard()
-                md_bg_color: 0.043, 0.145, 0.278, 1
+                md_bg_color:6/255, 143/255, 236/255, 1
                 pos_hint: {'right': 1, 'y': 0.5}
                 size_hint: 1, None
                 height: "50dp"
@@ -209,6 +208,7 @@ class LoginScreen(Screen):
         self.hide_loading_spinner()
 
     def go_to_dashboard(self):
+        entered_email = self.ids.email.text
         # Show loading spinner
         self.ids.error_text.text = ""
         self.show_loading_spinner()
@@ -216,6 +216,10 @@ class LoginScreen(Screen):
 
         # Start a separate thread for background validation
         self.background_validation()
+        last_login = datetime.now()
+        user_profiles = app_tables.users.search(email=entered_email)
+        user_profile = user_profiles[0]
+        user_profile.update(last_login=last_login)
 
     def show_loading_spinner(self):
         self.ids.loading_spinner.opacity = 1

@@ -216,25 +216,25 @@ view_loans = '''
             left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
             md_bg_color: 0.043, 0.145, 0.278, 1
             pos_hint: {'top': 1}
-        MDBoxLayout:
+        BoxLayout:
             orientation: 'vertical'
             spacing: dp(40)
-            padding: dp(10)
+            padding: dp(20)
             size_hint_y: None
             height: self.minimum_height
-
             canvas.before:
                 Color:
                     rgba: 230/255, 245/255, 255/255, 1 
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
-                    radius: [5, 5, 5, 5]
+                    radius: [1, 1, 1, 1]
+                    source: "background.jpg"
             MDGridLayout:
                 cols: 2
 
                 MDLabel:
-                    text: '     Amount:'
+                    text: 'Amount:'
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 0, 0, 0, 1
@@ -246,13 +246,14 @@ view_loans = '''
                     halign: 'left'
                     size_hint_y: None
                     height: dp(1)
+                    bold: True
 
                 MDLabel:
                     id: amount
                     bold: True
                     halign: 'left'
                     theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
+                    text_color: 0, 0, 0, 1
 
             MDLabel:
                 text: ''
@@ -262,7 +263,7 @@ view_loans = '''
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Product Name'
+                    text: 'Product Name'
                     halign: 'left'
                     bold: True
 
@@ -271,11 +272,12 @@ view_loans = '''
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Borrower Name'
+                    text: 'Borrower Name'
                     halign: 'left'
                     bold: True
 
@@ -284,11 +286,12 @@ view_loans = '''
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Phone Number'
+                    text: 'Phone Number'
                     halign: 'left'
                     bold: True
 
@@ -297,10 +300,12 @@ view_loans = '''
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
+                    
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Ascend Score'
+                    text: 'Ascend Score'
                     halign: 'left'
                     bold: True
 
@@ -309,11 +314,12 @@ view_loans = '''
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Interest(%)'
+                    text: 'Interest(%)'
                     halign: 'left'
                     bold: True
 
@@ -322,11 +328,12 @@ view_loans = '''
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Duration(M)'
+                    text: 'Duration(M)'
                     halign: 'left'
                     bold: True
 
@@ -335,11 +342,12 @@ view_loans = '''
                     halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Credit Limit'
+                    text: 'Credit Limit'
                     halign: 'left'
                     bold: True
 
@@ -348,12 +356,13 @@ view_loans = '''
                     halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
 
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Published Date'
+                    text: 'Published Date'
                     halign: 'left'
                     bold: True
 
@@ -362,11 +371,12 @@ view_loans = '''
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Loan Status'
+                    text: 'Loan Status'
                     halign: 'left'
                     bold: True
 
@@ -375,6 +385,7 @@ view_loans = '''
                     halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
             MDLabel:
                 text: ''
                 halign: 'left'
@@ -402,7 +413,7 @@ view_loans = '''
                 cols: 3
 
                 MDLabel:
-                    text: '     Total'
+                    text: 'Total'
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 0, 0, 0, 1 
@@ -417,6 +428,8 @@ view_loans = '''
                     id: amount_1
                     bold: True
                     halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
 
 <ViewLoansProfileScreens2>
     MDGridLayout:
@@ -429,20 +442,20 @@ view_loans = '''
             md_bg_color: 0.043, 0.145, 0.278, 1
             pos_hint: {'top': 1}
 
-        MDBoxLayout:
+        BoxLayout:
             orientation: 'vertical'
             spacing: dp(40)
-            padding: dp(10)
+            padding: dp(20)
             size_hint_y: None
             height: self.minimum_height
-
             canvas.before:
                 Color:
                     rgba: 230/255, 245/255, 255/255, 1 
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
-                    radius: [5, 5, 5, 5]
+                    radius: [1, 1, 1, 1]
+                    source: "background.jpg"
             MDGridLayout:
                 cols: 2
 
@@ -459,13 +472,14 @@ view_loans = '''
                     halign: 'left'
                     size_hint_y: None
                     height: dp(1)
+                    bold: True
 
                 MDLabel:
                     id: amount
                     bold: True
                     halign: 'left'
                     theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
+                    text_color: 0, 0, 0, 1
 
             MDLabel:
                 text: ''
@@ -475,7 +489,7 @@ view_loans = '''
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Product Name'
+                    text: 'Product Name'
                     halign: 'left'
                     bold: True
 
@@ -484,11 +498,12 @@ view_loans = '''
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Borrower Name'
+                    text: 'Borrower Name'
                     halign: 'left'
                     bold: True
 
@@ -497,11 +512,12 @@ view_loans = '''
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Phone Number'
+                    text: 'Phone Number'
                     halign: 'left'
                     bold: True
 
@@ -510,11 +526,12 @@ view_loans = '''
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
                     
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Ascend Score'
+                    text: 'Ascend Score'
                     halign: 'left'
                     bold: True
 
@@ -523,11 +540,12 @@ view_loans = '''
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Interest(%)'
+                    text: 'Interest(%)'
                     halign: 'left'
                     bold: True
 
@@ -536,11 +554,12 @@ view_loans = '''
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Duration(M)'
+                    text: 'Duration(M)'
                     halign: 'left'
                     bold: True
 
@@ -549,11 +568,12 @@ view_loans = '''
                     halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Credit Limit'
+                    text: 'Credit Limit'
                     halign: 'left'
                     bold: True
 
@@ -562,12 +582,13 @@ view_loans = '''
                     halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
 
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Published Date'
+                    text: 'Published Date'
                     halign: 'left'
                     bold: True
 
@@ -576,11 +597,12 @@ view_loans = '''
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold : True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Loan Status'
+                    text: 'Loan Status'
                     halign: 'left'
                     bold: True
 
@@ -589,14 +611,10 @@ view_loans = '''
                     halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-            MDLabel:
-                text: ''
-                halign: 'left'
-                size_hint_y: None
-                height: dp(5)
+                    bold : True
+                    
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(30)
             padding: dp(15)
             size_hint_y: None
             height: self.minimum_height
@@ -607,11 +625,7 @@ view_loans = '''
                     pos: self.pos
                     size: self.size
                     radius: [25, 25, 25, 25]
-            MDLabel:
-                text: ''
-                halign: 'left'
-                size_hint_y: None
-                height: dp(5)
+            
             MDGridLayout:
                 cols: 3
 
@@ -631,6 +645,13 @@ view_loans = '''
                     id: amount_1
                     bold: True
                     halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+        MDLabel:
+            text: ''
+            halign: 'left'
+            size_hint_y: None
+            height: dp(25)
     '''
 
 Builder.load_string(view_loans)

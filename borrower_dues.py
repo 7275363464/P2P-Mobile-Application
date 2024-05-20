@@ -59,18 +59,20 @@ user_helpers2 = """
             right_action_items: [['wallet']]
             pos_hint: {'top': 1} 
 
-        MDBoxLayout:
+        BoxLayout:
             orientation: 'vertical'
-            spacing: dp(35)
+            spacing: dp(50)
             padding: dp(30)
-
+            size_hint_y: None
+            height: self.minimum_height
             canvas.before:
                 Color:
                     rgba: 230/255, 245/255, 255/255, 1 
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
-                    radius: [5, 5, 5, 5]
+                    radius: [1, 1, 1, 1]
+                    source: "background.jpg"
 
             MDGridLayout:
                 cols: 2
@@ -361,10 +363,6 @@ class BorrowerDuesScreen(Screen):
             self.ids.tenure.text = str(tenure[index])
             self.ids.interest_rate.text = str(interest[index])
             self.ids.emi_amount.text = str(monthly_emi[index])
-
-        pro_fee = total_pro_fee_amount[index] / tenure[index]
-        monthly_interest = interest[index] / 12 / 100
-        total_pay = tenure[index] * 12
 
         cos_id = []
         account_num = []

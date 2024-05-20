@@ -51,8 +51,8 @@ loan_forecloseB = '''
                 id: container
 
 <ViewProfileScreenFB>
-    MDBoxLayout:
-        orientation: 'vertical'
+    GridLayout:
+        cols: 1
         MDTopAppBar:
             title: "View Profile"
             elevation: 3
@@ -61,400 +61,403 @@ loan_forecloseB = '''
             title_align: 'left'
 
         ScrollView:
-            MDBoxLayout:
-                orientation: 'vertical'
-                size_hint_y: None
-                height: self.minimum_height
+            GridLayout:
+                cols: 1
+                
                 BoxLayout:
-                    id: box1
                     orientation: 'vertical'
-                    size_hint_y: None
-                    MDLabel:
-                        text: "View Loan details"
-                        halign: "center"
-                        bold: True
-                MDBoxLayout:
-                    orientation: 'vertical'
+                    spacing: dp(50)
+                    padding: dp(30)
                     size_hint_y: None
                     height: self.minimum_height
-                    padding: dp(20)
-
-                    BoxLayout:
-                        id: box1
-                        orientation: 'vertical'
+                    canvas.before:
+                        Color:
+                            rgba: 230/255, 245/255, 255/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [1, 1, 1, 1]
+                            source: "background.jpg"
+    
+                    MDGridLayout:
+                        cols: 2
+        
+                        MDLabel:
+                            text: 'Loan Amount:'
+                            halign: 'left'
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                            bold: True
+                    MDGridLayout:
+                        cols: 2
+                        MDIconButton:
+                            icon: 'currency-inr'
+                            halign: 'left'
+                            size_hint_y: None
+                            height: dp(1)
+                            bold: True
+        
+                        MDLabel:
+                            id: amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 0,0,0,1
+                            bold: True
+                    MDLabel:
+                        text: ''
+                        halign: 'left'
                         size_hint_y: None
-                        height: dp(750)
+                        height: dp(5)
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: 'Borrower Name'
+                            halign: 'left' 
+                            bold: True
+        
+                        MDLabel:
+                            id: name
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1   
+                        
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: 'Tenure(Months)'
+                            halign: 'left'  
+                            bold: True
+        
+                        MDLabel:
+                            id: tenure
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: 'Interest Rate'
+                            halign: 'left'
+                            theme_text_color: 'Custom'  
+                            bold: True
+        
+                        MDLabel:
+                            id: interest
+                            halign: 'left'
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Credit limit:" 
+                            halign: 'left' 
+                            bold: True
+                        MDLabel:
+                            id: limit
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Total Payment Made:" 
+                            halign: 'left' 
+                            bold: True
+                        MDLabel:
+                            id: total_payment
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Foreclosure Type:" 
+                            halign: 'left'
+                            bold: True
+                        MDLabel:
+                            id: closer_type
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                MDLabel:
+                    text: ''
+                    halign: 'left'
+                    size_hint_y: None
+                    height: dp(25)
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: "48dp"
+                    spacing:dp(15)
+                    padding: dp(10)
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    CheckBox:
+                        id: check_box
+                        size_hint: None, None
+                        size: "30dp", "30dp"
+                        bold: True
+                        active: False
+                        on_active: root.checkbox_callback1(self, self.active)
+                        color: 0.043, 0.145, 0.278, 1 
 
-                        padding: [10, 0,0,0]
-                        canvas.before:
-                            Color:
-                                rgba: 0, 0, 0, 1  # Blue color for the box
-                            Line:
-                                rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
-
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Loan Amount:" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: amount
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: loan
-                                color:1,1,1,1      
-                                font_size:dp(1)
-                                text: "" 
-                                height:dp(1)
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Borrower Name:" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: name
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Tenure(Months):" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: tenure
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Interest Rate:" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: interest
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Credit limit:" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: limit
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Total Payment Made:" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: total_payment
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Foreclosure Type:" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: closer_type
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-
-                        MDGridLayout:
-                            cols: 2
-                            spacing: 10
-
-                            CheckBox:
-                                id: check_box
-                                size_hint: (None, None)
-                                width: 50
-                                bold: True
-                                on_active: root.checkbox_callback1(self, self.active)
-                                color: 0.043, 0.145, 0.278, 1 
-
-                            MDLabel:
-                                text: "I Agree Terms and Conditions"
-                                multiline: False
+                    MDLabel:
+                        text: "I Agree Terms and Conditions"
+                        multiline: False  
+                        size: "30dp", "30dp"
+                        theme_text_color: "Custom"
+                        text_color: 0, 0, 0, 1
+                        halign: "left"
+                        valign: "center" 
+                MDLabel:
+                    text: ''
+                    halign: 'left'
+                    size_hint_y: None
+                    height: dp(45)            
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(30)
+                    padding: dp(30)
+                    size_hint_y: None
+                    height: self.minimum_height
+                    canvas.before:
+                        Color:
+                            rgba: 249/255, 249/255, 247/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [25, 25, 25, 25]   
+                    MDRaisedButton:
+                        text: "BACK"
+                        md_bg_color: 0.043, 0.145, 0.278, 1 
+                        on_release: root.on_back()
+                        text_color: 1, 1, 1, 1
+                        size_hint: 1, None
 
 
-                        MDGridLayout:
-                            cols: 2
-                            spacing: 30
-                            padding: 20
-                            size_hint: 1, 1
-                            pos_hint: {'center_x': 0.48, 'center_y': 0.5}
+                    MDRaisedButton:
+                        id: foreclose_button
+                        text: "FORECLOSE"
+                        md_bg_color: 0.043, 0.145, 0.278, 1 
+                        on_release: root.on_foreclose_press()
+                        size_hint: 1, None
 
-                            MDRaisedButton:
-                                text: "BACK"
-                                md_bg_color: 0.043, 0.145, 0.278, 1 
-                                on_release: root.on_back()
-                                text_color: 1, 1, 1, 1
-                                size_hint: 1, None
-
-
-                            MDRaisedButton:
-                                id: foreclose_button
-                                text: "FORECLOSE"
-                                md_bg_color: 0.043, 0.145, 0.278, 1 
-                                on_release: root.on_foreclose_press(loan.text)
-                                size_hint: 1, None
 
 <ForecloseDetails>
-    BoxLayout:
-        orientation: 'vertical'
-        padding: dp(10)  
-        spacing: dp(15) 
+    GridLayout:
+        cols: 1 
         ScrollView:
-            do_scroll_x: False
-            BoxLayout:
-                orientation: "vertical"
-                padding: dp(10) 
-                spacing: dp(30)     
+            GridLayout:
+                cols: 1
                 size_hint_y: None
-                height: self.minimum_height
-                MDLabel:
-                    id: loan_id_label1
-                    color:1,1,1,1      
-                    font_size:dp(1)
-                    text: "" 
-                    height:dp(1)
-                    bold:True
+                height: self.minimum_height 
 
-                MDLabel:
-                    text: "Foreclosure  Details"
-                    bold: True
-
-                Widget:
-                    size_hint_y: None
-                    height: dp(2)  
-                    canvas:
-                        Color:
-                            rgba: 0, 0, 0, 1 
-                        Line:
-                            points: self.x, self.y, self.x + self.width, self.y
-                MDLabel:
-                    text: "Amount paid"
-                    bold: True
-
-                GridLayout:
-                    cols: 2
-                    size_hint_y: None
-                    padding: dp(10)
-                    spacing: dp(33)  
-
-                    MDLabel:
-                        text: "Total amount Paid "
-                        halign: "left"
-                        bold: True
-
-                    MDLabel:
-                        id: totalamount
-                        halign: "left"
-                        text: ""
-
-                    MDLabel:
-                        text: "Monthly installment"
-                        halign: "left"
-
-                    MDLabel:
-                        id: monthly_installment
-                        halign: "left"
-                        text: ""
-
-                    MDLabel:
-                        text: "Interest Amount"
-                        halign: "left"
-
-                    MDLabel:
-                        id: interest_amount
-                        halign: "left"
-                        text: ""
-
-                    MDLabel:
-                        text: "Monthly EMI"
-                        halign: "left"
-
-                    MDLabel:
-                        id: monthly_emi1
-                        halign: "left"
-                        text: ""
-                MDLabel:
-                    text: ""
-                    size_hint_y: None
-                    height: dp(2)
-
-                Widget:
-                    size_hint_y: None
-                    canvas:
-                        Color:
-                            rgba: 0, 0, 0, 1 
-                        Line:
-                            points: self.x, self.y, self.x + self.width, self.y
-
-                MDLabel:
-                    text: "Loan Closure Amount"
-                    bold: True
-                GridLayout:
-                    cols: 2
-                    size_hint_y: None
-                    padding: dp(6)
+                BoxLayout:
+                    orientation: 'vertical'
                     spacing: dp(50)
-                    height:dp(90)
-
-                    MDLabel:
-                        text: "Over all Outstanding Amount"
-                        halign: "left"
-                        bold: True
-
-                    MDLabel:
-                        id: overall_amount
-                        halign: "left"
-                        text: ""
-                    MDLabel:
-                        text: "Over all Monthly installment"
-                        halign: "left"
-
-                    MDLabel:
-                        id: over_month
-                        halign: "left"
-                        text: ""
-                    MDLabel:
-                        text: "Overall Interest Amount "
-                        halign: "left"
-
-                    MDLabel:
-                        id: overall_interest_amount
-                        halign: "left"
-                        text: ""
-
-                    MDLabel:
-                        text: "Total Amount"
-                        halign: "left"
-
-                    MDLabel:
-                        id: total_amount
-                        halign: "left"
-                        text: ""
-                MDLabel:
-                    text: ""
+                    padding: dp(30)
                     size_hint_y: None
-                    height: dp(6)
-
-                Widget:
-                    size_hint_y: None
-                    canvas:
+                    height: self.minimum_height
+                    canvas.before:
                         Color:
-                            rgba: 0, 0, 0, 1 
-                        Line:
-                            points: self.x, self.y, self.x + self.width, self.y
-
-                MDLabel:
-                    text: "Amount Due"
-                    halign: "left"
-                    bold: True
-
-                GridLayout:
-                    cols: 2
-                    size_hint_y: None
-                    padding: dp(6)
-                    spacing: dp(40)
-                    height:dp(70)
+                            rgba: 230/255, 245/255, 255/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [1, 1, 1, 1]
+                            source: "background.jpg"
 
                     MDLabel:
-                        text: "Outstanding Amount"
-                        halign: "left"
+                        text: "Foreclosure  Details"
+                        bold: True
 
-
+                    Widget:
+                        size_hint_y: None
+                        height: dp(2)  
+                        canvas:
+                            Color:
+                                rgba: 0, 0, 0, 1 
+                            Line:
+                                points: self.x, self.y, self.x + self.width, self.y
                     MDLabel:
-                        id: outstanding_amount
-                        halign: "left"
+                        text: "Amount paid"
+                        bold: True
+
+                    GridLayout:
+                        cols: 2
+                        size_hint_y: None
+                        padding: dp(10)
+                        spacing: dp(43)  
+
+                        MDLabel:
+                            text: "Total amount Paid "
+                            halign: 'left' 
+                            bold: True
+
+                        MDLabel:
+                            id: totalamount
+                            halign: 'left'
+                            theme_text_color: 'Custom' 
+                            text_color: 140/255, 140/255, 140/255, 1
+
+                        MDLabel:
+                            text: "Monthly installment"
+                            halign: "left"
+
+                        MDLabel:
+                            id: monthly_installment
+                            halign: 'left'
+                            theme_text_color: 'Custom' 
+                            text_color: 140/255, 140/255, 140/255, 1
+
+                        MDLabel:
+                            text: "Interest Amount"
+                            halign: "left"
+
+                        MDLabel:
+                            id: interest_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+
+                        MDLabel:
+                            text: "Monthly EMI"
+                            halign: "left"
+
+                        MDLabel:
+                            id: monthly_emi1
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDLabel:
                         text: ""
+                        size_hint_y: None
+                        height: dp(2)
+
+                    Widget:
+                        size_hint_y: None
+                        canvas:
+                            Color:
+                                rgba: 0, 0, 0, 1 
+                            Line:
+                                points: self.x, self.y, self.x + self.width, self.y
 
                     MDLabel:
-                        text: "Foreclosure Fee "
-                        halign: "left"
+                        text: "Loan Closure Amount"
+                        bold: True
+                    GridLayout:
+                        cols: 2
+                        size_hint_y: None
+                        padding: dp(6)
+                        spacing: dp(53)
+                        height:dp(70)
 
+                        MDLabel:
+                            text: "Over all Outstanding Amount"
+                            halign: "left"
+                            bold: True
+
+                        MDLabel:
+                            id: overall_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                        MDLabel:
+                            text: "Over all Monthly installment"
+                            halign: "left"
+
+                        MDLabel:
+                            id: over_month
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                        MDLabel:
+                            text: "Overall Interest Amount "
+                            halign: "left"
+
+                        MDLabel:
+                            id: overall_interest_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+
+                        MDLabel:
+                            text: "Total Amount"
+                            halign: "left"
+
+                        MDLabel:
+                            id: total_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
                     MDLabel:
-                        id: foreclosure_fee
-                        halign: "left"
                         text: ""
+                        size_hint_y: None
+                        height: dp(6)
+
+                    Widget:
+                        size_hint_y: None
+                        canvas:
+                            Color:
+                                rgba: 0, 0, 0, 1 
+                            Line:
+                                points: self.x, self.y, self.x + self.width, self.y
 
                     MDLabel:
-                        text: "Foreclosure Amount"
-                        halign: "left"
-
-                    MDLabel:
-                        id: foreclosure_amount
-                        halign: "left"
-                        text: ""
-
-                    MDLabel:
-                        text: "Total Due Amount"
+                        text: "Amount Due"
                         halign: "left"
                         bold: True
 
+                    GridLayout:
+                        cols: 2
+                        size_hint_y: None
+                        padding: dp(6)
+                        spacing: dp(43)
+                        height:dp(70)
+
+                        MDLabel:
+                            text: "Outstanding Amount"
+                            halign: "left"
+                            
+                        MDLabel:
+                            id: outstanding_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+
+                        MDLabel:
+                            text: "Foreclosure Fee "
+                            halign: "left"
+
+                        MDLabel:
+                            id: foreclosure_fee
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+
+                        MDLabel:
+                            text: "Foreclosure Amount"
+                            halign: "left"
+
+                        MDLabel:
+                            id: foreclosure_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+
+                        MDLabel:
+                            text: "Total Due Amount"
+                            halign: "left"
+                            bold: True
+
+                        MDLabel:
+                            id: total_due_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
                     MDLabel:
-                        id: total_due_amount
-                        halign: "left"
                         text: ""
-                MDLabel:
-                    text: ""
-                    size_hint_y: None
-                    height: dp(2)
+                        size_hint_y: None
+                        height: dp(2)
                 Widget:
                     size_hint_y: None
                     canvas:
@@ -464,8 +467,12 @@ loan_forecloseB = '''
                             points: self.x, self.y, self.x + self.width, self.y
 
                 BoxLayout:
-                    orientation: "vertical"
+                    orientation: 'vertical'
                     size_hint_y: None
+                    height: "75dp"
+                    spacing:dp(15)
+                    padding: dp(10)
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
                     MDLabel:
                         text: 'Reason for Foreclosure '
@@ -477,29 +484,47 @@ loan_forecloseB = '''
                         hint_text: 'Enter text here'
 
                 BoxLayout:
-                    orientation: "horizontal"
+                    orientation: 'horizontal'
                     size_hint_y: None
-                    spacing: dp(10)
+                    height: "48dp"
+                    spacing:dp(15)
+                    padding: dp(10)
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
                     CheckBox:
                         id: check
                         size_hint: None, None
-                        width: dp(30) 
+                        size: "30dp", "30dp"
+                        bold: True
+                        active: False 
                         color: (195/255, 110/255, 108/255, 1)
                         on_active: root.checkbox_callback(self, self.active)
 
                     MDLabel:
                         text: "I Agree Terms and Conditions"
                         multiline: False  
+                        size: "30dp", "30dp"
+                        theme_text_color: "Custom"
+                        text_color: 0, 0, 0, 1
+                        halign: "left"
+                        valign: "center"  
 
                 MDLabel:
                     text: ""
 
-                MDGridLayout:
-                    cols: 2
-                    spacing: dp(10)
-                    padding: dp(5)
-                    size_hint: 1, None
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(30)
+                    padding: dp(30)
+                    size_hint_y: None
+                    height: self.minimum_height
+                    canvas.before:
+                        Color:
+                            rgba: 249/255, 249/255, 247/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [25, 25, 25, 25]
 
                     MDRaisedButton:
                         text: "CANCEL"
@@ -513,8 +538,9 @@ loan_forecloseB = '''
                         text: "SUBMIT"
                         id : submit
                         md_bg_color: 0.043, 0.145, 0.278, 1 
-                        on_release: root.add_data(loan_id_label1.text,outstanding_amount.text, foreclosure_fee.text, foreclosure_amount.text, reason.text , total_due_amount.text, totalamount.text , monthly_emi1.text)
+                        on_release: root.add_data(outstanding_amount.text, foreclosure_fee.text, foreclosure_amount.text, reason.text , total_due_amount.text, totalamount.text , monthly_emi1.text)
                         size_hint: 1, None
+
 
 
 
@@ -586,7 +612,7 @@ class LoansDetailsB(Screen):
                         icon="card-account-details-outline"
                     ),
                     text=f"Borrower Name : {borrower_name[i]}",
-                    secondary_text=f"Mobile Number : {profile_mobile_number[number]}",
+                    secondary_text=f"Borrower Mobile Number : {profile_mobile_number[number]}",
                     tertiary_text=f"Product Name : {product_name[i]}",
                     text_color=(0, 0, 0, 1),  # Black color
                     theme_text_color='Custom',
@@ -603,14 +629,6 @@ class LoansDetailsB(Screen):
             # Handle the on_release event here
             value = instance.text.split(':')[-1].strip()
             data = app_tables.fin_loan_details.search()
-            loan_status = None
-            for loan in data:
-                if loan['loan_id'] == value:
-                    loan_status = loan['loan_updated_status']
-                    break
-            print(loan_id)
-
-            # Proceed with the action for the selected loan ID
 
             sm = self.manager
 
@@ -655,12 +673,14 @@ class ViewProfileScreenFB(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.check_box = None
+
     def checkbox_callback1(self, checkbox, value):
         if value:
             self.check_box = True
         else:
             self.check_box = False
     def initialize_with_value(self, value, data):
+        self.loan_id = value
         emi1 = app_tables.fin_emi_table.search()
         pro_details = app_tables.fin_product_details.search()
         loan_id = []
@@ -670,7 +690,7 @@ class ViewProfileScreenFB(Screen):
         tenure = []
         interest = []
         credit = []
-        min_months =[]
+        min_months = []
 
         for i in data:
             loan_id.append(i['loan_id'])
@@ -683,7 +703,6 @@ class ViewProfileScreenFB(Screen):
 
         if value in loan_id:
             index = loan_id.index(value)
-            self.ids.loan.text = str(loan_id[index])
             self.ids.amount.text = str(loan_amount[index])
             self.ids.name.text = str(name[index])
             self.ids.tenure.text = str(tenure[index])
@@ -773,7 +792,7 @@ class ViewProfileScreenFB(Screen):
     def on_start(self):
         Window.softinput_mode = "below_target"
 
-    def on_foreclose_press(self, loan_id):
+    def on_foreclose_press(self):
         if self.check_box == True:
             sm = self.manager
 
@@ -785,7 +804,7 @@ class ViewProfileScreenFB(Screen):
 
             # Switch to the LoginScreen
             sm.current = 'ForecloseDetails'
-            self.manager.get_screen('ForecloseDetails').initialize_with_value(loan_id)
+            self.manager.get_screen('ForecloseDetails').initialize_with_value(self.loan_id)
         else:
             self.show_validation_error(f"You have to click on check box to proceed")
 
@@ -809,6 +828,7 @@ class ForecloseDetails(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.check = None
+
     def checkbox_callback(self, checkbox, value):
         if value:
             self.check = True
@@ -816,6 +836,7 @@ class ForecloseDetails(Screen):
             self.check = False
 
     def initialize_with_value(self, value):
+        self.loan_id = value
         data1 = app_tables.fin_foreclosure.search()
         data = app_tables.fin_loan_details.search()
         pro = app_tables.fin_product_details.search()
@@ -847,7 +868,6 @@ class ForecloseDetails(Screen):
 
         if value in loan_id1:
             index = loan_id1.index(value)
-            self.ids.loan_id_label1.text = str(loan_id1[index])
 
         if value in loan_id1:
             index2 = loan_id1.index(value)
@@ -942,7 +962,8 @@ class ForecloseDetails(Screen):
 
     date = datetime.today()
 
-    def add_data(self, loan_id, outstanding_amount, foreclose_fee, foreclose_amount, reason, total_due_amount, totalamount, monthly_emi1):
+    def add_data(self, outstanding_amount, foreclose_fee, foreclose_amount, reason, total_due_amount, totalamount, monthly_emi1):
+        loan_id = self.loan_id
         index = 0
         if len(self.ids.reason.text) < 3:
             self.show_validation_error('You Must need to enter a reason for foreclosure')

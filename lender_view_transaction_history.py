@@ -30,7 +30,6 @@ lender_view_transaction_history = '''
             MDList:
                 id: container1
 
-
 <ViewProfileScreenLTH>:
 
     MDGridLayout:
@@ -43,28 +42,29 @@ lender_view_transaction_history = '''
             halign: 'left'
             pos_hint: {'top': 1} 
     
-        MDBoxLayout:
+        BoxLayout:
             orientation: 'vertical'
             spacing: dp(50)
-            padding: dp(20)
+            padding: dp(30)
             size_hint_y: None
             height: self.minimum_height
-
             canvas.before:
                 Color:
                     rgba: 230/255, 245/255, 255/255, 1 
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
-                    radius: [5, 5, 5, 5]
+                    radius: [1, 1, 1, 1]
+                    source: "background.jpg"
             MDGridLayout:
                 cols: 2
 
                 MDLabel:
-                    text: '     Amount:'
+                    text: 'Loan Amount:'
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 0, 0, 0, 1
+                    bold: True
             MDGridLayout:
                 cols: 2
                 MDIconButton:
@@ -72,11 +72,14 @@ lender_view_transaction_history = '''
                     halign: 'left'
                     size_hint_y: None
                     height: dp(1)
+                    bold: True
 
                 MDLabel:
                     id: amount
-                    halign: 'left'
-                    text_color: 140/255, 140/255, 140/255, 1
+                    halign: 'left' 
+                    theme_text_color: 'Custom'  
+                    text_color: 0,0,0,1
+                    bold: True
 
             MDLabel:
                 text: ''
@@ -86,84 +89,103 @@ lender_view_transaction_history = '''
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Transaction ID'
+                    text: 'Transaction ID'
                     halign: 'left'
                     theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1  
                     bold: True
 
                 MDLabel:
                     id: transaction_id
                     halign: 'left'
+                    theme_text_color: 'Custom' 
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     User Email'
+                    text: 'User Email'
                     halign: 'left'
                     theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1 
                     bold: True
 
                 MDLabel:
                     id: user_email
                     halign: 'left'
+                    theme_text_color: 'Custom'
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Receiver Email'
+                    text: 'Receiver Email'
                     halign: 'left'
                     theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1 
                     bold: True
 
                 MDLabel:
                     id: receiver_email
                     halign: 'left'
+                    theme_text_color: 'Custom' 
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: "     Transaction Type" 
+                    text: "Transaction Type" 
                     halign: 'left'
                     theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1 
                     bold: True
                 MDLabel:
                     id: transaction_type
                     halign: "left"
+                    theme_text_color: 'Custom' 
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
 
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Published Date'
+                    text: 'Published Date'
                     halign: 'left'
                     theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1 
                     bold: True
 
                 MDLabel:
                     id: date_time
                     halign: 'left'
+                    theme_text_color: 'Custom' 
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
+                    
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: '     Status'
+                    text: 'Status'
                     halign: 'left'
                     theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
                     bold: True
 
                 MDLabel:
                     id: status
                     halign: 'left' 
+                    theme_text_color: 'Custom' 
                     text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
 
         MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(30)
-            padding: dp(15)
+            padding: dp(20)
             size_hint_y: None
             height: self.minimum_height
             canvas.before:
@@ -182,7 +204,7 @@ lender_view_transaction_history = '''
                 cols: 3
 
                 MDLabel:
-                    text: '     Total'
+                    text: 'Total'
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 0, 0, 0, 1  
@@ -191,14 +213,15 @@ lender_view_transaction_history = '''
                     icon: 'currency-inr'
                     halign: 'center' 
                     bold: True   
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
 
                 MDLabel:
                     id: amount_1
                     halign: 'left'
-                    text_color: 140/255, 140/255, 140/255, 1
-
-
-
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
 
 
 

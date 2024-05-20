@@ -935,7 +935,16 @@ class ViewLoansProfileScreen(Screen):
         self.loan_id = None
 
     def on_back_button_press(self):
-        self.manager.current = 'ViewLoansRequest'
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        under_process = ViewLoansRequest(name='ViewLoansRequest')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(under_process)
+
+        # Switch to the LoginScreen
+        sm.current = 'ViewLoansRequest'
 
     def initialize_with_value(self, value, data):
         profile = app_tables.fin_user_profile.search()

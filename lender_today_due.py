@@ -30,7 +30,6 @@ lender_today_due = '''
             MDList:
                 id: container
 <ViewProfileTD>:
-
     GridLayout:
         cols: 1
 
@@ -45,18 +44,20 @@ lender_today_due = '''
             right_action_items: [['wallet']]
             pos_hint: {'top': 1} 
 
-        MDBoxLayout:
+        BoxLayout:
             orientation: 'vertical'
-            spacing: dp(40)
+            spacing: dp(50)
             padding: dp(30)
-
+            size_hint_y: None
+            height: self.minimum_height
             canvas.before:
                 Color:
                     rgba: 230/255, 245/255, 255/255, 1 
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
-                    radius: [5, 5, 5, 5]
+                    radius: [1, 1, 1, 1]
+                    source: "background.jpg"
 
             MDGridLayout:
                 cols: 2

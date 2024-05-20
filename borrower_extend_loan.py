@@ -39,230 +39,211 @@ extension_loan_request = """
                 id: container1
 
 <ExtensionLoansProfileScreen>
-    BoxLayout:
-        orientation: 'vertical'
+    GridLayout:
+        cols: 1
         MDTopAppBar:
             title: "Extension Loan Request"
             elevation: 3
             left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
             md_bg_color: 0.043, 0.145, 0.278, 1
-            title_align: 'center'
+            title_align: 'left'
 
         ScrollView:
-            MDBoxLayout:
-                orientation: 'vertical'
+            GridLayout:
+                cols: 1
                 size_hint_y: None
-                height: self.minimum_height
+                height: self.minimum_height 
+
                 BoxLayout:
-                    id: box1
                     orientation: 'vertical'
-                    size_hint_y: None
-                    MDLabel:
-                        text: " Borrower Extension Request"
-                        halign: "center"
-                        bold: True
-                MDBoxLayout:
-                    orientation: 'vertical'
+                    spacing: dp(50)
+                    padding: dp(30)
                     size_hint_y: None
                     height: self.minimum_height
-                    width:self.minimum_width
-                    padding: dp(20)
-                    spacing:dp(20)
-                    BoxLayout:
-                        id: box1
-                        orientation: 'vertical'
+                    canvas.before:
+                        Color:
+                            rgba: 230/255, 245/255, 255/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [1, 1, 1, 1]
+                            source: "background.jpg"
+                    MDGridLayout:
+                        cols: 1
+        
+                        MDLabel:
+                            text: 'Loan Amount:'
+                            halign: 'left'
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                            bold: True
+                    MDGridLayout:
+                        cols: 2
+                        MDIconButton:
+                            icon: 'currency-inr'
+                            halign: 'left'
+                            size_hint_y: None
+                            height: dp(1)
+                            bold: True
+        
+                        MDLabel:
+                            id: loan_amount
+                            halign: 'left'
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold: True
+                    MDLabel:
+                        text: ''
+                        halign: 'left'
                         size_hint_y: None
-                        height: dp(700)
-                        padding: [10, 0,0,0]
-                        canvas.before:
-                            Color:
-                                rgba: 0, 0, 0, 1  # Blue color for the box
-                            Line:
-                                width:0.7
-                                rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
+                        height: dp(20)
 
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Loan Amount :" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: loan_amount
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Borrower Name" 
+                            halign: "left"
+                            bold: True
+                        MDLabel:
+                            id: name
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Phone Number" 
+                            halign: "left"
+                            bold: True
+                        MDLabel:
+                            id: number
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Product Name" 
+                            halign: "left"
+                            bold: True
+                        MDLabel:
+                            id: product_name
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Loan Tenure" 
+                            bold: True
+                            halign: "left"
+                        MDLabel:
+                            id: tenure
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Interest Rate (%)" 
+                            bold: True
+                            halign: "left"
+                        MDLabel:
+                            id: interest
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Extension Fee(%)" 
+                            bold: True
+                            halign: "left"
+                        MDLabel:
+                            id: extension_fee
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Extension Allowed"
+                            bold: True
+                            halign: "left"
+                        MDLabel:
+                            id: extension_allowed
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                        MDLabel:
+                            id: user1
+                            color:1,1,1,1      
+                            font_size:dp(1)
+                            text: "" 
+                            height:dp(1)
+                        MDLabel:
+                            id: loan_id
+                            color:1,1,1,1      
+                            font_size:dp(1)
+                            text: "" 
+                            height:dp(1)
+                        MDLabel:
+                            id: total_payment
+                            color:1,1,1,1      
+                            font_size:dp(1)
+                            text: "" 
+                            height:dp(1)
+                    
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Extension Months" 
+                            bold: True
+                            halign: "left"
+                        MDTextField:
+                            hint_text: ""
+                            id: extension_months
+                            halign: "left"
+                            input_type: 'number'
+                            on_touch_down: root.on_extension_months()
+                    MDLabel:
+                        text: ''
+                        halign: 'left'
+                        size_hint_y: None
+                        height: dp(25)
+                MDLabel:
+                    text: ''
+                    halign: 'left'
+                    size_hint_y: None
+                    height: dp(5)
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(30)
+                    padding: dp(30)
+                    size_hint_y: None
+                    height: self.minimum_height
+                    canvas.before:
+                        Color:
+                            rgba: 249/255, 249/255, 247/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [25, 25, 25, 25]
+                    MDRaisedButton:
+                        id:extension_request
+                        text: "Extension Request"
+                        md_bg_color: 0.043, 0.145, 0.278, 1
+                        font_name: "Roboto-Bold"
+                        size_hint: 0.4, None
+                        height: dp(50)
+                        on_release:root.on_extend()
+                        text: "Next"
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        font_size:dp(15)
 
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Name :" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: name
-                                text: "" 
-                                height:dp(50)
-                                size_hint_y:None
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Phone Number :" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: number
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Product Name :" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: product_name
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Loan Tenure :" 
-                                size_hint_y:None
-                                height:dp(50)
-                                bold: True
-                                halign: "left"
-                            MDLabel:
-                                id: tenure
-                                text: "" 
-                                height:dp(50)
-                                size_hint_y:None
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Interest Rate (%):" 
-                                size_hint_y:None
-                                bold: True
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: interest
-                                text: "" 
-                                height:dp(50)
-                                size_hint_y:None
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Extension Allowed :" 
-                                size_hint_y:None
-                                bold: True
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: extension_allowed
-                                text:""
-                                height:dp(50)
-                                size_hint_y:None
-                                halign: "left"
-                            MDLabel:
-                                id: user1
-                                color:1,1,1,1      
-                                font_size:dp(1)
-                                text: "" 
-                                height:dp(1)
-                            MDLabel:
-                                id: loan_id
-                                color:1,1,1,1      
-                                font_size:dp(1)
-                                text: "" 
-                                height:dp(1)
-                            MDLabel:
-                                id: total_payment
-                                color:1,1,1,1      
-                                font_size:dp(1)
-                                text: "" 
-                                height:dp(1)
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Extension Fee(%) :" 
-                                size_hint_y:None
-                                bold: True
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: extension_fee
-                                text: "" 
-                                height:dp(50)
-                                size_hint_y:None
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Extension Months :" 
-                                size_hint_y:None
-                                bold: True
-                                height:dp(50)
-                                halign: "left"
-                            MDTextField:
-                                hint_text: ""
-                                id: extension_months
-                                size_hint_y:None
-                                halign: "left"
-                                height:dp(50)
-                                input_type: 'number'
-                                on_touch_down: root.on_extension_months()
-
-                        MDFloatLayout:
-                            MDRaisedButton:
-                                id:extension_request
-                                text: "Extension Request"
-                                md_bg_color: 0.043, 0.145, 0.278, 1
-                                font_name: "Roboto-Bold"
-                                size_hint: 0.4, None
-                                height: dp(50)
-                                on_release:root.on_extend()
-                                text: "Next"
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                                font_size:dp(15)
 
 <ExtendLoansScreen>
-    BoxLayout:
-        orientation: 'vertical'
+    GridLayout:
+        cols: 1
         MDTopAppBar:
             title: "Extension Loan Request"
             elevation: 3
@@ -271,169 +252,190 @@ extension_loan_request = """
             title_align: 'center'
 
         ScrollView:
-            MDBoxLayout:
-                orientation: 'vertical'
+            GridLayout:
+                cols: 1
                 size_hint_y: None
-                height: self.minimum_height
+                height: self.minimum_height 
+
                 BoxLayout:
-                    id: box1
                     orientation: 'vertical'
-                    size_hint_y: None
-                    MDLabel:
-                        text: " Borrower Extension Details"
-                        halign: "center"
-                        bold: True
-                MDBoxLayout:
-                    orientation: 'vertical'
+                    spacing: dp(50)
+                    padding: dp(30)
                     size_hint_y: None
                     height: self.minimum_height
-                    padding: dp(20)
-                    BoxLayout:
-                        id: box1
-                        orientation: 'vertical'
-                        size_hint_y: None
-                        height: dp(700)
-                        padding: [10, 0,0,0]
-                        canvas.before:
-                            Color:
-                                rgba: 0, 0, 0, 1  # Blue color for the box
-                            Line:
-                                rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
+                    canvas.before:
+                        Color:
+                            rgba: 230/255, 245/255, 255/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [1, 1, 1, 1]
+                            source: "background.jpg"
+                    MDGridLayout:
+                        cols: 2
 
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Loan Amount :" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: loan_amount
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: loan_id
-                                color:1,1,1,1      
-                                font_size:dp(1)
-                                text: "" 
-                                height:dp(1)
-
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Extension Fee(%) :" 
-                                size_hint_y:None
-                                height:dp(50)
-                                bold: True
-                                halign: "left"
-                            MDLabel:
-                                id: extension_fee
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Extension Amount :" 
-                                size_hint_y:None
-                                height:dp(50)
-                                bold: True
-                                halign: "left"
-                            MDLabel:
-                                id: extension_amount
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Finial Repayment Amount :" 
-                                size_hint_y:None
-                                height:dp(50)
-                                bold: True
-                                halign: "left"
-                            MDLabel:
-                                id: finial_repayment_amount
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "New EMI :" 
-                                size_hint_y:None
-                                height:dp(50)
-                                bold: True
-                                halign: "left"
-                            MDLabel:
-                                id: new_emi
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 1
-                            spacing: dp(5)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Reason For Extended Loan :" 
-                                size_hint_y:None
-                                height:dp(50)
-                                bold: True
-                            MDTextField:
-                                hint_text: ""
-                                id: reason
-                                size_hint_y:None
-                                height:dp(50)
                         MDLabel:
-                            text: " " 
-                            size_hint_y:None
+                            text: 'Loan Amount:'
+                            halign: 'left'
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                            bold: True
+                    MDGridLayout:
+                        cols: 3
+                        MDIconButton:
+                            icon: 'currency-inr'
+                            halign: 'left'
+                            size_hint_y: None
+                            height: dp(1)
+                            bold: True
 
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDCheckbox:
-                                id: check
-                                size_hint: None, None
-                                width: "20dp"
-                                active: False
-                                on_active: root.on_checkbox_active(self, self.active)
-                            MDLabel:
-                                text: "I Agree Terms and Conditions"
-                                multiline: False
-                                theme_text_color: 'Primary'
-                                halign: 'left'
-                                valign: 'center'
-                                bold: True
-                                on_touch_down: app.root.get_screen("ExtendLoansScreen").show_terms_dialog() if self.collide_point(*args[1].pos) else None
+                        MDLabel:
+                            id: loan_amount
+                            halign: 'left'
+                            text_color: 0,0,0,1
+                            bold: True
+                        MDLabel:
+                            id: loan_id
+                            color:1,1,1,1      
+                            font_size:dp(1)
+                            text: "" 
+                            height:dp(1)
+                    MDLabel:
+                        text: ''
+                        halign: 'left'
+                        size_hint_y: None
+                        height: dp(2)
+                            
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Extension Fee(%)" 
+                            bold: True
+                            halign: "left"
+                        MDLabel:
+                            id: extension_fee
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDLabel:
+                        text: ''
+                        halign: 'left'
+                        size_hint_y: None
+                        height: dp(2)
+                            
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Extension Amount" 
+                            bold: True
+                            halign: "left"
+                        MDLabel:
+                            id: extension_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            
+                    MDLabel:
+                        text: ''
+                        halign: 'left'
+                        size_hint_y: None
+                        height: dp(2)
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Finial Repayment Amount" 
+                            bold: True
+                            halign: "left"
+                        MDLabel:
+                            id: finial_repayment_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDLabel:
+                        text: ''
+                        halign: 'left'
+                        size_hint_y: None
+                        height: dp(2)        
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "New EMI"
+                            bold: True
+                            halign: "left"
+                        MDLabel:
+                            id: new_emi
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            
+                MDLabel:
+                    text: ""
+                    size_hint_y: None
+                    height: dp(65)
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: "75dp"
+                    spacing:dp(15)
+                    padding: dp(20)
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    MDLabel:
+                        text: "Reason For Extended Loan" 
+                        bold: True
+                        halign: 'left'
+                    MDTextField:
+                        id : reason
+                        hint_text: ""
+                        halign: 'left' 
+                        theme_text_color: 'Custom'  
+                        text_color: 140/255, 140/255, 140/255, 1
 
-                        MDFloatLayout:
-                            MDRaisedButton:
-                                text: "Submit"
-                                md_bg_color: 0.043, 0.145, 0.278, 1
-                                font_name: "Roboto-Bold"
-                                size_hint: 0.4, None
-                                height: dp(50)
-                                on_release:root.add_data()
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                                font_size:dp(15)
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: "68dp"
+                    spacing:dp(15)
+                    padding: dp(20)
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    MDCheckbox:
+                        id: check
+                        size_hint: None, None
+                        size: "30dp", "30dp"
+                        bold: True
+                        active: False
+                        on_active: root.on_checkbox_active(self, self.active)
+                    MDLabel:
+                        text: "I Agree Terms and Conditions"
+                        multiline: False  
+                        size: "30dp", "30dp"
+                        theme_text_color: "Custom"
+                        text_color: 0, 0, 0, 1
+                        halign: "left"
+                        valign: "center" 
+                        on_touch_down: app.root.get_screen("ExtendLoansScreen").show_terms_dialog() if self.collide_point(*args[1].pos) else None   
+                                                
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(30)
+                    padding: dp(30)
+                    size_hint_y: None
+                    height: self.minimum_height
+                    canvas.before:
+                        Color:
+                            rgba: 249/255, 249/255, 247/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [25, 25, 25, 25]
+                    MDRaisedButton:
+                        text: "Submit"
+                        md_bg_color: 0.043, 0.145, 0.278, 1
+                        font_name: "Roboto-Bold"
+                        size_hint: 0.4, None
+                        height: dp(50)
+                        on_release:root.add_data()
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        font_size:dp(15)
 """
 Builder.load_string(extension_loan_request)
 date = datetime.today()

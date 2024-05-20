@@ -206,462 +206,509 @@ lender_view_extension = """
                 id: container14               
 
 <ViewProfileE>
-    BoxLayout:
-        orientation: 'vertical'
+    GridLayout:
+        cols: 1
         MDTopAppBar:
-            title: "Extension Loans"
+            title: "Lender Extension"
             elevation: 3
             left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
-            md_bg_color: 0.043, 0.145, 0.278, 1
-        ScrollView:
+            md_bg_color: 0.043, 0.145, 0.278, 1 
+            title_align: 'left'
 
-            MDBoxLayout:
-                orientation: 'vertical'
+        ScrollView:
+            GridLayout:
+                cols: 1
                 size_hint_y: None
-                height: self.minimum_height
+                height: self.minimum_height 
+
                 BoxLayout:
-                    id: box1
                     orientation: 'vertical'
-                    size_hint_y: None
-                    MDLabel:
-                        text: "Loan Extension details"
-                        halign: "center"
-                        bold: True
-                MDBoxLayout:
-                    orientation: 'vertical'
+                    spacing: dp(50)
+                    padding: dp(30)
                     size_hint_y: None
                     height: self.minimum_height
-                    padding: dp(20)
-
-                    BoxLayout:
-                        id: box1
-                        orientation: 'vertical'
-                        size_hint_y: None
-                        height: dp(550)
-
-                        padding: [10, 0,0,0]
-                        canvas.before:
-                            Color:
-                                rgba: 0, 0, 0, 1 
-                            Line:
-                                rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
-
-                        GridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Loan ID" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                                bold: True
-                            MDLabel:
-                                id: loanid
-                                text: ""
-                                halign: "left"
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "Borrower Name" 
-                                size_hint_y:None
-                                bold: True
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: name
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "Loan Amount" 
-                                size_hint_y:None
-                                bold: True
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: amount
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "Extension Fee(%)" 
-                                bold: True
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: extension
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "Extension Amount" 
-                                bold: True
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: extension_amount
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "Remaining Amount" 
-                                bold: True
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: remaining_amount
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "Reason For Extension" 
-                                bold: True
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: reason
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "New EMI" 
-                                bold: True
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: interest
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-
-                            MDRaisedButton:
-                                text: "Reject"
-                                md_bg_color: 0.043, 0.145, 0.278, 1
-                                on_release: root.reject_request()
-                                theme_text_color: 'Custom'
-                                text_color: 1, 1, 1, 1
-                                size_hint: 1, None
-
-                            MDRaisedButton:
-                                text: "Accept"
-                                theme_text_color: 'Custom'
-                                on_release: root.accept_request()
-                                text_color: 1, 1, 1, 1
-                                md_bg_color: 0.043, 0.145, 0.278, 1
-                                size_hint: 1, None        
-
-
-
-<ViewProfileEX>
-    BoxLayout:
-        orientation: 'vertical'
-        MDTopAppBar:
-            title: "Approved Loans"
-            elevation: 3
-            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
-            md_bg_color: 0.043, 0.145, 0.278, 1
-        ScrollView:
-
-            MDBoxLayout:
-                orientation: 'vertical'
-                size_hint_y: None
-                height: self.minimum_height
-                BoxLayout:
-                    id: box1
-                    orientation: 'vertical'
-                    size_hint_y: None
-                    MDLabel:
-                        text: "Loan Extension details"
-                        halign: "center"
-                        bold: True
-                MDBoxLayout:
-                    orientation: 'vertical'
-                    size_hint_y: None
-                    height: self.minimum_height
-                    padding: dp(20)
-
-                    BoxLayout:
-                        id: box1
-                        orientation: 'vertical'
-                        size_hint_y: None
-                        height: dp(550)
-
-                        padding: [10, 0,0,0]
-                        canvas.before:
-                            Color:
-                                rgba: 0, 0, 0, 1 
-                            Line:
-                                rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
-
-                        GridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Loan ID" 
-                                size_hint_y:None
-                                bold: True
-                                halign: "left"
-                                height:dp(50)
-                            MDLabel:
-                                id: loanid
-                                text: ""
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "Borrower Name" 
-                                size_hint_y:None
-                                bold: True
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: name
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "Loan Amount" 
-                                size_hint_y:None
-                                bold: True
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: amount
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "Extension Fee(%)" 
-                                bold: True
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: extension
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "Extension Amount" 
-                                bold: True
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: extension_amount
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-
-                            MDLabel:
-                                text: "Remaining Amount" 
-                                bold: True
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: remaining_amount
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "Reason For Extension" 
-                                bold: True
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: reason
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "New EMI" 
-                                bold: True
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: interest
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
+                    canvas.before:
+                        Color:
+                            rgba: 230/255, 245/255, 255/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [1, 1, 1, 1]
+                            source: "background.jpg"
+                    MDGridLayout:
+                        cols: 2
+        
                         MDLabel:
-                            text: "Your Extension Loan has been approved" 
+                            text: 'Loan Amount:'
+                            halign: 'left'
                             bold: True
-                            size_hint_y:None
-                            height:dp(50)   
-                            halign: "center" 
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                    MDGridLayout:
+                        cols: 2
+                        MDIconButton:
+                            icon: 'currency-inr'
+                            halign: 'left'
+                            size_hint_y: None
+                            height: dp(1)
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+        
+                        MDLabel:
+                            id: amount
+                            halign: 'left'
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                            bold: True
+                    
+                    MDLabel:
+                        text: ''
+                        halign: 'left'
+                        size_hint_y: None
+                        height: dp(5)
+
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Borrower Name"
+                            halign: "left"
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                        MDLabel:
+                            id: name
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold: True
+                            
+                    MDGridLayout: 
+                        cols: 2    
+                        MDLabel:
+                            text: "Extension Fee(%)" 
+                            halign: "left"
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                        MDLabel:
+                            id: extension
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold: True
+                    MDGridLayout: 
+                        cols: 2       
+                        MDLabel:
+                            text: "Extension Amount" 
+                            halign: "left"
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                        MDLabel:
+                            id: extension_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold: True
+                    MDGridLayout: 
+                        cols: 2 
+                        MDLabel:
+                            text: "Remaining Amount" 
+                            halign: "left"
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                        MDLabel:
+                            id: remaining_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold: True
+                    MDGridLayout: 
+                        cols: 2 
+                        MDLabel:
+                            text: "Reason For Extension" 
+                            halign: "left"
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                        MDLabel:
+                            id: reason
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold: True
+                            
+                    MDGridLayout: 
+                        cols: 2 
+                        MDLabel:
+                            text: "New EMI" 
+                            halign: "left"
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                        MDLabel:
+                            id: interest
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold: True
+                MDLabel:
+                    text: ''
+                    halign: 'left'
+                    size_hint_y: None
+                    height: dp(55)
+                    
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(30)
+                    padding: dp(30)
+                    size_hint_y: None
+                    height: self.minimum_height
+                    canvas.before:
+                        Color:
+                            rgba: 249/255, 249/255, 247/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [25, 25, 25, 25]
+                    MDRaisedButton:
+                        text: "Decline"
+                        md_bg_color: 0.043, 0.145, 0.278, 1
+                        on_release: root.reject_request()
+                        theme_text_color: 'Custom'
+                        text_color: 1, 1, 1, 1
+                        size_hint: 1, 1
+
+                    MDRaisedButton:
+                        text: "Approve"
+                        theme_text_color: 'Custom'
+                        on_release: root.accept_request() 
+                        text_color: 1, 1, 1, 1
+                        md_bg_color: 0.043, 0.145, 0.278, 1
+                        size_hint: 1, 1
+                
+
+<ViewProfileEx>
+    GridLayout:
+        cols: 1
+        MDTopAppBar:
+            title: "Lender Extension"
+            elevation: 3
+            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            md_bg_color: 0.043, 0.145, 0.278, 1 
+            title_align: 'left'
+
+        ScrollView:
+            GridLayout:
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height 
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: dp(50)
+                    padding: dp(30)
+                    size_hint_y: None
+                    height: self.minimum_height
+                    canvas.before:
+                        Color:
+                            rgba: 230/255, 245/255, 255/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [1, 1, 1, 1]
+                            source: "background.jpg"
+                            
+                    MDGridLayout:
+                        cols: 2
+        
+                        MDLabel:
+                            text: 'Loan Amount:'
+                            halign: 'left'
+                            bold: True
+                    MDGridLayout:
+                        cols: 2
+                        MDIconButton:
+                            icon: 'currency-inr'
+                            halign: 'left'
+                            size_hint_y: None
+                            height: dp(1)
+                            bold: True
+        
+                        MDLabel:
+                            id: amount
+                            halign: 'left'
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                            bold: True
+                    
+                    MDLabel:
+                        text: ''
+                        halign: 'left'
+                        size_hint_y: None
+                        height: dp(5)
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Borrower Name" 
+                            halign: "left"
+                            bold: True
+                        MDLabel:
+                            id: name
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold : True
+                            
+                            
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Extension Fee(%)" 
+                            halign: "left"
+                            bold: True
+                        MDLabel:
+                            id: extension
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold : True
+                
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Extension Amount" 
+                            halign: "left"
+                            bold: True
+                        MDLabel:
+                            id: extension_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold : True
+                    
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Remaining Amount" 
+                            halign: "left"
+                            bold: True
+                        MDLabel:
+                            id: remaining_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold : True
+                    
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Reason For Extension" 
+                            halign: "left"
+                            bold: True
+                        MDLabel:
+                            id: reason
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold : True
+                            
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "New EMI" 
+                            halign: "left"
+                            bold: True
+                        MDLabel:
+                            id: interest
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold : True
+                            
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(30)
+                    padding: dp(30)
+                    size_hint_y: None
+                    height: self.minimum_height
+                    canvas.before:
+                        Color:
+                            rgba: 249/255, 249/255, 247/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [25, 25, 25, 25]
+                    MDLabel:
+                        text: "Your Extension Loan has been approved" 
+                        bold: True 
+                        halign: "center" 
+        
+   
 <ViewProfileEXE>
-    BoxLayout:
-        orientation: 'vertical'
+    GridLayout:
+        cols: 1
         MDTopAppBar:
-            title: "Rejected Loans"
+            title: "Lender Extension"
             elevation: 3
             left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
-            md_bg_color: 0.043, 0.145, 0.278, 1
-        ScrollView:
+            md_bg_color: 0.043, 0.145, 0.278, 1 
+            title_align: 'left'
 
-            MDBoxLayout:
-                orientation: 'vertical'
+        ScrollView:
+            GridLayout:
+                cols: 1
                 size_hint_y: None
-                height: self.minimum_height
+                height: self.minimum_height 
+
                 BoxLayout:
-                    id: box1
                     orientation: 'vertical'
-                    size_hint_y: None
-                    MDLabel:
-                        text: "Loan Extension details"
-                        halign: "center"
-                        bold: True
-                MDBoxLayout:
-                    orientation: 'vertical'
+                    spacing: dp(50)
+                    padding: dp(30)
                     size_hint_y: None
                     height: self.minimum_height
-                    padding: dp(20)
+                    canvas.before:
+                        Color:
+                            rgba: 230/255, 245/255, 255/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [1, 1, 1, 1]
+                            source: "background.jpg"
 
-                    BoxLayout:
-                        id: box1
-                        orientation: 'vertical'
-                        size_hint_y: None
-                        height: dp(550)
+                    MDGridLayout:
+                        cols: 2
 
-                        padding: [10, 0,0,0]
-                        canvas.before:
-                            Color:
-                                rgba: 0, 0, 0, 1 
-                            Line:
-                                rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
-
-                        GridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Loan ID" 
-                                size_hint_y:None
-                                bold: True
-                                halign: "left"
-                                height:dp(50)
-                            MDLabel:
-                                id: loanid
-                                text: ""
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "Borrower Name" 
-                                size_hint_y:None
-                                bold: True
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: name
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "Loan Amount" 
-                                size_hint_y:None
-                                bold: True
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: amount
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "Extension Fee(%)" 
-                                bold: True
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: extension
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "Extension Amount" 
-                                bold: True
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: extension_amount
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-
-                            MDLabel:
-                                text: "Remaining Amount" 
-                                bold: True
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: remaining_amount
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "Reason For Extension" 
-                                bold: True
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: reason
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                text: "New EMI" 
-                                bold: True
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                            MDLabel:
-                                id: interest
-                                text: "" 
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
                         MDLabel:
-                            text: "Your Extension Loan has been rejected" 
+                            text: 'Loan Amount:'
+                            halign: 'left'
                             bold: True
-                            size_hint_y:None
-                            height:dp(50)   
-                            halign: "center"                                
+                    MDGridLayout:
+                        cols: 2
+                        MDIconButton:
+                            icon: 'currency-inr'
+                            halign: 'left'
+                            size_hint_y: None
+                            height: dp(1)
+                            bold: True
+
+                        MDLabel:
+                            id: amount
+                            halign: 'left'
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                            bold: True
+
+                    MDLabel:
+                        text: ''
+                        halign: 'left'
+                        size_hint_y: None
+                        height: dp(5)
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Borrower Name" 
+                            halign: "left"
+                            bold: True
+                        MDLabel:
+                            id: name
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold : True
+
+                        
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Extension Fee(%)" 
+                            halign: "left"
+                            bold: True
+                        MDLabel:
+                            id: extension
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold : True
+
+                        
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Extension Amount" 
+                            halign: "left"
+                            bold: True
+                        MDLabel:
+                            id: extension_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold : True
+
+                        
+                    MDGridLayout:
+                        cols: 2
+                        
+                        MDLabel:
+                            text: "Remaining Amount" 
+                            halign: "left"
+                            bold: True
+                        MDLabel:
+                            id: remaining_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold : True
+
+                    
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Reason For Extension" 
+                            halign: "left"
+                            bold: True
+                        MDLabel:
+                            id: reason
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold : True
+                            
+
+                        
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "New EMI" 
+                            halign: "left"
+                            bold: True
+                        MDLabel:
+                            id: interest
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold : True
+
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(30)
+                    padding: dp(30)
+                    size_hint_y: None
+                    height: self.minimum_height
+                    canvas.before:
+                        Color:
+                            rgba: 249/255, 249/255, 247/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [25, 25, 25, 25]
+                    MDLabel:
+                        text: "Your Extension Loan has been Rejected" 
+                        bold: True 
+                        halign: "center"                                 
 
 """
 Builder.load_string(lender_view_extension)
@@ -880,12 +927,14 @@ class ApprovedLoansEX(Screen):
                     tertiary_text_color=(0, 0, 0, 1),
                     tertiary_theme_text_color='Custom'
                 )
-                item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance,
-                                                                                                   loan_id))  # Corrected the binding
+                item.bind(
+                    on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
                 self.ids.container11.add_widget(item)
 
     def icon_button_clicked(self, instance, loan_id):
-
+        value = instance.text.split(':')
+        value = value[-1][1:]
+        data = app_tables.fin_extends_loan.search()
         sm = self.manager
         # Create a new instance of the LoginScreen
         disbursed = ViewProfileEX(name='ViewProfileEX')
@@ -894,7 +943,7 @@ class ApprovedLoansEX(Screen):
 
         # Switch to the LoginScreen
         sm.current = 'ViewProfileEX'
-        self.manager.get_screen('ViewProfileEX').initialize_with_value(loan_id)
+        self.manager.get_screen('ViewProfileEX').initialize_with_value(loan_id, data)
 
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
@@ -979,13 +1028,14 @@ class ALLLoansEX(Screen):
                     tertiary_text_color=(0, 0, 0, 1),
                     tertiary_theme_text_color='Custom'
                 )
-                item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance,
-                                                                                                   loan_id))  # Corrected the binding
+                item.bind(
+                    on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
                 self.ids.container14.add_widget(item)
 
     def icon_button_clicked(self, instance, loan_id):
         # Handle the on_release event here
-
+        value = instance.text.split(':')
+        value = value[-1][1:]
         data = app_tables.fin_extends_loan.search()
         loan_status = None
         for loan in data:
@@ -1006,7 +1056,7 @@ class ALLLoansEX(Screen):
 
             # Switch to the LoginScreen
             sm.current = 'ViewProfileEX'
-            self.manager.get_screen('ViewProfileEX').initialize_with_value(loan_id)
+            self.manager.get_screen('ViewProfileEX').initialize_with_value(loan_id, data)
 
         elif loan_status == 'under process':
             # Open the screen for pending loans
@@ -1020,7 +1070,7 @@ class ALLLoansEX(Screen):
 
             # Switch to the LoginScreen
             sm.current = 'ViewProfileE'
-            self.manager.get_screen('ViewProfileE').initialize_with_value(loan_id)
+            self.manager.get_screen('ViewProfileE').initialize_with_value(loan_id, data)
 
         elif loan_status == 'rejected':
             # Open the screen for pending loans
@@ -1034,7 +1084,7 @@ class ALLLoansEX(Screen):
 
             # Switch to the LoginScreen
             sm.current = 'ViewProfileEXE'
-            self.manager.get_screen('ViewProfileEXE').initialize_with_value(loan_id)
+            self.manager.get_screen('ViewProfileEXE').initialize_with_value(loan_id, data)
         else:
             # Handle other loan statuses or show an error message
             pass
@@ -1127,12 +1177,14 @@ class RejectedLoansEX(Screen):
                     tertiary_text_color=(0, 0, 0, 1),
                     tertiary_theme_text_color='Custom'
                 )
-                item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance,
-                                                                                                   loan_id))  # Corrected the binding
+                item.bind(
+                    on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
                 self.ids.container13.add_widget(item)
 
     def icon_button_clicked(self, instance, loan_id):
-
+        value = instance.text.split(':')
+        value = value[-1][1:]
+        data = app_tables.fin_extends_loan.search()
         sm = self.manager
 
         # Create a new instance of the LoginScreen
@@ -1143,7 +1195,7 @@ class RejectedLoansEX(Screen):
 
         # Switch to the LoginScreen
         sm.current = 'ViewProfileEXE'
-        self.manager.get_screen('ViewProfileEXE').initialize_with_value(loan_id)
+        self.manager.get_screen('ViewProfileEXE').initialize_with_value(loan_id, data)
 
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
@@ -1230,12 +1282,14 @@ class UnderProcessLoansEX(Screen):
                     tertiary_text_color=(0, 0, 0, 1),
                     tertiary_theme_text_color='Custom'
                 )
-                item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance,
-                                                                                                   loan_id))  # Corrected the binding
+                item.bind(
+                    on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
                 self.ids.container12.add_widget(item)
 
     def icon_button_clicked(self, instance, loan_id):
-
+        value = instance.text.split(':')
+        value = value[-1][1:]
+        data = app_tables.fin_extends_loan.search()
         sm = self.manager
 
         # Create a new instance of the LoginScreen
@@ -1246,7 +1300,7 @@ class UnderProcessLoansEX(Screen):
 
         # Switch to the LoginScreen
         sm.current = 'ViewProfileE'
-        self.manager.get_screen('ViewProfileE').initialize_with_value(loan_id)
+        self.manager.get_screen('ViewProfileE').initialize_with_value(loan_id, data)
 
 
     def on_pre_enter(self):
@@ -1276,13 +1330,13 @@ class ViewProfileEX(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def initialize_with_value(self, value):
+    def initialize_with_value(self, value, data):
         data = app_tables.fin_extends_loan.search()
         borrower_name = []
         loan_id = []
         loan_amount = []
         extension_fee = []
-        extension_amount = []
+        extension_amount1 = []
         reason_for_extension = []
         remaining_amount = []
         new_emi = []
@@ -1292,18 +1346,17 @@ class ViewProfileEX(Screen):
             borrower_name.append(i['borrower_full_name'])
             loan_amount.append(i['loan_amount'])
             extension_fee.append(i['extend_fee'])
-            extension_amount.append(i['extension_amount'])
+            extension_amount1.append(i['extension_amount'])
             reason_for_extension.append(i['reason'])
             remaining_amount.append(i['final_repayment_amount'])
             new_emi.append(i['new_emi'])
 
         if value in loan_id:
             index = loan_id.index(value)
-            self.ids.loanid.text = str(loan_id[index])
             self.ids.name.text = str(borrower_name[index])
             self.ids.amount.text = str(loan_amount[index])
             self.ids.extension.text = str(extension_fee[index])
-            self.ids.extension_amount.text = str(extension_amount[index])
+            self.ids.extension_amount.text = str(extension_amount1[index])
             self.ids.reason.text = str(reason_for_extension[index])
             self.ids.remaining_amount.text = str(remaining_amount[index])
             self.ids.interest.text = str(new_emi[index])
@@ -1337,7 +1390,7 @@ class ViewProfileEXE(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def initialize_with_value(self, value):
+    def initialize_with_value(self, value, data):
         data = app_tables.fin_extends_loan.search()
         borrower_name = []
         loan_id = []
@@ -1360,7 +1413,6 @@ class ViewProfileEXE(Screen):
 
         if value in loan_id:
             index = loan_id.index(value)
-            self.ids.loanid.text = str(loan_id[index])
             self.ids.name.text = str(borrower_name[index])
             self.ids.amount.text = str(loan_amount[index])
             self.ids.extension.text = str(extension_fee[index])
@@ -1398,7 +1450,7 @@ class ViewProfileE(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def initialize_with_value(self, value):
+    def initialize_with_value(self, value, data):
         data = app_tables.fin_extends_loan.search()
         borrower_name = []
         loan_id = []
@@ -1421,7 +1473,6 @@ class ViewProfileE(Screen):
 
         if value in loan_id:
             index = loan_id.index(value)
-            self.ids.loanid.text = str(loan_id[index])
             self.ids.name.text = str(borrower_name[index])
             self.ids.amount.text = str(loan_amount[index])
             self.ids.extension.text = str(extension_fee[index])
@@ -1458,7 +1509,7 @@ class ViewProfileE(Screen):
         self.manager.current = 'NewExtension'
 
     def accept_request(self):
-        loan_id = self.ids.loanid.text
+        loan_id = self.loan_id
         print(loan_id)
 
         # Fetch the records from both tables based on loan_id
@@ -1484,7 +1535,7 @@ class ViewProfileE(Screen):
 
     def reject_request(self):
         data = app_tables.fin_extends_loan.search()
-        loan_id = self.ids.loanid.text
+        loan_id = self.loan_id
         print(loan_id)
         loan_idlist = []
         for i in data:

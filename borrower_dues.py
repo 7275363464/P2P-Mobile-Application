@@ -29,6 +29,7 @@ user_helpers2 = """
     BorrowerDuesScreen:
     DuesScreen:
     LastScreenWallet:
+    PartPayment:
 <DuesScreen>:
     BoxLayout:
         orientation: 'vertical'
@@ -192,8 +193,14 @@ user_helpers2 = """
                     halign: 'left'
                     text_color: 140/255, 140/255, 140/255, 1
         
+        MDLabel:
+            text: ''
+            halign: 'left'
+            size_hint_y: None
+            height: dp(55)
+            
         MDBoxLayout:
-            orientation: 'vertical'
+            orientation: 'horizontal'
             spacing: dp(30)
             padding: dp(30)
             size_hint_y: None
@@ -204,13 +211,15 @@ user_helpers2 = """
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
-                    radius: [25, 25, 25, 25] 
-                     
-            MDLabel:
-                text: ''
-                halign: 'left'
-                size_hint_y: None
-                height: dp(5)
+                    radius: [25, 25, 25, 25]
+            MDRaisedButton:
+                text: "Part Payment"
+                md_bg_color:0.043, 0.145, 0.278, 1
+                on_release: root.go_to_part_payment()
+                pos_hint: {'center_x': 0.5, 'center_y': 2}
+                size_hint: 0.4, None 
+                font_name:"Roboto-Bold"
+                font_size:dp(15) 
                      
             MDRaisedButton:
                 text: "Pay Now"
@@ -220,7 +229,208 @@ user_helpers2 = """
                 size_hint: 0.4, None 
                 font_name:"Roboto-Bold"
                 font_size:dp(15) 
-            
+<PartPayment>          
+    GridLayout:
+        cols: 1
+        MDTopAppBar:
+            title: "Part Payment"
+            elevation: 3
+            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            md_bg_color: 0.043, 0.145, 0.278, 1 
+            title_align: 'left'
+
+        ScrollView:
+            GridLayout:
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height 
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: dp(50)
+                    padding: dp(30)
+                    size_hint_y: None
+                    height: self.minimum_height
+                    canvas.before:
+                        Color:
+                            rgba: 230/255, 245/255, 255/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [1, 1, 1, 1]
+                            source: "E:\photo10.jpg"
+                    MDGridLayout:
+                        cols: 2
+        
+                        MDLabel:
+                            text: 'Loan Amount:'
+                            halign: 'left'
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                    MDGridLayout:
+                        cols: 2
+                        MDIconButton:
+                            icon: 'currency-inr'
+                            halign: 'left'
+                            size_hint_y: None
+                            height: dp(1)
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+        
+                        MDLabel:
+                            id: amount
+                            halign: 'left'
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    
+                    MDLabel:
+                        text: ''
+                        halign: 'left'
+                        size_hint_y: None
+                        height: dp(5)
+
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Borrower Name"
+                            halign: "left"
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                        MDLabel:
+                            id: name
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDGridLayout: 
+                        cols: 2    
+                        MDLabel:
+                            text: "Tenure" 
+                            halign: "left"
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                        MDLabel:
+                            id: tenure
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDGridLayout: 
+                        cols: 2       
+                        MDLabel:
+                            text: "Interest Amount" 
+                            halign: "left"
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                        MDLabel:
+                            id: interest
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDGridLayout: 
+                        cols: 2 
+                        MDLabel:
+                            text: "Account number" 
+                            halign: "left"
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                        MDLabel:
+                            id: account_number
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDGridLayout: 
+                        cols: 2 
+                        MDLabel:
+                            text: "Emi Amount" 
+                            halign: "left"
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                        MDLabel:
+                            id: emi_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    
+                    MDGridLayout: 
+                        cols: 2 
+                        MDLabel:
+                            text: "Remaining Amount" 
+                            halign: "left"
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                        MDLabel:
+                            id: remain_amount
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                    MDGridLayout: 
+                        cols: 2 
+                        MDLabel:
+                            text: "Total Amount" 
+                            halign: "left"
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                        MDLabel:
+                            id: total_amount1
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                            
+                    MDGridLayout: 
+                        cols: 2 
+                        MDLabel:
+                            text: "Amount" 
+                            halign: "left"
+                            bold: True
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                        MDLabel:
+                            id: amount1
+                            halign: 'left' 
+                            theme_text_color: 'Custom'  
+                            text_color: 140/255, 140/255, 140/255, 1
+                MDLabel:
+                    text: ''
+                    halign: 'left'
+                    size_hint_y: None
+                    height: dp(55)
+                    
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(30)
+                    padding: dp(30)
+                    size_hint_y: None
+                    height: self.minimum_height
+                    canvas.before:
+                        Color:
+                            rgba: 249/255, 249/255, 247/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [25, 25, 25, 25]
+                    MDRaisedButton:
+                        text: "Back"
+                        md_bg_color: 0.043, 0.145, 0.278, 1
+                        on_release: root.reject_request()
+                        theme_text_color: 'Custom'
+                        text_color: 1, 1, 1, 1
+                        size_hint: 1, 1
+
+                    MDRaisedButton:
+                        text: "Pay Now"
+                        theme_text_color: 'Custom'
+                        on_release: root.accept_request() 
+                        text_color: 1, 1, 1, 1
+                        md_bg_color: 0.043, 0.145, 0.278, 1
+                        size_hint: 1, 1
 
 <LastScreenWallet>:
     MDTopAppBar:
@@ -417,8 +627,8 @@ class BorrowerDuesScreen(Screen):
 
                 total_amount = monthly_emi[index] + extra_amount
                 self.ids.extra.text = "Extra Payment(Default)"
-                self.ids.extra_amount.text = str(extra_amount + default_amount)
-                self.ids.total_amount.text = str(total_amount + default_amount)
+                self.ids.extra_amount.text = str(round(extra_amount + default_amount, 2))
+                self.ids.total_amount.text = str(round(total_amount + default_amount, 2))
                 data1[index]['loan_state_status'] = 'default'
                 print(default_amount)
                 print(default_type[product_index] == 'Non Performing Asset (%)')
@@ -438,14 +648,14 @@ class BorrowerDuesScreen(Screen):
                     npa_amount = default_fee_amount[product_index]
                 total_amount = monthly_emi[index] + extra_amount
                 self.ids.extra.text = "Extra Payment(NPA)"
-                self.ids.extra_amount.text = str(extra_amount + npa_amount)
-                self.ids.total_amount.text = str(total_amount + npa_amount)
+                self.ids.extra_amount.text = str(round(extra_amount + npa_amount, 2))
+                self.ids.total_amount.text = str(round(total_amount + npa_amount, 2))
                 data1[index]['loan_state_status'] = 'npa'
 
             else:
                 total_amount = monthly_emi[index] + extra_amount
-                self.ids.extra_amount.text = str(extra_amount)
-                self.ids.total_amount.text = str(total_amount)
+                self.ids.extra_amount.text = str(round(extra_amount, 2))
+                self.ids.total_amount.text = str(round(total_amount))
                 self.ids.extra.text = "Extra Payment "
 
 
@@ -481,9 +691,9 @@ class BorrowerDuesScreen(Screen):
                     product_index = product_id.index(loan_product[index])
                     lapsed_percentage = lapsed_fee[product_index] + days_left
                     lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
-                    self.ids.extra_amount.text = str(extend_amount + lapsed_amount)
+                    self.ids.extra_amount.text = str(round(extend_amount + lapsed_amount, 2))
                     self.ids.emi_amount.text = str(new_emi_amount)
-                    self.ids.total_amount.text = str(total_amount + lapsed_amount)
+                    self.ids.total_amount.text = str(round(total_amount + lapsed_amount, 2))
                     self.ids.extra.text = "Extra Payment (Late payment Fee)"
                     data1[index]['loan_state_status'] = "lapsed"
                 elif (today_date - shechule_date[value]).days >= 16 and (today_date - shechule_date[value]).days < 98:
@@ -497,9 +707,9 @@ class BorrowerDuesScreen(Screen):
                         default_amount = (monthly_emi[index] * default_percentage) / 100
                     elif default_type[product_index] == 'Default fee (₹)':
                         default_amount = default_fee_amount[product_index]
-                    self.ids.extra_amount.text = str(extend_amount + default_amount)
+                    self.ids.extra_amount.text = str(round(extend_amount + default_amount, 2))
                     self.ids.emi_amount.text = str(new_emi_amount)
-                    self.ids.total_amount.text = str(total_amount + default_amount)
+                    self.ids.total_amount.text = str(round(total_amount + default_amount, 2))
                     self.ids.extra.text = "Extra Payment (Default)"
                     data1[index]['loan_state_status'] = "default"
                     print(default_amount)
@@ -515,15 +725,15 @@ class BorrowerDuesScreen(Screen):
                         npa_amount = (monthly_emi[index] * npa_percentage) / 100
                     elif npa_type[product_index] == 'Non Performing Asset (₹)':
                         npa_amount = default_fee_amount[product_index]
-                    self.ids.extra_amount.text = str(extend_amount + npa_amount)
+                    self.ids.extra_amount.text = str(round(extend_amount + npa_amount, 2))
                     self.ids.emi_amount.text = str(new_emi_amount)
-                    self.ids.total_amount.text = str(total_amount + npa_amount)
+                    self.ids.total_amount.text = str(round(total_amount + npa_amount, 2))
                     self.ids.extra.text = "Extra Payment (Default)"
                     data1[index]['loan_state_status'] = 'npa'
                 else:
-                    self.ids.extra_amount.text = str(extend_amount)
+                    self.ids.extra_amount.text = str(round(extend_amount))
                     self.ids.emi_amount.text = str(new_emi_amount)
-                    self.ids.total_amount.text = str(total_amount)
+                    self.ids.total_amount.text = str(round(total_amount))
                     self.ids.extra.text = "Extra Payment"
                 print(extend_amount, new_emi_amount, total_amount)
 
@@ -548,9 +758,9 @@ class BorrowerDuesScreen(Screen):
                     product_index = product_id.index(loan_product[index])
                     lapsed_percentage = lapsed_fee[product_index] + days_left
                     lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
-                    self.ids.extra_amount.text = str(foreclose_amount1 + lapsed_amount)
+                    self.ids.extra_amount.text = str(round(foreclose_amount1 + lapsed_amount, 2))
                     self.ids.emi_amount.text = str(emi_amount1)
-                    self.ids.total_amount.text = str(total_amount + lapsed_amount)
+                    self.ids.total_amount.text = str(round(total_amount + lapsed_amount, 2))
                     self.ids.total.text = "Total Amount (Late payment Fee)"
                     data1[index]['loan_state_status'] = "lapsed"
                     data1[index]['loan_updated_status'] = "closed"
@@ -567,9 +777,9 @@ class BorrowerDuesScreen(Screen):
                         default_amount = (monthly_emi[index] * default_percentage) / 100
                     elif default_type[product_index] == 'Default fee (₹)':
                         default_amount = default_fee_amount[product_index]
-                    self.ids.extra_amount.text = str(foreclose_amount1 + default_amount)
+                    self.ids.extra_amount.text = str(round(foreclose_amount1 + default_amount, 2))
                     self.ids.emi_amount.text = str(emi_amount1)
-                    self.ids.total_amount.text = str(total_amount)
+                    self.ids.total_amount.text = str(round(total_amount + default_amount, 2))
                     self.ids.total.text = "Total Amount (Default)"
                     data1[index]['loan_state_status'] = "default"
                     data1[index]['loan_updated_status'] = "closed"
@@ -585,18 +795,18 @@ class BorrowerDuesScreen(Screen):
                         npa_amount = (monthly_emi[index] * npa_percentage) / 100
                     elif npa_type[product_index] == 'Non Performing Asset (₹)':
                         npa_amount = default_fee_amount[product_index]
-                    self.ids.extra_amount.text = str(foreclose_amount1 + npa_amount)
+                    self.ids.extra_amount.text = str(round(foreclose_amount1 + npa_amount, 2))
                     self.ids.emi_amount.text = str(emi_amount1)
-                    self.ids.total_amount.text = str(total_amount + npa_amount)
+                    self.ids.total_amount.text = str(round(total_amount + npa_amount, 2))
                     self.ids.extra.text = "Extra Payment (Default)"
                     data1[index]['loan_state_status'] = "default"
                     data1[index]['loan_updated_status'] = "closed"
 
                 else:
                     self.ids.extra.text = "Extra Payment"
-                    self.ids.extra_amount.text = str(foreclose_amount1)
+                    self.ids.extra_amount.text = str(round(foreclose_amount1))
                     self.ids.emi_amount.text = str(emi_amount1)
-                    self.ids.total_amount.text = str(total_amount)
+                    self.ids.total_amount.text = str(round(total_amount))
                     data1[index]['loan_updated_status'] = "closed"
 
     def go_to_paynow(self):
@@ -604,10 +814,13 @@ class BorrowerDuesScreen(Screen):
         emi_loan_id = []
         emi_num = []
         next_payment = []
+        paid_amount = []
         for i in emi_data:
             emi_loan_id.append(i['loan_id'])
             emi_num.append(i['emi_number'])
             next_payment.append(i['next_payment'])
+            paid_amount.append(i['amount_paid'])
+
         value = self.loan_id
         data1 = app_tables.fin_loan_details.search()
         wallet = app_tables.fin_wallet.search()
@@ -631,6 +844,7 @@ class BorrowerDuesScreen(Screen):
         lender_customer_id = []
         borrower_email = []
         lender_email = []
+        total_repay_amount = []
         for i in data1:
             loan_id.append(i['loan_id'])
             cos_id1.append(i['borrower_customer_id'])
@@ -639,6 +853,7 @@ class BorrowerDuesScreen(Screen):
             lender_customer_id.append(i['lender_customer_id'])
             borrower_email.append(i['borrower_email_id'])
             lender_email.append(i['lender_email_id'])
+            total_repay_amount.append(i['total_repayment_amount'])
 
         cos_id = []
         account_num = []
@@ -695,6 +910,18 @@ class BorrowerDuesScreen(Screen):
             elif emi_type_pay[index].strip() == 'One Time':
                 if tenure:
                     next_payment_date = schedule_date[index] + timedelta(days=30 * int(tenure))
+
+            paid_amount1 = 0
+            for i in emi_loan_id:
+                if i == value:
+                    index3 = emi_loan_id.index(value)
+                    paid_amount1 += paid_amount[index3] * emi_number
+                else:
+                    paid_amount1 = 0
+
+            print(paid_amount1)
+            remain_amount = total_repay_amount[index] - paid_amount1
+            print(remain_amount)
             app_tables.fin_emi_table.add_row(
                 loan_id=str(value),
                 extra_fee=float(extra_amount),
@@ -708,21 +935,15 @@ class BorrowerDuesScreen(Screen):
                 borrower_customer_id=cos_id1[index],
                 lender_customer_id=lender_customer_id[index],
                 lender_email=lender_email[index]
+
             )
+            data1[index]['total_amount_paid'] = float(paid_amount1)
+            data1[index]['remaining_amount'] = float(remain_amount)
             anvil.server.call('loan_text', None)
             sm = self.manager
             wallet_screen = LastScreenWallet(name='LastScreenWallet')
             sm.add_widget(wallet_screen)
             sm.current = 'LastScreenWallet'
-            print(next_payment_date)
-            print(account_num[index1])
-            print(datetime.today())
-            print(schedule_date[index])
-            print(emi_number)
-            print(borrower_email[index])
-            print(cos_id1[index])
-            print(lender_customer_id[index])
-            print(lender_email[index])
 
         elif wallet_amount[b_index] < float(total):
             self.show_success_dialog2(f"Insufficient Balance Please Deposit {float(total)}")
@@ -735,6 +956,17 @@ class BorrowerDuesScreen(Screen):
             sm.add_widget(wallet_screen)
             # Switch to the LenderWalletScreen
             sm.current = 'WalletScreen'
+    def go_to_part_payment(self):
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        profile_screen = PartPayment(name='PartPayment')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(profile_screen)
+
+        # Switch to the LoginScreen
+        sm.current = 'PartPayment'
 
     def show_success_dialog(self, text):
         dialog = MDDialog(
@@ -801,7 +1033,8 @@ class LastScreenWallet(Screen):
     def go_back_home(self):
         self.manager.current = 'DashboardScreen'
 
-
+class PartPayment(Screen):
+    pass
 class DuesScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

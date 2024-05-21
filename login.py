@@ -141,7 +141,7 @@ KV = """
             MDRaisedButton:
                 text: "Login"
                 on_release: root.go_to_dashboard()
-                md_bg_color:6/255, 143/255, 236/255, 1
+                md_bg_color:0.043, 0.145, 0.278, 1
                 pos_hint: {'right': 1, 'y': 0.5}
                 size_hint: 1, None
                 height: "50dp"

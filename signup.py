@@ -161,7 +161,7 @@ KV = """
             MDRaisedButton:
                 text: "Signup"
                 on_release: root.go_to_login()
-                md_bg_color: 6/255, 143/255, 236/255, 1
+                md_bg_color: 0.043, 0.145, 0.278, 1
                 size_hint: 1, None
                 height: "50dp"
                 font_name: "Roboto-Bold"

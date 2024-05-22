@@ -1167,7 +1167,16 @@ class ViewLoansProfileScreen(Screen):
     def go_back(self):
         # Navigate to the previous screen with a slide transition
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'ViewLoansRequest'
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        under_process = ViewLoansRequest(name='ViewLoansRequest')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(under_process)
+
+        # Switch to the LoginScreen
+        sm.current = 'ViewLoansRequest'
 
     def show_validation_error(self, error_message):
         dialog = MDDialog(
@@ -1296,7 +1305,16 @@ class ViewLoansProfileScreenLR(Screen):
         return False  # Continue handling the event
 
     def on_back_button_press(self):
-        self.manager.current = 'ViewLoansRequest'
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        under_process = ViewLoansRequest(name='ViewLoansRequest')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(under_process)
+
+        # Switch to the LoginScreen
+        sm.current = 'ViewLoansRequest'
 
     '''def go_back(self):
         # Navigate to the previous screen with a slide transition
@@ -1450,7 +1468,16 @@ class ViewLoansProfileScreenLR(Screen):
         elif minutes_difference > 30:
             self.show_validation_error(f"Time Out You Must Finish Before 30 Minutes")
             data[index]['loan_updated_status'] = 'lost opportunities'
-            self.manager.current = 'ViewLoansRequest'
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            under_process = ViewLoansRequest(name='ViewLoansRequest')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(under_process)
+
+            # Switch to the LoginScreen
+            sm.current = 'ViewLoansRequest'
             return
 
     def show_success_dialog(self, text):
@@ -1514,7 +1541,16 @@ class ViewLoansProfileScreenLR(Screen):
     def open_dashboard_screen3(self, dialog):
 
         dialog.dismiss()
-        self.manager.current = 'ViewLoansRequest'
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        under_process = ViewLoansRequest(name='ViewLoansRequest')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(under_process)
+
+        # Switch to the LoginScreen
+        sm.current = 'ViewLoansRequest'
 
 
 class ViewLoansProfileScreenRL(Screen):
@@ -1523,7 +1559,16 @@ class ViewLoansProfileScreenRL(Screen):
         self.loan_id = None
 
     def on_back_button_press(self):
-        self.manager.current = 'ViewLoansRequest'
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        under_process = ViewLoansRequest(name='ViewLoansRequest')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(under_process)
+
+        # Switch to the LoginScreen
+        sm.current = 'ViewLoansRequest'
 
     def initialize_with_value(self, value, data):
         profile = app_tables.fin_user_profile.search()
@@ -1595,7 +1640,16 @@ class ViewLoansProfileScreenRL(Screen):
     def go_back(self):
         # Navigate to the previous screen with a slide transition
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'ViewLoansRequest'
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        under_process = ViewLoansRequest(name='ViewLoansRequest')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(under_process)
+
+        # Switch to the LoginScreen
+        sm.current = 'ViewLoansRequest'
 
 
 class MyScreenManager(ScreenManager):

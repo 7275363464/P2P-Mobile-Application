@@ -1344,7 +1344,10 @@ class EditScreen(Screen):
         self.manager.current = 'ProfileScreen'
 
     def on_back_button_press(self):
-        self.manager.current = 'ProfileScreen'
+        sm = self.manager
+        wallet_screen = ProfileScreen(name='ProfileScreen')
+        sm.add_widget(wallet_screen)
+        sm.current = 'ProfileScreen'
 
 
 class MyScreenManager(ScreenManager):

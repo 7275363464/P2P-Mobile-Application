@@ -16,19 +16,30 @@ from kivy.clock import mainthread
 from kivymd.uix.button import MDRectangleFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.filemanager import MDFileManager
+from kivymd.uix.list import ThreeLineAvatarIconListItem, IconLeftWidget
+
 from lender_lost_opportunities import LostOpportunitiesScreen
 from lender_view_transaction_history import TransactionLH
-from lender_view_loans import ViewLoansScreen
-from lender_view_loans_request import ViewLoansRequest
-from lender_view_extension_request import NewExtension
-from lender_foreclosure_request import DashboardScreenLF
-from lender_today_due import TodayDuesTD
-from kivy.uix.modalview import ModalView
-from kivymd.uix.spinner import MDSpinner
-from kivy.clock import Clock
-from lender_view_loans_request import ViewLoansProfileScreen
+from datetime import datetime
+
+from anvil.tables import app_tables
+from kivy.core.window import Window
+from kivy.metrics import dp
+from kivy.uix.button import Button
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.lang import Builder
+from kivymd.app import MDApp
+from kivymd.uix.button import MDRaisedButton, MDFlatButton, MDRoundFlatButton, MDRectangleFlatButton
+from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
+import anvil
+from kivymd.uix.dialog import MDDialog
+from lender_view_transaction_history import TransactionLH
+from lender_view_loans_request import ViewLoansProfileScreen, ViewLoansProfileScreenLR, ViewLoansProfileScreenRL
 from kivy.animation import Animation
 from kivymd.uix.label import MDLabel
+from kivy.animation import Animation
+from kivy.clock import Clock
+from kivy.uix.modalview import ModalView
 
 if platform == 'android':
     from kivy.uix.button import Button
@@ -48,7 +59,7 @@ user_helpers1 = """
 
 <LenderDashboard>
     MDBottomNavigation:
-        panel_color: 0.043, 0.145, 0.278, 1
+        panel_color: 1,1,1,1
         selected_color_background: "white"
         text_color_active: "white"
         MDBottomNavigationItem:
@@ -141,7 +152,7 @@ user_helpers1 = """
                                                         width: 0.1
                                                         rectangle: (self.x, self.y, self.width, self.height)
                                                 MDLabel:
-                                                    id: total_amount
+                                                    id: total_amount1
                                                     text: "Rs. 50,000"
                                                     size_hint_y: None
                                                     height: dp(30)
@@ -164,6 +175,7 @@ user_helpers1 = """
                                                     pos_hint: {'center_x': 0.5}
                                                     theme_text_color: "Custom"
                                                     text_color: "white"
+                                                    on_release: root.go_to_wallet()
                                             MDBoxLayout:
                                                 orientation: 'vertical'
                                                 size_hint_y: None
@@ -186,7 +198,7 @@ user_helpers1 = """
                                                     font_size: dp(20)
 
                                                 MDLabel:
-                                                    text: "My Returns/ Commission"
+                                                    text: "My Returns"
                                                     size_hint_y: None
                                                     height: dp(30)
                                                     halign: 'center'
@@ -233,6 +245,7 @@ user_helpers1 = """
                                                     pos_hint: {'center_x': 0.5}
                                                     theme_text_color: "Custom"
                                                     text_color: "white"
+                                                    on_release: root.view_loan_request()
 
                                         MDLabel:
                                             text: ""
@@ -287,6 +300,8 @@ user_helpers1 = """
                                                 MDIcon:
                                                     icon: "speedometer"
                                                     pos_hint: {'center_x': 0.5}
+                                                    theme_text_color: "Custom"
+                                                    text_color: "#23639e"
                                                 MDBoxLayout:
                                                     orientation: 'vertical'
                                                     spacing: dp(30)
@@ -313,6 +328,8 @@ user_helpers1 = """
                                                 MDIcon:
                                                     icon: "account-tie"
                                                     pos_hint: {'center_x': 0.5}
+                                                    theme_text_color: "Custom"
+                                                    text_color: "#23639e"
                                                 MDBoxLayout:
                                                     orientation: 'vertical'
                                                     spacing: dp(30)
@@ -339,6 +356,8 @@ user_helpers1 = """
                                                 MDIcon:
                                                     icon: "package-variant-plus"
                                                     pos_hint: {'center_x': 0.5}
+                                                    theme_text_color: "Custom"
+                                                    text_color: "#23639e"
                                                 MDBoxLayout:
                                                     orientation: 'vertical'
                                                     spacing: dp(30)
@@ -546,47 +565,55 @@ user_helpers1 = """
                             MDNavigationDrawerItem
                                 icon: "calendar-check-outline"
                                 text: "Today's Dues"
+                                icon_color: "#23639e"
                                 on_release: root.lender_today_due()
                             MDNavigationDrawerDivider:
 
                             MDNavigationDrawerItem
                                 icon: "bank"
                                 text: "View Loan"
+                                icon_color: "#23639e"
                                 on_release: root.view_loanscreen()
                             MDNavigationDrawerDivider:
 
                             MDNavigationDrawerItem
                                 icon: "file-document"
                                 text: "View Loan Requests"
+                                icon_color: "#23639e"
                                 on_release: root.view_loan_request()
                             MDNavigationDrawerDivider:
 
                             MDNavigationDrawerItem
                                 icon: "plus-circle"
                                 text: "View Loans Extensions"
+                                icon_color: "#23639e"
                                 on_release: root.newloan_extension()
                             MDNavigationDrawerDivider:
 
                             MDNavigationDrawerItem
                                 icon: "home-minus"
                                 text: "View Loans Foreclosure"
+                                icon_color: "#23639e"
                                 on_release: root.view_loan_foreclose()
                             MDNavigationDrawerDivider:
 
                             MDNavigationDrawerItem
                                 icon: "eye-outline"
                                 text: "View Lost Opportunities"
+                                icon_color: "#23639e"
                                 on_release: root.view_lost_opportunities()
                             MDNavigationDrawerDivider:
 
                             MDNavigationDrawerItem
                                 icon: "history"
                                 text: "View Transactions History"
+                                icon_color: "#23639e"
                                 on_release: root.view_transaction_history()
                             MDNavigationDrawerDivider:
                             MDNavigationDrawerItem
                                 icon: "logout"
                                 text: "Logout"
+                                icon_color: "#23639e"
                                 on_release: root.go_to_main_screen()
                             MDNavigationDrawerDivider:
 
@@ -594,28 +621,307 @@ user_helpers1 = """
             name: 'screen 2'
             text: 'Wallet'
             icon: 'wallet'
+            on_tab_press: root.wallet()
+            MDTopAppBar:
+                title: "GP2P-Wallet"
+                elevation: 2
+                pos_hint: {'top': 1}
+                left_action_items: [['arrow-left',lambda x: root.go_back()]]
+                right_action_items: [['refresh', lambda x: root.refresh1()]]
+                title_align: 'center'
+                md_bg_color: 0.043, 0.145, 0.278, 1
+        
+            MDBoxLayout:
+                id: box1
+                orientation: 'vertical'
+                spacing: dp(30)
+                padding: dp(30)
+                MDLabel:
+                    text: 'Available Balance'
+                    halign: 'center'
+                    size_hint_y: None
+                    height: dp(30)
+        
+                GridLayout:
+                    cols: 2
+                    spacing: dp(20)
+                    pos_hint: {'center_x': 0.7, 'center_y':0.3}
+                    size_hint_y: None
+                    height: dp(30)
+                    MDIcon:
+                        icon: 'currency-inr'
+                        halign: 'center'
+                    MDLabel:
+                        id: total_amount
+                        halign: 'left'
+                        font_size: dp(25)
+                        bold: True
+        
+                GridLayout:
+                    cols: 2
+                    spacing: dp(20)
+                    size_hint_y: None
+                    height: dp(50)
+                    pos_hint: {'center_x': 0.6}
+                    MDRectangleFlatIconButton:
+                        text: "Deposit"
+                        id: deposit_button_grid
+                        line_color: 0, 0, 0, 0
+                        icon: "cash"
+                        text_color: 0, 0, 0, 1
+                        md_bg_color:1,1,1,1
+                        font_name:"Roboto-Bold"
+                        on_release: root.highlight_button('deposit')
+                    MDRectangleFlatIconButton:
+                        id: withdraw_button_grid
+                        text: "Withdraw"
+                        icon: "cash"
+                        line_color: 0, 0, 0, 0
+                        text_color: 0, 0, 0, 1
+                        md_bg_color: 1,1,1,1
+                        font_name:"Roboto-Bold"
+                        on_release: root.highlight_button('withdraw')
+                MDLabel:
+                    text: 'Enter Amount'
+                    bold: True
+                    size_hint_y: None
+                    height: dp(5)
+                MDTextField:
+                    id: enter_amount
+                    multiline: False
+                    helper_text: 'Enter valid Amount'
+                    helper_text_mode: 'on_focus'
+                    size_hint_y:None
+                    font_size: "15dp"
+                    theme_text_color: "Custom"
+                    hint_text_color: 0, 0, 0, 1
+                    hint_text_color_normal: "black"
+                    text_color_normal: "black"
+                    helper_text_color_normal: "black"
+                    on_touch_down: root.on_amount_touch_down()
+        
+                MDFlatButton:
+                    text: "View Transaction History >"
+                    theme_text_color: "Custom"
+                    text_color: "black"
+                    pos_hint: {'center_x': 0.5}
+                    padding: dp(10)
+                    md_bg_color: 140/255, 140/255, 140/255, 1
+                    on_release: root.view_transaction_history()
+                GridLayout:
+                    id: box
+                    cols: 1
+                    spacing: dp(20)
+                    size_hint_y: None
+                    height: dp(50)
+                    pos_hint: {'center_x': 0.65}
+        
+        
+                MDRoundFlatButton:
+                    text: "Submit"
+                    md_bg_color: 0.043, 0.145, 0.278, 1
+                    theme_text_color: 'Custom'
+                    font_name: "Roboto-Bold" 
+                    text_color: 1, 1, 1, 1
+                    size_hint: 0.7, None
+                    height: "40dp"
+                    pos_hint: {'center_x': 0.5}
+                    on_release: root.submit()
+                MDLabel:
+                    text:''
+                    size_hint_y:None
+                    height:dp(20)
 
-            MDLabel:
-                text: 'Wallet'
-                halign: 'center'
 
         MDBottomNavigationItem:
             name: 'screen 4'
             text: 'Loans'
             icon: 'cash'
-
-            MDLabel:
-                text: 'Loans'
-                halign: 'center'
+            text_color_normal: '#4c594f'
+            text_color_active: 1, 0, 0, 1
+            BoxLayout:
+                orientation: 'vertical'
+                MDTopAppBar:
+                    title: "Loan Request"
+                    elevation: 3
+                    left_action_items: [['arrow-left', lambda x: root.go_back()]]
+                    right_action_items: [['refresh', lambda x: root.refresh2()]]
+                    md_bg_color: 0.043, 0.145, 0.278, 1
+                    title_align: 'left'
+                MDScrollView:
+        
+                    MDList:
+                        id: container
 
         MDBottomNavigationItem:
             name: 'screen 3'
             text: 'Account'
             icon: 'account'
-
-            MDLabel:
-                text: 'Account'
-                halign: 'center'       
+            icon_color: '#4c594f'
+            font_name: "Roboto-Bold"
+            on_tab_press: root.refresh_profile_data()
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: 1, 1
+                pos_hint: {'center_x':0.5, 'center_y':0.5}
+                MDTopAppBar:
+                    title: "View Profile"
+                    elevation: 2
+                    pos_hint: {'top': 1}
+                    left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+                    right_action_items: [['refresh', lambda x: root.refresh()]]
+                    title_align: 'center'
+                    md_bg_color: 0.043, 0.145, 0.278, 1
+        
+                ScrollView:  # Add ScrollView here
+                    do_scroll_x: False
+                    BoxLayout:
+                        orientation: "vertical"
+                        padding:dp(10)
+                        spacing:dp(25)
+                        size_hint_y: None
+                        height: self.minimum_height
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: None
+                            height: self.minimum_height
+                            padding: dp(20)
+                            BoxLayout:
+                                id: box2
+                                orientation: 'vertical'
+                                size_hint_y: None
+                                height: dp(500)
+                                padding: [10, 0,0,0]
+                                canvas.before:
+                                    Color:
+                                        rgba: 0, 0, 0, 1  # Blue color for the box
+                                    Line:
+                                        rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
+        
+                                MDGridLayout:
+                                    cols: 2
+                                    spacing: dp(10)
+                                    padding: dp(10)
+                                    MDLabel:
+                                        text: "Name:" 
+                                        size_hint_y:None
+                                        height:dp(50)
+                                        bold: True
+                                        halign: "left"
+                                    MDLabel:
+                                        id: name        
+                                        text: "" 
+                                        size_hint_y:None
+                                        height:dp(50)
+                                        halign: "left"
+                                MDGridLayout:
+                                    cols: 2
+                                    spacing: dp(10)
+                                    padding: dp(10)
+                                    MDLabel:
+                                        text: "Email:" 
+                                        size_hint_y:None
+                                        height:dp(50)
+                                        bold: True
+                                        halign: "left"
+                                    MDLabel:
+                                        id: email        
+                                        text: "" 
+                                        size_hint_y:None
+                                        height:dp(50)
+                                        halign: "left"
+        
+                                MDGridLayout:
+                                    cols: 2
+                                    spacing: dp(10)
+                                    padding: dp(10)
+                                    MDLabel:
+                                        text: "Mobile No::" 
+                                        size_hint_y:None
+                                        height:dp(50)
+                                        bold: True
+                                        halign: "left"
+                                    MDLabel:
+                                        id: mobile_no        
+                                        text: "" 
+                                        size_hint_y:None
+                                        height:dp(50)
+                                        halign: "left"
+                                MDGridLayout:
+                                    cols: 2
+                                    spacing: dp(10)
+                                    padding: dp(10)
+                                    MDLabel:
+                                        text: "Date Of Birth::" 
+                                        size_hint_y:None
+                                        height:dp(50)
+                                        bold: True
+                                        halign: "left"
+                                    MDLabel:
+                                        id: dob        
+                                        text: "" 
+                                        size_hint_y:None
+                                        height:dp(50)
+                                        halign: "left"
+                                MDGridLayout:
+                                    cols: 2
+                                    spacing: dp(10)
+                                    padding: dp(10)
+                                    MDLabel:
+                                        text: "City:" 
+                                        size_hint_y:None
+                                        height:dp(50)
+                                        bold: True
+                                        halign: "left"
+                                    MDLabel:
+                                        id: city        
+                                        text: "" 
+                                        size_hint_y:None
+                                        height:dp(50)
+                                        halign: "left"
+                                MDGridLayout:
+                                    cols: 2
+                                    spacing: dp(10)
+                                    padding: dp(10)
+                                    MDLabel:
+                                        text: "Gender:" 
+                                        size_hint_y:None
+                                        height:dp(50)
+                                        bold: True
+                                        halign: "left"
+                                    MDLabel:
+                                        id: gender        
+                                        text: "" 
+                                        size_hint_y:None
+                                        height:dp(50)
+                                        halign: "left"
+                                MDGridLayout:
+                                    cols: 2
+                                    spacing: dp(10)
+                                    padding: dp(10)
+                                    MDLabel:
+                                        text: "Marrital Status:" 
+                                        size_hint_y:None
+                                        height:dp(50)
+                                        bold: True
+                                        halign: "left"
+                                    MDLabel:
+                                        id: marrital_status        
+                                        text: "" 
+                                        size_hint_y:None
+                                        height:dp(50)
+                                        halign: "left"
+        
+                                MDFloatLayout:
+                                    MDRaisedButton:
+                                        text: "Edit Profile"
+                                        md_bg_color: 0.043, 0.145, 0.278, 1
+                                        font_name: "Roboto-Bold"
+                                        size_hint: 0.4, None
+                                        height: dp(50)
+                                        on_release:root.on_edit()
+                                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                        font_size:dp(15)     
 <ViewProfileScreen>
     BoxLayout:
         orientation: 'vertical'
@@ -942,6 +1248,352 @@ cursor = conn.cursor()
 
 class LenderDashboard(Screen):
     Builder.load_string(user_helpers1)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        data = app_tables.fin_loan_details.search()
+        profile = app_tables.fin_user_profile.search()
+        customer_id = []
+        loan_id = []
+        borrower_name = []
+        loan_status = []
+        product_name = []
+        s = 0
+        for i in data:
+            s += 1
+            customer_id.append(i['borrower_customer_id'])
+            loan_id.append(i['loan_id'])
+            borrower_name.append(i['borrower_full_name'])
+            loan_status.append(i['loan_updated_status'])
+            product_name.append(i['product_name'])
+
+        profile_customer_id = []
+        profile_mobile_number = []
+        for i in profile:
+            profile_customer_id.append(i['customer_id'])
+            profile_mobile_number.append(i['mobile'])
+        c = -1
+        index_list = []
+        for i in range(s):
+            c += 1
+            if loan_status[c] == 'under process' or loan_status[c] == 'approved':
+                index_list.append(c)
+
+        b = 1
+        k = -1
+        for i in index_list:
+            b += 1
+            k += 1
+            if customer_id[i] in profile_customer_id:
+                number = profile_customer_id.index(customer_id[i])
+            else:
+                number = 0
+            item = ThreeLineAvatarIconListItem(
+
+                IconLeftWidget(
+                    icon="card-account-details-outline"
+                ),
+                text=f"Borrower Name : {borrower_name[i]}",
+                secondary_text=f"Borrower Number : {profile_mobile_number[number]}",
+                tertiary_text=f"Product Name : {product_name[i]}",
+                text_color=(0, 0, 0, 1),  # Black color
+                theme_text_color='Custom',
+                secondary_text_color=(0, 0, 0, 1),
+                secondary_theme_text_color='Custom',
+                tertiary_text_color=(0, 0, 0, 1),
+                tertiary_theme_text_color='Custom'
+            )
+            item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
+            self.ids.container.add_widget(item)
+
+    def icon_button_clicked(self, instance, loan_id):
+        # Handle the on_release event here
+        print(loan_id)
+        data = app_tables.fin_loan_details.search()  # Fetch data here
+        loan_status = None
+        for loan in data:
+            if loan['loan_id'] == loan_id:
+                loan_status = loan['loan_updated_status']
+                break
+
+        if loan_status == 'approved':
+            # Open the screen for approved loans
+
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            approved = ViewLoansProfileScreenLR(name='ViewLoansProfileScreenLR')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(approved)
+
+            # Switch to the LoginScreen
+            sm.current = 'ViewLoansProfileScreenLR'
+            self.manager.get_screen('ViewLoansProfileScreenLR').initialize_with_value(loan_id, data)
+
+        elif loan_status == 'under process':
+            # Open the screen for pending loans
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            under_process = ViewLoansProfileScreen(name='ViewLoansProfileScreen')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(under_process)
+
+            # Switch to the LoginScreen
+            sm.current = 'ViewLoansProfileScreen'
+            self.manager.get_screen('ViewLoansProfileScreen').initialize_with_value(loan_id, data)
+        elif loan_status == 'rejected':
+            # Open the screen for pending loans
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            rejected = ViewLoansProfileScreenRL(name='ViewLoansProfileScreenRL')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(rejected)
+
+            # Switch to the LoginScreen
+            sm.current = 'ViewLoansProfileScreenRL'
+            self.manager.get_screen('ViewLoansProfileScreenRL').initialize_with_value(loan_id, data)
+        else:
+            # Handle other loan statuses or show an error message
+            pass
+
+    def refresh2(self):
+        self.__init__()
+    def wallet(self):
+        self.type = None
+        data = app_tables.fin_wallet.search()
+        email = self.email()
+        w_email = []
+        w_id = []
+        w_amount = []
+        for i in data:
+            w_email.append(i['user_email'])
+            w_id.append(i['wallet_id'])
+            w_amount.append(i['wallet_amount'])
+
+        index = 0
+        if email in w_email:
+            index = w_email.index(email)
+            self.ids.total_amount.text = str(round(w_amount[index], 2))
+        else:
+            print("no email found")
+
+    def on_amount_touch_down(self):
+        self.ids.enter_amount.input_type = 'number'
+    def view_transaction_history(self):
+        sm = self.manager
+        # Create a new instance of the LenderWalletScreen
+        wallet_screen = TransactionLH(name='TransactionLH')
+        # Add the LenderWalletScreen to the existing ScreenManager
+        sm.add_widget(wallet_screen)
+        # Switch to the LenderWalletScreen
+        sm.current = 'TransactionLH'
+
+    def disbrsed_loan(self, instance):
+        print("amount paid")
+        view_loan_text = anvil.server.call("view_loan_text")
+        if view_loan_text == "view_loan_text":
+            self.manager.get_screen('ViewUnderScreenLR').paynow()
+        else:
+            self.manager.get_screen('ViewLoansProfileScreenLR').paynow()
+
+    def highlight_button(self, button_type):
+        if button_type == 'deposit':
+            self.ids.deposit_button_grid.md_bg_color = 0, 0, 0, 1
+            self.ids.withdraw_button_grid.md_bg_color = 1, 1, 1, 1
+            self.ids.deposit_button_grid.text_color = 1, 1, 1, 1
+            self.ids.withdraw_button_grid.text_color = 0, 0, 0, 1
+            self.type = 'deposit'
+        elif button_type == 'withdraw':
+            self.ids.deposit_button_grid.md_bg_color = 1, 1, 1, 1
+            self.ids.withdraw_button_grid.md_bg_color = 0, 0, 0, 1
+            self.ids.withdraw_button_grid.text_color = 1, 1, 1, 1
+            self.ids.deposit_button_grid.text_color = 0, 0, 0, 1
+            self.type = 'withdraw'
+
+
+
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=self.on_back_button)
+
+    def on_back_button(self, instance, key, scancode, codepoint, modifier):
+        if key == 27:
+            self.go_back()
+            return True
+        return False
+
+    def go_back(self):
+        self.manager.transition = SlideTransition(direction='right')
+        self.manager.current = 'LenderDashboard'
+
+    def show_success_dialog(self, text):
+        dialog = MDDialog(
+            text=text,
+            size_hint=(0.8, 0.3),
+            buttons=[
+                MDRaisedButton(
+                    text="OK",
+                    on_release=lambda *args: self.open_dashboard_screen(dialog),
+                    theme_text_color="Custom",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                )
+            ]
+        )
+        dialog.open()
+
+    def open_dashboard_screen(self, dialog):
+        dialog.dismiss()
+        self.manager.current = 'LenderWalletScreen'
+
+    def submit(self):
+        enter_amount = self.ids.enter_amount.text
+        if self.type == None:
+            self.show_validation_error3('Please Select Transaction Type')
+        elif self.ids.enter_amount.text == '' and not self.ids.enter_amount.text.isdigit():
+            self.show_validation_error3('Enter Valid Amount')
+        elif self.type == 'deposit':
+            data = app_tables.fin_wallet.search()
+            transaction = app_tables.fin_wallet_transactions.search()
+            email = self.email()
+            w_email = []
+            w_id = []
+            w_amount = []
+            w_customer_id = []
+            for i in data:
+                w_email.append(i['user_email'])
+                w_id.append(i['wallet_id'])
+                w_amount.append(i['wallet_amount'])
+                w_customer_id.append(i['customer_id'])
+
+            t_id = []
+            for i in transaction:
+                t_id.append(i['transaction_id'])
+
+            if len(t_id) >= 1:
+                transaction_id = 'TA' + str(int(t_id[-1][2:]) + 1).zfill(4)
+            else:
+                transaction_id = 'TA0001'
+
+            transaction_date_time = datetime.today()
+            if email in w_email:
+                index = w_email.index(email)
+                data[index]['wallet_amount'] = int(enter_amount) + w_amount[index]
+                self.show_validation_error(f'Amount {enter_amount} Deposited Successfully')
+                self.ids.enter_amount.text = ''
+                app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                           customer_id=w_customer_id[index], user_email=email,
+                                                           transaction_type=self.type, amount=int(enter_amount),
+                                                           status='success', wallet_id=w_id[index],
+                                                           transaction_time_stamp=transaction_date_time)
+            else:
+                print("no email found")
+            self.refresh1()
+
+        elif self.type == 'withdraw':
+            data = app_tables.fin_wallet.search()
+            transaction = app_tables.fin_wallet_transactions.search()
+            email = self.email()
+            w_email = []
+            w_id = []
+            w_amount = []
+            w_customer_id = []
+            for i in data:
+                w_email.append(i['user_email'])
+                w_id.append(i['wallet_id'])
+                w_amount.append(i['wallet_amount'])
+                w_customer_id.append(i['customer_id'])
+
+            t_id = []
+            for i in transaction:
+                t_id.append(i['transaction_id'])
+
+            if len(t_id) >= 1:
+                transaction_id = 'TA' + str(int(t_id[-1][2:]) + 1).zfill(4)
+            else:
+                transaction_id = 'TA0001'
+
+            transaction_date_time = datetime.today()
+
+            if email in w_email:
+                index = w_email.index(email)
+                if w_amount[index] >= int(self.ids.enter_amount.text):
+                    data[index]['wallet_amount'] = w_amount[index] - int(self.ids.enter_amount.text)
+                    self.show_validation_error(
+                        f'Amount {self.ids.enter_amount.text} Withdraw Successfully')
+                    self.ids.enter_amount.text = ''
+                    app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                               customer_id=w_customer_id[index], user_email=email,
+                                                               transaction_type=self.type, amount=int(enter_amount),
+                                                               status='success', wallet_id=w_id[index],
+                                                               transaction_time_stamp=transaction_date_time)
+                else:
+                    self.show_validation_error2(
+                        f'Insufficient Amount {self.ids.enter_amount.text} Please Deposit Required Money')
+                    app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                               customer_id=w_customer_id[index], user_email=email,
+                                                               transaction_type=self.type, amount=int(enter_amount),
+                                                               status='fail', wallet_id=w_id[index],
+                                                               transaction_time_stamp=transaction_date_time)
+                    self.ids.enter_amount.text = ''
+            else:
+                print("no email found")
+        self.refresh1()
+
+    def refresh1(self):
+        self.wallet()
+
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Transaction Success",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
+    def show_validation_error2(self, error_message):
+        dialog = MDDialog(
+            title="Transaction Failure",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
+    def show_validation_error3(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+    def email(self):
+        return anvil.server.call('another_method')
 
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
@@ -1059,7 +1711,7 @@ class LenderDashboard(Screen):
         index = 0
         if log_email in w_email:
             index = w_email.index(log_email)
-            self.ids.total_amount.text = "Rs. " + str(round(w_amount[index], 2))
+            self.ids.total_amount1.text = "Rs. " + str(round(w_amount[index], 2))
         else:
             print("no email found")
 
@@ -1161,12 +1813,133 @@ class LenderDashboard(Screen):
     def go_back(self):
         # Navigate to the previous screen with a slide transition
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'LenderLanding'
+        self.manager.current = 'LenderDashboard'
 
         # Replace with the actual name of your previous screen
 
     def homepage(self):
         self.manager.current = 'MainScreen'
+
+
+    def refresh_profile_data(self):
+        email = self.get_email()
+        data = app_tables.fin_user_profile.search(email_user=email)
+        name = []
+        email1 = []
+        mobile_no = []
+        dob = []
+        city = []
+        gender = []
+        marrital_status = []
+        for row in data:
+            name.append(row['full_name'])
+            email1.append(row['email_user'])
+            mobile_no.append(row['mobile'])
+            dob.append(row['date_of_birth'])
+            city.append(row['city'])
+            gender.append(row['gender'])
+            marrital_status.append(row['marital_status'])
+        if email in email1:
+            index = email1.index(email)
+            self.ids.name.text = str(name[index])
+            self.ids.email.text = str(email1[index])
+            self.ids.mobile_no.text = str(mobile_no[index])
+            self.ids.dob.text = str(dob[index])
+            self.ids.city.text = str(city[index])
+            self.ids.gender.text = str(gender[index])
+            self.ids.marrital_status.text = str(marrital_status[index])
+
+    def get_email(self):
+        # Make a call to the Anvil server function
+        # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
+        return anvil.server.call('another_method')
+
+    def get_table(self):
+        # Make a call to the Anvil server function
+        # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
+        return anvil.server.call('profile')
+
+    def refresh(self):
+        pass
+
+    def check_and_open_file_manager1(self):
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
+
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id):
+        if platform == 'android':
+            if check_permission(Permission.READ_MEDIA_IMAGES):
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id)
+            else:
+                self.request_media_images_permission()
+        else:
+            # For non-Android platforms, directly open the file manager
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id)
+
+    def on_edit(self):
+        self.manager.add_widget(Factory.EditScreen(name='ViewEditScreen'))
+        self.manager.current = 'ViewEditScreen'
+
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            # For other platforms, show the file manager from the root directory
+            self.file_manager.show('/')
+
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
+        self.ids[image_id].source = path  # Set the source of the Image widget
+        self.file_manager.close()
+
+    def exit_manager(self, *args):
+        self.file_manager.close()
+
+    def request_media_images_permission(self):
+        request_permissions([Permission.READ_MEDIA_IMAGES], self.permission_callback)
+
+    def permission_callback(self, permissions, grants):
+        if all(grants.values()):
+            # Permission granted, open the file manager
+            self.file_manager_open()
+        else:
+            # Permission denied, show a modal view
+            self.show_permission_denied()
+
+    def show_permission_denied(self):
+        view = ModalView()
+        view.add_widget(Button(
+            text='Permission NOT granted.\n\n' +
+                 'Tap to quit app.\n\n\n' +
+                 'If you selected "Don\'t Allow",\n' +
+                 'enable permission with App Settings.',
+            on_press=self.bye)
+        )
+        view.open()
+
+
+
+    def on_pre_leave(self):
+        # Unbind the back button event when leaving the screen
+        Window.unbind(on_keyboard=self.on_back_button)
+
+    def on_back_button(self, instance, key, scancode, codepoint, modifier):
+        # Handle the back button event
+        if key == 27:  # 27 is the keycode for the hardware back button on Android
+            self.on_back_button_press()
+            return True  # Consume the event, preventing further handling
+        return False  # Continue handling the event
+
+    def go_back(self):
+        # Navigate to the previous screen with a slide transition
+        self.manager.transition = SlideTransition(direction='right')
+        self.manager.current = 'LenderDashboard'  # Replace with the actual name of your previous screen
+
+    def on_back_button_press(self):
+        self.manager.current = 'LenderDashboard'
 
     def go_to_main_screen(self):
         # Clear user data
@@ -1552,9 +2325,7 @@ class ViewProfileScreen(Screen):
         )
         view.open()
 
-    def on_pre_enter(self):
-        # Bind the back button event to the on_back_button method
-        Window.bind(on_keyboard=self.on_back_button)
+
 
     def on_pre_leave(self):
         # Unbind the back button event when leaving the screen
@@ -1770,8 +2541,7 @@ class ViewEditScreen(Screen):
         )
         view.open()
 
-    def on_pre_enter(self):
-        Window.bind(on_keyboard=self.on_back_button)
+
 
     def on_pre_leave(self):
         Window.unbind(on_keyboard=self.on_back_button)

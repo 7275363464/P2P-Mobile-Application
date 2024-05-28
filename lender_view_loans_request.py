@@ -955,7 +955,7 @@ class ViewLoansProfileScreen(Screen):
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
-            ascend_score.append(i['bessem_value'])
+            ascend_score.append(i['ascend_value'])
         customer_id = []
         loan_id = []
         tenure = []
@@ -1246,7 +1246,7 @@ class ViewLoansProfileScreenLR(Screen):
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
-            ascend_score.append(i['bessem_value'])
+            ascend_score.append(i['ascend_value'])
         customer_id = []
         loan_id = []
         tenure = []
@@ -1579,7 +1579,7 @@ class ViewLoansProfileScreenRL(Screen):
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
-            ascend_score.append(i['bessem_value'])
+            ascend_score.append(i['ascend_value'])
         customer_id = []
         loan_id = []
         tenure = []

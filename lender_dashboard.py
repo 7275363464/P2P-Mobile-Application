@@ -17,6 +17,7 @@ from kivymd.uix.button import MDRectangleFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.list import ThreeLineAvatarIconListItem, IconLeftWidget
+from kivymd.uix.menu import MDDropdownMenu
 
 from lender_lost_opportunities import LostOpportunitiesScreen
 from lender_view_transaction_history import TransactionLH
@@ -40,6 +41,12 @@ from kivymd.uix.label import MDLabel
 from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.uix.modalview import ModalView
+from lender_view_loans import ViewLoansScreen, ViewClosedLoansScreen, ViewRejectedLoansScreen, OpenViewLoanScreen, \
+    ALlLoansScreen
+from lender_today_due import TodayDuesTD
+from lender_lost_opportunities import LostOpportunitiesScreen
+from lender_view_extension_request import NewExtension
+from lender_foreclosure_request import DashboardScreenLF
 
 if platform == 'android':
     from kivy.uix.button import Button
@@ -59,9 +66,10 @@ user_helpers1 = """
 
 <LenderDashboard>
     MDBottomNavigation:
-        panel_color: 1,1,1,1
-        selected_color_background: "white"
-        text_color_active: "white"
+        panel_color: '#F5F5F5'
+        selected_color_background: "#666666"
+        text_color_active: "#007BFF"
+        elevation: 10
         MDBottomNavigationItem:
             name: 'screen 1'
             text: 'Home'
@@ -84,23 +92,30 @@ user_helpers1 = """
                                     md_bg_color: 0.043, 0.145, 0.278, 1
                                     specific_text_color: "#ffffff"
                                     left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
-
+                                    right_action_items: [['bell', lambda x: root.notification()]]
 
                                 ScrollView:
                                     MDBoxLayout:
                                         orientation: 'vertical'
                                         padding: "10dp", "5dp", "10dp", "0dp"
                                         size_hint_y: None
-                                        height: dp(950)
+                                        height: dp(1050)
                                         spacing: dp(20)
                                         ThreeLineAvatarListItem:
                                             id: details
                                             text: "Welcome Sai Mamidala"
                                             secondary_text: "Joined Date: 22-03-12"
                                             tertiary_text: "Membership_type: Elite"
+                                            bg_color: '#F5F5F5'
+                                            theme_text_color: 'Custom'
+                                            secondary_theme_text_color: 'Custom'
+                                            tertiary_theme_text_color: 'Custom'
+                                            text_color: '#007BFF'
+                                            secondary_text_color: '#666666'
+                                            tertiary_text_color: '#666666'
                                             on_release: root.profile()
                                             ImageLeftWidget:
-                                                source: "icon1.jpg"
+
                                         GridLayout:
                                             cols: 2
                                             padding: dp(10)
@@ -109,12 +124,12 @@ user_helpers1 = """
                                                 orientation: 'vertical'
                                                 size_hint_y: None
                                                 height: self.minimum_height
-                                                md_bg_color: "#ABBAE3"
+                                                md_bg_color: "#AEDFF7"
                                                 canvas.before:
                                                     Color:
                                                         rgba: 0, 0, 0, 1
                                                     Line:
-                                                        width: 0.1
+                                                        width: 0.01
                                                         rectangle: (self.x, self.y, self.width, self.height)
                                                 MDLabel:
                                                     id: commitment
@@ -123,7 +138,7 @@ user_helpers1 = """
                                                     height: dp(30)
                                                     halign: 'center'
                                                     theme_text_color: "Custom"
-                                                    text_color: "white"
+                                                    text_color: "#333333"
                                                     font_name: "Roboto-Bold"
                                                     font_size: dp(20)
 
@@ -132,19 +147,21 @@ user_helpers1 = """
                                                     size_hint_y: None
                                                     height: dp(30)
                                                     halign: 'center'
+                                                    theme_text_color: "Custom"
+                                                    text_color: "#333333"
                                                     font_name: "Roboto-Bold"
                                                 MDFlatButton:
-                                                    text: "view all"
+                                                    text: "View All"
                                                     size_hint_y: None
                                                     height: dp(30)
                                                     pos_hint: {'center_x': 0.5}
                                                     theme_text_color: "Custom"
-                                                    text_color: "white"
+                                                    text_color: "#007BFF"
                                             MDBoxLayout:
                                                 orientation: 'vertical'
                                                 size_hint_y: None
                                                 height: self.minimum_height
-                                                md_bg_color: "#ABBAE3"
+                                                md_bg_color: "#AEDFF7"
                                                 canvas.before:
                                                     Color:
                                                         rgba: 0, 0, 0, 1
@@ -158,7 +175,7 @@ user_helpers1 = """
                                                     height: dp(30)
                                                     halign: 'center'
                                                     theme_text_color: "Custom"
-                                                    text_color: "white"
+                                                    text_color: "#333333"
                                                     font_name: "Roboto-Bold"
                                                     font_size: dp(20)
 
@@ -168,19 +185,21 @@ user_helpers1 = """
                                                     height: dp(30)
                                                     halign: 'center'
                                                     font_name: "Roboto-Bold"
+                                                    theme_text_color: "Custom"
+                                                    text_color: "#333333"
                                                 MDFlatButton:
-                                                    text: "view all"
+                                                    text: "View All"
                                                     size_hint_y: None
                                                     height: dp(30)
                                                     pos_hint: {'center_x': 0.5}
                                                     theme_text_color: "Custom"
-                                                    text_color: "white"
+                                                    text_color: "#007BFF"
                                                     on_release: root.go_to_wallet()
                                             MDBoxLayout:
                                                 orientation: 'vertical'
                                                 size_hint_y: None
                                                 height: self.minimum_height
-                                                md_bg_color: "#ABBAE3"
+                                                md_bg_color: "#AEDFF7"
                                                 canvas.before:
                                                     Color:
                                                         rgba: 0, 0, 0, 1
@@ -193,7 +212,7 @@ user_helpers1 = """
                                                     height: dp(30)
                                                     halign: 'center'
                                                     theme_text_color: "Custom"
-                                                    text_color: "white"
+                                                    text_color: "#333333"
                                                     font_name: "Roboto-Bold"
                                                     font_size: dp(20)
 
@@ -203,24 +222,27 @@ user_helpers1 = """
                                                     height: dp(30)
                                                     halign: 'center'
                                                     font_name: "Roboto-Bold"
+                                                    theme_text_color: "Custom"
+                                                    text_color: "#333333"
                                                 MDFlatButton:
-                                                    text: "view all"
+                                                    text: "View All"
                                                     size_hint_y: None
                                                     height: dp(30)
                                                     pos_hint: {'center_x': 0.5}
                                                     theme_text_color: "Custom"
-                                                    text_color: "white" 
+                                                    text_color: "#007BFF" 
                                             MDBoxLayout:
                                                 orientation: 'vertical'
                                                 size_hint_y: None
                                                 height: self.minimum_height
-                                                md_bg_color: "#ABBAE3"
+                                                md_bg_color: "#AEDFF7"
                                                 canvas.before:
                                                     Color:
                                                         rgba: 0, 0, 0, 1
                                                     Line:
                                                         width: 0.1
                                                         rectangle: (self.x, self.y, self.width, self.height)
+
                                                 MDLabel:
                                                     id: loan
                                                     text: "3"
@@ -228,7 +250,7 @@ user_helpers1 = """
                                                     height: dp(30)
                                                     halign: 'center'
                                                     theme_text_color: "Custom"
-                                                    text_color: "white"
+                                                    text_color: "#333333"
                                                     font_name: "Roboto-Bold"
                                                     font_size: dp(20)
 
@@ -238,13 +260,15 @@ user_helpers1 = """
                                                     height: dp(30)
                                                     halign: 'center'
                                                     font_name: "Roboto-Bold"
+                                                    theme_text_color: "Custom"
+                                                    text_color: "#333333"
                                                 MDFlatButton:
-                                                    text: "view all"
+                                                    text: "View All"
                                                     size_hint_y: None
                                                     height: dp(30)
                                                     pos_hint: {'center_x': 0.5}
                                                     theme_text_color: "Custom"
-                                                    text_color: "white"
+                                                    text_color: "#007BFF"
                                                     on_release: root.view_loan_request()
 
                                         MDLabel:
@@ -263,16 +287,46 @@ user_helpers1 = """
                                                     rgba: 0, 0, 0, 1  # Change color if needed
                                                 Line:
                                                     points: self.x, self.y, self.x + self.width, self.y
+                                        MDBoxLayout:
+                                            orientation: 'vertical'
+                                            spacing: dp(10)
+                                            BoxLayout:  
+                                                orientation: 'vertical'
+                                                size_hint_y: None
+                                                height: self.minimum_height
+                                                MDLabel:
+                                                    text: 'Borrower Listing'
+                                                    bold: True
+                                                    size_hint_y: None
+                                                    height: dp(20)
+                                                MDFloatLayout:
+                                                    MDTextField:
+                                                        id: search
+                                                        hint_text: "Search"
+                                                        pos_hint: {"center_x": 0.5, "top": 1}
+
+
+                                                    MDIconButton:
+                                                        id: button
+                                                        icon: 'magnify'
+                                                        pos_hint: {"right": 1, "top": 1}
+                                                        on_release: app.root.get_screen('LenderDashboard').menu.open()
+                                                        on_release: root.setup_menu()
+
+                                        MDLabel:
+                                            text: ''
+                                            size_hint_y: None
+                                            height: dp(30)
+
                                         GridLayout:
                                             cols: 3
                                             spacing: dp(10)
                                             size_hint_y: None
                                             height: dp(50)
                                             Image:
-                                                source: "icon1.jpg"
                                                 size_hint: None, None
                                                 size: "60dp", "60dp"
-                                            
+
                                             MDLabel:
                                                 id: borrower_name
                                                 text: "Mamidala sai"
@@ -283,7 +337,7 @@ user_helpers1 = """
                                                 text: "23years"
                                                 font_family: "Arial"
                                                 font_size: dp(10)
-                                            
+
                                         GridLayout:
                                             cols: 3
                                             spacing: dp(10)
@@ -335,7 +389,7 @@ user_helpers1 = """
                                                     spacing: dp(30)
                                                     padding:dp(20)
                                                     MDLabel:
-                                                        text: "Employment Type"
+                                                        text: "Profession Type"
                                                         font_size: dp(12)
                                                         halign: 'center'
                                                     MDLabel:
@@ -371,7 +425,7 @@ user_helpers1 = """
                                                         text: "TVS"
                                                         font_size:dp(16)
                                                         halign: 'center'
-                                                        
+
                                         MDLabel:
                                             text: ''
                                             size_hint_y: None
@@ -385,7 +439,7 @@ user_helpers1 = """
                                                 orientation: 'vertical'
                                                 size_hint_y: None
                                                 height: dp(70)
-                                                
+
                                                 canvas.before:
                                                     Color:
                                                         rgba: 0, 0, 0, 1
@@ -399,7 +453,7 @@ user_helpers1 = """
                                                     padding: dp(5)
 
                                                     Image:
-                                                        source: "icon1.jpg"
+                                                        source: "icon1.png"
                                                         size_hint: None, None
                                                         size: "60dp", "60dp"
                                                     MDBoxLayout:
@@ -429,7 +483,7 @@ user_helpers1 = """
                                                     padding: dp(5)
 
                                                     Image:
-                                                        source: "icon2.jpg"
+                                                        source: "icon2.png"
                                                         size_hint: None, None
                                                         size: "60dp", "60dp"
                                                     MDBoxLayout:
@@ -441,7 +495,7 @@ user_helpers1 = """
                                                             id:left
                                                             text: "Rs. 1,50,000"
                                                             font_size:dp(15)
-                                                            
+
                                         MDLabel:
                                             text: ""
                                             size_hint_y: None
@@ -524,16 +578,16 @@ user_helpers1 = """
                                                 icon: "currency-rupee"
                                                 text_color: "white"
                                                 font_name: "Roboto-Bold"
-                                                md_bg_color: 0, 0, 0, 1
+                                                md_bg_color: '#117d2e'
                                                 on_release: root.invest()
                                             MDFillRoundFlatIconButton:
                                                 text: "View More"
                                                 icon: "clipboard-text-outline"
                                                 font_name: "Roboto-Bold"
                                                 text_color: "white"
-                                                md_bg_color: 0, 0, 0, 1
+                                                md_bg_color: 0.043, 0.145, 0.278, 1
                                                 on_release: root.view_loan_request()
-                                            
+
                                         Widget:
                                             size_hint_y: None
                                             height: 5
@@ -542,8 +596,8 @@ user_helpers1 = """
                                                     rgba: 0, 0, 0, 1  # Change color if needed
                                                 Line:
                                                     points: self.x, self.y, self.x + self.width, self.y
-                                        
-                                        
+
+
                                         MDLabel:
                                             text: ""
                                         MDLabel:
@@ -571,7 +625,7 @@ user_helpers1 = """
 
                             MDNavigationDrawerItem
                                 icon: "bank"
-                                text: "View Loan"
+                                text: "View Loans"
                                 icon_color: "#23639e"
                                 on_release: root.view_loanscreen()
                             MDNavigationDrawerDivider:
@@ -630,7 +684,7 @@ user_helpers1 = """
                 right_action_items: [['refresh', lambda x: root.refresh1()]]
                 title_align: 'center'
                 md_bg_color: 0.043, 0.145, 0.278, 1
-        
+
             MDBoxLayout:
                 id: box1
                 orientation: 'vertical'
@@ -641,7 +695,7 @@ user_helpers1 = """
                     halign: 'center'
                     size_hint_y: None
                     height: dp(30)
-        
+
                 GridLayout:
                     cols: 2
                     spacing: dp(20)
@@ -656,7 +710,7 @@ user_helpers1 = """
                         halign: 'left'
                         font_size: dp(25)
                         bold: True
-        
+
                 GridLayout:
                     cols: 2
                     spacing: dp(20)
@@ -699,7 +753,7 @@ user_helpers1 = """
                     text_color_normal: "black"
                     helper_text_color_normal: "black"
                     on_touch_down: root.on_amount_touch_down()
-        
+
                 MDFlatButton:
                     text: "View Transaction History >"
                     theme_text_color: "Custom"
@@ -715,8 +769,8 @@ user_helpers1 = """
                     size_hint_y: None
                     height: dp(50)
                     pos_hint: {'center_x': 0.65}
-        
-        
+
+
                 MDRoundFlatButton:
                     text: "Submit"
                     md_bg_color: 0.043, 0.145, 0.278, 1
@@ -739,19 +793,133 @@ user_helpers1 = """
             icon: 'cash'
             text_color_normal: '#4c594f'
             text_color_active: 1, 0, 0, 1
-            BoxLayout:
-                orientation: 'vertical'
-                MDTopAppBar:
-                    title: "Loan Request"
-                    elevation: 3
-                    left_action_items: [['arrow-left', lambda x: root.go_back()]]
-                    right_action_items: [['refresh', lambda x: root.refresh2()]]
+            MDTopAppBar:
+                title: "View Loans"
+                elevation: 3
+                left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+                pos_hint: {'top': 1}
+                md_bg_color: 0.043, 0.145, 0.278, 1
+
+            MDGridLayout:
+                cols: 2
+                spacing: dp(15)
+                size_hint_y: None
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                height: self.minimum_height
+                width: self.minimum_width
+                size_hint_x: None
+
+                MDFlatButton:
+                    size_hint: None, None
+
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     md_bg_color: 0.043, 0.145, 0.278, 1
-                    title_align: 'left'
-                MDScrollView:
-        
-                    MDList:
-                        id: container
+
+                    size_hint_y: None
+                    height: dp(60)
+                    size_hint_x: None
+                    width: dp(110)
+                    on_release: root.go_to_open_loans()
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing:dp(10)
+                        MDLabel:
+                            text: "Open Loans"
+                            font_size:dp(14)
+                            bold:True
+                            theme_text_color: 'Custom'
+                            halign: "center"
+                            text_color:1,1,1,1
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+                MDFlatButton:
+                    size_hint: None, None
+
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    md_bg_color: 0.043, 0.145, 0.278, 1 
+                    on_release: root.go_to_under_process_loans()
+                    size_hint_y: None
+                    height: dp(60)
+                    size_hint_x: None
+                    width: dp(110)
+
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing:dp(10)
+                        MDLabel:
+                            text: "UnderProcess Loans"
+                            font_size:dp(14)
+                            bold:True
+                            theme_text_color: 'Custom'
+                            halign: "center"
+                            text_color:1,1,1,1
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+                MDFlatButton:
+                    size_hint: None, None
+
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    md_bg_color: 0.043, 0.145, 0.278, 1
+                    on_release: root.go_to_rejected_loans()
+                    size_hint_y: None
+                    height: dp(60)
+                    size_hint_x: None
+                    width: dp(110)
+
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing:dp(10)
+                        MDLabel:
+                            text: "Rejected Loans"
+                            font_size:dp(14)
+                            bold:True
+                            theme_text_color: 'Custom'
+                            halign: "center"
+                            text_color:1,1,1,1
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+                MDFlatButton:
+                    size_hint: None, None
+
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    md_bg_color: 0.043, 0.145, 0.278, 1 
+                    on_release: root.go_to_closed_loans()
+                    size_hint_y: None
+                    height: dp(60)
+                    size_hint_x: None
+                    width: dp(110)
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing:dp(10)
+                        MDLabel:
+                            text: "Closed Loans"
+                            font_size:dp(14)
+                            bold:True
+                            theme_text_color: 'Custom'
+                            halign: "center"
+                            text_color:1,1,1,1
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+
+                MDFlatButton:
+                    size_hint: None, None
+                    md_bg_color: 0.043, 0.145, 0.278, 1 
+
+                    size_hint_y: None
+                    height: dp(60)
+                    size_hint_x: None
+                    width: dp(110)
+                    on_release: root.all_loanscreen()
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing:dp(10)
+                        MDLabel:
+                            text: "All Loans"
+                            font_size:dp(14)
+                            bold:True
+                            theme_text_color: 'Custom'
+                            halign: "center"
+                            text_color:1,1,1,1
 
         MDBottomNavigationItem:
             name: 'screen 3'
@@ -772,7 +940,7 @@ user_helpers1 = """
                     right_action_items: [['refresh', lambda x: root.refresh()]]
                     title_align: 'center'
                     md_bg_color: 0.043, 0.145, 0.278, 1
-        
+
                 ScrollView:  # Add ScrollView here
                     do_scroll_x: False
                     BoxLayout:
@@ -797,7 +965,7 @@ user_helpers1 = """
                                         rgba: 0, 0, 0, 1  # Blue color for the box
                                     Line:
                                         rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
-        
+
                                 MDGridLayout:
                                     cols: 2
                                     spacing: dp(10)
@@ -830,7 +998,7 @@ user_helpers1 = """
                                         size_hint_y:None
                                         height:dp(50)
                                         halign: "left"
-        
+
                                 MDGridLayout:
                                     cols: 2
                                     spacing: dp(10)
@@ -911,7 +1079,7 @@ user_helpers1 = """
                                         size_hint_y:None
                                         height:dp(50)
                                         halign: "left"
-        
+
                                 MDFloatLayout:
                                     MDRaisedButton:
                                         text: "Edit Profile"
@@ -1248,120 +1416,216 @@ cursor = conn.cursor()
 
 class LenderDashboard(Screen):
     Builder.load_string(user_helpers1)
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        data = app_tables.fin_loan_details.search()
-        profile = app_tables.fin_user_profile.search()
-        customer_id = []
-        loan_id = []
-        borrower_name = []
-        loan_status = []
-        product_name = []
-        s = 0
-        for i in data:
-            s += 1
-            customer_id.append(i['borrower_customer_id'])
-            loan_id.append(i['loan_id'])
-            borrower_name.append(i['borrower_full_name'])
-            loan_status.append(i['loan_updated_status'])
-            product_name.append(i['product_name'])
 
-        profile_customer_id = []
-        profile_mobile_number = []
-        for i in profile:
-            profile_customer_id.append(i['customer_id'])
-            profile_mobile_number.append(i['mobile'])
-        c = -1
-        index_list = []
-        for i in range(s):
-            c += 1
-            if loan_status[c] == 'under process' or loan_status[c] == 'approved':
-                index_list.append(c)
+    def notification(self):
+        pass
 
-        b = 1
-        k = -1
-        for i in index_list:
-            b += 1
-            k += 1
-            if customer_id[i] in profile_customer_id:
-                number = profile_customer_id.index(customer_id[i])
-            else:
-                number = 0
-            item = ThreeLineAvatarIconListItem(
+    def on_pre_leave(self):
+        # Unbind the back button event when leaving the screen
+        Window.unbind(on_keyboard=self.on_back_button)
 
-                IconLeftWidget(
-                    icon="card-account-details-outline"
-                ),
-                text=f"Borrower Name : {borrower_name[i]}",
-                secondary_text=f"Borrower Number : {profile_mobile_number[number]}",
-                tertiary_text=f"Product Name : {product_name[i]}",
-                text_color=(0, 0, 0, 1),  # Black color
-                theme_text_color='Custom',
-                secondary_text_color=(0, 0, 0, 1),
-                secondary_theme_text_color='Custom',
-                tertiary_text_color=(0, 0, 0, 1),
-                tertiary_theme_text_color='Custom'
-            )
-            item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
-            self.ids.container.add_widget(item)
+    def on_back_button(self, instance, key, scancode, codepoint, modifier):
+        # Handle the back button event
+        if key == 27:  # 27 is the keycode for the hardware back button on Android
+            self.go_back()
+            return True  # Consume the event, preventing further handling
+        return False  # Continue handling the event
 
-    def icon_button_clicked(self, instance, loan_id):
-        # Handle the on_release event here
-        print(loan_id)
-        data = app_tables.fin_loan_details.search()  # Fetch data here
-        loan_status = None
-        for loan in data:
-            if loan['loan_id'] == loan_id:
-                loan_status = loan['loan_updated_status']
-                break
+    def go_back(self):
+        # Navigate to the previous screen with a slide transition
+        self.manager.transition = SlideTransition(direction='right')
+        self.manager.current = 'LenderDashboard'
 
-        if loan_status == 'approved':
-            # Open the screen for approved loans
+    def on_back_button_press(self):
+        self.manager.current = 'LenderDashboard'
 
-            sm = self.manager
+    def animate_loading_text(self, loading_label, modal_height):
+        # Define the animation to move the label vertically
+        anim = Animation(y=modal_height - loading_label.height, duration=1) + \
+               Animation(y=0, duration=5)
+        anim.bind(on_complete=lambda *args: self.animate_loading_text(loading_label,
+                                                                      modal_height))  # Bind to the completion event to repeat the animation
+        anim.start(loading_label)
 
-            # Create a new instance of the LoginScreen
-            approved = ViewLoansProfileScreenLR(name='ViewLoansProfileScreenLR')
+    def all_loanscreen(self):
+        modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])
 
-            # Add the LoginScreen to the existing ScreenManager
-            sm.add_widget(approved)
+        # Create MDLabel with white text color, increased font size, and bold text
+        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
+                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
+                                font_size="50sp", bold=True)
 
-            # Switch to the LoginScreen
-            sm.current = 'ViewLoansProfileScreenLR'
-            self.manager.get_screen('ViewLoansProfileScreenLR').initialize_with_value(loan_id, data)
+        # Set initial y-position off-screen
+        loading_label.y = -loading_label.height
 
-        elif loan_status == 'under process':
-            # Open the screen for pending loans
-            sm = self.manager
+        modal_view.add_widget(loading_label)
+        modal_view.open()
 
-            # Create a new instance of the LoginScreen
-            under_process = ViewLoansProfileScreen(name='ViewLoansProfileScreen')
+        # Perform the animation
+        self.animate_loading_text(loading_label, modal_view.height)
 
-            # Add the LoginScreen to the existing ScreenManager
-            sm.add_widget(under_process)
+        # Perform the actual action (e.g., fetching loan requests)
+        # You can replace the sleep with your actual logic
+        Clock.schedule_once(lambda dt: self.performance_all_loanscreen(modal_view), 2)
 
-            # Switch to the LoginScreen
-            sm.current = 'ViewLoansProfileScreen'
-            self.manager.get_screen('ViewLoansProfileScreen').initialize_with_value(loan_id, data)
-        elif loan_status == 'rejected':
-            # Open the screen for pending loans
-            sm = self.manager
+    def performance_all_loanscreen(self, modal_view):
+        # self.manager.current = 'ViewProfileScreen'
+        modal_view.dismiss()
+        sm = self.manager
 
-            # Create a new instance of the LoginScreen
-            rejected = ViewLoansProfileScreenRL(name='ViewLoansProfileScreenRL')
+        # Create a new instance of the LoginScreen
+        profile_screen = ALlLoansScreen(name='ALlLoansScreen')
 
-            # Add the LoginScreen to the existing ScreenManager
-            sm.add_widget(rejected)
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(profile_screen)
 
-            # Switch to the LoginScreen
-            sm.current = 'ViewLoansProfileScreenRL'
-            self.manager.get_screen('ViewLoansProfileScreenRL').initialize_with_value(loan_id, data)
-        else:
-            # Handle other loan statuses or show an error message
-            pass
+        # Switch to the LoginScreen
+        sm.current = 'ALlLoansScreen'
+
+    def go_to_open_loans(self):
+        modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])
+
+        # Create MDLabel with white text color, increased font size, and bold text
+        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
+                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
+                                font_size="50sp", bold=True)
+
+        # Set initial y-position off-screen
+        loading_label.y = -loading_label.height
+
+        modal_view.add_widget(loading_label)
+        modal_view.open()
+
+        # Perform the animation
+        self.animate_loading_text(loading_label, modal_view.height)
+
+        # Perform the actual action (e.g., fetching loan requests)
+        # You can replace the sleep with your actual logic
+        Clock.schedule_once(lambda dt: self.performance_go_to_open_loans(modal_view), 2)
+
+    def performance_go_to_open_loans(self, modal_view):
+        # self.manager.current = 'ViewProfileScreen'
+        modal_view.dismiss()
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        open = OpenViewLoanScreen(name='OpenViewLoanScreen')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(open)
+
+        # Switch to the LoginScreen
+        sm.current = 'OpenViewLoanScreen'
+
+    def go_to_rejected_loans(self):
+        modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])
+
+        # Create MDLabel with white text color, increased font size, and bold text
+        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
+                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
+                                font_size="50sp", bold=True)
+
+        # Set initial y-position off-screen
+        loading_label.y = -loading_label.height
+
+        modal_view.add_widget(loading_label)
+        modal_view.open()
+
+        # Perform the animation
+        self.animate_loading_text(loading_label, modal_view.height)
+
+        # Perform the actual action (e.g., fetching loan requests)
+        # You can replace the sleep with your actual logic
+        Clock.schedule_once(lambda dt: self.performance_go_to_rejected_loans(modal_view), 2)
+
+    def performance_go_to_rejected_loans(self, modal_view):
+        # self.manager.current = 'ViewProfileScreen'
+        modal_view.dismiss()
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        rejected = ViewRejectedLoansScreen(name='ViewRejectedLoansScreen')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(rejected)
+
+        # Switch to the LoginScreen
+        sm.current = 'ViewRejectedLoansScreen'
+
+    def go_to_under_process_loans(self):
+        modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])
+
+        # Create MDLabel with white text color, increased font size, and bold text
+        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
+                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
+                                font_size="50sp", bold=True)
+
+        # Set initial y-position off-screen
+        loading_label.y = -loading_label.height
+
+        modal_view.add_widget(loading_label)
+        modal_view.open()
+
+        # Perform the animation
+        self.animate_loading_text(loading_label, modal_view.height)
+
+        # Perform the actual action (e.g., fetching loan requests)
+        # You can replace the sleep with your actual logic
+        Clock.schedule_once(lambda dt: self.performance_go_to_under_process_loans(modal_view), 2)
+
+    def performance_go_to_under_process_loans(self, modal_view):
+        # self.manager.current = 'ViewProfileScreen'
+        modal_view.dismiss()
+        from lender_underprocess import ViewUnderProcess
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        under_process = ViewUnderProcess(name='ViewUnderProcess')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(under_process)
+
+        # Switch to the LoginScreen
+        sm.current = 'ViewUnderProcess'
+
+    def go_to_closed_loans(self):
+        modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])
+
+        # Create MDLabel with white text color, increased font size, and bold text
+        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
+                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
+                                font_size="50sp", bold=True)
+
+        # Set initial y-position off-screen
+        loading_label.y = -loading_label.height
+
+        modal_view.add_widget(loading_label)
+        modal_view.open()
+
+        # Perform the animation
+        self.animate_loading_text(loading_label, modal_view.height)
+
+        # Perform the actual action (e.g., fetching loan requests)
+        # You can replace the sleep with your actual logic
+        Clock.schedule_once(lambda dt: self.performance_go_to_closed_loans(modal_view), 2)
+
+    def performance_go_to_closed_loans(self, modal_view):
+        # self.manager.current = 'ViewProfileScreen'
+        modal_view.dismiss()
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        closed = ViewClosedLoansScreen(name='ViewClosedLoansScreen')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(closed)
+
+        # Switch to the LoginScreen
+        sm.current = 'ViewClosedLoansScreen'
 
     def refresh2(self):
         self.__init__()
+
     def wallet(self):
         self.type = None
         data = app_tables.fin_wallet.search()
@@ -1383,6 +1647,7 @@ class LenderDashboard(Screen):
 
     def on_amount_touch_down(self):
         self.ids.enter_amount.input_type = 'number'
+
     def view_transaction_history(self):
         sm = self.manager
         # Create a new instance of the LenderWalletScreen
@@ -1413,8 +1678,6 @@ class LenderDashboard(Screen):
             self.ids.withdraw_button_grid.text_color = 1, 1, 1, 1
             self.ids.deposit_button_grid.text_color = 0, 0, 0, 1
             self.type = 'withdraw'
-
-
 
     def on_pre_leave(self):
         Window.unbind(on_keyboard=self.on_back_button)
@@ -1592,13 +1855,13 @@ class LenderDashboard(Screen):
             ]
         )
         dialog.open()
+
     def email(self):
         return anvil.server.call('another_method')
 
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
         Window.bind(on_keyboard=self.on_back_button)
-
 
         log_email = anvil.server.call('another_method')
         profile = app_tables.fin_user_profile.search()
@@ -1618,14 +1881,15 @@ class LenderDashboard(Screen):
             investment.append(i['investment'])
             user_age.append(i['user_age'])
             p_customer_id.append(i['customer_id'])
-            ascend_score.append(i['bessem_value'])
-            emp_type.append(i['employment_type'])
+            ascend_score.append(i['ascend_value'])
+            emp_type.append(i['profession'])
 
         # Check if 'logged' is in the status list
         log_index = 0
         if log_email in email_user:
             log_index = email_user.index(log_email)
             self.ids.details.text = "Welcome " + name_list[log_index]
+            self.ids.details.font_style = 'H6'
             self.ids.name.text = name_list[log_index]
         else:
             # Handle the case when 'logged' is not in the status list
@@ -1663,7 +1927,6 @@ class LenderDashboard(Screen):
                 index_list.append(c)
 
         self.ids.loan.text = str(len(index_list))
-
 
         if len(loan_id) < 1:
             self.ids.borrower_name.text = ""
@@ -1747,11 +2010,134 @@ class LenderDashboard(Screen):
             self.ids.commitment.text = "Rs. " + str(investment[log_index])
             for i in range(a):
                 if float(investment[log_index]) >= min_amount[i] and float(investment[log_index]) < max_amount[i]:
-                    self.ids.details.tertiary_text = f"Membership_type: {membership_type[i]}"
+                    self.ids.details.tertiary_text = f"Membership Type: {membership_type[i]}"
                     break
         else:
-            self.ids.details.tertiary_text = f"Membership_type: None"
+            self.ids.details.tertiary_text = f"Membership Type: None"
             print("Investment Amount Not There")
+
+    def on_kv_post(self, base_widget):
+        self.setup_menu()
+
+    def setup_menu(self):
+        data = app_tables.fin_loan_details.search()
+
+        enter_data = self.ids.search.text
+
+        loan_id = []
+        borrower_name = []
+        loan_status_list = []
+        s = 0
+        for i in data:
+            s += 1
+            loan_id.append(i['loan_id'])
+            borrower_name.append(i['borrower_full_name'])
+            loan_status_list.append(i['loan_updated_status'])
+
+        menu_items = [
+
+        ]
+        a = -1
+        index_list = []
+        for i in range(s):
+            a += 1
+            print(enter_data.lower(), borrower_name[i].lower())
+            print(enter_data.lower() in borrower_name[i].lower())
+            if enter_data.lower() in borrower_name[i].lower() and loan_status_list[i] in ['under process', 'approved',
+                                                                                          'rejected']:
+                index_list.append(a)
+
+        for i in index_list:
+            item = {
+                "text": f"{borrower_name[i]}",
+                "viewclass": "OneLineListItem",
+                "on_release": lambda x=i: self.menu_callback(x),
+            }
+            menu_items.append(item)
+
+        self.menu = MDDropdownMenu(
+            caller=self.ids.button,
+            items=menu_items,
+            ver_growth="down",
+            max_height=dp(224),
+            position="center",
+            width_mult=4,
+        )
+
+    def menu_callback(self, text_item):
+        print(text_item)
+        self.menu.dismiss()
+        data = app_tables.fin_loan_details.search()
+
+        loan_id = []
+        loan_status_list = []
+        s = 0
+        for i in data:
+            s += 1
+            loan_id.append(i['loan_id'])
+            loan_status_list.append(i['loan_updated_status'])
+
+        loan_status = loan_status_list[text_item]
+        if loan_status == 'approved':
+            # Open the screen for approved loans
+
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            approved = ViewLoansProfileScreenLR(name='ViewLoansProfileScreenLR')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(approved)
+
+            # Switch to the LoginScreen
+            sm.current = 'ViewLoansProfileScreenLR'
+            self.manager.get_screen('ViewLoansProfileScreenLR').initialize_with_value(loan_id[text_item], data)
+
+        elif loan_status == 'under process':
+            # Open the screen for pending loans
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            under_process = ViewLoansProfileScreen(name='ViewLoansProfileScreen')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(under_process)
+
+            # Switch to the LoginScreen
+            sm.current = 'ViewLoansProfileScreen'
+            self.manager.get_screen('ViewLoansProfileScreen').initialize_with_value(loan_id[text_item], data)
+        elif loan_status == 'rejected':
+            # Open the screen for pending loans
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            rejected = ViewLoansProfileScreenRL(name='ViewLoansProfileScreenRL')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(rejected)
+
+            # Switch to the LoginScreen
+            sm.current = 'ViewLoansProfileScreenRL'
+            self.manager.get_screen('ViewLoansProfileScreenRL').initialize_with_value(loan_id[text_item], data)
+        else:
+            # Handle other loan statuses or show an error message
+            pass
+
+    def show_validation_error5(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
 
     def invest(self):
         data = app_tables.fin_loan_details.search()
@@ -1819,7 +2205,6 @@ class LenderDashboard(Screen):
 
     def homepage(self):
         self.manager.current = 'MainScreen'
-
 
     def refresh_profile_data(self):
         email = self.get_email()
@@ -1919,8 +2304,6 @@ class LenderDashboard(Screen):
             on_press=self.bye)
         )
         view.open()
-
-
 
     def on_pre_leave(self):
         # Unbind the back button event when leaving the screen
@@ -2325,8 +2708,6 @@ class ViewProfileScreen(Screen):
         )
         view.open()
 
-
-
     def on_pre_leave(self):
         # Unbind the back button event when leaving the screen
         Window.unbind(on_keyboard=self.on_back_button)
@@ -2540,8 +2921,6 @@ class ViewEditScreen(Screen):
             on_press=self.bye)
         )
         view.open()
-
-
 
     def on_pre_leave(self):
         Window.unbind(on_keyboard=self.on_back_button)

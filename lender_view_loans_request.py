@@ -1112,6 +1112,7 @@ class ViewLoansProfileScreen(Screen):
                     borrower_name = i['borrower_full_name']  # Get borrower name for this loan ID
             index = loan_idlist.index(loan_id)
             data[index]['loan_updated_status'] = 'rejected'
+            data[index]['lender_rejected_timestamp'] = datetime.now()
             sm = self.manager
             disbursed = ViewLoansProfileScreenRL(name='ViewLoansProfileScreenRL')
             sm.add_widget(disbursed)

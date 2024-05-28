@@ -1053,7 +1053,14 @@ class OpenViewLoanScreen(Screen):
     def go_back(self):
         # Navigate to the previous screen with a slide transition
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'ViewLoansScreen'
+        sm = self.manager
+        profile = ViewLoansScreen(name='ViewLoansScreen')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(profile)
+
+        # Switch to the LoginScreen
+        sm.current = 'ViewLoansScreen'
 
     def refresh(self):
         self.ids.container1.clear_widgets()

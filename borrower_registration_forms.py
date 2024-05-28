@@ -8624,11 +8624,11 @@ class BorrowerScreen19(Screen):
         user_id_list = [i['customer_id'] for i in data]
 
         index = 0
-        beseem = 0
+        ascend = 0
         if user_email in id_list:
             index = id_list.index(user_email)
             try:
-                beseem = anvil.server.call('final_points_update_bessem_table', user_id_list[index])
+                ascend = anvil.server.call('final_points_update_bessem_table', user_id_list[index])
             except Exception as e:
                 print(f"An error occurred: {e}")
             data[index]['bank_id'] = bank_id
@@ -8636,12 +8636,12 @@ class BorrowerScreen19(Screen):
             data[index]['usertype'] = b
             data[index]['registration_approve'] = True
             data[index]['last_confirm'] = True
-            data[index]['bessem_value'] = float(beseem)
+            data[index]['ascend_value'] = float(ascend)
 
         else:
             print('email not valid')
         print(user_id_list[index])
-        print(beseem)
+        print(ascend)
 
         sm = self.manager
         borrower_screen = DashboardScreen(name='DashboardScreen')

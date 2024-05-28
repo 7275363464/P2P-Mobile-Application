@@ -968,7 +968,7 @@ class ViewUnderScreen(Screen):
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
-            ascend_score.append(i['bessem_value'])
+            ascend_score.append(i['ascend_value'])
         index = 0
 
         if value in loan_id:
@@ -1189,7 +1189,7 @@ class ViewUnderScreenLR(Screen):
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
-            ascend_score.append(i['bessem_value'])
+            ascend_score.append(i['ascend_value'])
 
         index = 0
 
@@ -1471,7 +1471,7 @@ class ViewUnderScreenRL(Screen):
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
-            ascend_score.append(i['bessem_value'])
+            ascend_score.append(i['ascend_value'])
         index = 0
 
         if value in loan_id:

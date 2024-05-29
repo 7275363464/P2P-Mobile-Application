@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import anvil
 from anvil.tables import app_tables
 from kivy.core.window import Window
@@ -20,7 +22,6 @@ if platform == 'android':
     from android import api_version, mActivity
     from android.permissions import (
         request_permissions, check_permission, Permission)
-
 
 lender_foreclouser = '''
 
@@ -241,8 +242,8 @@ lender_foreclouser = '''
 
             MDList:
                 id: container5
-                
-                
+
+
 <ViewProfileScreenLF>:
     GridLayout:
         cols: 1
@@ -275,7 +276,7 @@ lender_foreclouser = '''
                             source: "background.jpg"
                     MDGridLayout:
                         cols: 2
-        
+
                         MDLabel:
                             text: 'Loan Amount:'
                             halign: 'left'
@@ -292,7 +293,7 @@ lender_foreclouser = '''
                             bold: True
                             theme_text_color: 'Custom'  
                             text_color: 0,0,0,1
-        
+
                         MDLabel:
                             id: amount
                             halign: 'left'
@@ -411,12 +412,10 @@ lender_foreclouser = '''
                             text_color: 140/255, 140/255, 140/255, 1 
                             bold: True
 
-                
-
                 MDGridLayout:
                     cols: 2
                     spacing: 10
-    
+
                     CheckBox:
                         id: check
                         size_hint: (None, None)
@@ -424,7 +423,7 @@ lender_foreclouser = '''
                         bold: True
                         on_active: root.checkbox_callback(self, self.active)
                         color: (195/255,110/255,108/255,1)
-    
+
                     MDLabel:
                         text: "I Agree Terms and Conditions"
                         multiline: False
@@ -495,7 +494,7 @@ lender_foreclouser = '''
                             source: "background.jpg"
                     MDGridLayout:
                         cols: 2
-        
+
                         MDLabel:
                             text: 'Loan Amount:'
                             halign: 'left'
@@ -512,7 +511,7 @@ lender_foreclouser = '''
                             bold: True
                             theme_text_color: 'Custom'  
                             text_color: 0,0,0,1
-        
+
                         MDLabel:
                             id: amount
                             halign: 'left'
@@ -680,7 +679,7 @@ lender_foreclouser = '''
                             source: "background.jpg"
                     MDGridLayout:
                         cols: 2
-        
+
                         MDLabel:
                             text: 'Loan Amount:'
                             halign: 'left'
@@ -697,14 +696,14 @@ lender_foreclouser = '''
                             bold: True
                             theme_text_color: 'Custom'  
                             text_color: 0,0,0,1
-        
+
                         MDLabel:
                             id: amount
                             halign: 'left'
                             theme_text_color: 'Custom'  
                             text_color: 0,0,0,1
                             bold: True
-                            
+
                     MDLabel:
                         text: ''
                         halign: 'left'
@@ -722,7 +721,7 @@ lender_foreclouser = '''
                             theme_text_color: 'Custom'  
                             text_color: 140/255, 140/255, 140/255, 1
                             bold: True
-                            
+
 
                     MDGridLayout:
                         cols: 2
@@ -922,6 +921,7 @@ class DashboardScreenLF(Screen):
 
         # Switch to the LoginScreen
         sm.current = 'ViewAllLoansLF'
+
     def refresh(self):
         self.ids.container.clear_widgets()
         self.__init__()
@@ -1107,6 +1107,7 @@ class ClosedLoansLF(Screen):
                 self.ids.container3.add_widget(item)
             else:
                 print("Index out of range!")
+
     def icon_button_clicked(self, instance, loan_id):
         value = instance.text.split(':')
         value = value[-1][1:]
@@ -1370,7 +1371,6 @@ class UnderProcessLoansLF(Screen):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'DashboardScreenLF'
 
-
     def on_back_button_press(self):
         self.manager.current = 'DashboardScreenLF'
 
@@ -1392,7 +1392,7 @@ class ViewAllLoansLF(Screen):
             loan_id.append(i['loan_id'])
             borrower_name.append(i['borrower_name'])
             loan_status.append(i['status'])
-
+        print(loan_id)
         c = -1
         customer_id = []
         product_name = []
@@ -1523,7 +1523,6 @@ class ViewAllLoansLF(Screen):
         self.__init__()
 
 
-
 class ViewProfileScreenLFL(Screen):
     def initialize_with_value(self, value, data):
         data = app_tables.fin_foreclosure.search()
@@ -1578,7 +1577,6 @@ class ViewProfileScreenLFL(Screen):
 
     def on_back_button_press(self):
         self.manager.current = 'DashboardScreenLF'
-
 
 
 class ViewProfileScreenFLF(Screen):
@@ -1637,16 +1635,17 @@ class ViewProfileScreenFLF(Screen):
         self.manager.current = 'DashboardScreenLF'
 
 
-
 class ViewProfileScreenLF(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.check = None
+
     def checkbox_callback(self, checkbox, value):
         if value:
             self.check = True
         else:
             self.check = False
+
     def initialize_with_value(self, value, data):
         data = app_tables.fin_foreclosure.search()
         self.loan_id = value
@@ -1672,6 +1671,7 @@ class ViewProfileScreenLF(Screen):
             outstanding_amount.append(i['outstanding_amount'])
             reason_foreclose.append(i['reason'])
             total_due_amount.append(i['total_due_amount'])
+
         print(value)
         if value in loan_id:
             index = loan_id.index(value)
@@ -1690,17 +1690,51 @@ class ViewProfileScreenLF(Screen):
             self.show_validation_error('You need to select Terms and Conditions')
             return
         loan_id = self.loan_id
-
+        approved_date = datetime.now()
         foreclosure_records = app_tables.fin_foreclosure.search(loan_id=loan_id)
         loan_records = app_tables.fin_loan_details.search(loan_id=loan_id)
+        profile = app_tables.fin_user_profile.search()
+        email_user = self.email_user()
+        data = app_tables.fin_loan_details.search()
+        lender_cos_id = []
+        lender_email = []
+        lender_name = []
+        product_name = []
+        for i in data:
+            lender_cos_id.append(i['lender_customer_id'])
+            lender_email.append(i['lender_email_id'])
+            lender_name.append(i['lender_full_name'])
+            product_name.append(i['product_name'])
+        index1 = 0
+        if loan_id in data:
+            index1 = loan_id.index(loan_id)
+        loan_idlist = [i['loan_id'] for i in data]
+        profile_customer_id = []
+        profile_email = []
+        profile_name = []
+        for i in profile:
+            profile_customer_id.append(i['customer_id'])
+            profile_email.append(i['email_user'])
+            profile_name.append(i['full_name'])
+        email_index = 0
+        if email_user in profile_email:
+            email_index = profile_email.index(email_user)
+        else:
+            print("no email found")
+        if loan_id in loan_idlist:
+            for i in data:
+                if i['loan_id'] == loan_id:
+                    borrower_name = i['borrower_full_name']
+                    break
+            foreclosure_records[index1]['status_timestamp'] = approved_date
+            foreclosure_records[index1]['lender_customer_id'] = lender_cos_id[email_index]
+            foreclosure_records[index1]['lender_full_name'] = lender_name[email_index]
+            foreclosure_records[index1]['lender_email_id'] = lender_email[email_index]
+            foreclosure_records[index1]['product_name'] = product_name[email_index]
 
         if foreclosure_records and loan_records:
             for record in foreclosure_records:
                 record['status'] = 'approved'
-                record.update()
-
-            for record in loan_records:
-                record['loan_updated_status'] = 'foreclosure'
                 record.update()
 
             self.manager.current = 'DashboardScreenLF'
@@ -1724,20 +1758,56 @@ class ViewProfileScreenLF(Screen):
         dialog.open()
 
     def rejected_click(self):
-        data = app_tables.fin_foreclosure.search()
+        if self.check != True:
+            self.show_validation_error('You need to select Terms and Conditions')
+            return
         loan_id = self.loan_id
-
-        loan_idlist = []
+        foreclosure_records = app_tables.fin_foreclosure.search(loan_id=loan_id)
+        approved_date = datetime.now()
+        profile = app_tables.fin_user_profile.search()
+        email_user = self.email_user()
+        data = app_tables.fin_loan_details.search()
+        lender_cos_id = []
+        lender_email = []
+        lender_name = []
+        product_name = []
         for i in data:
-            loan_idlist.append(i['loan_id'])
-        print(loan_idlist)
+            lender_cos_id.append(i['lender_customer_id'])
+            lender_email.append(i['lender_email_id'])
+            lender_name.append(i['lender_full_name'])
+            product_name.append(i['product_name'])
+        index1 = 0
+        if loan_id in data:
+            index1 = loan_id.index(loan_id)
+
+        loan_idlist = [i['loan_id'] for i in data]
+        profile_customer_id = []
+        profile_email = []
+        profile_name = []
+        for i in profile:
+            profile_customer_id.append(i['customer_id'])
+            profile_email.append(i['email_user'])
+            profile_name.append(i['full_name'])
+        email_index = 0
+        if email_user in profile_email:
+            email_index = profile_email.index(email_user)
+        else:
+            print("no email found")
         if loan_id in loan_idlist:
             index = loan_idlist.index(loan_id)
-            data[index]['status'] = 'rejected'
+            foreclosure_records[index1]['status'] = 'rejected'
+            foreclosure_records[index1]['status_timestamp'] = approved_date
+            foreclosure_records[index1]['lender_customer_id'] = lender_cos_id[email_index]
+            foreclosure_records[index1]['lender_full_name'] = lender_name[email_index]
+            foreclosure_records[index1]['lender_email_id'] = lender_email[email_index]
+            foreclosure_records[index1]['product_name'] = product_name[email_index]
             self.manager.current = 'DashboardScreenLF'
 
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.on_back_button)
+
+    def email_user(self):
+        return anvil.server.call('another_method')
 
     def on_pre_leave(self):
         Window.unbind(on_keyboard=self.on_back_button)
@@ -1750,8 +1820,6 @@ class ViewProfileScreenLF(Screen):
 
     def on_back_button_press(self):
         self.manager.current = 'DashboardScreenLF'
-
-
 
 
 class MyScreenManager(ScreenManager):

@@ -411,6 +411,7 @@ class DashboardScreenVLB(Screen):
         anim.start(loading_label)
 
     def go_to_open_loans(self):
+        self.manager.get_screen('DashboardScreen').dash("Open")
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -445,6 +446,7 @@ class DashboardScreenVLB(Screen):
         sm.current = 'OpenLoanVLB'
 
     def go_to_under_loans(self):
+        self.manager.get_screen('DashboardScreen').dash("under")
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -485,6 +487,7 @@ class DashboardScreenVLB(Screen):
         sm.current = 'UnderProcessLoanVLB'
 
     def go_to_reject_loans(self):
+        self.manager.get_screen('DashboardScreen').dash("reject")
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -519,6 +522,7 @@ class DashboardScreenVLB(Screen):
         sm.current = 'RejectedLoanVLB'
 
     def go_to_app_tracker(self):
+        self.manager.get_screen('DashboardScreen').dash("closed")
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -565,8 +569,18 @@ class DashboardScreenVLB(Screen):
         return False
 
     def on_back_button_press(self):
+        from borrower_dashboard import DashboardScreen
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'DashboardScreen'
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        profile = DashboardScreen(name='DashboardScreen')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(profile)
+
+        # Switch to the LoginScreen
+        sm.current = 'DashboardScreen'
 
     def logout(self):
         self.manager.current = 'MainScreen'
@@ -647,7 +661,16 @@ class ViewLoansScreenVLB(Screen):
         self.manager.current = 'ViewLoansRequest'
 
     def on_back_button_press(self):
-        self.manager.current = 'DashboardScreenVLB'
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        profile = DashboardScreenVLB(name='DashboardScreenVLB')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(profile)
+
+        # Switch to the LoginScreen
+        sm.current = 'DashboardScreenVLB'
 
 
 class OpenLoanVLB(Screen):
@@ -773,8 +796,35 @@ class OpenLoanVLB(Screen):
         return False
 
     def go_back(self):
-        self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'DashboardScreenVLB'
+
+        from borrower_dashboard import DashboardScreen
+
+        type = self.manager.get_screen('DashboardScreen').type()
+        print(type)
+        if type == 'dashboard':
+            self.manager.transition = SlideTransition(direction='right')
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            profile = DashboardScreen(name='DashboardScreen')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'DashboardScreen'
+        else:
+            self.manager.transition = SlideTransition(direction='right')
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            profile = DashboardScreenVLB(name='DashboardScreenVLB')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'DashboardScreenVLB'
 
     def refresh(self):
         self.ids.container.clear_widgets()
@@ -893,9 +943,34 @@ class UnderProcessLoanVLB(Screen):
         return False  # Continue handling the event
 
     def go_back(self):
-        # Navigate to the previous screen with a slide transition
-        self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'DashboardScreenVLB'
+        from borrower_dashboard import DashboardScreen
+
+        type = self.manager.get_screen('DashboardScreen').type()
+        print(type)
+        if type == 'dashboard':
+            self.manager.transition = SlideTransition(direction='right')
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            profile = DashboardScreen(name='DashboardScreen')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'DashboardScreen'
+        else:
+            self.manager.transition = SlideTransition(direction='right')
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            profile = DashboardScreenVLB(name='DashboardScreenVLB')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'DashboardScreenVLB'
 
     def refresh(self):
         self.ids.container1.clear_widgets()
@@ -1012,10 +1087,34 @@ class RejectedLoanVLB(Screen):
         return False  # Continue handling the event
 
     def go_back(self):
-        # Navigate to the previous screen with a slide transition
-        self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'DashboardScreenVLB'
+        from borrower_dashboard import DashboardScreen
 
+        type = self.manager.get_screen('DashboardScreen').type()
+        print(type)
+        if type == 'dashboard':
+            self.manager.transition = SlideTransition(direction='right')
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            profile = DashboardScreen(name='DashboardScreen')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'DashboardScreen'
+        else:
+            self.manager.transition = SlideTransition(direction='right')
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            profile = DashboardScreenVLB(name='DashboardScreenVLB')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'DashboardScreenVLB'
     def refresh(self):
         self.ids.container2.clear_widgets()
         self.__init__()
@@ -1133,9 +1232,34 @@ class ClosedLoanVLB(Screen):
         return False  # Continue handling the event
 
     def go_back(self):
-        # Navigate to the previous screen with a slide transition
-        self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'DashboardScreenVLB'
+        from borrower_dashboard import DashboardScreen
+
+        type = self.manager.get_screen('DashboardScreen').type()
+        print(type)
+        if type == 'dashboard':
+            self.manager.transition = SlideTransition(direction='right')
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            profile = DashboardScreen(name='DashboardScreen')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'DashboardScreen'
+        else:
+            self.manager.transition = SlideTransition(direction='right')
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            profile = DashboardScreenVLB(name='DashboardScreenVLB')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'DashboardScreenVLB'
 
     def refresh(self):
         self.ids.container3.clear_widgets()

@@ -3,6 +3,7 @@ import json
 from anvil.tables import app_tables
 from kivy.factory import Factory
 from kivy.metrics import dp
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 from kivymd.app import MDApp
 from kivy.lang import Builder
@@ -20,6 +21,7 @@ from kivymd.uix.list import ThreeLineAvatarIconListItem, IconLeftWidget
 from kivymd.uix.menu import MDDropdownMenu
 
 from lender_lost_opportunities import LostOpportunitiesScreen
+from lender_notification import Lend_NotificationScreen
 from lender_view_transaction_history import TransactionLH
 from datetime import datetime
 
@@ -85,14 +87,40 @@ user_helpers1 = """
                             MDBoxLayout:
                                 orientation: 'vertical'
 
-                                MDTopAppBar:
-                                    title: "Lender Dashboard"
-                                    elevation: 0
-                                    pos_hint: {"top": 1}
-                                    md_bg_color: 0.043, 0.145, 0.278, 1
-                                    specific_text_color: "#ffffff"
+                                MDTopAppBar:                                   
+                                    elevation: 2
+                                    pos_hint: {'top': 1}
                                     left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
-                                    right_action_items: [['bell', lambda x: root.notification()]]
+                                    title_align: 'center'
+                                    md_bg_color: 0.043, 0.145, 0.278, 1
+
+
+
+                                    BoxLayout:
+                                        size_hint_x: None
+                                        width: dp(20)
+                                        pos_hint: {"center_x": 0.9, "center_y": 1.5}
+                                        spacing: dp(-16)
+
+                                        MDIconButton:
+                                            icon: "bell"
+                                            on_touch_down: root.go_to_lender_notification() if self.collide_point(*args[1].pos) else None    
+                                            pos_hint: {"center_y": 1.3}
+                                            theme_text_color: 'Custom'
+                                            text_color: 1, 1, 1, 1 
+
+
+                                        MDLabel:
+                                            id: notification_label
+                                            text: "3"
+                                            size_hint_x: None
+                                            width: self.texture_size[0]
+                                            halign: "center"
+                                            valign: "center"
+                                            theme_text_color: 'Custom'
+                                            text_color: 1, 0, 0, 1 
+                                            font_name: "Roboto-Bold"
+                                            pos_hint: {"center_y": 1.5}
 
                                 ScrollView:
                                     MDBoxLayout:
@@ -1417,6 +1445,47 @@ cursor = conn.cursor()
 class LenderDashboard(Screen):
     Builder.load_string(user_helpers1)
 
+    def update_notification_count(self, count):
+        self.ids.notification_label.text = str(count)
+
+    def go_to_lender_notification(self):
+        # Create a modal view for the loading animation
+        modal_view = ModalView(size_hint=(None, None), size=(300, 150), background_color=[0, 0, 0, 0])
+
+        # Create a BoxLayout to hold the loading text
+        box_layout = BoxLayout(orientation='vertical')
+
+        # Create a label for the loading text
+        loading_label = MDLabel(
+            text="Loading...",
+            halign="center",
+            valign="center",
+            theme_text_color="Custom",
+            text_color=[1, 1, 1, 1],
+            font_size="20sp",
+            bold=True
+        )
+
+        # Add the label to the box layout
+        box_layout.add_widget(loading_label)
+
+        # Add the box layout to the modal view
+        modal_view.add_widget(box_layout)
+
+        # Open the modal view
+        modal_view.open()
+
+        # Perform the actual action (e.g., checking account details and navigating)
+        Clock.schedule_once(lambda dt: self.show_transfer_screen(modal_view), 1)
+
+    def show_transfer_screen(self, modal_view):
+        # Dismiss the loading animation modal view
+        modal_view.dismiss()
+        notification_screen = Lend_NotificationScreen(name='Lend_NotificationScreen')
+        notification_screen.lender_dashboard = self  # Pass reference to LenderDashBoard screen
+        self.manager.add_widget(notification_screen)
+        self.manager.current = 'Lend_NotificationScreen'
+
     def notification(self):
         pass
 
@@ -1859,8 +1928,17 @@ class LenderDashboard(Screen):
     def email(self):
         return anvil.server.call('another_method')
 
+    def build(self):
+        self.update_notification_count(0)  # Initially set count to 0
+        return super().build()
+
     def on_pre_enter(self):
-        # Bind the back button event to the on_back_button method
+        notification_screen = Factory.Lend_NotificationScreen(name='Lend_NotificationScreen')
+        self.manager.add_widget(notification_screen)
+        notification_screen.lender_dashboard = self  # Pass reference to LenderDashBoard screen
+        notification_count = sum([len(screen.ids.container1.children) for screen in self.manager.screens if
+                                  isinstance(screen, Lend_NotificationScreen)])
+        self.update_notification_count(notification_count)
         Window.bind(on_keyboard=self.on_back_button)
 
         log_email = anvil.server.call('another_method')

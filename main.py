@@ -18,7 +18,7 @@ import anvil.server
 from lender_dashboard import LenderDashboard
 
 #anvil.server.connect("server_2V5FMRORVEQOP72ZVQWSBAPD-OZATT3SDKEEAAR6A") #published
-anvil.server.connect("server_U7A4KXYWXMDPYZVJ372XROKQ-G7ZBBKQHLNUGOIZC")
+anvil.server.connect("server_5WJ74GLTRMMBC7IEPT2BMWMV-KGBKO5L5TX6S2KW2")
 class MyApp(MDApp):
     def build(self):
         self.sm = ScreenManager(transition=SlideTransition())

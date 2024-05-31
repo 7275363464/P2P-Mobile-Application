@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 from anvil.tables import app_tables
 from bson import utc
+from kivy.factory import Factory
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
@@ -841,7 +842,7 @@ class ViewProfileTD(Screen):
         self.manager.current = 'DuesScreen'
 
     def on_back_button_press(self):
-        self.manager.transition = SlideTransition(direction='right')
+        self.manager.add_widget(Factory.TodayDuesTD(name='TodayDuesTD'))
         self.manager.current = 'TodayDuesTD'
 
     def current(self):

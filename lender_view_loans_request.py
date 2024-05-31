@@ -54,26 +54,26 @@ view_loan_request = """
             pos_hint: {'top': 1}
             title_align: 'left'
             md_bg_color: 0.043, 0.145, 0.278, 1
-    
-        BoxLayout:
+
+        MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(40)
-            padding: dp(30)
+            padding: dp(20)
             size_hint_y: None
             height: self.minimum_height
+
             canvas.before:
                 Color:
                     rgba: 230/255, 245/255, 255/255, 1 
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
-                    radius: [1, 1, 1, 1]
-                    source: "background.jpg"
+                    radius: [5, 5, 5, 5]
             MDGridLayout:
                 cols: 2
-    
+
                 MDLabel:
-                    text: 'Amount:'
+                    text: '     Amount:'
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 0, 0, 0, 1
@@ -85,16 +85,14 @@ view_loan_request = """
                     halign: 'left'
                     size_hint_y: None
                     height: dp(1)
-                    bold: True
-    
+
                 MDLabel:
                     id: amount
                     bold: True
                     halign: 'left'
                     theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    bold: True
-    
+                    text_color: 140/255, 140/255, 140/255, 1
+
             MDLabel:
                 text: ''
                 halign: 'left'
@@ -103,131 +101,122 @@ view_loan_request = """
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Product Name'
+                    text: '     Product Name'
                     halign: 'left'
                     bold: True
-    
+
                 MDLabel:
                     id: pro_name
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-    
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Borrower Name'
+                    text: '     Borrower Name'
                     halign: 'left'
                     bold: True
-    
+
                 MDLabel:
                     id: b_name
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-    
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Phone Number'
+                    text: '     Phone Number'
                     halign: 'left'
                     bold: True
-    
+
                 MDLabel:
                     id: phone_num
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-    
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Ascend Score'
+                    text: '     Ascend Score'
                     halign: 'left'
                     bold: True
-    
+
                 MDLabel:
                     id: ascend
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-    
-    
+
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Interest(%)'
+                    text: '     Interest(%)'
                     halign: 'left'
                     bold: True
-    
+
                 MDLabel:
                     id: int_rate
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-    
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Duration(M)'
+                    text: '     Duration(M)'
                     halign: 'left'
                     bold: True
-    
+
                 MDLabel:
                     id: tenure
                     halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-    
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Credit Limit'
+                    text: '     Credit Limit'
                     halign: 'left'
                     bold: True
-    
+
                 MDLabel:
                     id: limit
                     halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-    
-    
+
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Published Date'
+                    text: '     Published Date'
                     halign: 'left'
                     bold: True
-    
+
                 MDLabel:
                     id: date
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-    
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Loan Status'
+                    text: '     Loan Status'
                     halign: 'left'
                     bold: True
-    
+
                 MDLabel:
                     id: status
                     halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-    
+
         MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(10)
@@ -248,7 +237,7 @@ view_loan_request = """
                 height: dp(5)
             MDGridLayout:
                 cols: 3
-    
+
                 MDLabel:
                     text: '     Total'
                     halign: 'left'
@@ -260,12 +249,12 @@ view_loan_request = """
                     icon: 'currency-inr'
                     halign: 'center' 
                     bold: True   
-    
+
                 MDLabel:
                     id: amount_1
                     halign: 'left'
                     bold: True
-    
+
         BoxLayout:
             orientation: 'horizontal'
             spacing: dp(30)
@@ -280,7 +269,7 @@ view_loan_request = """
                 text_color: 0, 0, 0, 1
                 font_name: "Roboto-Bold.ttf"
                 size_hint: 1, None
-    
+
             MDRaisedButton:
                 text: "Accept"
                 md_bg_color: 5/255, 235/255, 77/255, 1
@@ -302,25 +291,25 @@ view_loan_request = """
             pos_hint: {'top': 1}
             halign:"left"
 
-        BoxLayout:
+        MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(40)
-            padding: dp(30)
+            padding: dp(20)
             size_hint_y: None
             height: self.minimum_height
+
             canvas.before:
                 Color:
                     rgba: 230/255, 245/255, 255/255, 1 
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
-                    radius: [1, 1, 1, 1]
-                    source: "background.jpg"
+                    radius: [5, 5, 5, 5]
             MDGridLayout:
                 cols: 2
 
                 MDLabel:
-                    text: 'Amount:'
+                    text: '     Amount:'
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 0, 0, 0, 1
@@ -332,17 +321,13 @@ view_loan_request = """
                     halign: 'left'
                     size_hint_y: None
                     height: dp(1)
-                    bold: True
-                    theme_text_color: 'Custom'
-                    text_color: 0,0,0,1
 
                 MDLabel:
                     id: amount
                     bold: True
                     halign: 'left'
                     theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    bold: True
+                    text_color: 140/255, 140/255, 140/255, 1
 
             MDLabel:
                 text: ''
@@ -352,7 +337,7 @@ view_loan_request = """
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Product Name'
+                    text: '     Product Name'
                     halign: 'left'
                     bold: True
 
@@ -361,12 +346,11 @@ view_loan_request = """
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Borrower Name'
+                    text: '     Borrower Name'
                     halign: 'left'
                     bold: True
 
@@ -375,12 +359,11 @@ view_loan_request = """
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Phone Number'
+                    text: '     Phone Number'
                     halign: 'left'
                     bold: True
 
@@ -389,12 +372,10 @@ view_loan_request = """
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-                    
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Ascend Score'
+                    text: '     Ascend Score'
                     halign: 'left'
                     bold: True
 
@@ -403,13 +384,12 @@ view_loan_request = """
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
 
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Interest(%)'
+                    text: '     Interest(%)'
                     halign: 'left'
                     bold: True
 
@@ -418,12 +398,11 @@ view_loan_request = """
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Duration(M)'
+                    text: '     Duration(M)'
                     halign: 'left'
                     bold: True
 
@@ -432,12 +411,11 @@ view_loan_request = """
                     halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Credit Limit'
+                    text: '     Credit Limit'
                     halign: 'left'
                     bold: True
 
@@ -446,13 +424,12 @@ view_loan_request = """
                     halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
 
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Published Date'
+                    text: '     Published Date'
                     halign: 'left'
                     bold: True
 
@@ -461,12 +438,11 @@ view_loan_request = """
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Loan Status'
+                    text: '     Loan Status'
                     halign: 'left'
                     bold: True
 
@@ -475,7 +451,6 @@ view_loan_request = """
                     halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
             MDLabel:
                 text: ''
                 halign: 'left'
@@ -503,7 +478,7 @@ view_loan_request = """
                 cols: 3
 
                 MDLabel:
-                    text: 'Total'
+                    text: '     Total'
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 0, 0, 0, 1  
@@ -513,15 +488,11 @@ view_loan_request = """
                     icon: 'currency-inr'
                     halign: 'center' 
                     bold: True   
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
 
                 MDLabel:
                     id: amount_1
                     bold: True
                     halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
         MDBoxLayout:
             orientation: 'horizontal'
             spacing: dp(30)
@@ -546,27 +517,27 @@ view_loan_request = """
             pos_hint: {'top': 1}
             title_align: 'left'
             md_bg_color: 0.043, 0.145, 0.278, 1
-    
 
-        BoxLayout:
+
+        MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(40)
-            padding: dp(30)
+            padding: dp(10)
             size_hint_y: None
             height: self.minimum_height
+
             canvas.before:
                 Color:
                     rgba: 230/255, 245/255, 255/255, 1 
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
-                    radius: [1, 1, 1, 1]
-                    source: "background.jpg"
+                    radius: [5, 5, 5, 5]
             MDGridLayout:
                 cols: 2
 
                 MDLabel:
-                    text: 'Amount:'
+                    text: '     Amount:'
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 0, 0, 0, 1
@@ -578,15 +549,13 @@ view_loan_request = """
                     halign: 'left'
                     size_hint_y: None
                     height: dp(1)
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
 
                 MDLabel:
                     id: amount
                     bold: True
                     halign: 'left'
                     theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
+                    text_color: 140/255, 140/255, 140/255, 1
 
             MDLabel:
                 text: ''
@@ -596,7 +565,7 @@ view_loan_request = """
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Product Name'
+                    text: '     Product Name'
                     halign: 'left'
                     bold: True
 
@@ -605,13 +574,11 @@ view_loan_request = """
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold : True
-                    
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Borrower Name'
+                    text: '     Borrower Name'
                     halign: 'left'
                     bold: True
 
@@ -620,13 +587,11 @@ view_loan_request = """
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold : True
-                    
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Phone Number'
+                    text: '     Phone Number'
                     halign: 'left'
                     bold: True
 
@@ -635,13 +600,11 @@ view_loan_request = """
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold : True
-                    
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Ascend Score'
+                    text: '     Ascend Score'
                     halign: 'left'
                     bold: True
 
@@ -650,13 +613,11 @@ view_loan_request = """
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold : True
-                    
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Interest(%)'
+                    text: '     Interest(%)'
                     halign: 'left'
                     bold: True
 
@@ -665,13 +626,11 @@ view_loan_request = """
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold : True
-                    
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Duration(M)'
+                    text: '     Duration(M)'
                     halign: 'left'
                     bold: True
 
@@ -680,13 +639,11 @@ view_loan_request = """
                     halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold : True
-                    
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Credit Limit'
+                    text: '     Credit Limit'
                     halign: 'left'
                     bold: True
 
@@ -695,14 +652,12 @@ view_loan_request = """
                     halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold : True
-                    
 
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Published Date'
+                    text: '     Published Date'
                     halign: 'left'
                     bold: True
 
@@ -711,13 +666,11 @@ view_loan_request = """
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold : True
-                    
 
             MDGridLayout:
                 cols: 2
                 MDLabel:
-                    text: 'Loan Status'
+                    text: '     Loan Status'
                     halign: 'left'
                     bold: True
 
@@ -726,8 +679,6 @@ view_loan_request = """
                     halign: 'left' 
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-                    
             MDLabel:
                 text: ''
                 halign: 'left'
@@ -755,7 +706,7 @@ view_loan_request = """
                 cols: 3
 
                 MDLabel:
-                    text: 'Total'
+                    text: '     Total'
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 0, 0, 0, 1  
@@ -765,16 +716,11 @@ view_loan_request = """
                     icon: 'currency-inr'
                     halign: 'center' 
                     bold: True   
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
 
                 MDLabel:
                     id: amount_1
-                    bold: Ture
+                    bold: True
                     halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    
 
         MDBoxLayout:
             orientation: "vertical"
@@ -794,6 +740,7 @@ Builder.load_string(view_loan_request)
 class ViewLoansRequest(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
         data = app_tables.fin_loan_details.search()
         profile = app_tables.fin_user_profile.search()
         customer_id = []
@@ -935,16 +882,8 @@ class ViewLoansProfileScreen(Screen):
         self.loan_id = None
 
     def on_back_button_press(self):
-        sm = self.manager
-
-        # Create a new instance of the LoginScreen
-        under_process = ViewLoansRequest(name='ViewLoansRequest')
-
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(under_process)
-
-        # Switch to the LoginScreen
-        sm.current = 'ViewLoansRequest'
+        self.manager.add_widget(Factory.ViewLoansRequest(name='ViewLoansRequest'))
+        self.manager.current = 'ViewLoansRequest'
 
     def initialize_with_value(self, value, data):
         profile = app_tables.fin_user_profile.search()
@@ -1112,7 +1051,6 @@ class ViewLoansProfileScreen(Screen):
                     borrower_name = i['borrower_full_name']  # Get borrower name for this loan ID
             index = loan_idlist.index(loan_id)
             data[index]['loan_updated_status'] = 'rejected'
-            data[index]['lender_rejected_timestamp'] = datetime.now()
             sm = self.manager
             disbursed = ViewLoansProfileScreenRL(name='ViewLoansProfileScreenRL')
             sm.add_widget(disbursed)
@@ -1168,16 +1106,7 @@ class ViewLoansProfileScreen(Screen):
     def go_back(self):
         # Navigate to the previous screen with a slide transition
         self.manager.transition = SlideTransition(direction='right')
-        sm = self.manager
-
-        # Create a new instance of the LoginScreen
-        under_process = ViewLoansRequest(name='ViewLoansRequest')
-
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(under_process)
-
-        # Switch to the LoginScreen
-        sm.current = 'ViewLoansRequest'
+        self.manager.current = 'ViewLoansRequest'
 
     def show_validation_error(self, error_message):
         dialog = MDDialog(
@@ -1306,16 +1235,8 @@ class ViewLoansProfileScreenLR(Screen):
         return False  # Continue handling the event
 
     def on_back_button_press(self):
-        sm = self.manager
-
-        # Create a new instance of the LoginScreen
-        under_process = ViewLoansRequest(name='ViewLoansRequest')
-
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(under_process)
-
-        # Switch to the LoginScreen
-        sm.current = 'ViewLoansRequest'
+        self.manager.add_widget(Factory.ViewLoansRequest(name='ViewLoansRequest'))
+        self.manager.current = 'ViewLoansRequest'
 
     '''def go_back(self):
         # Navigate to the previous screen with a slide transition
@@ -1422,7 +1343,7 @@ class ViewLoansProfileScreenLR(Screen):
                 if tenure[index]:
                     # Add the tenure in months to the loan_disbursed_timestamp
                     first_emi_due_date = (
-                                data[index]['loan_disbursed_timestamp'] + timedelta(days=30 * tenure[index])).date()
+                            data[index]['loan_disbursed_timestamp'] + timedelta(days=30 * tenure[index])).date()
                     data[index]['first_emi_payment_due_date'] = first_emi_due_date
                 else:
                     # Handle the case where tenure is not provided (raise an exception or set to None)
@@ -1469,16 +1390,8 @@ class ViewLoansProfileScreenLR(Screen):
         elif minutes_difference > 30:
             self.show_validation_error(f"Time Out You Must Finish Before 30 Minutes")
             data[index]['loan_updated_status'] = 'lost opportunities'
-            sm = self.manager
-
-            # Create a new instance of the LoginScreen
-            under_process = ViewLoansRequest(name='ViewLoansRequest')
-
-            # Add the LoginScreen to the existing ScreenManager
-            sm.add_widget(under_process)
-
-            # Switch to the LoginScreen
-            sm.current = 'ViewLoansRequest'
+            self.manager.add_widget(Factory.ViewLoansRequest(name='ViewLoansRequest'))
+            self.manager.current = 'ViewLoansRequest'
             return
 
     def show_success_dialog(self, text):
@@ -1542,16 +1455,7 @@ class ViewLoansProfileScreenLR(Screen):
     def open_dashboard_screen3(self, dialog):
 
         dialog.dismiss()
-        sm = self.manager
-
-        # Create a new instance of the LoginScreen
-        under_process = ViewLoansRequest(name='ViewLoansRequest')
-
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(under_process)
-
-        # Switch to the LoginScreen
-        sm.current = 'ViewLoansRequest'
+        self.manager.current = 'ViewLoansRequest'
 
 
 class ViewLoansProfileScreenRL(Screen):
@@ -1560,16 +1464,7 @@ class ViewLoansProfileScreenRL(Screen):
         self.loan_id = None
 
     def on_back_button_press(self):
-        sm = self.manager
-
-        # Create a new instance of the LoginScreen
-        under_process = ViewLoansRequest(name='ViewLoansRequest')
-
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(under_process)
-
-        # Switch to the LoginScreen
-        sm.current = 'ViewLoansRequest'
+        self.manager.current = 'ViewLoansRequest'
 
     def initialize_with_value(self, value, data):
         profile = app_tables.fin_user_profile.search()
@@ -1641,16 +1536,7 @@ class ViewLoansProfileScreenRL(Screen):
     def go_back(self):
         # Navigate to the previous screen with a slide transition
         self.manager.transition = SlideTransition(direction='right')
-        sm = self.manager
-
-        # Create a new instance of the LoginScreen
-        under_process = ViewLoansRequest(name='ViewLoansRequest')
-
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(under_process)
-
-        # Switch to the LoginScreen
-        sm.current = 'ViewLoansRequest'
+        self.manager.current = 'ViewLoansRequest'
 
 
 class MyScreenManager(ScreenManager):

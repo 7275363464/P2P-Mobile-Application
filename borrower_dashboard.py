@@ -5,6 +5,7 @@ from datetime import datetime
 
 import anvil
 from anvil.tables import app_tables
+from kivy.properties import StringProperty
 from kivy.uix.popup import Popup
 from kivymd.app import MDApp
 from kivy.lang import Builder
@@ -17,6 +18,7 @@ from kivymd.uix.button import MDRectangleFlatButton, MDRaisedButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.spinner import MDSpinner
+from borrower_notification import NotificationScreen
 from borrower_extend_loan import ExtensionLoansRequest
 from borrower_view_transaction_history import TransactionBH
 from borrower_application_tracker import ALLLoansAPT
@@ -66,15 +68,41 @@ user_helpers = '''
                         MDScreen:
                             MDBoxLayout:
                                 orientation: 'vertical'
-
+        
                                 MDTopAppBar:
-                                    title: "Borrower Dashboard"
-                                    elevation: 0
-                                    pos_hint: {"top": 1}
-                                    md_bg_color: 0.043, 0.145, 0.278, 1
-                                    specific_text_color: "#ffffff"
+                                    elevation: 2
+                                    pos_hint: {'top': 1}
                                     left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
-                                    right_action_items: [['bell', lambda x: root.notification()]]
+                                    title_align: 'center'
+                                    md_bg_color: 0.043, 0.145, 0.278, 1
+        
+        
+        
+                                    BoxLayout:
+                                        size_hint_x: None
+                                        width: dp(20)
+                                        pos_hint: {"center_x": 0.9, "center_y": 1.5}
+                                        spacing: dp(-16)
+        
+                                        MDIconButton:
+                                            icon: "bell"
+                                            on_touch_down: root.notification() if self.collide_point(*args[1].pos) else None    
+                                            pos_hint: {"center_y": 1.3}
+                                            theme_text_color: 'Custom'
+                                            text_color: 1, 1, 1, 1 
+        
+        
+                                        MDLabel:
+                                            id: notification_label
+                                            text: root.false_count_text
+                                            size_hint_x: None
+                                            width: self.texture_size[0]
+                                            halign: "center"
+                                            valign: "center"
+                                            theme_text_color: 'Custom'
+                                            text_color: 1, 0, 0, 1 
+                                            font_name: "Roboto-Bold"
+                                            pos_hint: {"center_y": 1.5}
 
                                 ScrollView:
                                     MDBoxLayout:
@@ -1145,6 +1173,7 @@ user_helpers = '''
 
 class DashboardScreen(Screen):
     Builder.load_string(user_helpers)
+    false_count_text = StringProperty("")
 
     dashboard = None  # Initialize this variable properly
 
@@ -1155,8 +1184,21 @@ class DashboardScreen(Screen):
     def type(self):
         if self.dashboard is not None:
             return self.dashboard
-    def notification(self):
-        pass
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.load_false_count()
+
+    def load_false_count(self):
+        try:
+            with open("false_count.json", "r") as json_file:
+                data = json.load(json_file)
+                false_count = data.get("false_count", 0)
+                self.false_count_text = str(false_count)
+        except FileNotFoundError:
+            self.false_count_text = "0"
+    def notification(self, ):
+        self.manager.add_widget(Factory.NotificationScreen(name='NotificationScreen'))
+        self.manager.current = 'NotificationScreen'
 
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically

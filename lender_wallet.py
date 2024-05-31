@@ -21,7 +21,7 @@ Builder.load_string(
 
 <LenderWalletScreen>:
     MDTopAppBar:
-        title: "GP2P-Wallet"
+        title: "ASCEND-Wallet"
         elevation: 2
         pos_hint: {'top': 1}
         left_action_items: [['arrow-left',lambda x: root.go_back()]]

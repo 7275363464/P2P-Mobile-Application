@@ -2,6 +2,7 @@
 import anvil
 from anvil.tables import app_tables
 from kivy import properties
+from kivy.factory import Factory
 from pytz import utc
 from kivy.core.window import Window
 from kivy.properties import ListProperty, Clock
@@ -1203,7 +1204,7 @@ class BorrowerDuesScreen(Screen):
         return False
 
     def go_back(self):
-        self.manager.transition = SlideTransition(direction='right')
+        self.manager.add_widget(Factory.DuesScreen(name='DuesScreen'))
         self.manager.current = 'DuesScreen'
 
     def current(self):

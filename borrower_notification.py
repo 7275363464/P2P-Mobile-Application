@@ -1,6 +1,8 @@
 from datetime import datetime
 import anvil.server
 import json
+
+from kivy.clock import mainthread, Clock
 from kivy.config import value
 from kivy.factory import Factory
 from kivy.lang import Builder
@@ -9,9 +11,11 @@ from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
+from kivy.uix.modalview import ModalView
 from kivy.uix.popup import Popup
 from kivymd.uix.button import MDFlatButton, MDRectangleFlatButton
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.label import MDLabel
 from kivymd.uix.list import *
 from kivy.lang import Builder
 from datetime import datetime
@@ -422,6 +426,14 @@ class NotificationScreen(Screen):
         super().__init__(**kwargs)
         self.clicked_notifications = set()  # Set to store clicked notifications
         self.load_notifications()
+        Clock.schedule_interval(self.refresh_wrapper, 15)  # Schedule refresh every 10 seconds
+
+    @mainthread
+    def refresh_wrapper(self, dt):
+        self.refresh()
+
+    def refresh(self):
+        self.load_notifications()
 
     def load_notifications(self):
         self.ids.container1.clear_widgets()
@@ -643,9 +655,8 @@ class NotificationScreen(Screen):
         sm.current = 'BorrowerDuesScreen'
         self.manager.get_screen('BorrowerDuesScreen').initialize_with_value(loan_id, schedule_date)
 
-
-
-    def display_notifications(self, index_list, loan_id, borrower_name, loan_status, loan_amount, product_name, loan_data, status_timestamp):
+    def display_notifications(self, index_list, loan_id, borrower_name, loan_status, loan_amount, product_name,
+                              loan_data, status_timestamp):
         for i in reversed(index_list):
             status_message = f"{borrower_name[i]} has {loan_status[i]} your loan request"
             secondary_message = f"for {loan_amount[i]} loan amount in {product_name[i]} product"
@@ -675,30 +686,35 @@ class NotificationScreen(Screen):
             )
             item.loan_id = loan_id[i]
             item.bind(
-                on_release=lambda instance, loan_id=loan_id[i], loan_type='regular': self.icon_button_clicked(instance, loan_id, loan_type))
+                on_release=lambda instance, loan_id=loan_id[i], loan_type='regular': self.icon_button_clicked(instance,
+                                                                                                              loan_id,
+                                                                                                              loan_type))
             self.ids.container1.add_widget(item)
 
     def is_notification_clicked(self, loan_id):
         try:
             with open("notification_status.json", "r") as json_file:
                 data = json.load(json_file)
-            return data.get(str(loan_id), False)
+            status = data.get(str(loan_id))
+            if isinstance(status, bool):
+                return status
+            return status.get("clicked", False) if status else False
         except FileNotFoundError:
             return False
 
     def icon_button_clicked(self, instance, loan_id, loan_type):
         print(f"Clicked loan ID: {loan_id} of type {loan_type}")
 
-        # Update clicked status of the notification
-        self.clicked_notifications.add(loan_id)
+        # Update the status in the JSON file
+        self.update_json_status(loan_id, loan_type)
 
         # Remove bold formatting from the clicked item
         instance.text = instance.text.replace("[b]", "").replace("[/b]", "")
         instance.secondary_text = instance.secondary_text.replace("[b]", "").replace("[/b]", "")
         instance.tertiary_text = instance.tertiary_text.replace("[b]", "").replace("[/b]", "")
 
-        # Update the status in the JSON file
-        self.update_json_status(loan_id)
+        # Refresh the notification list to reflect the changes
+        self.refresh()
 
         data = app_tables.fin_loan_details.search()  # Fetch data here
         loan_status = None
@@ -719,14 +735,21 @@ class NotificationScreen(Screen):
         sm.current = view_screen.name
         self.manager.get_screen(view_screen.name).initialize_with_value(loan_id, data, notification_type=loan_type)
 
-    def update_json_status(self, loan_id):
+    def refresh(self):
+        self.load_notifications()
+
+    def update_json_status(self, loan_id, loan_type):
         try:
             with open("notification_status.json", "r") as json_file:
                 data = json.load(json_file)
         except FileNotFoundError:
             data = {}
 
-        data[str(loan_id)] = True
+        # Update the JSON data with loan type and clicked status
+        data[str(loan_id)] = {
+            "loan_type": loan_type,
+            "clicked": True
+        }
 
         with open("notification_status.json", "w") as json_file:
             json.dump(data, json_file, indent=4)
@@ -751,12 +774,15 @@ class NotificationScreen(Screen):
         )
         item.loan_id = loan_id
         item.bind(
-            on_release=lambda instance, loan_id=loan_id, loan_type=loan_type: self.icon_button_clicked(instance, loan_id, loan_type))
+            on_release=lambda instance, loan_id=loan_id, loan_type=loan_type: self.icon_button_clicked(instance,
+                                                                                                       loan_id,
+                                                                                                       loan_type))
         self.ids.container1.add_widget(item)
 
     def add_notification_item(self, borrower_name, loan_id, status, notification_type, loan_amount, product_name,
                               status_timestamp):
-        secondary_message = f"{borrower_name} has {status} your {notification_type} request"
+        formatted_status_text =f"{borrower_name} has {status} your {notification_type} request"
+        secondary_message = f"for {loan_amount} loan amount in {product_name} product"
 
         if status_timestamp:
             tertiary_message = status_timestamp.strftime("%Y-%m-%d, %A")
@@ -764,19 +790,21 @@ class NotificationScreen(Screen):
             tertiary_message = "No timestamp available"
 
         if self.is_notification_clicked(loan_id):
+            formatted_text = formatted_status_text
             formatted_secondary_message = secondary_message
             formatted_tertiary_message = tertiary_message
         else:
+            formatted_text = f"[b]{formatted_status_text}[/b]"
             formatted_secondary_message = f"[b]{secondary_message}[/b]"
             formatted_tertiary_message = f"[b]{tertiary_message}[/b]"
 
-        formatted_text = f"[b]{formatted_secondary_message}[/b]"
+
 
         item = ThreeLineAvatarIconListItem(
             IconLeftWidget(icon="card-account-details-outline"),
             IconRightWidget(icon="chevron-right"),
             text=formatted_text,
-            secondary_text=f"[b]for {loan_amount} loan amount in {product_name} product[/b]",
+            secondary_text=formatted_secondary_message,
             tertiary_text=formatted_tertiary_message,
             text_color=(0, 0, 0, 1),  # Black color
             theme_text_color='Custom',
@@ -789,9 +817,8 @@ class NotificationScreen(Screen):
         item.bind(
             on_release=lambda instance, loan_id=loan_id, loan_type=notification_type: self.icon_button_clicked(instance,
                                                                                                                loan_id,
-                                                                                                               loan_type))
+                                                                                                               notification_type))
         self.ids.container1.add_widget(item)
-
     def on_back_button_press(self):
         self.manager.current = 'DashboardScreen'
 
@@ -814,8 +841,42 @@ class NotificationScreen(Screen):
         return False  # Continue handling the event
 
     def go_back(self):
+        # Create a modal view for the loading animation
+        modal_view = ModalView(size_hint=(None, None), size=(300, 150), background_color=[0, 0, 0, 0])
+
+        # Create a BoxLayout to hold the loading text
+        box_layout = BoxLayout(orientation='vertical')
+
+        # Create a label for the loading text
+        loading_label = MDLabel(
+            text="Loading...",
+            halign="center",
+            valign="center",
+            theme_text_color="Custom",
+            text_color=[1, 1, 1, 1],
+            font_size="20sp",
+            bold=True
+        )
+
+        # Add the label to the box layout
+        box_layout.add_widget(loading_label)
+
+        # Add the box layout to the modal view
+        modal_view.add_widget(box_layout)
+
+        # Open the modal view
+        modal_view.open()
+
+        # Perform the actual action (e.g., checking account details and navigating)
+        Clock.schedule_once(lambda dt: self.show_transfer_screen(modal_view), 1)
+
+    def show_transfer_screen(self, modal_view):
+        # Dismiss the loading animation modal view
+        modal_view.dismiss()
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'DashboardScreen'
+
+
 
     def on_keyboard(self, window, key, *args):
         if key == 27:  # Key code for the 'Escape' key

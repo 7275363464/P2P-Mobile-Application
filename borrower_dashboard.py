@@ -6,6 +6,7 @@ from datetime import datetime
 import anvil
 from anvil.tables import app_tables
 from kivy.properties import StringProperty
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 from kivymd.app import MDApp
 from kivy.lang import Builder
@@ -1187,6 +1188,8 @@ class DashboardScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.load_false_count()
+        # Schedule the refresh every 5 seconds
+        Clock.schedule_interval(self.refresh_false_count, 5)
 
     def load_false_count(self):
         try:
@@ -1196,9 +1199,48 @@ class DashboardScreen(Screen):
                 self.false_count_text = str(false_count)
         except FileNotFoundError:
             self.false_count_text = "0"
-    def notification(self, ):
+
+    def refresh_false_count(self, dt):
+        print("mani")
+        self.load_false_count()
+
+    def notification(self):
+        # Create a modal view for the loading animation
+        modal_view = ModalView(size_hint=(None, None), size=(300, 150), background_color=[0, 0, 0, 0])
+
+        # Create a BoxLayout to hold the loading text
+        box_layout = BoxLayout(orientation='vertical')
+
+        # Create a label for the loading text
+        loading_label = MDLabel(
+            text="Loading...",
+            halign="center",
+            valign="center",
+            theme_text_color="Custom",
+            text_color=[1, 1, 1, 1],
+            font_size="20sp",
+            bold=True
+        )
+
+        # Add the label to the box layout
+        box_layout.add_widget(loading_label)
+
+        # Add the box layout to the modal view
+        modal_view.add_widget(box_layout)
+
+        # Open the modal view
+        modal_view.open()
+
+        # Perform the actual action (e.g., checking account details and navigating)
+        Clock.schedule_once(lambda dt: self.show_transfer_screen(modal_view), 1)
+
+    def show_transfer_screen(self, modal_view):
+        # Dismiss the loading animation modal view
+        modal_view.dismiss()
         self.manager.add_widget(Factory.NotificationScreen(name='NotificationScreen'))
         self.manager.current = 'NotificationScreen'
+
+
 
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically

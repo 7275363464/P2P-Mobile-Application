@@ -301,7 +301,7 @@ view_loans = '''
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
                     bold : True
-                    
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -434,7 +434,7 @@ view_loans = '''
 <ViewLoansProfileScreens2>
     MDGridLayout:
         cols: 1
-    
+
         MDTopAppBar:
             title: "View Loan details"
             elevation: 2
@@ -527,7 +527,7 @@ view_loans = '''
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
                     bold : True
-                    
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -612,7 +612,7 @@ view_loans = '''
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
                     bold : True
-                    
+
         MDBoxLayout:
             orientation: 'vertical'
             padding: dp(15)
@@ -625,7 +625,7 @@ view_loans = '''
                     pos: self.pos
                     size: self.size
                     radius: [25, 25, 25, 25]
-            
+
             MDGridLayout:
                 cols: 3
 
@@ -743,9 +743,32 @@ class ALlLoansScreen(Screen):
         return False  # Continue handling the event
 
     def go_back(self):
-        # Navigate to the previous screen with a slide transition
+        from lender_dashboard import LenderDashboard
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'ViewLoansScreen'
+
+        type = self.manager.get_screen('LenderDashboard').type()
+        print(type)
+        if type == 'dashboard':
+            self.manager.transition = SlideTransition(direction='right')
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            profile = LenderDashboard(name='LenderDashboard')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'LenderDashboard'
+        else:
+            sm = self.manager
+            profile = ViewLoansScreen(name='ViewLoansScreen')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'ViewLoansScreen'
 
     def refresh(self):
         self.ids.container2.clear_widgets()
@@ -785,6 +808,7 @@ class ViewLoansScreen(Screen):
         anim.start(loading_label)
 
     def all_loanscreen(self):
+        self.manager.get_screen('LenderDashboard').dash("all")
         modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -820,6 +844,7 @@ class ViewLoansScreen(Screen):
         sm.current = 'ALlLoansScreen'
 
     def go_to_open_loans(self):
+        self.manager.get_screen('LenderDashboard').dash("open")
         modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -855,6 +880,7 @@ class ViewLoansScreen(Screen):
         sm.current = 'OpenViewLoanScreen'
 
     def go_to_rejected_loans(self):
+        self.manager.get_screen('LenderDashboard').dash("reject")
         modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -890,6 +916,7 @@ class ViewLoansScreen(Screen):
         sm.current = 'ViewRejectedLoansScreen'
 
     def go_to_under_process_loans(self):
+        self.manager.get_screen('LenderDashboard').dash("under")
         modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -926,6 +953,7 @@ class ViewLoansScreen(Screen):
         sm.current = 'ViewUnderProcess'
 
     def go_to_closed_loans(self):
+        self.manager.get_screen('LenderDashboard').dash("closed")
         modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -1052,15 +1080,32 @@ class OpenViewLoanScreen(Screen):
 
     def go_back(self):
         # Navigate to the previous screen with a slide transition
+        from lender_dashboard import LenderDashboard
         self.manager.transition = SlideTransition(direction='right')
-        sm = self.manager
-        profile = ViewLoansScreen(name='ViewLoansScreen')
 
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(profile)
+        type = self.manager.get_screen('LenderDashboard').type()
+        print(type)
+        if type == 'dashboard':
+            self.manager.transition = SlideTransition(direction='right')
+            sm = self.manager
 
-        # Switch to the LoginScreen
-        sm.current = 'ViewLoansScreen'
+            # Create a new instance of the LoginScreen
+            profile = LenderDashboard(name='LenderDashboard')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'LenderDashboard'
+        else:
+            sm = self.manager
+            profile = ViewLoansScreen(name='ViewLoansScreen')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'ViewLoansScreen'
 
     def refresh(self):
         self.ids.container1.clear_widgets()
@@ -1335,8 +1380,32 @@ class ViewRejectedLoansScreen(Screen):
 
     def go_back(self):
         # Navigate to the previous screen with a slide transition
+        from lender_dashboard import LenderDashboard
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'ViewLoansScreen'
+
+        type = self.manager.get_screen('LenderDashboard').type()
+        print(type)
+        if type == 'dashboard':
+            self.manager.transition = SlideTransition(direction='right')
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            profile = LenderDashboard(name='LenderDashboard')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'LenderDashboard'
+        else:
+            sm = self.manager
+            profile = ViewLoansScreen(name='ViewLoansScreen')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'ViewLoansScreen'
 
     def refresh(self):
         self.ids.container4.clear_widgets()
@@ -1433,8 +1502,32 @@ class ViewClosedLoansScreen(Screen):
 
     def go_back(self):
         # Navigate to the previous screen with a slide transition
+        from lender_dashboard import LenderDashboard
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'ViewLoansScreen'
+
+        type = self.manager.get_screen('LenderDashboard').type()
+        print(type)
+        if type == 'dashboard':
+            self.manager.transition = SlideTransition(direction='right')
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            profile = LenderDashboard(name='LenderDashboard')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'LenderDashboard'
+        else:
+            sm = self.manager
+            profile = ViewLoansScreen(name='ViewLoansScreen')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'ViewLoansScreen'
 
     def refresh(self):
         self.ids.container6.clear_widgets()

@@ -195,10 +195,11 @@ user_helpers = '''
                                                     size_hint_y: None
                                                     height: dp(20)
                                         GridLayout:
-                                            cols: 2
+                                            cols: 3  
                                             spacing: dp(10)
                                             size_hint_y: None
                                             height: dp(20)
+                                            
                                             MDLabel:
                                                 id: product_name
                                                 text: "Product Name:"
@@ -210,6 +211,11 @@ user_helpers = '''
                                                 id: product_name
                                                 text: "TVS"
                                                 font_family: "Arial"
+                                                halign: "left"
+                                            MDLabel:
+                                                text: ""
+                                                font_family: "Arial"
+                                                bold: True
                                                 halign: "left"
                                         
                                         
@@ -262,21 +268,21 @@ user_helpers = '''
 
                                                 GridLayout:
                                                     cols: 2
-                                                    spacing: dp(10)
+                                                    spacing: dp(20)
                                                     padding: dp(5)
 
                                                     Image:
-                                                        source: "icon2.png"
+                                                        source: "icon4.png"
                                                         size_hint: None, None
-                                                        size: "60dp", "60dp"
+                                                        size: "30dp", "60dp"
                                                     MDBoxLayout:
                                                         orientation: 'vertical'
                                                         MDLabel:
-                                                            text: "Loan Status"
+                                                            text: "Tenure"
                                                             font_size: dp(12)
                                                         MDLabel:
-                                                            id:status
-                                                            text: "under process"
+                                                            id: tenure
+                                                            text: "24 Months"
                                                             font_size:dp(15)
 
                                         MDLabel:
@@ -328,24 +334,24 @@ user_helpers = '''
                                                     Line:
                                                         width: 2
                                                         rectangle: (self.x, self.y, self.width, self.height)
-
+                                                        
                                                 GridLayout:
                                                     cols: 2
-                                                    spacing: dp(20)
+                                                    spacing: dp(10)
                                                     padding: dp(5)
 
                                                     Image:
-                                                        source: "icon4.png"
+                                                        source: "icon5.png"
                                                         size_hint: None, None
-                                                        size: "30dp", "60dp"
+                                                        size: "60dp", "60dp"
                                                     MDBoxLayout:
                                                         orientation: 'vertical'
                                                         MDLabel:
-                                                            text: "Tenure"
+                                                            text: "Loan Status"
                                                             font_size: dp(12)
                                                         MDLabel:
-                                                            id: tenure
-                                                            text: "24 Months"
+                                                            id:status
+                                                            text: "under process"
                                                             font_size:dp(15)
                                         MDLabel:
                                             text: ""
@@ -354,7 +360,7 @@ user_helpers = '''
                                             cols: 1
                                             spacing: dp(20)
                                             padding: dp(20)
-                                            pos_hint: {'center_x': 0.75}
+                                            pos_hint: {'center_x': 0.80}
                                             MDFillRoundFlatIconButton:
                                                 text: "View More"
                                                 icon: "clipboard-text-outline"
@@ -381,6 +387,7 @@ user_helpers = '''
                                             text: ''
                                             size_hint_y: None
                                             height: dp(30)
+
                                             
             
                     
@@ -689,168 +696,280 @@ user_helpers = '''
             icon: 'account'
             icon_color: '#4c594f'
             font_name: "Roboto-Bold"
-            on_tab_press: root.refresh_profile_data()
-            BoxLayout:
+            MDBoxLayout:
                 orientation: 'vertical'
-                size_hint: 1, 1
-                pos_hint: {'center_x':0.5, 'center_y':0.5}
                 MDTopAppBar:
-                    title: "View Profile"
+                    title: "Account Info"
                     elevation: 2
                     pos_hint: {'top': 1}
-                    right_action_items: [['refresh', lambda x: root.refresh2()]]
-                    title_align: 'center'
+                    left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+                    right_action_items: [['refresh', lambda x: root.refresh()]]
+                    title_align: 'center'  # Center-align the title
                     md_bg_color: 0.043, 0.145, 0.278, 1
-
-                ScrollView:  # Add ScrollView here
-                    do_scroll_x: False
-                    BoxLayout:
-                        orientation: "vertical"
+        
+                MDBoxLayout:
+                    size_hint: 1, 1
+                    orientation: "vertical"
+                    spacing: dp(5)
+                    padding: dp(5)
+        
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        pos_hint: {"top": 1}
+                        size_hint_y: 0.15
                         padding:dp(10)
-                        spacing:dp(25)
-                        size_hint_y: None
-                        height: self.minimum_height
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 0, 1
+                            Line:
+                                width: 0.25
+                                rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+        
+        
+                        text_size: self.width - dp(20), None
+        
+                        Image:
+                            source: 'icon8.png'
+                            halign: 'center'
+                            valign: 'middle'
+                            size_hint_x: None
+                            width: dp(34)
+                            spacing: dp(30)
+                            padding: dp(30)
+                            theme_text_color: 'Custom'
+                            text_color: 0.043, 0.145, 0.278, 1
+                            size: dp(90), dp(90)
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_touch_down:  root.go_to_profile() if self.collide_point(*args[1].pos) else None
+                            canvas.before:
+                                Color:
+                                    rgba: 1, 1, 1, 1
+                                Ellipse:
+                                    size: self.size
+                                    pos: self.pos
+        
                         MDBoxLayout:
-                            orientation: 'vertical'
+                            orientation: "vertical"
                             size_hint_y: None
                             height: self.minimum_height
-                            padding: dp(20)
-                            BoxLayout:
-                                id: box2
-                                orientation: 'vertical'
+                            pos_hint: {"center_y": 0.5}
+                            padding: dp(5)
+        
+                            MDLabel:
+                                id: username
+                                text: "Welcome"
+                                bold: True
+                                font_size: dp(20)
                                 size_hint_y: None
-                                height: dp(500)
-                                padding: [10, 0,0,0]
-                                canvas.before:
-                                    Color:
-                                        rgba: 0, 0, 0, 1  # Blue color for the box
-                                    Line:
-                                        rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
-
-                                MDGridLayout:
-                                    cols: 2
-                                    spacing: dp(10)
-                                    padding: dp(10)
-                                    MDLabel:
-                                        text: "Name:" 
-                                        size_hint_y:None
-                                        height:dp(50)
-                                        bold: True
-                                        halign: "left"
-                                    MDLabel:
-                                        id: name        
-                                        text: "" 
-                                        size_hint_y:None
-                                        height:dp(50)
-                                        halign: "left"
-                                MDGridLayout:
-                                    cols: 2
-                                    spacing: dp(10)
-                                    padding: dp(10)
-                                    MDLabel:
-                                        text: "Email:" 
-                                        size_hint_y:None
-                                        height:dp(50)
-                                        bold: True
-                                        halign: "left"
-                                    MDLabel:
-                                        id: email        
-                                        text: "" 
-                                        size_hint_y:None
-                                        height:dp(50)
-                                        halign: "left"
-
-                                MDGridLayout:
-                                    cols: 2
-                                    spacing: dp(10)
-                                    padding: dp(10)
-                                    MDLabel:
-                                        text: "Mobile No::" 
-                                        size_hint_y:None
-                                        height:dp(50)
-                                        bold: True
-                                        halign: "left"
-                                    MDLabel:
-                                        id: mobile_no        
-                                        text: "" 
-                                        size_hint_y:None
-                                        height:dp(50)
-                                        halign: "left"
-                                MDGridLayout:
-                                    cols: 2
-                                    spacing: dp(10)
-                                    padding: dp(10)
-                                    MDLabel:
-                                        text: "Date Of Birth::" 
-                                        size_hint_y:None
-                                        height:dp(50)
-                                        bold: True
-                                        halign: "left"
-                                    MDLabel:
-                                        id: dob        
-                                        text: "" 
-                                        size_hint_y:None
-                                        height:dp(50)
-                                        halign: "left"
-                                MDGridLayout:
-                                    cols: 2
-                                    spacing: dp(10)
-                                    padding: dp(10)
-                                    MDLabel:
-                                        text: "City:" 
-                                        size_hint_y:None
-                                        height:dp(50)
-                                        bold: True
-                                        halign: "left"
-                                    MDLabel:
-                                        id: city        
-                                        text: "" 
-                                        size_hint_y:None
-                                        height:dp(50)
-                                        halign: "left"
-                                MDGridLayout:
-                                    cols: 2
-                                    spacing: dp(10)
-                                    padding: dp(10)
-                                    MDLabel:
-                                        text: "Gender:" 
-                                        size_hint_y:None
-                                        height:dp(50)
-                                        bold: True
-                                        halign: "left"
-                                    MDLabel:
-                                        id: gender        
-                                        text: "" 
-                                        size_hint_y:None
-                                        height:dp(50)
-                                        halign: "left"
-                                MDGridLayout:
-                                    cols: 2
-                                    spacing: dp(10)
-                                    padding: dp(10)
-                                    MDLabel:
-                                        text: "Marrital Status:" 
-                                        size_hint_y:None
-                                        height:dp(50)
-                                        bold: True
-                                        halign: "left"
-                                    MDLabel:
-                                        id: marrital_status        
-                                        text: "" 
-                                        size_hint_y:None
-                                        height:dp(50)
-                                        halign: "left"
-
-                                MDFloatLayout:
-                                    MDRaisedButton:
-                                        text: "Edit Profile"
-                                        md_bg_color: 0.043, 0.145, 0.278, 1
-                                        font_name: "Roboto-Bold"
-                                        size_hint: 0.4, None
-                                        height: dp(50)
-                                        on_release:root.on_edit()
-                                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                                        font_size:dp(15)     
+                                height: self.texture_size[1]
+        
+                            MDLabel:
+                                id: date
+                                text: "Joined Date:"
+                                font_size: dp(15)
+                                size_hint_y: None
+                                height: self.texture_size[1]
+        
+                            MDLabel:
+                                id: balance
+                                text: "Available Balance:"
+                                font_size: dp(15)
+                                size_hint_y: None
+                                height: self.texture_size[1]
+        
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        size_hint_y:0.47
+        
+                        MDCard:
+                            pos_hint:{"top": 1}
+        
+                            MDGridLayout:
+                                cols: 2
+                                spacing: dp(20)  # Equal gap between cards
+                                padding: dp(20)  # Proper padding around the grid
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+                                    size_hint_y: None
+                                    height: dp(70)
+                                    md_bg_color: "#ffffff"
+                                    canvas.before:
+                                        Color:
+                                            rgba: 0, 0, 0, 1
+                                        Line:
+                                            width: 1.5
+                                            rectangle: (self.x, self.y, self.width,self.height)
+                                    # Card 1
+                                    MDCard:
+                                        md_bg_color: "#ffffff"  # Customize background color
+                                        orientation: "vertical"
+                                        padding:dp(9), dp(3)
+                                        on_release: root.go_to_profile()
+        
+                                        Image:
+                                            source: "icon7.png"
+                                            size_hint: (0.4, 1)
+                                            pos_hint:{"center_x":0.5,"center_y":0.2}
+                                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        
+                                        MDLabel:
+                                            text: "Profile Info"
+                                            font_size:dp(12)
+                                            bold: True
+                                            theme_text_color: "Custom"
+                                            text_color: 0, 0, 0, 1
+                                            halign: "center"  # Center-align the label text
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+                                    size_hint_y: None
+                                    height: dp(70)
+                                    md_bg_color: "#ffffff"
+                                    canvas.before:
+                                        Color:
+                                            rgba: 0, 0, 0, 1
+                                        Line:
+                                            width: 1.5
+                                            rectangle: (self.x, self.y, self.width,self.height)
+                                    MDCard:
+                                        md_bg_color: "#ffffff"  # Customize background color
+                                        orientation: "vertical"
+                                        padding:dp(9), dp(3)
+        
+                                        Image:
+                                            source: "icon6.png"
+                                            size_hint: (0.4, 1)
+                                            pos_hint:{"center_x":0.5,"center_y":0.2}
+                                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        
+        
+                                        MDLabel:
+                                            text: "Personal Info"
+                                            font_size:dp(12)
+                                            bold: True
+                                            theme_text_color: "Custom"
+                                            text_color: 0, 0, 0, 1
+                                            halign: "center"
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+                                    size_hint_y: None
+                                    height: dp(70)
+                                    md_bg_color: "#ffffff"
+                                    canvas.before:
+                                        Color:
+                                            rgba: 0, 0, 0, 1
+                                        Line:
+                                            width: 1.5
+                                            rectangle: (self.x, self.y, self.width,self.height)
+                                    MDCard:
+                                        md_bg_color: "#ffffff"  # Customize background color
+                                        orientation: "vertical"
+                                        padding:dp(9), dp(3)
+        
+                                        Image:
+                                            source: "icon8.png"
+                                            size_hint: (0.4, 1)
+                                            pos_hint:{"center_x":0.5,"center_y":0.2}
+                                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        
+        
+                                        MDLabel:
+                                            text: "Professional Info"
+                                            font_size:dp(12)
+                                            bold: True
+                                            theme_text_color: "Custom"
+                                            text_color: 0, 0, 0, 1
+                                            halign: "center"
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+                                    size_hint_y: None
+                                    height: dp(70)
+                                    md_bg_color: "#ffffff"
+                                    canvas.before:
+                                        Color:
+                                            rgba: 0, 0, 0, 1
+                                        Line:
+                                            width: 1.5
+                                            rectangle: (self.x, self.y, self.width,self.height)
+                                    MDCard:
+                                        md_bg_color: "#ffffff"  # Customize background color
+                                        orientation: "vertical"
+                                        padding:dp(9), dp(3)
+        
+                                        Image:
+                                            source: "icon9.png"
+                                            size_hint: (0.4, 1)
+                                            pos_hint:{"center_x":0.5,"center_y":0.2}
+                                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        
+        
+                                        MDLabel:
+                                            text: "Business Info"
+                                            font_size:dp(12)
+                                            bold: True
+                                            theme_text_color: "Custom"
+                                            text_color: 0, 0, 0, 1
+                                            halign: "center"
+        
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+                                    size_hint_y: None
+                                    height: dp(70)
+                                    md_bg_color: "#ffffff"
+                                    canvas.before:
+                                        Color:
+                                            rgba: 0, 0, 0, 1
+                                        Line:
+                                            width: 1.5
+                                            rectangle: (self.x, self.y, self.width,self.height)
+                                    MDCard:
+                                        md_bg_color: "#ffffff"  # Customize background color
+                                        orientation: "vertical"
+                                        padding:dp(9), dp(3)
+                                        Image:
+                                            source: "icon10.png"
+                                            size_hint: (0.4, 1)
+                                            pos_hint:{"center_x":0.5,"center_y":0.2}
+                                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        
+        
+                                        MDLabel:
+                                            text: "Bank Details"
+                                            font_size:dp(12)
+                                            bold: True
+                                            theme_text_color: "Custom"
+                                            text_color: 0, 0, 0, 1
+                                            halign: "center"
+        
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+                                    size_hint_y: None
+                                    height: dp(70)
+                                    md_bg_color: "#ffffff"
+                                    canvas.before:
+                                        Color:
+                                            rgba: 0, 0, 0, 1
+                                        Line:
+                                            width: 1.5
+                                            rectangle: (self.x, self.y, self.width,self.height)
+                                    MDCard:
+                                        md_bg_color: "#ffffff"  # Customize background color
+                                        orientation: "vertical"
+                                        padding:dp(9), dp(3)
+        
+                                        Image:
+                                            source: "icon11.png"
+                                            size_hint: (0.4, 1)
+                                            pos_hint:{"center_x":0.5,"center_y":0.2}
+                                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        
+        
+                                        MDLabel:
+                                            text: "Change Password"
+                                            font_size:dp(12)
+                                            bold: True
+                                            theme_text_color: "Custom"
+                                            text_color: 0, 0, 0, 1
+                                            halign: "center"   
                     
 <ProfileScreen>
     BoxLayout:
@@ -1800,7 +1919,7 @@ class DashboardScreen(Screen):
                 index_list.append(c)
                 print(c)
         print(index_list)
-        if len(loan_id) < 1 or len(index_list) < 1:
+        if len(index_list) < 1:
             self.ids.product_name = ''
             self.ids.amount.text = ''
             self.ids.interest.text = ''
@@ -1811,7 +1930,7 @@ class DashboardScreen(Screen):
             a = index_list[-1]
             print(a)
             self.ids.product_name.text = str(product_name[a])
-            self.ids.amount.text = "Rs. " + str(loan_amount[a])
+            self.ids.amount.text = "Rs. " + str(round(loan_amount[a], 2))
             self.ids.interest.text = str(interest_rate[a]) + "%"
             self.ids.tenure.text = str(int(tenure[a])) + ' Months'
             self.ids.status.text = str(loan_status[a])
@@ -1832,32 +1951,22 @@ class DashboardScreen(Screen):
         else:
             print("no email found")
 
-        users = app_tables.users.search()
-
-        user_email = []
-        create_date = []
-        for i in users:
-            user_email.append(i['email'])
-            create_date.append(i['signed_up'])
-
-        if log_email in user_email:
-            user_index = user_email.index(log_email)
-            self.ids.details.secondary_text = "Joined Date: " + str(create_date[user_index].date())
-        else:
-            print("no email found")
-
         borrower_data = app_tables.fin_borrower.search()
         borrower_cus_id = []
         credit_limit = []
+        create_date = []
         for i in borrower_data:
             borrower_cus_id.append(i['customer_id'])
             credit_limit.append(i['credit_limit'])
+            create_date.append(i['borrower_since'])
 
         if p_customer_id[log_index] in borrower_cus_id:
             index1 = borrower_cus_id.index(p_customer_id[log_index])
             self.ids.details.tertiary_text = "Credit Limit: " + str(credit_limit[index1])
+            self.ids.details.secondary_text = "Joined Date: " + str(create_date[index1])
         else:
             self.ids.details.tertiary_text = "Credit Limit: "
+            self.ids.details.secondary_text = "Joined Date: "
 
     def on_pre_leave(self):
         Window.unbind(on_keyboard=self.on_back_button)

@@ -99,6 +99,8 @@ user_helpers = '''
                                             size_hint_x: None
                                             width: self.texture_size[0]
                                             halign: "center"
+                                            size_hint_x: None
+                                            width: dp(20)
                                             valign: "center"
                                             theme_text_color: 'Custom'
                                             text_color: 1, 0, 0, 1 

@@ -20,6 +20,7 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton, MDRectangleFlatButton, MDRaisedButton
 
 from borrower_wallet import WalletScreen
+from lender_view_loans import ViewLoansScreen
 from lender_wallet import LenderWalletScreen
 
 view_loans = """
@@ -920,8 +921,32 @@ class ViewUnderProcess(Screen):
 
     def go_back(self):
         # Navigate to the previous screen with a slide transition
+        from lender_dashboard import LenderDashboard
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'ViewLoansScreen'
+
+        type = self.manager.get_screen('LenderDashboard').type()
+        print(type)
+        if type == 'dashboard':
+            self.manager.transition = SlideTransition(direction='right')
+            sm = self.manager
+
+            # Create a new instance of the LoginScreen
+            profile = LenderDashboard(name='LenderDashboard')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'LenderDashboard'
+        else:
+            sm = self.manager
+            profile = ViewLoansScreen(name='ViewLoansScreen')
+
+            # Add the LoginScreen to the existing ScreenManager
+            sm.add_widget(profile)
+
+            # Switch to the LoginScreen
+            sm.current = 'ViewLoansScreen'
 
     def refresh(self):
         self.ids.container.clear_widgets()

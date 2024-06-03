@@ -116,6 +116,8 @@ user_helpers1 = """
                                             size_hint_x: None
                                             width: self.texture_size[0]
                                             halign: "center"
+                                            size_hint_x: None
+                                            width: dp(19)
                                             valign: "center"
                                             theme_text_color: 'Custom'
                                             text_color: 1, 0, 0, 1 
@@ -1445,7 +1447,9 @@ cursor = conn.cursor()
 class LenderDashboard(Screen):
     Builder.load_string(user_helpers1)
 
+
     def update_notification_count(self, count):
+
         self.ids.notification_label.text = str(count)
 
     def go_to_lender_notification(self):
@@ -1943,7 +1947,7 @@ class LenderDashboard(Screen):
 
         log_email = anvil.server.call('another_method')
         profile = app_tables.fin_user_profile.search()
-        print(log_email)
+
 
         email_user = []
         name_list = []

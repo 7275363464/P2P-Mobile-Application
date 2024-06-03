@@ -624,8 +624,8 @@ class NotificationScreen(Screen):
             item = ThreeLineAvatarIconListItem(
                 IconLeftWidget(icon="calendar-check"),
                 IconRightWidget(icon="chevron-right"),
-                text=f"{borrower_name[i]} has an overdue payment",  # Corrected line
-                secondary_text=f"for {loan_amount_for_id} loan amount in {product_name_for_id} product",
+                text=f"Dear [size=18]{borrower_name[i]}[/size], your loan payment is currently",
+                secondary_text=f"overdue for {loan_amount_for_id} loan amount in {product_name_for_id} product",
                 tertiary_text=" ",
                 text_color=(0, 0, 0, 1),
                 theme_text_color='Custom',
@@ -658,7 +658,11 @@ class NotificationScreen(Screen):
     def display_notifications(self, index_list, loan_id, borrower_name, loan_status, loan_amount, product_name,
                               loan_data, status_timestamp):
         for i in reversed(index_list):
-            status_message = f"{borrower_name[i]} has {loan_status[i]} your loan request"
+            status_color = "00FF00" if loan_status[i] == "approved" else ("FF0000" if loan_status[i] == "rejected" else "000000")
+
+
+            # Embed the color tag in the status message
+            status_message = f"[size=18]{borrower_name[i]}[/size], has [size=17][color=#{status_color}]{loan_status[i]}[/color][/size] your loan request"
             secondary_message = f"for {loan_amount[i]} loan amount in {product_name[i]} product"
             tertiary_message = status_timestamp[i].strftime("%Y-%m-%d, %A")
 
@@ -781,7 +785,12 @@ class NotificationScreen(Screen):
 
     def add_notification_item(self, borrower_name, loan_id, status, notification_type, loan_amount, product_name,
                               status_timestamp):
-        formatted_status_text =f"{borrower_name} has {status} your {notification_type} request"
+        status_color = "00FF00" if status == "approved" else (
+            "FF0000" if status == "rejected" else "000000")
+
+
+
+        formatted_status_text =f"[size=18]{borrower_name}[/size], has [size=17][color=#{status_color}]{status}[/color][/size] your {notification_type} request"
         secondary_message = f"for {loan_amount} loan amount in {product_name} product"
 
         if status_timestamp:

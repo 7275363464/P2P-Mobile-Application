@@ -1,3 +1,5 @@
+import json
+
 import anvil
 from anvil import tables
 from anvil.tables import app_tables
@@ -21,7 +23,7 @@ from kivy.uix.modalview import ModalView
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen, ScreenManager, SlideTransition
-from kivymd.uix.button import MDRectangleFlatButton, MDRaisedButton
+from kivymd.uix.button import MDRectangleFlatButton, MDRaisedButton, MDFlatButton
 from kivymd.uix.slider import MDSlider
 from kivymd.uix.label import MDLabel
 import sqlite3
@@ -981,51 +983,65 @@ class NewloanScreen(Screen):
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
     def go_to_newloan_screen1(self):
-        # Check if all required fields are selected
         if (self.ids.group_id1.text == 'Select Group' or
                 self.ids.group_id2.text == 'Select Categories' or
                 self.ids.group_id3.text == 'Select product name'):
-            # If any field is not selected, display a popup
-            self.show_popup("Please select all fields.")
+            self.show_dialog("Please select all fields.")
         else:
-            # Show modal view with loading label
-            modal_view = ModalView(size_hint=(None, None), size=(300, 100),
-                                   background_color=(0, 0, 0, 0))  # Set background color to transparent
+            try:
+                with open('emails.json', 'r') as file:
+                    emails_data = json.load(file)
+                    user_email = emails_data.get('email_user')
+                    print(f"User email: {user_email}")  # Debug statement
+            except Exception as e:
+                print(f"Error reading emails.json: {e}")
+                self.show_dialog("Unable to read user email.")
+                return
 
-            # Create a loading label
-            loading_label = Label(text="Loading...", font_size=25)
-            modal_view.add_widget(loading_label)
-            modal_view.open()
+            if not user_email:
+                self.show_dialog("No email found in emails.json.")
+                return
 
-            # Animate the loading label
-            Clock.schedule_once(lambda dt: self.animate_loading_text(loading_label, modal_view.height), 0.1)
+            selected_product_name = self.ids.group_id3.text
+            print(f"Selected product name: {selected_product_name}")  # Debug statement
 
-            # Perform the actual action (e.g., fetching loan requests)
-            # You can replace the sleep with your actual logic
-            Clock.schedule_once(lambda dt: self.performance_go_to_newloan_screen1(modal_view), 2)
+            existing_loans = app_tables.fin_loan_details.search(borrower_email_id=user_email,
+                                                                product_name=selected_product_name)
+            existing_loan = list(existing_loans)
+            print(f"Existing loans: {existing_loan}")  # Debug statement
+
+            if existing_loan:
+                self.show_dialog(f"You already have a loan with the product {selected_product_name}."
+                                    f"Cannot proceed for a new loan with the same product.")
+
+
+
+            else:
+                modal_view = ModalView(size_hint=(None, None), size=(300, 100), background_color=(0, 0, 0, 0))
+                loading_label = Label(text="Loading...", font_size=25)
+                modal_view.add_widget(loading_label)
+                modal_view.open()
+                Clock.schedule_once(lambda dt: self.animate_loading_text(loading_label, modal_view.height), 0.1)
+                Clock.schedule_once(lambda dt: self.performance_go_to_newloan_screen1(modal_view), 2)
 
     def performance_go_to_newloan_screen1(self, modal_view):
-
-        # selected_group = self.ids.group_id1.text
-        # selected_category = self.ids.group_id2.text
-        # self.selected_category = selected_category
-        # self.selected_group = selected_group
-        # Get the existing ScreenManager
-        # product_name = self.ids.product_id1.text
-
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
-        # Close the modal view after performing the action
         modal_view.dismiss()
         self.manager.add_widget(Factory.NewloanScreen1(name='NewloanScreen1'))
         self.manager.current = 'NewloanScreen1'
-        # print(self.selected_category)
-        # print(product_name)
 
-    def show_popup(self, text):
-        content = MDLabel(text=text)
-        popup = Popup(title="Warning", content=content, size_hint=(None, None), size=(400, 200))
-        popup.open()
-
+    def show_dialog(self, text):
+        dialog = MDDialog(
+            title="Warning",
+            text=text,
+            buttons=[
+                MDFlatButton(
+                    text="OK",
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
 
 class NewloanScreen1(Screen):
     product_name = ""

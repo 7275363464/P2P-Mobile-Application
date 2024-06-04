@@ -69,6 +69,8 @@ user_helpers1 = """
 <WindowManager>:
     LenderDashboard:
     ViewAccountScreen:
+    ViewBankScreen:
+    ViewBusinessScreen:
     ViewProfileScreen:
     ViewEditScreen:
 
@@ -1195,6 +1197,7 @@ user_helpers1 = """
                                         md_bg_color: "#ffffff"  # Customize background color
                                         orientation: "vertical"
                                         padding:dp(9), dp(3)
+                                        on_release: root.bank()
                                         Image:
                                             source: "icon10.png"
                                             size_hint: (0.4, 1)
@@ -1491,7 +1494,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-
+                                on_release: root.bank()
                                 Image:
                                     source: "icon10.png"
                                     size_hint: (0.4, 1)
@@ -1538,6 +1541,764 @@ user_helpers1 = """
                                     theme_text_color: "Custom"
                                     text_color: 0, 0, 0, 1
                                     halign: "center"
+
+<ViewBusinessScreen>
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: 1, 1
+        pos_hint: {'center_x':0.5, 'center_y':0.5}
+        MDTopAppBar:
+            title: "Bank Info"
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            right_action_items: [['refresh', lambda x: root.refresh()]]
+            title_align: 'center'
+            md_bg_color: 0.043, 0.145, 0.278, 1
+        ScrollView:
+            BoxLayout:
+                orientation: "vertical"
+                padding: dp(0)
+                spacing: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(0)
+                    spacing: dp(10)
+                    MDLabel:
+                        text: ' '
+                    BoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: None
+                        height: dp(10)
+                        spacing: dp(5)
+                        padding:dp(7)
+                        
+                        MDLabel:
+                            text: ' Business name '
+                            color: 0, 0, 0, 1
+                            halign: 'left'
+                            font_size: dp(13)
+                            size_hint_x: 0.4
+                            pos_hint: {'center_y': 0.5}
+                            bold: True
+                            multiline: False
+
+                        MDLabel:
+                            id: business_name
+                            font_size: dp(13)
+                            text:'Add business name'
+                            size_hint: None, None
+                            size_hint_x: 0.6
+                            multiline: False
+                            halign: 'left'
+                            pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Business address '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: business_address
+                        text:'Add business address'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        font_size: dp(13)
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Business type '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: business_type
+                        text:'Add business type'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        font_size: dp(13)
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' No of Employees Working '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: no_working
+                        text:'Add no of employees working'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        font_size: dp(13)
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Year of Establishment '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: year
+                        font_size: dp(13)
+                        text:'Add year of establishment'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Industry Type '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: industry_type
+                        font_size: dp(13)
+                        text:'Add industry type'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Last six months turnover '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: last_six
+                        text:'Add last six months turnover'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        font_size: dp(13)
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: " last six month's bank statements "
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: six_bank
+                        font_size: dp(13)
+                        text:"Add last six month's bank statements"
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' DIN '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: din
+                        font_size: dp(13)
+                        text:'Add din'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' CIN '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: cin
+                        text:'Add cin'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        font_size: dp(13)
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Office address '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: office_address
+                        text:'Add office address'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        font_size: dp(13)
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Proof verification '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: proof
+                        text:'Add proof verification'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        font_size: dp(13)
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+<ViewBankScreen>
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: 1, 1
+        pos_hint: {'center_x':0.5, 'center_y':0.5}
+        MDTopAppBar:
+            title: "Bank Info"
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            right_action_items: [['refresh', lambda x: root.refresh()]]
+            title_align: 'center'
+            md_bg_color: 0.043, 0.145, 0.278, 1
+
+        ScrollView:  # Add ScrollView here
+            do_scroll_x: False
+            BoxLayout:
+                orientation: "vertical"
+                padding: dp(0)
+                spacing: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(0)
+                    spacing: dp(10)
+                    MDLabel:
+                        text: ' '
+                    BoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: None
+                        height: dp(10)
+                        spacing: dp(5)
+                        padding:dp(7)
+                        
+                        MDLabel:
+                            text: ' Account holder name '
+                            color: 0, 0, 0, 1
+                            halign: 'left'
+                            font_size: dp(13)
+                            size_hint_x: 0.4
+                            pos_hint: {'center_y': 0.5}
+                            bold: True
+                            multiline: False
+
+                        MDLabel:
+                            id: holder
+                            font_size: dp(13)
+                            text:'Add Account holder name'
+                            size_hint: None, None
+                            size_hint_x: 0.6
+                            multiline: False
+                            halign: 'left'
+                            pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(0)
+                    spacing: dp(10)
+
+                    BoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: None
+                        height: dp(10)
+                        spacing: dp(5)
+                        padding:dp(7)
+
+                        MDLabel:
+                            text: ' Account type '
+                            color: 0, 0, 0, 1
+                            halign: 'left'
+                            font_size: dp(13)
+                            size_hint_x: 0.4
+                            pos_hint: {'center_y': 0.5}
+                            bold: True
+                            multiline: False
+
+                        MDLabel:
+                            id: account_type
+                            font_size: dp(13)
+                            text:'Add account type'
+                            size_hint: None, None
+                            size_hint_x: 0.6
+                            multiline: False
+                            halign: 'left'
+                            pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+                
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(0)
+                    spacing: dp(10)
+
+                    BoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: None
+                        height: dp(10)
+                        spacing: dp(5)
+                        padding:dp(7)
+
+                        MDLabel:
+                            text: ' Account number '
+                            color: 0, 0, 0, 1
+                            halign: 'left'
+                            font_size: dp(13)
+                            size_hint_x: 0.4
+                            pos_hint: {'center_y': 0.5}
+                            bold: True
+                            multiline: False
+
+                        MDLabel:
+                            id: account_number
+                            font_size: dp(13)
+                            text:'Add account number'
+                            size_hint: None, None
+                            size_hint_x: 0.6
+                            multiline: False
+                            halign: 'left'
+                            pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+                
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(0)
+                    spacing: dp(10)
+
+                    BoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: None
+                        height: dp(10)
+                        spacing: dp(5)
+                        padding:dp(7)
+
+                        MDLabel:
+                            text: ' Bank name '
+                            color: 0, 0, 0, 1
+                            halign: 'left'
+                            font_size: dp(13)
+                            size_hint_x: 0.4
+                            pos_hint: {'center_y': 0.5}
+                            bold: True
+                            multiline: False
+
+                        MDLabel:
+                            id: bank_name
+                            font_size: dp(13)
+                            text:'Add bank name'
+                            size_hint: None, None
+                            size_hint_x: 0.6
+                            multiline: False
+                            halign: 'left'
+                            pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(0)
+                    spacing: dp(10)
+
+                    BoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: None
+                        height: dp(10)
+                        spacing: dp(5)
+                        padding:dp(7)
+
+                        MDLabel:
+                            text: ' Bank id '
+                            color: 0, 0, 0, 1
+                            halign: 'left'
+                            font_size: dp(13)
+                            size_hint_x: 0.4
+                            pos_hint: {'center_y': 0.5}
+                            bold: True
+                            multiline: False
+
+                        MDLabel:
+                            id: bank_id
+                            font_size: dp(13)
+                            text:'Add bank id'
+                            size_hint: None, None
+                            size_hint_x: 0.6
+                            multiline: False
+                            halign: 'left'
+                            pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(0)
+                    spacing: dp(10)
+
+                    BoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: None
+                        height: dp(10)
+                        spacing: dp(5)
+                        padding:dp(7)
+
+                        MDLabel:
+                            text: ' Branch name '
+                            color: 0, 0, 0, 1
+                            halign: 'left'
+                            font_size: dp(13)
+                            size_hint_x: 0.4
+                            pos_hint: {'center_y': 0.5}
+                            bold: True
+                            multiline: False
+
+                        MDLabel:
+                            id: branch_name
+                            font_size: dp(13)
+                            text:'Add branch name'
+                            size_hint: None, None
+                            size_hint_x: 0.6
+                            multiline: False
+                            halign: 'left'
+                            pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
 
 <ViewProfileScreen>
     canvas.before:
@@ -4024,6 +4785,17 @@ class ViewAccountScreen(Screen):
     def on_back_button_press(self):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'LenderDashboard'
+
+    def bank(self):
+        self.manager.add_widget(Factory.ViewBankScreen(name='ViewBankScreen'))
+        self.manager.current = 'ViewBankScreen'
+
+class ViewBankScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def on_back_button_press(self):
+        self.manager.current = 'ViewAccountScreen'
 
 
 class ViewProfileScreen(Screen):

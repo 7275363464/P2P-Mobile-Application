@@ -2,6 +2,7 @@ import json
 import threading
 from datetime import datetime, timezone
 import anvil.server
+from kivy.app import App
 from kivy.clock import Clock, mainthread
 from kivy.config import value
 
@@ -24,6 +25,8 @@ from kivy.lang import Builder
 from datetime import datetime
 from kivy.core.window import Window
 import anvil.users
+from pytz import utc
+
 import server
 from anvil.tables import app_tables
 from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
@@ -425,13 +428,14 @@ print(date)
 
 from datetime import datetime
 
+
 class Lend_NotificationScreen(Screen):
     new_notifications = NumericProperty(0)  # Change BooleanProperty to NumericProperty
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.refresh()
-        Clock.schedule_interval(self.refresh, 10)  # Schedule refresh every 10 seconds
+        Clock.schedule_interval(self.refresh, 40)
 
     def refresh(self, *args):
         threading.Thread(target=self.fetch_data).start()
@@ -462,16 +466,17 @@ class Lend_NotificationScreen(Screen):
             if foreclosure['status'] == 'under process':
                 under_process_foreclosures.append(foreclosure)
 
-        self.update_ui(under_process_loans, approved_loans, under_process_extensions, under_process_foreclosures)
+        # Schedule UI update on the main thread
+        Clock.schedule_once(lambda dt: self.update_ui(under_process_loans, approved_loans, under_process_extensions, under_process_foreclosures))
 
     @mainthread
     def update_ui(self, under_process_loans, approved_loans, under_process_extensions, under_process_foreclosures):
         self.ids.container1.clear_widgets()
 
-        self.add_loans_to_container(under_process_loans, "has sent you a loan request")
-        self.add_loans_to_container(approved_loans, "is waiting for your loan disbursement. Tap to approve...")
-        self.add_extensions_to_container(under_process_extensions, "is waiting for loan extension request")
-        self.add_foreclosures_to_container(under_process_foreclosures, "is waiting for loan closure request")
+        self.add_loans_to_container(under_process_loans, "")
+        self.add_loans_to_container(approved_loans, "is waiting for your loan [b]disbursement[/b].")
+        self.add_extensions_to_container(under_process_extensions, "is waiting for loan [b]extension request[/b]")
+        self.add_foreclosures_to_container(under_process_foreclosures, "is waiting for loan [b]forclosure[/b] request")
 
         # Get the count of today's dues
         todays_dues_count = self.add_todays_dues_to_container()
@@ -484,11 +489,11 @@ class Lend_NotificationScreen(Screen):
         # Update notification count on LenderDashBoard screen if it exists
         if self.lender_dashboard:
             self.lender_dashboard.update_notification_count(notification_count)
-
     def add_loans_to_container(self, loans, message):
         for loan in loans:
             borrower_name = loan['borrower_full_name']
             loan_id = loan['loan_id']
+            loan_amount = loan['loan_amount']
 
             item = TwoLineAvatarIconListItem(
                 IconLeftWidget(
@@ -497,7 +502,7 @@ class Lend_NotificationScreen(Screen):
                 IconRightWidget(
                     icon="chevron-right"
                 ),
-                text=f"{borrower_name}",
+                text=f"[b][size=18]{borrower_name}[/size][/b]",
                 secondary_text=message,
                 text_color=(0, 0, 0, 1),
                 theme_text_color='Custom',
@@ -510,32 +515,40 @@ class Lend_NotificationScreen(Screen):
             self.ids.container1.add_widget(item)
 
     def add_todays_dues_to_container(self):
-        data = app_tables.fin_emi_table.search()
-        data1 = app_tables.fin_loan_details.search()
-        today_date = datetime.now(timezone.utc).date()
+
+        today_date = datetime.now(tz=utc).date()
+        data = app_tables.fin_loan_details.search()
+        emi_data = app_tables.fin_emi_table.search()
         profile = app_tables.fin_user_profile.search()
-        loan_id = []
         customer_id = []
+        loan_id = []
         loan_status = []
+        borrower_id = []
         borrower_name = []
         schedule_date = []
+
         s = 0
 
-        for i in data1:
+        for i in data:
             s += 1
             loan_id.append(i['loan_id'])
             customer_id.append(i['borrower_customer_id'])
             loan_status.append(i['loan_updated_status'])
+            borrower_id.append(i['borrower_customer_id'])
             borrower_name.append(i['borrower_full_name'])
             schedule_date.append(i['first_emi_payment_due_date'])
 
         emi_loan_id = []
         emi_num = []
         next_payment = []
-        for i in data:
+        part_payment_type = []
+        part_payment_done = []
+        for i in emi_data:
             emi_loan_id.append(i['loan_id'])
             emi_num.append(i['emi_number'])
             next_payment.append(i['next_payment'])
+            part_payment_type.append((i['payment_type']))
+            part_payment_done.append(i['part_payment_done'])
         profile_customer_id = []
         profile_mobile_number = []
         for i in profile:
@@ -546,13 +559,14 @@ class Lend_NotificationScreen(Screen):
         shedule_date = {}
         for i in range(s):
             a += 1
+
             if loan_status[i] == "disbursed" or loan_status[i] == "extension" or loan_status[i] == "foreclosure":
-                if loan_id[i] not in emi_loan_id and schedule_date[i] != None and today_date >= schedule_date[i]:
+                if loan_id[i] not in emi_loan_id and schedule_date[i] is not None and today_date >= schedule_date[i]:
                     index_list.append(i)
                     shedule_date[loan_id[i]] = schedule_date[i]
                 elif loan_id[i] in emi_loan_id:
                     last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(loan_id[i])
-                    if today_date >= next_payment[last_index]:
+                    if next_payment[last_index] is not None and today_date >= next_payment[last_index]:
                         index_list.append(i)
                         shedule_date[loan_id[i]] = next_payment[last_index]
 
@@ -569,6 +583,14 @@ class Lend_NotificationScreen(Screen):
                 number = profile_customer_id.index(customer_id[i])
             else:
                 number = 0
+            # Retrieve loan amount and product name based on loan_id
+            loan_amount_for_id = None
+            product_name_for_id = None
+            for loan_record in data:
+                if loan_record['loan_id'] == loan_id[i]:
+                    loan_amount_for_id = loan_record['loan_amount']
+                    product_name_for_id = loan_record['product_name']
+                    break
 
             item = ThreeLineAvatarIconListItem(
 
@@ -578,8 +600,8 @@ class Lend_NotificationScreen(Screen):
                 IconRightWidget(
                     icon="chevron-right"
                 ),
-                text=f"Borrower Name: {borrower_name[i]}",
-                secondary_text=f"Scheduled Date  : {shedule_date[loan_id[i]]}",
+                text=f"[size=18]{borrower_name[i]}[/size] has an [b][size=17]overdue[/size][/b] payment",  # Corrected line
+                secondary_text=f"for Rs:{loan_amount_for_id} loan amount in {product_name_for_id} product",
                 tertiary_text=f"Day Passed Due Date : {(today_date - shedule_date[loan_id[i]]).days}",
                 text_color=(0, 0, 0, 1),  # Black color
                 theme_text_color='Custom',
@@ -615,38 +637,40 @@ class Lend_NotificationScreen(Screen):
             now = datetime.now()
             formatted_date = now.strftime("%Y-%m-%d")
             formatted_day = now.strftime("%A")
+            loan_status = foreclosure['status']
+            loan_amount = foreclosure['loan_amount']
+            product_name = foreclosure['product_name']
 
-            # Create a BoxLayout for buttons
+            message = f"for {loan_amount} loan amount in {product_name} product"
             button_layout = BoxLayout(
-                orientation='horizontal',  # Change orientation to horizontal
+                orientation='horizontal',
                 size_hint=(None, None),
-                size=(dp(200), dp(30)),  # Adjust size of button layout
-                spacing=dp(10),  # Adjust spacing between buttons
-                pos_hint={'center_x': 0.5, 'center_y': 0.2}  # Position the layout in the middle
+                size=(dp(200), dp(30)),
+                spacing=dp(10),
+                pos_hint={'center_x': 0.5, 'center_y': 0.2}
             )
 
             accept_button = Button(
                 text="Accept",
                 size_hint=(None, None),
-                size=(dp(100), dp(28)),  # Adjust button size
-                background_color=(0, 1, 0, 1),  # Green background
-                color=(1, 1, 1, 1)  # White text color
+                size=(dp(100), dp(28)),
+                background_color=(0, 1, 0, 1),
+                color=(1, 1, 1, 1)
             )
             accept_button.bind(on_release=lambda instance, loan_id=loan_id: self.on_accept(loan_id))
 
             reject_button = Button(
                 text="Reject",
                 size_hint=(None, None),
-                size=(dp(100), dp(28)),  # Adjust button size
-                background_color=(1, 0, 0, 1),  # Red background
-                color=(1, 1, 1, 1)  # White text color
+                size=(dp(100), dp(28)),
+                background_color=(1, 0, 0, 1),
+                color=(1, 1, 1, 1)
             )
             reject_button.bind(on_release=lambda instance, loan_id=loan_id: self.on_reject(loan_id))
 
             button_layout.add_widget(accept_button)
             button_layout.add_widget(reject_button)
 
-            # Create the ThreeLineAvatarIconListItem with the button layout instead of tertiary text
             item = ThreeLineAvatarIconListItem(
                 IconLeftWidget(
                     icon="account-remove"
@@ -654,21 +678,21 @@ class Lend_NotificationScreen(Screen):
                 IconRightWidget(
                     icon="chevron-right"
                 ),
-                text=f"{borrower_name}",
-                secondary_text=message,
+                text=f"[size=18]{borrower_name}[/size] has sent a [size=17][b]foreclose[/b][/size] request",
+                secondary_text=f"for Rs:{loan_amount} loan amount in {product_name} product",
                 tertiary_text=" ",
-                text_color=(0, 0, 0, 1),  # Black color
+                text_color=(0, 0, 0, 1),
                 theme_text_color='Custom',
                 secondary_text_color=(0, 0, 0, 1),
                 secondary_theme_text_color='Custom',
                 tertiary_text_color=(0.6, 0.6, 0.6, 1),
                 tertiary_theme_text_color='Custom',
-                height=dp(100),  # Adjust the height of the list item
+                height=dp(100),
             )
 
-            # Add the buttons layout and a spacer below the list item
-            item.add_widget(Label())  # Add a spacer to separate buttons from secondary text
-            item.add_widget(button_layout)  # Add the buttons layout below the list item
+            item.add_widget(Label())
+            item.add_widget(button_layout)
+            # Add the buttons layout below the list item
 
             item.bind(on_release=lambda instance, loan_id=loan_id: self.foreclosure_button_clicked(instance, loan_id))
             self.ids.container1.add_widget(item)
@@ -799,7 +823,12 @@ class Lend_NotificationScreen(Screen):
         for extension in extensions:
             borrower_name = extension['borrower_full_name']
             loan_id = extension['loan_id']
+            loan_status = extension['status']
+            loan_amount = extension['extension_amount']
+            product_name = extension['product_name']
 
+
+            message = f"for Rs:{loan_amount} loan amount in {product_name} product"
             # Create accept and reject buttons
             accept_button = Button(
                 text="Accept",
@@ -839,7 +868,7 @@ class Lend_NotificationScreen(Screen):
                 IconRightWidget(
                     icon="chevron-right"
                 ),
-                text=f"{borrower_name}",
+                text=f"[size=18]{borrower_name}[/size] has sent a [size=17][b]extension[/b][/size] request",
                 secondary_text=message,
                 tertiary_text=" ",
                 text_color=(0, 0, 0, 1),  # Black color
@@ -1003,17 +1032,63 @@ class Lend_NotificationScreen(Screen):
             borrower_name = loan['borrower_full_name']
             loan_id = loan['loan_id']
             loan_status = loan['loan_updated_status']
+            loan_amount = loan['loan_amount']
+            product_name = loan['product_name']
+
+            if loan_status != 'approved':
+                message = f"for Rs:{loan_amount} loan amount in {product_name} product"
+                # Design for under process loans
+                item = ThreeLineAvatarIconListItem(
+                    IconLeftWidget(
+                        icon="card-account-details-outline"
+                    ),
+                    IconRightWidget(
+                        icon="chevron-right"
+                    ),
+                    text=f"[size=18]{borrower_name}[/size] has sent you [size=17][b]loan request[/b][/size]",
+                    secondary_text=message,
+                    tertiary_text=" ",
+                    text_color=(0, 0, 0, 1),  # Black color
+                    theme_text_color='Custom',
+                    secondary_text_color=(0, 0, 0, 1),  # Red color for under process loans
+                    secondary_theme_text_color='Custom',
+                    tertiary_text_color=(0.6, 0.6, 0.6, 1),
+                    tertiary_theme_text_color='Custom',
+                    height=dp(100),  # Adjust the height of the list item
+                )
+            else:
+                if loan_status != 'under process':
+                    message = f"{borrower_name} is waiting for"
+                # Design for approved loans
+                item = ThreeLineAvatarIconListItem(
+                    IconLeftWidget(
+                        icon="card-account-details-outline"
+                    ),
+                    IconRightWidget(
+                        icon="chevron-right"
+                    ),
+                    text=f"[size=18]{borrower_name}[/size] is waiting for [size=17][b]loan disbursement[/b][/size],",
+                    secondary_text=f"with an amount of Rs {loan_amount} loan,",
+                    tertiary_text=f"intended for {product_name} loan product.",
+                    text_color=(0, 0, 0, 1),
+                    theme_text_color='Custom',
+                    secondary_text_color=(0, 0, 0, 1),
+                    secondary_theme_text_color='Custom',
+                    tertiary_text_color=(0, 0, 0, 1),
+                    tertiary_theme_text_color='Custom',
+                    height=dp(100),
+                )
 
             # Create a BoxLayout for buttons only if loan status is not 'approved'
-            button_layout = BoxLayout(
-                orientation='horizontal',  # Change orientation to horizontal
-                size_hint=(None, None),
-                size=(dp(200), dp(30)),  # Adjust size of button layout
-                spacing=dp(10),  # Adjust spacing between buttons
-                pos_hint={'center_x': 0.5, 'center_y': 0.2}  # Position the layout in the middle
-            ) if loan_status != 'approved' else None
+            if loan_status != 'approved':
+                button_layout = BoxLayout(
+                    orientation='horizontal',  # Change orientation to horizontal
+                    size_hint=(None, None),
+                    size=(dp(200), dp(30)),  # Adjust size of button layout
+                    spacing=dp(10),  # Adjust spacing between buttons
+                    pos_hint={'center_x': 0.5, 'center_y': 0.2}  # Position the layout in the middle
+                )
 
-            if button_layout:
                 accept_button = Button(
                     text="Accept",
                     size_hint=(None, None),
@@ -1035,28 +1110,6 @@ class Lend_NotificationScreen(Screen):
                 button_layout.add_widget(accept_button)
                 button_layout.add_widget(reject_button)
 
-            # Create the ThreeLineAvatarIconListItem with the button layout instead of tertiary text
-            item = ThreeLineAvatarIconListItem(
-                IconLeftWidget(
-                    icon="card-account-details-outline"
-                ),
-                IconRightWidget(
-                    icon="chevron-right"
-                ),
-                text=f"{borrower_name}",
-                secondary_text=message,
-                tertiary_text=" ",
-                text_color=(0, 0, 0, 1),  # Black color
-                theme_text_color='Custom',
-                secondary_text_color=(0, 0, 0, 1),
-                secondary_theme_text_color='Custom',
-                tertiary_text_color=(0.6, 0.6, 0.6, 1),
-                tertiary_theme_text_color='Custom',
-                height=dp(100),  # Adjust the height of the list item
-            )
-
-            # Add the buttons layout and a spacer below the list item if loan status is not 'approved'
-            if button_layout:
                 item.add_widget(Label())  # Add a spacer to separate buttons from secondary text
                 item.add_widget(button_layout)  # Add the buttons layout below the list item
 

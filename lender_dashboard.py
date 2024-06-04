@@ -122,6 +122,8 @@ user_helpers1 = """
                                             size_hint_x: None
                                             width: self.texture_size[0]
                                             halign: "center"
+                                            size_hint_x: None
+                                            width: dp(19)
                                             valign: "center"
                                             theme_text_color: 'Custom'
                                             text_color: 1, 0, 0, 1 
@@ -1072,7 +1074,7 @@ user_helpers1 = """
                                         md_bg_color: "#ffffff"  # Customize background color
                                         orientation: "vertical"
                                         padding:dp(9), dp(3)
-                                        
+
 
                                         Image:
                                             source: "icon7.png"
@@ -1364,7 +1366,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-                                
+
 
                                 Image:
                                     source: "icon7.png"
@@ -1394,7 +1396,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-                                
+
 
                                 Image:
                                     source: "icon6.png"
@@ -1425,7 +1427,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-                                
+
 
 
                                 Image:
@@ -1457,7 +1459,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-                                
+
 
                                 Image:
                                     source: "icon9.png"
@@ -1489,7 +1491,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-                                
+
                                 Image:
                                     source: "icon10.png"
                                     size_hint: (0.4, 1)
@@ -1520,7 +1522,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-                                
+
 
                                 Image:
                                     source: "icon11.png"
@@ -1536,7 +1538,7 @@ user_helpers1 = """
                                     theme_text_color: "Custom"
                                     text_color: 0, 0, 0, 1
                                     halign: "center"
-                                     
+
 <ViewProfileScreen>
     canvas.before:
         Color:
@@ -4019,7 +4021,6 @@ class ViewAccountScreen(Screen):
     def get_email(self):
         return anvil.server.call('another_method')
 
-
     def on_back_button_press(self):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'LenderDashboard'
@@ -4367,4 +4368,3 @@ class ViewEditScreen(Screen):
 
 class MyScreenManager(ScreenManager):
     pass
-

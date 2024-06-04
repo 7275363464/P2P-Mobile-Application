@@ -1074,7 +1074,7 @@ user_helpers1 = """
                                         md_bg_color: "#ffffff"  # Customize background color
                                         orientation: "vertical"
                                         padding:dp(9), dp(3)
-                                        
+
 
                                         Image:
                                             source: "icon7.png"
@@ -1366,7 +1366,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-                                
+
 
                                 Image:
                                     source: "icon7.png"
@@ -1396,7 +1396,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-                                
+
 
                                 Image:
                                     source: "icon6.png"
@@ -1427,7 +1427,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-                                
+
 
 
                                 Image:
@@ -1459,7 +1459,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-                                
+
 
                                 Image:
                                     source: "icon9.png"
@@ -1491,7 +1491,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-                                
+
                                 Image:
                                     source: "icon10.png"
                                     size_hint: (0.4, 1)
@@ -1522,7 +1522,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-                                
+
 
                                 Image:
                                     source: "icon11.png"
@@ -1538,7 +1538,7 @@ user_helpers1 = """
                                     theme_text_color: "Custom"
                                     text_color: 0, 0, 0, 1
                                     halign: "center"
-                                     
+
 <ViewProfileScreen>
     canvas.before:
         Color:
@@ -2682,9 +2682,7 @@ cursor = conn.cursor()
 class LenderDashboard(Screen):
     Builder.load_string(user_helpers1)
 
-
     def update_notification_count(self, count):
-
         self.ids.notification_label.text = str(count)
 
     def go_to_lender_notification(self):
@@ -3182,7 +3180,7 @@ class LenderDashboard(Screen):
 
         log_email = anvil.server.call('another_method')
         profile = app_tables.fin_user_profile.search()
-
+        print(log_email)
 
         email_user = []
         name_list = []
@@ -4023,7 +4021,6 @@ class ViewAccountScreen(Screen):
     def get_email(self):
         return anvil.server.call('another_method')
 
-
     def on_back_button_press(self):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'LenderDashboard'
@@ -4371,4 +4368,3 @@ class ViewEditScreen(Screen):
 
 class MyScreenManager(ScreenManager):
     pass
-

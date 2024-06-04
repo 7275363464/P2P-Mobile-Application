@@ -658,7 +658,7 @@ class NotificationScreen(Screen):
     def display_notifications(self, index_list, loan_id, borrower_name, loan_status, loan_amount, product_name,
                               loan_data, status_timestamp):
         for i in reversed(index_list):
-            status_color = "00FF00" if loan_status[i] == "approved" else ("FF0000" if loan_status[i] == "rejected" else "000000")
+            status_color = "008000" if loan_status[i] == "approved" else ("FF0000" if loan_status[i] == "rejected" else "000000")
 
 
             # Embed the color tag in the status message
@@ -785,7 +785,7 @@ class NotificationScreen(Screen):
 
     def add_notification_item(self, borrower_name, loan_id, status, notification_type, loan_amount, product_name,
                               status_timestamp):
-        status_color = "00FF00" if status == "approved" else (
+        status_color = "008000" if status == "approved" else (
             "FF0000" if status == "rejected" else "000000")
 
 

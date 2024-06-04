@@ -474,9 +474,9 @@ class Lend_NotificationScreen(Screen):
         self.ids.container1.clear_widgets()
 
         self.add_loans_to_container(under_process_loans, "")
-        self.add_loans_to_container(approved_loans, "is waiting for your loan disbursement.")
-        self.add_extensions_to_container(under_process_extensions, "is waiting for loan extension request")
-        self.add_foreclosures_to_container(under_process_foreclosures, "is waiting for loan closure request")
+        self.add_loans_to_container(approved_loans, "is waiting for your loan [b]disbursement[/b].")
+        self.add_extensions_to_container(under_process_extensions, "is waiting for loan [b]extension request[/b]")
+        self.add_foreclosures_to_container(under_process_foreclosures, "is waiting for loan [b]forclosure[/b] request")
 
         # Get the count of today's dues
         todays_dues_count = self.add_todays_dues_to_container()
@@ -502,7 +502,7 @@ class Lend_NotificationScreen(Screen):
                 IconRightWidget(
                     icon="chevron-right"
                 ),
-                text=f"{borrower_name}",
+                text=f"[b][size=18]{borrower_name}[/size][/b]",
                 secondary_text=message,
                 text_color=(0, 0, 0, 1),
                 theme_text_color='Custom',
@@ -600,7 +600,7 @@ class Lend_NotificationScreen(Screen):
                 IconRightWidget(
                     icon="chevron-right"
                 ),
-                text=f"{borrower_name[i]} has an overdue payment",  # Corrected line
+                text=f"[size=18]{borrower_name[i]}[/size] has an [b][size=17]overdue[/size][/b] payment",  # Corrected line
                 secondary_text=f"for Rs:{loan_amount_for_id} loan amount in {product_name_for_id} product",
                 tertiary_text=f"Day Passed Due Date : {(today_date - shedule_date[loan_id[i]]).days}",
                 text_color=(0, 0, 0, 1),  # Black color
@@ -678,7 +678,7 @@ class Lend_NotificationScreen(Screen):
                 IconRightWidget(
                     icon="chevron-right"
                 ),
-                text=f"{borrower_name} has sent a foreclose request",
+                text=f"[size=18]{borrower_name}[/size] has sent a [size=17][b]foreclose[/b][/size] request",
                 secondary_text=f"for Rs:{loan_amount} loan amount in {product_name} product",
                 tertiary_text=" ",
                 text_color=(0, 0, 0, 1),
@@ -868,7 +868,7 @@ class Lend_NotificationScreen(Screen):
                 IconRightWidget(
                     icon="chevron-right"
                 ),
-                text=f"{borrower_name} has sent a extension request",
+                text=f"[size=18]{borrower_name}[/size] has sent a [size=17][b]extension[/b][/size] request",
                 secondary_text=message,
                 tertiary_text=" ",
                 text_color=(0, 0, 0, 1),  # Black color
@@ -1045,7 +1045,7 @@ class Lend_NotificationScreen(Screen):
                     IconRightWidget(
                         icon="chevron-right"
                     ),
-                    text=f"{borrower_name} has sent you loan request",
+                    text=f"[size=18]{borrower_name}[/size] has sent you [size=17][b]loan request[/b][/size]",
                     secondary_text=message,
                     tertiary_text=" ",
                     text_color=(0, 0, 0, 1),  # Black color
@@ -1067,14 +1067,14 @@ class Lend_NotificationScreen(Screen):
                     IconRightWidget(
                         icon="chevron-right"
                     ),
-                    text=f"{borrower_name} is waiting for loan disbursement",
-                    secondary_text=f"for Rs:{loan_amount} loan amount in {product_name} product",
-                    tertiary_text=" ",
+                    text=f"[size=18]{borrower_name}[/size] is waiting for [size=17][b]loan disbursement[/b][/size],",
+                    secondary_text=f"with an amount of Rs {loan_amount} loan,",
+                    tertiary_text=f"intended for {product_name} loan product.",
                     text_color=(0, 0, 0, 1),
                     theme_text_color='Custom',
                     secondary_text_color=(0, 0, 0, 1),
                     secondary_theme_text_color='Custom',
-                    tertiary_text_color=(0.6, 0.6, 0.6, 1),
+                    tertiary_text_color=(0, 0, 0, 1),
                     tertiary_theme_text_color='Custom',
                     height=dp(100),
                 )

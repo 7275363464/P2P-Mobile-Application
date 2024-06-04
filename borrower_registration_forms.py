@@ -1,6 +1,6 @@
 import os
 import re
-
+from anvil import media
 import anvil.server
 from anvil.tables import app_tables
 from kivy.animation import Animation
@@ -4480,6 +4480,25 @@ class BorrowerScreen1(Screen):
             self.ids.mobile_number.text = data[index]['mobile']
         else:
             print('email not found')
+    def upload_image(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['user_photo'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
 
     def on_mobile_number_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
@@ -4513,9 +4532,14 @@ class BorrowerScreen1(Screen):
             self.file_manager.show('/')
 
     def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.upload_image(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen1').ids[image_label_id].text = file_name  # Update the label text
         self.file_manager.close()
+
+    def get_email(self):
+        return anvil.server.call('another_method')
 
     def exit_manager(self, *args):
         self.file_manager.close()
@@ -4714,15 +4738,62 @@ class BorrowerScreen2(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
+    def upload_image1(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['aadhaar_photo'] = user_photo_media
+
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image2(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['pan_photo'] = user_photo_media
+
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
     def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.upload_image1(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen2').ids[image_label_id].text = file_name  # Update the label text
         self.file_manager.close()
 
     def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.upload_image2(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen2').ids[image_label_id].text = file_name  # Update the label text
         self.file_manager.close()
+
+    def get_email(self):
+        return anvil.server.call('another_method')
 
     def exit_manager(self, *args):
         self.file_manager.close()

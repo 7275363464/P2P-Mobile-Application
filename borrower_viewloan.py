@@ -1,4 +1,9 @@
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.image import Image
+from kivy.uix.label import Label
 from kivymd.app import MDApp
+from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.card import MDCard
 from kivymd.uix.list import *
 from kivy.lang import Builder
 from kivy.core.window import Window
@@ -78,14 +83,14 @@ borrower_view_loan = '''
                         bold:True
                         theme_text_color: 'Custom'
                         halign: "center"
-                        text_color:1,1,1,1
+                        text_color:1,1,1, 1
                         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
             MDFlatButton:
                 size_hint: None, None
 
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                md_bg_color: 0.043, 0.145, 0.278, 1 
+                md_bg_color: 0.043, 0.145, 0.278, 1
                 on_release: root.go_to_under_loans()
                 size_hint_y: None
                 height: dp(60)
@@ -108,7 +113,7 @@ borrower_view_loan = '''
                 size_hint: None, None
 
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                md_bg_color: 0.043, 0.145, 0.278, 1 
+                md_bg_color: 0.043, 0.145, 0.278, 1
                 on_release: root.go_to_reject_loans()
                 size_hint_y: None
                 height: dp(60)
@@ -131,7 +136,7 @@ borrower_view_loan = '''
                 size_hint: None, None
 
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                md_bg_color: 0.043, 0.145, 0.278, 1 
+                md_bg_color: 0.043, 0.145, 0.278, 1
 
                 size_hint_y: None
                 height: dp(60)
@@ -153,19 +158,37 @@ borrower_view_loan = '''
 <OpenLoanVLB>
     BoxLayout:
         orientation: 'vertical'
+
         MDTopAppBar:
-            title: "Open Loans"
+            title: "All Loans"
             elevation: 3
             left_action_items: [['arrow-left', lambda x: root.go_back()]]
             right_action_items: [['refresh', lambda x: root.refresh()]]
             md_bg_color: 0.043, 0.145, 0.278, 1
-        MDScrollView:
 
-            MDList:
+        MDScrollView:
+            MDBoxLayout:
                 id: container
+                orientation: 'vertical'
+                padding: dp(25)
+                spacing: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+                width: self.minimum_width
+                adaptive_size: True
+                pos_hint: {"center_x": 0, "center_y":  0}
+
+            # MDList:
+            #     
+            #     id: container                 
+
+
+
+
 <UnderProcessLoanVLB>
     BoxLayout:
         orientation: 'vertical'
+
         MDTopAppBar:
             title: "UnderProcess Loans"
             elevation: 3
@@ -331,7 +354,7 @@ borrower_view_loan = '''
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
                     bold: True
-                    
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -345,7 +368,7 @@ borrower_view_loan = '''
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
                     bold: True
-                    
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -395,7 +418,10 @@ borrower_view_loan = '''
                 MDLabel:
                     id: amount_1
                     halign: 'left'
-                    bold: True    
+                    bold: True
+
+
+
 
 '''
 Builder.load_string(borrower_view_loan)
@@ -411,7 +437,6 @@ class DashboardScreenVLB(Screen):
         anim.start(loading_label)
 
     def go_to_open_loans(self):
-        self.manager.get_screen('DashboardScreen').dash("Open")
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -446,7 +471,6 @@ class DashboardScreenVLB(Screen):
         sm.current = 'OpenLoanVLB'
 
     def go_to_under_loans(self):
-        self.manager.get_screen('DashboardScreen').dash("under")
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -487,7 +511,6 @@ class DashboardScreenVLB(Screen):
         sm.current = 'UnderProcessLoanVLB'
 
     def go_to_reject_loans(self):
-        self.manager.get_screen('DashboardScreen').dash("reject")
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -522,7 +545,6 @@ class DashboardScreenVLB(Screen):
         sm.current = 'RejectedLoanVLB'
 
     def go_to_app_tracker(self):
-        self.manager.get_screen('DashboardScreen').dash("closed")
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -569,18 +591,8 @@ class DashboardScreenVLB(Screen):
         return False
 
     def on_back_button_press(self):
-        from borrower_dashboard import DashboardScreen
         self.manager.transition = SlideTransition(direction='right')
-        sm = self.manager
-
-        # Create a new instance of the LoginScreen
-        profile = DashboardScreen(name='DashboardScreen')
-
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(profile)
-
-        # Switch to the LoginScreen
-        sm.current = 'DashboardScreen'
+        self.manager.current = 'DashboardScreen'
 
     def logout(self):
         self.manager.current = 'MainScreen'
@@ -661,20 +673,11 @@ class ViewLoansScreenVLB(Screen):
         self.manager.current = 'ViewLoansRequest'
 
     def on_back_button_press(self):
-        sm = self.manager
-
-        # Create a new instance of the LoginScreen
-        profile = DashboardScreenVLB(name='DashboardScreenVLB')
-
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(profile)
-
-        # Switch to the LoginScreen
-        sm.current = 'DashboardScreenVLB'
+        self.manager.current = 'OpenLoanVLB'
 
 
 class OpenLoanVLB(Screen):
-    def __init__(self, **kwargs):
+    def __init__(self, instance=None, **kwargs):
         super().__init__(**kwargs)
         self.selected_item = None  # Track the selected item
 
@@ -687,6 +690,10 @@ class OpenLoanVLB(Screen):
         loan_status = []
         product_name = []
         email1 = []
+        loan_amount = []
+        tenure = []
+        interest_rate = []
+        ascend_score = []
         s = 0
         for i in data:
             s += 1
@@ -696,6 +703,10 @@ class OpenLoanVLB(Screen):
             loan_status.append(i['loan_updated_status'])
             product_name.append(i['product_name'])
             email1.append(i['borrower_email_id'])
+            loan_amount.append(i['loan_amount'])
+            tenure.append(i['tenure'])
+            interest_rate.append(i['interest_rate'])
+            ascend_score.append(i['ascend_score'])
 
         profile_customer_id = []
         profile_mobile_number = []
@@ -712,8 +723,7 @@ class OpenLoanVLB(Screen):
             index_list = []
             for i in range(s):
                 c += 1
-                if (loan_status[c] == 'disbursed' and customer_id[c] == cos_id or loan_status[c] == 'foreclosure' and \
-                        customer_id[c] == cos_id or loan_status[c] == 'extension' and customer_id[c] == cos_id):
+                if customer_id[c] == cos_id:
                     index_list.append(c)
 
             b = 1
@@ -725,30 +735,144 @@ class OpenLoanVLB(Screen):
                     number = profile_customer_id.index(customer_id[i])
                 else:
                     number = 0
-                item = ThreeLineAvatarIconListItem(
-
-                    IconLeftWidget(
-                        icon="card-account-details-outline"
-                    ),
-                    text=f"Borrower Name : {borrower_name[i]}",
-                    secondary_text=f"Borrower Mobile Number : {profile_mobile_number[number]}",
-                    tertiary_text=f"Product Name : {product_name[i]}",
-                    text_color=(0, 0, 0, 1),  # Black color
-                    theme_text_color='Custom',
-                    secondary_text_color=(0, 0, 0, 1),
-                    secondary_theme_text_color='Custom',
-                    tertiary_text_color=(0, 0, 0, 1),
-                    tertiary_theme_text_color='Custom'
+                # Card to display the list of details
+                card = MDCard(
+                    orientation='vertical',
+                    size_hint=(None, None),
+                    size=("280dp", "190dp"),
+                    # size: "280dp", "180dp",
+                    padding="10dp",
+                    spacing="3dp",
+                    elevation=3,
                 )
-                item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
-                self.ids.container.add_widget(item)
+                # Horizontal layout to keep the text and image in to the card
+                horizontal_layout = BoxLayout(orientation='horizontal')
+                image = Image(
+                    source="img.png",  # Assuming you want to use the same image for now
+                    size_hint_x=None,
+                    height="10dp",
+                )
+                horizontal_layout.add_widget(image)
+
+                # Text Layout to keep the text on card
+                text_layout = BoxLayout(orientation='vertical')
+                text_layout.add_widget(MDLabel(
+                    text=f"{borrower_name[i]}\n{profile_mobile_number[number]}",
+                    theme_text_color='Custom',
+                    text_color=(0, 0, 0, 1),
+                    halign='left',
+                    markup=True,
+                    font_size='10sp'
+                ))
+                text_layout.add_widget(MDLabel(
+                    text=f" [b]Loan Amount:[/b] {loan_amount[i]}",
+                    theme_text_color='Custom',
+                    text_color=(0, 0, 0, 1),
+                    halign='left',
+                    markup=True,
+                    font_size='10sp'
+                ))
+                text_layout.add_widget(MDLabel(
+                    text=f" [b]Ascend Score :[/b]{ascend_score[i]}",
+                    theme_text_color='Custom',
+                    text_color=(0, 0, 0, 1),
+                    halign='left',
+                    markup=True,
+                    font_size='10sp'
+                ))
+                text_layout.add_widget(MDLabel(
+                    text=f" [b]Interest Rate :[/b]{interest_rate[i]}",
+                    theme_text_color='Custom',
+                    text_color=(0, 0, 0, 1),
+                    halign='left',
+                    markup=True,
+                    font_size='10sp'
+                ))
+                horizontal_layout.add_widget(text_layout)
+                card.add_widget(horizontal_layout)
+
+                # Button layout to align the Buttons
+                button_layout = BoxLayout(
+                    size_hint_y=None,
+                    height="40dp",
+                    padding="10dp",
+                    spacing=30
+                )
+                button2 = MDRaisedButton(
+                    text="View Details",
+                    size_hint=(None, None),
+                    height="40dp",
+                    width="250dp",
+                    pos_hint={"center_x": 1},
+                    md_bg_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id)
+                )
+                button1 = MDRaisedButton(
+                    text=f"{loan_status[i]}",
+                    size_hint=(None, None),
+                    height="40dp",
+                    width="250dp",
+                    pos_hint={"center_x": 0},
+                    md_bg_color=(0.545, 0.765, 0.290, 1),
+                )
+                button_layout.add_widget(button1)
+                button_layout.add_widget(button2)
+
+                # Adding the Buttons to the card
+                card.add_widget(button_layout)
+
+                # Actual code for the future referance incase of failures
+                # item = ThreeLineAvatarIconListItem(
+                #
+                #     IconLeftWidget(
+                #         icon="icon1.jpg", size_hint_x=None, width=50
+                #         # icon = f"{customer_id}"
+                #     ),
+                #
+                #     text=f"User Name :{borrower_name[i]},       Product Name :{product_name[i]}",
+                #     secondary_text=f"Mobile Number :{profile_mobile_number[number]},            Loan Amount :{loan_amount[i]}",
+                #     tertiary_text=f"Interest Rate :{interest_rate[i]},      Tenure: {tenure[i]},        Loan Status: {loan_status[i]}",
+                #     text_color=(0, 0, 0, 1),  # Black color
+                #     theme_text_color='Custom',
+                #     secondary_text_color=(0, 0, 0, 1),
+                #     secondary_theme_text_color='Custom',
+                #     tertiary_text_color=(0, 0, 0, 1),
+                #     tertiary_theme_text_color='Custom',
+                #
+                # )
+                # item.ids._lbl_primary.halign = 'center'
+                # item.ids._lbl_primary.valign = 'top'
+                # item.ids._lbl_secondary.halign = 'center'
+                # item.ids._lbl_primary.valign = 'middle'
+                # item.ids._lbl_tertiary.halign = 'center'
+                # item.ids._lbl_primary.valign = 'bottom'
+                #
+                # button = MDRaisedButton(
+                #     text="Close Loan",
+                #     size_hint=(None, None),
+                #     height=30,
+                #     width=20,
+                #     #pos_hint={"center_x": 1, "center_y": 0},
+                #     pos_hint={"right": 1, "bottom": 0}
+                #
+                #     # on_release=lambda x, i=i: self.close_loan(i)
+                # )
+                #
+                # # Add the button to the item
+                # right_icon = IconRightWidget()
+                # right_icon.add_widget(button)
+                # item.add_widget(right_icon)
+                #
+                #
+                # card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
+                self.ids.container.add_widget(card)
 
     def icon_button_clicked(self, instance, loan_id):
         # Deselect all other items
         self.deselect_items()
 
         # Change the background color of the clicked item to indicate selection
-        instance.bg_color = (0.5, 0.5, 0.5, 1)  # Change color as desired
+        # instance.bg_color = (0.5, 0.5, 0.5, 1)  # Change color as desired
         self.selected_item = instance
 
         data = app_tables.fin_loan_details.search()
@@ -757,7 +881,7 @@ class OpenLoanVLB(Screen):
             if loan['loan_id'] == loan_id:
                 loan_status = loan['loan_updated_status']
                 break
-        if loan_status == 'disbursed' or loan_status == 'extension' or loan_status == 'foreclosure':
+        if loan_status == 'under process' or loan_status == 'disbursed loan' or loan_status == 'foreclosure':
             # Open the screen for approved loans
 
             sm = self.manager
@@ -796,35 +920,8 @@ class OpenLoanVLB(Screen):
         return False
 
     def go_back(self):
-
-        from borrower_dashboard import DashboardScreen
-
-        type = self.manager.get_screen('DashboardScreen').type()
-        print(type)
-        if type == 'dashboard':
-            self.manager.transition = SlideTransition(direction='right')
-            sm = self.manager
-
-            # Create a new instance of the LoginScreen
-            profile = DashboardScreen(name='DashboardScreen')
-
-            # Add the LoginScreen to the existing ScreenManager
-            sm.add_widget(profile)
-
-            # Switch to the LoginScreen
-            sm.current = 'DashboardScreen'
-        else:
-            self.manager.transition = SlideTransition(direction='right')
-            sm = self.manager
-
-            # Create a new instance of the LoginScreen
-            profile = DashboardScreenVLB(name='DashboardScreenVLB')
-
-            # Add the LoginScreen to the existing ScreenManager
-            sm.add_widget(profile)
-
-            # Switch to the LoginScreen
-            sm.current = 'DashboardScreenVLB'
+        self.manager.transition = SlideTransition(direction='right')
+        self.manager.current = 'DashboardScreen'
 
     def refresh(self):
         self.ids.container.clear_widgets()
@@ -943,34 +1040,9 @@ class UnderProcessLoanVLB(Screen):
         return False  # Continue handling the event
 
     def go_back(self):
-        from borrower_dashboard import DashboardScreen
-
-        type = self.manager.get_screen('DashboardScreen').type()
-        print(type)
-        if type == 'dashboard':
-            self.manager.transition = SlideTransition(direction='right')
-            sm = self.manager
-
-            # Create a new instance of the LoginScreen
-            profile = DashboardScreen(name='DashboardScreen')
-
-            # Add the LoginScreen to the existing ScreenManager
-            sm.add_widget(profile)
-
-            # Switch to the LoginScreen
-            sm.current = 'DashboardScreen'
-        else:
-            self.manager.transition = SlideTransition(direction='right')
-            sm = self.manager
-
-            # Create a new instance of the LoginScreen
-            profile = DashboardScreenVLB(name='DashboardScreenVLB')
-
-            # Add the LoginScreen to the existing ScreenManager
-            sm.add_widget(profile)
-
-            # Switch to the LoginScreen
-            sm.current = 'DashboardScreenVLB'
+        # Navigate to the previous screen with a slide transition
+        self.manager.transition = SlideTransition(direction='right')
+        self.manager.current = 'DashboardScreenVLB'
 
     def refresh(self):
         self.ids.container1.clear_widgets()
@@ -1087,34 +1159,10 @@ class RejectedLoanVLB(Screen):
         return False  # Continue handling the event
 
     def go_back(self):
-        from borrower_dashboard import DashboardScreen
+        # Navigate to the previous screen with a slide transition
+        self.manager.transition = SlideTransition(direction='right')
+        self.manager.current = 'DashboardScreenVLB'
 
-        type = self.manager.get_screen('DashboardScreen').type()
-        print(type)
-        if type == 'dashboard':
-            self.manager.transition = SlideTransition(direction='right')
-            sm = self.manager
-
-            # Create a new instance of the LoginScreen
-            profile = DashboardScreen(name='DashboardScreen')
-
-            # Add the LoginScreen to the existing ScreenManager
-            sm.add_widget(profile)
-
-            # Switch to the LoginScreen
-            sm.current = 'DashboardScreen'
-        else:
-            self.manager.transition = SlideTransition(direction='right')
-            sm = self.manager
-
-            # Create a new instance of the LoginScreen
-            profile = DashboardScreenVLB(name='DashboardScreenVLB')
-
-            # Add the LoginScreen to the existing ScreenManager
-            sm.add_widget(profile)
-
-            # Switch to the LoginScreen
-            sm.current = 'DashboardScreenVLB'
     def refresh(self):
         self.ids.container2.clear_widgets()
         self.__init__()
@@ -1232,34 +1280,9 @@ class ClosedLoanVLB(Screen):
         return False  # Continue handling the event
 
     def go_back(self):
-        from borrower_dashboard import DashboardScreen
-
-        type = self.manager.get_screen('DashboardScreen').type()
-        print(type)
-        if type == 'dashboard':
-            self.manager.transition = SlideTransition(direction='right')
-            sm = self.manager
-
-            # Create a new instance of the LoginScreen
-            profile = DashboardScreen(name='DashboardScreen')
-
-            # Add the LoginScreen to the existing ScreenManager
-            sm.add_widget(profile)
-
-            # Switch to the LoginScreen
-            sm.current = 'DashboardScreen'
-        else:
-            self.manager.transition = SlideTransition(direction='right')
-            sm = self.manager
-
-            # Create a new instance of the LoginScreen
-            profile = DashboardScreenVLB(name='DashboardScreenVLB')
-
-            # Add the LoginScreen to the existing ScreenManager
-            sm.add_widget(profile)
-
-            # Switch to the LoginScreen
-            sm.current = 'DashboardScreenVLB'
+        # Navigate to the previous screen with a slide transition
+        self.manager.transition = SlideTransition(direction='right')
+        self.manager.current = 'DashboardScreenVLB'
 
     def refresh(self):
         self.ids.container3.clear_widgets()

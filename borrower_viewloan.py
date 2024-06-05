@@ -160,7 +160,7 @@ borrower_view_loan = '''
         orientation: 'vertical'
 
         MDTopAppBar:
-            title: "All Loans"
+            title: "View All Loans"
             elevation: 3
             left_action_items: [['arrow-left', lambda x: root.go_back()]]
             right_action_items: [['refresh', lambda x: root.refresh()]]
@@ -739,10 +739,10 @@ class OpenLoanVLB(Screen):
                 card = MDCard(
                     orientation='vertical',
                     size_hint=(None, None),
-                    size=("280dp", "190dp"),
+                    size=("280dp", "170dp"),
                     # size: "280dp", "180dp",
-                    padding="10dp",
-                    spacing="3dp",
+                    padding="8dp",
+                    spacing="5dp",
                     elevation=3,
                 )
                 # Horizontal layout to keep the text and image in to the card
@@ -757,7 +757,7 @@ class OpenLoanVLB(Screen):
                 # Text Layout to keep the text on card
                 text_layout = BoxLayout(orientation='vertical')
                 text_layout.add_widget(MDLabel(
-                    text=f"{borrower_name[i]}\n{profile_mobile_number[number]}",
+                    text=f"[b]{borrower_name[i]}\n{profile_mobile_number[number]}[/b]",
                     theme_text_color='Custom',
                     text_color=(0, 0, 0, 1),
                     halign='left',
@@ -798,6 +798,26 @@ class OpenLoanVLB(Screen):
                     padding="10dp",
                     spacing=30
                 )
+                #this colors for loan status button colors based on loan status
+                status_color = (0.545, 0.765, 0.290, 1)  # default color
+                if loan_status[i] == "under process" or loan_status[i] == "Under Process" or loan_status[i] == "UnderProcess" or loan_status[i] == "underprocess":
+                    status_color = (0.9804, 0.9804, 0.8235, 1.0)
+                elif loan_status[i] == "disbursed loan" or loan_status[i] == "disbursed":
+                    status_color = (0.8588, 0.4392, 0.5765, 1.0)
+                elif loan_status[i] == "closed loan" or loan_status[i] == "Closed Loan" or loan_status[i] == "closedloan" or loan_status[i] == "ClosedLoan":
+                    status_color = (0.4235, 0.5569, 0.1373, 1.0)
+                elif loan_status[i] == "extension" or loan_status[i] == "Extension":
+                    status_color = (1.0, 0.6275, 0.4824, 1.0)
+                elif loan_status[i] == "foreclosure" or loan_status[i] == "Foreclosure":
+                    status_color = (0.0, 0.749, 1.0, 1.0)
+                elif loan_status[i] == "accepted" or loan_status[i] == "Accepted":
+                    status_color = (0.2353, 0.7019, 0.4431, 1.0)
+                elif loan_status[i] == "rejected" or loan_status[i] == "Rejected" or loan_status[i] == "Rejected Loan" or loan_status[i] == "rejected loan":
+                    status_color = (0.8039, 0.3608, 0.3608, 1.0)
+                elif loan_status[i] == "approved" or loan_status[i] == "Approved" or loan_status[i] == "approved loans" or loan_status[i] == "Approved Loans":
+                    status_color = (0.2353, 0.7019, 0.4431, 1.0)
+                elif loan_status[i] == "decline" or loan_status[i] == "Decline" or loan_status[i] == "declined" or loan_status[i] == "Declined":
+                    status_color = (0.8039, 0.3608, 0.3608, 1.0)
                 button2 = MDRaisedButton(
                     text="View Details",
                     size_hint=(None, None),
@@ -813,7 +833,8 @@ class OpenLoanVLB(Screen):
                     height="40dp",
                     width="250dp",
                     pos_hint={"center_x": 0},
-                    md_bg_color=(0.545, 0.765, 0.290, 1),
+                    md_bg_color=status_color,
+                    theme_text_color="Primary"
                 )
                 button_layout.add_widget(button1)
                 button_layout.add_widget(button2)
@@ -881,24 +902,24 @@ class OpenLoanVLB(Screen):
             if loan['loan_id'] == loan_id:
                 loan_status = loan['loan_updated_status']
                 break
-        if loan_status == 'under process' or loan_status == 'disbursed loan' or loan_status == 'foreclosure':
+        #if loan_status == 'under process' or loan_status == 'disbursed loan' or loan_status == 'foreclosure':
             # Open the screen for approved loans
 
-            sm = self.manager
+        sm = self.manager
 
-            # Create a new instance of the LoginScreen
-            under_process = ViewLoansScreenVLB(name='ViewLoansScreenVLB')
+        # Create a new instance of the LoginScreen
+        under_process = ViewLoansScreenVLB(name='ViewLoansScreenVLB')
 
-            # Add the LoginScreen to the existing ScreenManager
-            sm.add_widget(under_process)
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(under_process)
 
-            # Switch to the LoginScreen
-            sm.current = 'ViewLoansScreenVLB'
-            self.manager.get_screen('ViewLoansScreenVLB').initialize_with_value(loan_id, data)
+        # Switch to the LoginScreen
+        sm.current = 'ViewLoansScreenVLB'
+        self.manager.get_screen('ViewLoansScreenVLB').initialize_with_value(loan_id, data)
 
-        else:
-            # Handle other loan statuses or show an error message
-            pass
+        # else:
+        #     # Handle other loan statuses or show an error message
+        #     pass
 
     def deselect_items(self):
         # Deselect all items in the list

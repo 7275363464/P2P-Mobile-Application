@@ -1,27 +1,18 @@
 import json
-
 from anvil.tables import app_tables
 from kivy.factory import Factory
 from kivy.metrics import dp
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.image import Image
 from kivy.uix.popup import Popup
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
 import sqlite3
-import base64
-from anvil import media
-from io import BytesIO
-from kivy.core.image import Image as CoreImage
-from kivy.graphics import Color, Ellipse
 import anvil.server
 from kivy.uix.screenmanager import Screen, SlideTransition
 from kivy.utils import platform
 from kivy.clock import mainthread
 from kivymd.uix.button import MDRectangleFlatButton
-from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.list import ThreeLineAvatarIconListItem, IconLeftWidget
@@ -43,6 +34,7 @@ from kivymd.uix.button import MDRaisedButton, MDFlatButton, MDRoundFlatButton, M
 from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
 import anvil
 from kivymd.uix.dialog import MDDialog
+from lender_view_loans import ALlLoansScreen
 from lender_view_transaction_history import TransactionLH
 from lender_view_loans_request import ViewLoansProfileScreen, ViewLoansProfileScreenLR, ViewLoansProfileScreenRL
 from kivy.animation import Animation
@@ -50,12 +42,7 @@ from kivymd.uix.label import MDLabel
 from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.uix.modalview import ModalView
-from lender_view_loans import ViewLoansScreen, ViewClosedLoansScreen, ViewRejectedLoansScreen, OpenViewLoanScreen, \
-    ALlLoansScreen, ViewLoansProfileScreens
-from lender_today_due import TodayDuesTD
-from lender_lost_opportunities import LostOpportunitiesScreen
-from lender_view_extension_request import NewExtension
-from lender_foreclosure_request import DashboardScreenLF
+
 
 if platform == 'android':
     from kivy.uix.button import Button
@@ -4560,8 +4547,8 @@ class LenderDashboard(Screen):
     def perform_view_loanscreen(self, modal_view):
         # Close the modal view after performing the action
         modal_view.dismiss()
-        self.manager.add_widget(Factory.ViewLoansScreen(name='ViewLoansScreen'))
-        self.manager.current = 'ViewLoansScreen'
+        self.manager.add_widget(Factory.ALlLoansScreen(name='ALlLoansScreen'))
+        self.manager.current = 'ALlLoansScreen'
 
     def newloan_extension(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])

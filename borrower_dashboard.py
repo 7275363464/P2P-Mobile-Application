@@ -4030,8 +4030,8 @@ class DashboardScreen(Screen):
         # Close the modal view after performing the action
         modal_view.dismiss()
 
-        self.manager.add_widget(Factory.DashboardScreenVLB(name='DashboardScreenVLB'))
-        self.manager.current = 'DashboardScreenVLB'
+        self.manager.add_widget(Factory.OpenLoanVLB(name='OpenLoanVLB'))
+        self.manager.current = 'OpenLoanVLB'
 
     def go_to_transaction_history(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])

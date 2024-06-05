@@ -673,7 +673,7 @@ class ViewLoansScreenVLB(Screen):
         self.manager.current = 'ViewLoansRequest'
 
     def on_back_button_press(self):
-        self.manager.current = 'OpenLoanVLB'
+        self.manager.current = 'DashboardScreen'
 
 
 class OpenLoanVLB(Screen):

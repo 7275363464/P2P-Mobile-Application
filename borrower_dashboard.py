@@ -11,6 +11,7 @@ import anvil
 from anvil.tables import app_tables
 from kivy.properties import StringProperty
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.image import Image
 from kivy.uix.popup import Popup
 from kivymd.app import MDApp
 from kivy.lang import Builder
@@ -20,8 +21,10 @@ from kivy.utils import platform
 from kivy.clock import mainthread
 from kivymd.material_resources import dp
 from kivymd.uix.button import MDRectangleFlatButton, MDRaisedButton
+from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.filemanager import MDFileManager
+from kivymd.uix.list import ThreeLineAvatarIconListItem
 from kivymd.uix.spinner import MDSpinner
 from borrower_notification import NotificationScreen
 from borrower_extend_loan import ExtensionLoansRequest
@@ -29,7 +32,8 @@ from borrower_view_transaction_history import TransactionBH
 from borrower_application_tracker import ALLLoansAPT
 from borrower_dues import BorrowerDuesScreen
 from new_loan_request import NewloanScreen
-from borrower_viewloan import DashboardScreenVLB, ClosedLoanVLB, UnderProcessLoanVLB, OpenLoanVLB, RejectedLoanVLB
+from borrower_viewloan import DashboardScreenVLB, ClosedLoanVLB, UnderProcessLoanVLB, OpenLoanVLB, RejectedLoanVLB, \
+    ViewLoansScreenVLB
 from borrower_foreclosure import LoansDetailsB
 from kivy.uix.modalview import ModalView
 from kivymd.uix.spinner import MDSpinner
@@ -60,7 +64,7 @@ user_helpers = '''
 
     MDBottomNavigation:
         panel_color: '#F5F5F5'
-        selected_color_background: "#666666"
+        selected_color_background: "#ffffff"
         text_color_active: "#007BFF"
         elevation: 10
         MDBottomNavigationItem:
@@ -474,7 +478,7 @@ user_helpers = '''
             icon: 'wallet'
             on_tab_press: root.wallet()
             MDTopAppBar:
-                title: "GP2P-Wallet"
+                title: "Ascends-P2P-Wallet"
                 elevation: 2
                 pos_hint: {'top': 1}
                 right_action_items: [['refresh', lambda x: root.refresh1()]]
@@ -587,117 +591,33 @@ user_helpers = '''
             icon: 'cash'
             text_color_normal: '#4c594f'
             text_color_active: 1, 0, 0, 1
-            MDFloatLayout:
-                md_bg_color:1,1,1,1
-                size_hint: 1, 1 
-        
+            on_tab_press: root.refresh5()
+            BoxLayout:
+                orientation: 'vertical'
+                
                 MDTopAppBar:
-                    title: "Borrower View Loan"
+                    title: "View All Loans"
                     elevation: 3
-                    right_action_items: [['refresh', lambda x: root.refresh()]]
-                    pos_hint: {'top': 1}
+                    left_action_items: [['arrow-left', lambda x: root.go_back()]]
+                    right_action_items: [['refresh5', lambda x: root.refresh5()]]
                     md_bg_color: 0.043, 0.145, 0.278, 1
-        
-                MDGridLayout:
-                    cols: 2
-                    spacing: dp(15)
-                    size_hint_y: None
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    height: self.minimum_height
-                    width: self.minimum_width
-                    size_hint_x: None
-        
-                    MDFlatButton:
-                        size_hint: None, None
-        
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        md_bg_color: 0.043, 0.145, 0.278, 1
-        
+                    
+                MDScrollView:
+                    MDBoxLayout:
+                        id: container
+                        orientation: 'vertical'
+                        padding: dp(25)
+                        spacing: dp(10)
                         size_hint_y: None
-                        height: dp(60)
-                        size_hint_x: None
-                        width: dp(110)
-                        on_release: root.go_to_open_loans()
-                        BoxLayout:
-                            orientation: 'horizontal'
-                            spacing:dp(10)
-                            MDLabel:
-                                text: "Open Loans"
-                                font_size:dp(14)
-                                bold:True
-                                theme_text_color: 'Custom'
-                                halign: "center"
-                                text_color:1,1,1,1
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        
-                    MDFlatButton:
-                        size_hint: None, None
-        
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        md_bg_color: 0.043, 0.145, 0.278, 1 
-                        on_release: root.go_to_under_loans()
-                        size_hint_y: None
-                        height: dp(60)
-                        size_hint_x: None
-                        width: dp(110)
-        
-                        BoxLayout:
-                            orientation: 'horizontal'
-                            spacing:dp(10)
-                            MDLabel:
-                                text: "Under process Loans"
-                                font_size:dp(14)
-                                bold:True
-                                theme_text_color: 'Custom'
-                                halign: "center"
-                                text_color:1,1,1,1
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        
-                    MDFlatButton:
-                        size_hint: None, None
-        
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        md_bg_color: 0.043, 0.145, 0.278, 1 
-                        on_release: root.go_to_reject_loans()
-                        size_hint_y: None
-                        height: dp(60)
-                        size_hint_x: None
-                        width: dp(110)
-        
-                        BoxLayout:
-                            orientation: 'horizontal'
-                            spacing:dp(10)
-                            MDLabel:
-                                text: "Rejected Loans"
-                                font_size:dp(14)
-                                bold:True
-                                theme_text_color: 'Custom'
-                                halign: "center"
-                                text_color:1,1,1,1
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        
-                    MDFlatButton:
-                        size_hint: None, None
-        
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        md_bg_color: 0.043, 0.145, 0.278, 1 
-        
-                        size_hint_y: None
-                        height: dp(60)
-                        size_hint_x: None
-                        width: dp(110)
-                        on_release: root.closed_loans()
-                        BoxLayout:
-                            orientation: 'horizontal'
-                            spacing:dp(10)
-                            MDLabel:
-                                text: "Closed Loans"
-                                font_size:dp(14)
-                                bold:True
-                                theme_text_color: 'Custom'
-                                halign: "center"
-                                text_color:1,1,1,1
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        height: self.minimum_height
+                        width: self.minimum_width
+                        adaptive_size: True
+                        pos_hint: {"center_x": 0, "center_y":  0}
+                        
+                    # MDList:
+                    #     
+                    #     id: container
+
         MDBottomNavigationItem:
             name: 'screen 3'
             text: 'Account'
@@ -874,7 +794,7 @@ user_helpers = '''
                                         padding:dp(9), dp(3)
         
                                         Image:
-                                            source: "icon8.png"
+                                            source: "icon12.png"
                                             size_hint: (0.4, 1)
                                             pos_hint:{"center_x":0.5,"center_y":0.2}
                                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
@@ -3357,151 +3277,251 @@ class DashboardScreen(Screen):
                                                                       modal_height))  # Bind to the completion event to repeat the animation
         anim.start(loading_label)
 
-    def go_to_open_loans(self):
-        self.dash('dashboard')
-        modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
+    def loans(self):
+        self.selected_item = None  # Track the selected item
+        data = app_tables.fin_loan_details.search()
+        email = anvil.server.call('another_method')
+        profile = app_tables.fin_user_profile.search(email_user=email)
+        customer_id = []
+        loan_id = []
+        borrower_name = []
+        loan_status = []
+        product_name = []
+        email1 = []
+        loan_amount = []
+        tenure = []
+        interest_rate = []
+        ascend_score = []
+        s = 0
+        for i in data:
+            s += 1
+            customer_id.append(i['borrower_customer_id'])
+            loan_id.append(i['loan_id'])
+            borrower_name.append(i['borrower_full_name'])
+            loan_status.append(i['loan_updated_status'])
+            product_name.append(i['product_name'])
+            email1.append(i['borrower_email_id'])
+            loan_amount.append(i['loan_amount'])
+            tenure.append(i['tenure'])
+            interest_rate.append(i['interest_rate'])
 
-        # Create MDLabel with white text color, increased font size, and bold text
-        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
-                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
-                                font_size="50sp", bold=True)
 
-        # Set initial y-position off-screen
-        loading_label.y = -loading_label.height
+        profile_customer_id = []
+        profile_mobile_number = []
+        for i in profile:
+            profile_customer_id.append(i['customer_id'])
+            profile_mobile_number.append(i['mobile'])
+            ascend_score.append(i['ascend_value'])
+        cos_id = None
+        if email in email1:
+            index = email1.index(email)
+            cos_id = customer_id[index]
 
-        modal_view.add_widget(loading_label)
-        modal_view.open()
+        print(cos_id)
+        if cos_id is not None:
 
-        # Perform the animation
-        self.animate_loading_text(loading_label, modal_view.height)
+            c = -1
+            index_list = []
+            for i in range(s):
+                c += 1
+                if customer_id[c] == cos_id:
+                    index_list.append(c)
 
-        # Perform the actual action (e.g., fetching loan requests)
-        # You can replace the sleep with your actual logic
-        Clock.schedule_once(lambda dt: self.performance_go_to_open_loans(modal_view), 2)
+            b = 1
+            k = -1
+            for i in reversed(index_list):
+                b += 1
+                k += 1
+                if customer_id[i] in profile_customer_id:
+                    number = profile_customer_id.index(customer_id[i])
+                else:
+                    number = 0
+                # Card to display the list of details
+                card = MDCard(
+                    orientation='vertical',
+                    size_hint=(None, None),
+                    size=("280dp", "190dp"),
+                    # size: "280dp", "180dp",
+                    padding="10dp",
+                    spacing="3dp",
+                    elevation=3,
+                )
+                # Horizontal layout to keep the text and image in to the card
+                horizontal_layout = BoxLayout(orientation='horizontal')
+                image = Image(
+                    source="icon8.png",  # Assuming you want to use the same image for now
+                    size_hint_x=None,
+                    height="10dp",
+                )
+                horizontal_layout.add_widget(image)
 
-    def performance_go_to_open_loans(self, modal_view):
-        modal_view.dismiss()
+                # Text Layout to keep the text on card
+                text_layout = BoxLayout(orientation='vertical')
+                text_layout.add_widget(MDLabel(
+                    text=f" {borrower_name[i]}\n {profile_mobile_number[number]}",
+                    theme_text_color='Custom',
+                    text_color=(0, 0, 0, 1),
+                    halign='left',
+                    markup=True,
+                    font_size='10sp',
+                    bold= True
+                ))
+                text_layout.add_widget(MDLabel(
+                    text=f" [b]Loan Amount:[/b] {loan_amount[i]}",
+                    theme_text_color='Custom',
+                    text_color=(0, 0, 0, 1),
+                    halign='left',
+                    markup=True,
+                    font_size='10sp'
+                ))
+                text_layout.add_widget(MDLabel(
+                    text=f" [b]Ascend Score :[/b]{ascend_score[number]}",
+                    theme_text_color='Custom',
+                    text_color=(0, 0, 0, 1),
+                    halign='left',
+                    markup=True,
+                    font_size='10sp'
+                ))
+                text_layout.add_widget(MDLabel(
+                    text=f" [b]Interest Rate :[/b]{interest_rate[i]}",
+                    theme_text_color='Custom',
+                    text_color=(0, 0, 0, 1),
+                    halign='left',
+                    markup=True,
+                    font_size='10sp'
+                ))
+                # text_layout.add_widget(MDLabel(
+                #     text=f" [b]Mobile Number :[/b]{profile_mobile_number[number]}",
+                #     theme_text_color='Custom',
+                #     text_color=(0, 0, 0, 1),
+                #     halign='left',
+                #     markup=True,
+                #     font_size='10sp'
+                # ))
+                horizontal_layout.add_widget(text_layout)
+                card.add_widget(horizontal_layout)
+
+                # Button layout to align the Buttons
+                button_layout = BoxLayout(
+                    size_hint_y=None,
+                    height="40dp",
+                    padding="10dp",
+                    spacing=30
+                )
+                button2 = MDRaisedButton(
+                    text="View Details",
+                    size_hint=(None, None),
+                    height="40dp",
+                    width="250dp",
+                    pos_hint={"center_x": 1},
+                    md_bg_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id)
+                )
+
+                button1 = MDRaisedButton(
+                    text=f"{loan_status[i]}",
+                    size_hint=(None, None),
+                    height="40dp",
+                    width="250dp",
+                    pos_hint={"center_x": 0},
+                    md_bg_color=(0.545, 0.765, 0.290, 1),
+                    # on_release=lambda x, i=i: self.close_loan(i)
+                )
+                button_layout.add_widget(button1)
+                button_layout.add_widget(button2)
+
+                # Adding the Buttons to the card
+                card.add_widget(button_layout)
+
+
+                if button1.text == 'under process':
+                    button1.md_bg_color = '#FFFACD'
+                if button1.text == 'disbursed':
+                    button1.md_bg_color = '#FFB6C1'
+                if button1.text == 'approved':
+                    button1.md_bg_color = '#98FB98'
+                if button1.text == 'rejected':
+                    button1.md_bg_color = '#F08080'
+                if button1.text == 'closed':
+                    button1.md_bg_color = '#556B2F'
+                if button1.text == 'extension':
+                    button1.md_bg_color = '#FFDAB9'
+                if button1.text == 'foreclosure':
+                    button1.md_bg_color = '#87CEFA'
+                # Actual code for the future referance incase of failures
+                # item = ThreeLineAvatarIconListItem(
+                #
+                #     IconLeftWidget(
+                #         icon="icon1.jpg", size_hint_x=None, width=50
+                #         # icon = f"{customer_id}"
+                #     ),
+                #
+                #     text=f"User Name :{borrower_name[i]},       Product Name :{product_name[i]}",
+                #     secondary_text=f"Mobile Number :{profile_mobile_number[number]},            Loan Amount :{loan_amount[i]}",
+                #     tertiary_text=f"Interest Rate :{interest_rate[i]},      Tenure: {tenure[i]},        Loan Status: {loan_status[i]}",
+                #     text_color=(0, 0, 0, 1),  # Black color
+                #     theme_text_color='Custom',
+                #     secondary_text_color=(0, 0, 0, 1),
+                #     secondary_theme_text_color='Custom',
+                #     tertiary_text_color=(0, 0, 0, 1),
+                #     tertiary_theme_text_color='Custom',
+                #
+                # )
+                # item.ids._lbl_primary.halign = 'center'
+                # item.ids._lbl_primary.valign = 'top'
+                # item.ids._lbl_secondary.halign = 'center'
+                # item.ids._lbl_primary.valign = 'middle'
+                # item.ids._lbl_tertiary.halign = 'center'
+                # item.ids._lbl_primary.valign = 'bottom'
+                #
+                # button = MDRaisedButton(
+                #     text="Close Loan",
+                #     size_hint=(None, None),
+                #     height=30,
+                #     width=20,
+                #     #pos_hint={"center_x": 1, "center_y": 0},
+                #     pos_hint={"right": 1, "bottom": 0}
+                #
+                #     # on_release=lambda x, i=i: self.close_loan(i)
+                # )
+                #
+                # # Add the button to the item
+                # right_icon = IconRightWidget()
+                # right_icon.add_widget(button)
+                # item.add_widget(right_icon)
+                #
+                #
+                card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
+                self.ids.container.add_widget(card)
+
+    def icon_button_clicked(self, instance, loan_id):
+        data = app_tables.fin_loan_details.search()
+        # Deselect all other items
+        self.deselect_items()
+
+        # Change the background color of the clicked item to indicate selection
+        instance.bg_color = (0.5, 0.5, 0.5, 1)  # Change color as desired
+        self.selected_item = instance
+
+
         sm = self.manager
 
         # Create a new instance of the LoginScreen
-        profile_screen = OpenLoanVLB(name='OpenLoanVLB')
+        under_process = ViewLoansScreenVLB(name='ViewLoansScreenVLB')
 
         # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(profile_screen)
+        sm.add_widget(under_process)
 
         # Switch to the LoginScreen
-        sm.current = 'OpenLoanVLB'
+        sm.current = 'ViewLoansScreenVLB'
+        self.manager.get_screen('ViewLoansScreenVLB').initialize_with_value(loan_id, data)
 
-    def go_to_under_loans(self):
-        self.dash('dashboard')
-        modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
+    def deselect_items(self):
+        # Deselect all items in the list
+        for item in self.ids.container.children:
+            if isinstance(item, ThreeLineAvatarIconListItem):
+                item.bg_color = (1, 1, 1, 1)  # Reset background color for all items
 
-        # Create MDLabel with white text color, increased font size, and bold text
-        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
-                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
-                                font_size="25sp", bold=True)
-
-        # Set initial y-position off-screen
-        loading_label.y = -loading_label.height
-
-        modal_view.add_widget(loading_label)
-        modal_view.open()
-
-        # Perform the animation
-        self.animate_loading_text(loading_label, modal_view.height)
-
-        # Perform the actual action (e.g., fetching loan requests)
-        # You can replace the sleep with your actual logic
-        Clock.schedule_once(lambda dt: self.performance_go_to_under_loans(modal_view), 2)
-
-    def performance_go_to_under_loans(self, modal_view):
-        # Perform the actual action here (e.g., fetching loan requests)
-        # For demonstration purposes, let's simulate a delay of 2 seconds
-        # Replace this with your actual logic
-
-        # Dismiss the modal view once the action is complete
-        modal_view.dismiss()
-
-        sm = self.manager
-
-        # Create a new instance of the LoginScreen
-        profile_screen = UnderProcessLoanVLB(name='UnderProcessLoanVLB')
-
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(profile_screen)
-
-        # Switch to the LoginScreen
-        sm.current = 'UnderProcessLoanVLB'
-
-    def go_to_reject_loans(self):
-        self.dash('dashboard')
-        modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
-
-        # Create MDLabel with white text color, increased font size, and bold text
-        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
-                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
-                                font_size="25sp", bold=True)
-
-        # Set initial y-position off-screen
-        loading_label.y = -loading_label.height
-
-        modal_view.add_widget(loading_label)
-        modal_view.open()
-
-        # Perform the animation
-        self.animate_loading_text(loading_label, modal_view.height)
-
-        # Perform the actual action (e.g., fetching loan requests)
-        # You can replace the sleep with your actual logic
-        Clock.schedule_once(lambda dt: self.performance_go_to_reject_loans(modal_view), 2)
-
-    def performance_go_to_reject_loans(self, modal_view):
-        modal_view.dismiss()
-        sm = self.manager
-
-        # Create a new instance of the LoginScreen
-        profile_screen = RejectedLoanVLB(name='RejectedLoanVLB')
-
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(profile_screen)
-
-        # Switch to the LoginScreen
-        sm.current = 'RejectedLoanVLB'
-
-    def closed_loans(self):
-        self.dash('dashboard')
-        modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
-
-        # Create MDLabel with white text color, increased font size, and bold text
-        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
-                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
-                                font_size="25sp", bold=True)
-
-        # Set initial y-position off-screen
-        loading_label.y = -loading_label.height
-
-        modal_view.add_widget(loading_label)
-        modal_view.open()
-
-        # Perform the animation
-        self.animate_loading_text(loading_label, modal_view.height)
-
-        # Perform the actual action (e.g., fetching loan requests)
-        # You can replace the sleep with your actual logic
-        Clock.schedule_once(lambda dt: self.performance_go_to_app_tracker(modal_view), 2)
-
-    def performance_go_to_app_tracker(self, modal_view):
-        modal_view.dismiss()
-        sm = self.manager
-
-        # Create a new instance of the LoginScreen
-        profile_screen = ClosedLoanVLB(name='ClosedLoanVLB')
-
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(profile_screen)
-
-        # Switch to the LoginScreen
-        sm.current = 'ClosedLoanVLB'
     def refresh_profile_data(self):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
@@ -3540,8 +3560,46 @@ class DashboardScreen(Screen):
         # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
         return anvil.server.call('profile')
 
-    def refresh(self):
-        pass
+    def refresh5(self):
+        self.ids.container.clear_widgets()
+        self.loans()
+
+    def go_to_profile(self):
+        modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
+
+        # Create MDLabel with white text color, increased font size, and bold text
+        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
+                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
+                                font_size=dp(50), bold=True)
+
+        # Set initial y-position off-screen
+        loading_label.y = -loading_label.height
+
+        modal_view.add_widget(loading_label)
+        modal_view.open()
+
+        # Perform the animation
+        self.animate_loading_text(loading_label, modal_view.height)
+
+        # Perform the actual action (e.g., fetching transaction history)
+        # You can replace the sleep with your actual logic
+        Clock.schedule_once(lambda dt: self.go_to_profile_action(modal_view), 2)
+
+    def go_to_profile_action(self, modal_view):
+        # Dismiss the modal view
+        modal_view.dismiss()
+
+        # Get the ScreenManager
+        sm = self.manager
+
+        # Create a new instance of the TransactionBH screen
+        transaction_bh_screen = PersonalScreen(name='PersonalScreen')
+
+        # Add the TransactionBH screen to the existing ScreenManager
+        sm.add_widget(transaction_bh_screen)
+
+        # Switch to the TransactionBH screen
+        sm.current = 'PersonalScreen'
 
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
@@ -4613,10 +4671,10 @@ class PersonalScreen(Screen):
 
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'AccountScreen'
+        self.manager.current = 'DashboardScreen'
 
     def on_back_button_press(self):
-        self.manager.current = 'AccountScreen'
+        self.manager.current = 'DashboardScreen'
 
 class ProfileScreen(Screen):
     def __init__(self, **kwargs):

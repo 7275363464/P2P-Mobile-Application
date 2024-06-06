@@ -62,77 +62,33 @@ borrower_portfolio = '''
             title_align: 'left'
             md_bg_color: 0.043, 0.145, 0.278, 1
 
-        BoxLayout:
-            orientation: 'vertical'
-            padding: dp(20)
-            spacing: dp(20)
-
-            BoxLayout:
-                id: chart_container
-                orientation: "horizontal"
+        ScrollView:
+            MDBoxLayout:
+                orientation: 'vertical'
+                padding: dp(20)
+                spacing: dp(20)
                 size_hint_y: None
-                height: dp(200)
-                padding: dp(10)
-                spacing: dp(10)
+                height: self.minimum_height
 
-            BoxLayout:
-                orientation: 'horizontal'
-                spacing: dp(10)
-                size_hint_y: None
-                height: dp(40)
-                padding: dp(10)
-
-                MDLabel:
-                    text: "Investment"
-                    halign: 'left'
-                    padding: [0, 0, dp(10), 0]  # Adjusted padding
-
-                Widget:
-                    size_hint_x: None
-                    width: dp(13)
-                    size_hint_y: None
-                    height: dp(13)
-                    canvas:
-                        Color:
-                            rgba: 0, 1, 0, 1  # Green color
-                        Rectangle:
-                            pos: self.pos
-                            size: self.size
-
-                MDLabel:
-                    text: "Returns"
-                    halign: 'left'
-                Widget:
-                    size_hint_x: None
-                    width: dp(13)
-                    size_hint_y: None
-                    height: dp(13)
-                    canvas:
-                        Color:
-                            rgba: 1, 0, 0, 1  # Red color
-                        Rectangle:
-                            pos: self.pos
-                            size: self.size
-
-            ScrollView:
                 MDBoxLayout:
                     orientation: 'vertical'
-                    padding: dp(20)
-                    spacing: dp(40)
+                    padding: dp(10)
+                    spacing: dp(10)
                     size_hint_y: None
-                    height: self.minimum_height
+                    height: dp(550)
                     canvas.before:
                         Color:
                             rgba: 0, 0, 0, 1
                         Line:
                             width: 0.25
                             rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+                    
                     MDGridLayout:
                         cols: 2
                         spacing: dp(10)
                         padding: dp(10)
                         MDLabel:
-                            text: "Full Name:" 
+                            text: "Full Name" 
                             size_hint_y:None
                             height:dp(50)
                             bold: True
@@ -148,7 +104,7 @@ borrower_portfolio = '''
                         spacing: dp(10)
                         padding: dp(10)
                         MDLabel:
-                            text: "Mobile Number:" 
+                            text: "Mobile Number" 
                             size_hint_y:None
                             height:dp(50)
                             bold: True
@@ -272,7 +228,56 @@ borrower_portfolio = '''
                             text: "" 
                             size_hint_y:None
                             height:dp(50)
-                            halign: "left"    
+                            halign: "left"   
+                
+                AnchorLayout:
+                    size_hint_y: None
+                    height: dp(500)
+                    padding: dp(10)
+                    BoxLayout:
+                        id: chart_container
+                        orientation: "horizontal"
+                        padding: dp(10)
+                        spacing: dp(40)
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    size_hint_y: None
+                    height: dp(40)
+                    padding: dp(10)
+
+                    MDLabel:
+                        text: "Investment"
+                        halign: 'left'
+                        padding: [0, 0, dp(10), 0]  # Adjusted padding
+
+                    Widget:
+                        size_hint_x: None
+                        width: dp(13)
+                        size_hint_y: None
+                        height: dp(13)
+                        canvas:
+                            Color:
+                                rgba: 0, 1, 0, 1  # Green color
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+
+                    MDLabel:
+                        text: "Returns"
+                        halign: 'left'
+                    Widget:
+                        size_hint_x: None
+                        width: dp(13)
+                        size_hint_y: None
+                        height: dp(13)
+                        canvas:
+                            Color:
+                                rgba: 1, 0, 0, 1  # Red color
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size 
 
 '''
 Builder.load_string(borrower_portfolio)
@@ -394,8 +399,8 @@ class ViewPortfolio(Screen):
             for investment_percentage, return_percentage in zip(investment_data, my_returns_data):
                 # Create BarWidgets for investment and returns
                 investment_bar = BarWidget(value=investment_percentage, color=(0, 1, 0, 1), size_hint=(None, 1),
-                                           width=dp(30))
-                return_bar = BarWidget(value=return_percentage, color=(1, 0, 0, 1), size_hint=(None, 1), width=dp(30))
+                                           width=dp(60))
+                return_bar = BarWidget(value=return_percentage, color=(1, 0, 0, 1), size_hint=(None, 1), width=dp(60))
 
                 # Add the progress bars to the chart layout
                 chart_layout.add_widget(investment_bar)

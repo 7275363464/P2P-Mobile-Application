@@ -1,7 +1,13 @@
+import base64
 import json
+from io import BytesIO
+
 from anvil.tables import app_tables
+from kivy.atlas import CoreImage
 from kivy.factory import Factory
 from kivy.metrics import dp
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.image import Image
 from kivy.uix.popup import Popup
 from kivymd.app import MDApp
 from kivy.lang import Builder
@@ -13,6 +19,7 @@ from kivy.uix.screenmanager import Screen, SlideTransition
 from kivy.utils import platform
 from kivy.clock import mainthread
 from kivymd.uix.button import MDRectangleFlatButton
+from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.list import ThreeLineAvatarIconListItem, IconLeftWidget
@@ -34,7 +41,7 @@ from kivymd.uix.button import MDRaisedButton, MDFlatButton, MDRoundFlatButton, M
 from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
 import anvil
 from kivymd.uix.dialog import MDDialog
-from lender_view_loans import ALlLoansScreen
+from lender_view_loans import ALlLoansScreen, ViewLoansProfileScreens
 from lender_view_transaction_history import TransactionLH
 from lender_view_loans_request import ViewLoansProfileScreen, ViewLoansProfileScreenLR, ViewLoansProfileScreenRL
 from kivy.animation import Animation
@@ -66,7 +73,6 @@ user_helpers1 = """
 <LenderDashboard>
     MDBottomNavigation:
         panel_color: '#F5F5F5'
-        selected_color_background: "#ffffff"
         text_color_active: "#007BFF"
         elevation: 10
         MDBottomNavigationItem:
@@ -704,7 +710,7 @@ user_helpers1 = """
             icon: 'wallet'
             on_tab_press: root.wallet()
             MDTopAppBar:
-                title: "Ascends-P2P-Wallet"
+                title: "Ascends P2P Wallet"
                 elevation: 2
                 pos_hint: {'top': 1}
                 left_action_items: [['arrow-left',lambda x: root.go_back()]]
@@ -862,7 +868,7 @@ user_helpers1 = """
                     elevation: 2
                     pos_hint: {'top': 1}
                     left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
-                    right_action_items: [['refresh', lambda x: root.refresh()]]
+                    right_action_items: [['refresh', lambda x: root.refresh6()]]
                     title_align: 'center'
                     md_bg_color: 0.043, 0.145, 0.278, 1
 
@@ -3373,6 +3379,8 @@ class LenderDashboard(Screen):
 
     def notification(self):
         pass
+    def refresh6(self):
+        self.on_pre_enter()
 
     def on_pre_leave(self):
         # Unbind the back button event when leaving the screen
@@ -3712,9 +3720,11 @@ class LenderDashboard(Screen):
             self.ids.details.text = "Welcome " + name_list[log_index]
             self.ids.details.font_style = 'H6'
             self.ids.name.text = name_list[log_index]
+            self.ids.username.text = "Welcome " + name_list[log_index]
         else:
             # Handle the case when 'logged' is not in the status list
             self.ids.details.text = "User welcome to P2P"
+            self.ids.username.text = "Welcome "
 
         data = app_tables.fin_loan_details.search()
 
@@ -3796,22 +3806,11 @@ class LenderDashboard(Screen):
         if log_email in w_email:
             index = w_email.index(log_email)
             self.ids.total_amount1.text = "Rs. " + str(round(w_amount[index], 2))
+            self.ids.balance.text = "Available Balance: Rs. " + str(round(w_amount[index], 2))
         else:
+            self.ids.balance.text = "Available Balance: "
             print("no email found")
 
-        users = app_tables.users.search()
-
-        user_email = []
-        create_date = []
-        for i in users:
-            user_email.append(i['email'])
-            create_date.append(i['signed_up'])
-
-        if log_email in user_email:
-            user_index = user_email.index(log_email)
-            self.ids.details.secondary_text = "Joined Date: " + str(create_date[user_index].date())
-        else:
-            print("no email found")
 
         member = app_tables.fin_membership.search()
 
@@ -3837,6 +3836,20 @@ class LenderDashboard(Screen):
             self.ids.details.tertiary_text = f"Membership Type: None"
             print("Investment Amount Not There")
 
+        lender_data = app_tables.fin_lender.search()
+        lender_cus_id = []
+        create_date = []
+        for i in lender_data:
+            lender_cus_id.append(i['customer_id'])
+            create_date.append(i['lender_since'])
+
+        if p_customer_id[log_index] in lender_cus_id:
+            index1 = lender_cus_id.index(p_customer_id[log_index])
+            self.ids.details.secondary_text = "Joined Date: " + str(create_date[index1])
+            self.ids.date.text = "Joined Date: " + str(create_date[index1])
+        else:
+            self.ids.details.secondary_text = "Joined Date: "
+            self.ids.date.text = "Joined Date: "
     def on_kv_post(self, base_widget):
         self.setup_menu()
 

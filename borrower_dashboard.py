@@ -66,7 +66,6 @@ user_helpers = '''
 
     MDBottomNavigation:
         panel_color: '#F5F5F5'
-        selected_color_background: "#ffffff"
         text_color_active: "#007BFF"
         elevation: 10
         MDBottomNavigationItem:
@@ -486,7 +485,7 @@ user_helpers = '''
             icon: 'wallet'
             on_tab_press: root.wallet()
             MDTopAppBar:
-                title: "Ascends-P2P-Wallet"
+                title: "Ascends P2P Wallet"
                 elevation: 2
                 pos_hint: {'top': 1}
                 right_action_items: [['refresh', lambda x: root.refresh1()]]
@@ -607,7 +606,7 @@ user_helpers = '''
                     title: "View All Loans"
                     elevation: 3
                     left_action_items: [['arrow-left', lambda x: root.go_back()]]
-                    right_action_items: [['refresh5', lambda x: root.refresh5()]]
+                    right_action_items: [['refresh', lambda x: root.refresh5()]]
                     md_bg_color: 0.043, 0.145, 0.278, 1
                     
                 MDScrollView:
@@ -639,7 +638,7 @@ user_helpers = '''
                     elevation: 2
                     pos_hint: {'top': 1}
                     left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
-                    right_action_items: [['refresh', lambda x: root.refresh()]]
+                    right_action_items: [['refresh', lambda x: root.refresh6()]]
                     title_align: 'center'  # Center-align the title
                     md_bg_color: 0.043, 0.145, 0.278, 1
         
@@ -3220,6 +3219,9 @@ class DashboardScreen(Screen):
     def type(self):
         if self.dashboard is not None:
             return self.dashboard
+
+    def refresh6(self):
+        self.on_pre_enter()
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.load_false_count()
@@ -3935,9 +3937,11 @@ class DashboardScreen(Screen):
             self.ids.details.text = "Welcome " + name_list[log_index]
             self.ids.details.font_style = 'H6'
             self.ids.my_name.text = name_list[log_index]
+            self.ids.username.text = "Welcome " + name_list[log_index]
         else:
             # Handle the case when 'logged' is not in the status list
             self.ids.details.text = "User welcome to P2P"
+            self.ids.username.text = "Welcome "
 
         data = app_tables.fin_loan_details.search()
 
@@ -4000,8 +4004,10 @@ class DashboardScreen(Screen):
         if log_email in w_email:
             index = w_email.index(log_email)
             self.ids.total_amount1.text = "Rs. " + str(round(w_amount[index], 2))
+            self.ids.balance.text = "Available Balance: Rs. " + str(round(w_amount[index], 2))
         else:
             print("no email found")
+            self.ids.balance.text = "Available Balance: "
 
         borrower_data = app_tables.fin_borrower.search()
         borrower_cus_id = []
@@ -4016,9 +4022,11 @@ class DashboardScreen(Screen):
             index1 = borrower_cus_id.index(p_customer_id[log_index])
             self.ids.details.tertiary_text = "Credit Limit: " + str(credit_limit[index1])
             self.ids.details.secondary_text = "Joined Date: " + str(create_date[index1])
+            self.ids.date.text = "Joined Date: " + str(create_date[index1])
         else:
             self.ids.details.tertiary_text = "Credit Limit: "
             self.ids.details.secondary_text = "Joined Date: "
+            self.ids.date.text = "Joined Date: "
 
     def on_pre_leave(self):
         Window.unbind(on_keyboard=self.on_back_button)

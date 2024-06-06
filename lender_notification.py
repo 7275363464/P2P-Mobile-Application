@@ -502,7 +502,7 @@ class Lend_NotificationScreen(Screen):
                 IconRightWidget(
                     icon="chevron-right"
                 ),
-                text=f"[b][size=18]{borrower_name}[/size][/b]",
+                text=f"[b]{borrower_name}[/b]",
                 secondary_text=message,
                 text_color=(0, 0, 0, 1),
                 theme_text_color='Custom',
@@ -600,7 +600,7 @@ class Lend_NotificationScreen(Screen):
                 IconRightWidget(
                     icon="chevron-right"
                 ),
-                text=f"[size=18]{borrower_name[i]}[/size] has an [b][size=17]overdue[/size][/b] payment",  # Corrected line
+                text=f"{borrower_name[i]} has an [b]overdue[/b] payment",  # Corrected line
                 secondary_text=f"for Rs:{loan_amount_for_id} loan amount in {product_name_for_id} product",
                 tertiary_text=f"Day Passed Due Date : {(today_date - shedule_date[loan_id[i]]).days}",
                 text_color=(0, 0, 0, 1),  # Black color
@@ -678,7 +678,7 @@ class Lend_NotificationScreen(Screen):
                 IconRightWidget(
                     icon="chevron-right"
                 ),
-                text=f"[size=18]{borrower_name}[/size] has sent a [size=17][b]foreclose[/b][/size] request",
+                text=f"{borrower_name} has sent a [b]foreclose[/b] request",
                 secondary_text=f"for Rs:{loan_amount} loan amount in {product_name} product",
                 tertiary_text=" ",
                 text_color=(0, 0, 0, 1),
@@ -868,7 +868,7 @@ class Lend_NotificationScreen(Screen):
                 IconRightWidget(
                     icon="chevron-right"
                 ),
-                text=f"[size=18]{borrower_name}[/size] has sent a [size=17][b]extension[/b][/size] request",
+                text=f"{borrower_name} has sent a [b]extension[/b] request",
                 secondary_text=message,
                 tertiary_text=" ",
                 text_color=(0, 0, 0, 1),  # Black color
@@ -1045,7 +1045,7 @@ class Lend_NotificationScreen(Screen):
                     IconRightWidget(
                         icon="chevron-right"
                     ),
-                    text=f"[size=18]{borrower_name}[/size] has sent you [size=17][b]loan request[/b][/size]",
+                    text=f"{borrower_name} has sent you [b]loan request[/b]",
                     secondary_text=message,
                     tertiary_text=" ",
                     text_color=(0, 0, 0, 1),  # Black color
@@ -1067,7 +1067,7 @@ class Lend_NotificationScreen(Screen):
                     IconRightWidget(
                         icon="chevron-right"
                     ),
-                    text=f"[size=18]{borrower_name}[/size] is waiting for [size=17][b]loan disbursement[/b][/size],",
+                    text=f"{borrower_name} is waiting for [b]loan disbursement[/b],",
                     secondary_text=f"with an amount of Rs {loan_amount} loan,",
                     tertiary_text=f"intended for {product_name} loan product.",
                     text_color=(0, 0, 0, 1),

@@ -624,7 +624,7 @@ class NotificationScreen(Screen):
             item = ThreeLineAvatarIconListItem(
                 IconLeftWidget(icon="calendar-check"),
                 IconRightWidget(icon="chevron-right"),
-                text=f"Dear [size=18]{borrower_name[i]}[/size], your loan payment is currently",
+                text=f"Dear {borrower_name[i]}, your loan payment is currently",
                 secondary_text=f"overdue for {loan_amount_for_id} loan amount in {product_name_for_id} product",
                 tertiary_text=" ",
                 text_color=(0, 0, 0, 1),
@@ -662,7 +662,7 @@ class NotificationScreen(Screen):
 
 
             # Embed the color tag in the status message
-            status_message = f"[size=18]{borrower_name[i]}[/size], has [size=17][color=#{status_color}]{loan_status[i]}[/color][/size] your loan request"
+            status_message = f"{borrower_name[i]}, has [color=#{status_color}]{loan_status[i]}[/color] your loan request"
             secondary_message = f"for {loan_amount[i]} loan amount in {product_name[i]} product"
             tertiary_message = status_timestamp[i].strftime("%Y-%m-%d, %A")
 
@@ -790,7 +790,7 @@ class NotificationScreen(Screen):
 
 
 
-        formatted_status_text =f"[size=18]{borrower_name}[/size], has [size=17][color=#{status_color}]{status}[/color][/size] your {notification_type} request"
+        formatted_status_text =f"{borrower_name}, has [color=#{status_color}]{status}[/color] your {notification_type} request"
         secondary_message = f"for {loan_amount} loan amount in {product_name} product"
 
         if status_timestamp:

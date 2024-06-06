@@ -42,6 +42,8 @@ from kivy.animation import Animation
 from kivymd.uix.label import MDLabel
 from kivy.factory import Factory
 from kivymd.uix.button import MDFillRoundFlatButton
+from borrower_portfolio import LenderDetails
+
 
 if platform == 'android':
     from kivy.uix.button import Button
@@ -464,6 +466,12 @@ user_helpers = '''
                             text: "View Transaction History"
                             icon_color: "#23639e"
                             on_release: root.go_to_transaction_history()
+                        MDNavigationDrawerDivider:
+                        MDNavigationDrawerItem
+                            icon: "briefcase"
+                            text: "View Portofolio"
+                            icon_color: "#23639e"
+                            on_release: root.go_to_borrower_portofolio()
                         MDNavigationDrawerDivider:
                         MDNavigationDrawerItem
                             icon: "logout"
@@ -4128,6 +4136,42 @@ class DashboardScreen(Screen):
         # Switch to the TransactionBH screen
         sm.current = 'TransactionBH'
 
+    def go_to_borrower_portofolio(self):
+        modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
+
+        # Create MDLabel with white text color, increased font size, and bold text
+        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
+                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
+                                font_size=dp(50), bold=True)
+
+        # Set initial y-position off-screen
+        loading_label.y = -loading_label.height
+
+        modal_view.add_widget(loading_label)
+        modal_view.open()
+
+        # Perform the animation
+        self.animate_loading_text(loading_label, modal_view.height)
+
+        # Perform the actual action (e.g., fetching transaction history)
+        # You can replace the sleep with your actual logic
+        Clock.schedule_once(lambda dt: self.perform_borrower_portofolio_action(modal_view), 2)
+
+    def perform_borrower_portofolio_action(self, modal_view):
+        # Dismiss the modal view
+        modal_view.dismiss()
+
+        # Get the ScreenManager
+        sm = self.manager
+
+        # Create a new instance of the TransactionBH screen
+        LenderDetails_screen = LenderDetails(name='LenderDetails')
+
+        # Add the TransactionBH screen to the existing ScreenManager
+        sm.add_widget(LenderDetails_screen)
+
+        # Switch to the TransactionBH screen
+        sm.current = 'LenderDetails'
     def go_to_app_tracker(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 

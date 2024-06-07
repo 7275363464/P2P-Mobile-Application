@@ -4659,7 +4659,7 @@ class BorrowerScreen1(Screen):
         if user_email in id_list:
             index = id_list.index(user_email)
             data[index]['mobile'] = mobile_number
-            data[index]['another_email'] = alternate_email
+            data[index]['mail_id'] = alternate_email
         else:
             print('no email found')
         # self.manager.current = 'BorrowerScreen2'

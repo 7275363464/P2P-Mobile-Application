@@ -2,7 +2,8 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivymd.app import MDApp
-from kivymd.uix.button import MDRaisedButton
+from kivymd.material_resources import dp
+from kivymd.uix.button import MDRaisedButton, MDRoundFlatIconButton, MDRoundFlatButton, MDFillRoundFlatButton
 from kivymd.uix.card import MDCard
 from kivymd.uix.list import *
 from kivy.lang import Builder
@@ -167,16 +168,19 @@ borrower_view_loan = '''
             md_bg_color: 0.043, 0.145, 0.278, 1
 
         MDScrollView:
+            
             MDBoxLayout:
                 id: container
                 orientation: 'vertical'
-                padding: dp(25)
+                padding: dp(30)
                 spacing: dp(10)
                 size_hint_y: None
                 height: self.minimum_height
                 width: self.minimum_width
                 adaptive_size: True
+                
                 pos_hint: {"center_x": 0, "center_y":  0}
+                
 
             # MDList:
             #     
@@ -200,6 +204,8 @@ borrower_view_loan = '''
 
             MDList:
                 id: container1
+                
+                
 <RejectedLoanVLB>
     BoxLayout:
         orientation: 'vertical'
@@ -321,6 +327,21 @@ borrower_view_loan = '''
 
                 MDLabel:
                     id: phone_num
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
+                    
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Ascend Score'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    bold: True
+
+                MDLabel:
+                    id: asc_score
                     halign: 'left'
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
@@ -631,10 +652,12 @@ class ViewLoansScreenVLB(Screen):
             status.append(i['loan_updated_status'])
         profile_customer_id = []
         profile_mobile_number = []
+        ascend_value = []
 
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
+            ascend_value.append(i['ascend_value'])
 
         index = 0
         if value in loan_id:
@@ -652,6 +675,7 @@ class ViewLoansScreenVLB(Screen):
             index2 = profile_customer_id.index(customer_id[index])
 
             self.ids.phone_num.text = str(profile_mobile_number[index2])
+            self.ids.asc_score.text = str(ascend_value[index2])
 
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
@@ -673,7 +697,7 @@ class ViewLoansScreenVLB(Screen):
         self.manager.current = 'ViewLoansRequest'
 
     def on_back_button_press(self):
-        self.manager.current = 'DashboardScreen'
+        self.manager.current = 'OpenLoanVLB'
 
 
 class OpenLoanVLB(Screen):
@@ -693,7 +717,7 @@ class OpenLoanVLB(Screen):
         loan_amount = []
         tenure = []
         interest_rate = []
-        ascend_score = []
+        #ascend_value = []
         s = 0
         for i in data:
             s += 1
@@ -706,13 +730,15 @@ class OpenLoanVLB(Screen):
             loan_amount.append(i['loan_amount'])
             tenure.append(i['tenure'])
             interest_rate.append(i['interest_rate'])
-            ascend_score.append(i['ascend_score'])
+            #ascend_value.append(i['ascend_value'])
 
         profile_customer_id = []
         profile_mobile_number = []
+        ascend_value = []
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
+            ascend_value.append(i['ascend_value'])
         cos_id = None
         if email in email1:
             index = email1.index(email)
@@ -739,10 +765,9 @@ class OpenLoanVLB(Screen):
                 card = MDCard(
                     orientation='vertical',
                     size_hint=(None, None),
-                    size=("280dp", "170dp"),
-                    # size: "280dp", "180dp",
-                    padding="8dp",
-                    spacing="5dp",
+                    size=("280dp", "190dp"),
+                    padding="10dp",
+                    spacing="3dp",
                     elevation=3,
                 )
                 # Horizontal layout to keep the text and image in to the card
@@ -757,12 +782,13 @@ class OpenLoanVLB(Screen):
                 # Text Layout to keep the text on card
                 text_layout = BoxLayout(orientation='vertical')
                 text_layout.add_widget(MDLabel(
-                    text=f"[b]{borrower_name[i]}\n{profile_mobile_number[number]}[/b]",
+                    text=f" [b]{borrower_name[i]}\n {profile_mobile_number[number]}[/b]",
                     theme_text_color='Custom',
                     text_color=(0, 0, 0, 1),
                     halign='left',
                     markup=True,
-                    font_size='10sp'
+                    font_size='10sp',
+                    bold = True
                 ))
                 text_layout.add_widget(MDLabel(
                     text=f" [b]Loan Amount:[/b] {loan_amount[i]}",
@@ -770,15 +796,15 @@ class OpenLoanVLB(Screen):
                     text_color=(0, 0, 0, 1),
                     halign='left',
                     markup=True,
-                    font_size='10sp'
+                    # font_size='10sp'
                 ))
                 text_layout.add_widget(MDLabel(
-                    text=f" [b]Ascend Score :[/b]{ascend_score[i]}",
+                    text=f" [b]Ascend Score :[/b]{ascend_value[number]}",
                     theme_text_color='Custom',
                     text_color=(0, 0, 0, 1),
                     halign='left',
                     markup=True,
-                    font_size='10sp'
+                    # font_size='10sp'
                 ))
                 text_layout.add_widget(MDLabel(
                     text=f" [b]Interest Rate :[/b]{interest_rate[i]}",
@@ -786,25 +812,30 @@ class OpenLoanVLB(Screen):
                     text_color=(0, 0, 0, 1),
                     halign='left',
                     markup=True,
-                    font_size='10sp'
+                    # font_size='10sp'
                 ))
                 horizontal_layout.add_widget(text_layout)
                 card.add_widget(horizontal_layout)
 
+                horizontal_layout1 = BoxLayout(orientation='horizontal', size_hint_y=None, height=dp(45))
                 # Button layout to align the Buttons
-                button_layout = BoxLayout(
+                button_layout2 = BoxLayout(
                     size_hint_y=None,
                     height="40dp",
                     padding="10dp",
                     spacing=30
                 )
+
                 #this colors for loan status button colors based on loan status
+
                 status_color = (0.545, 0.765, 0.290, 1)  # default color
-                if loan_status[i] == "under process" or loan_status[i] == "Under Process" or loan_status[i] == "UnderProcess" or loan_status[i] == "underprocess":
+                if loan_status[i] == "under process" or loan_status[i] == "Under Process" or loan_status[
+                    i] == "UnderProcess" or loan_status[i] == "underprocess":
                     status_color = (0.9804, 0.9804, 0.8235, 1.0)
                 elif loan_status[i] == "disbursed loan" or loan_status[i] == "disbursed":
                     status_color = (0.8588, 0.4392, 0.5765, 1.0)
-                elif loan_status[i] == "closed loan" or loan_status[i] == "Closed Loan" or loan_status[i] == "closedloan" or loan_status[i] == "ClosedLoan":
+                elif loan_status[i] == "closed loan" or loan_status[i] == "Closed Loan" or loan_status[
+                    i] == "closedloan" or loan_status[i] == "ClosedLoan":
                     status_color = (0.4235, 0.5569, 0.1373, 1.0)
                 elif loan_status[i] == "extension" or loan_status[i] == "Extension":
                     status_color = (1.0, 0.6275, 0.4824, 1.0)
@@ -812,35 +843,59 @@ class OpenLoanVLB(Screen):
                     status_color = (0.0, 0.749, 1.0, 1.0)
                 elif loan_status[i] == "accepted" or loan_status[i] == "Accepted":
                     status_color = (0.2353, 0.7019, 0.4431, 1.0)
-                elif loan_status[i] == "rejected" or loan_status[i] == "Rejected" or loan_status[i] == "Rejected Loan" or loan_status[i] == "rejected loan":
-                    status_color = (0.8039, 0.3608, 0.3608, 1.0)
-                elif loan_status[i] == "approved" or loan_status[i] == "Approved" or loan_status[i] == "approved loans" or loan_status[i] == "Approved Loans":
+                elif loan_status[i] == "rejected" or loan_status[i] == "Rejected" or loan_status[
+                    i] == "Rejected Loan" or loan_status[i] == "rejected loan":
+                    status_color = (0.902, 0.141, 0.141, 1)
+                elif loan_status[i] == "approved" or loan_status[i] == "Approved" or loan_status[
+                    i] == "approved loans" or loan_status[i] == "Approved Loans":
                     status_color = (0.2353, 0.7019, 0.4431, 1.0)
-                elif loan_status[i] == "decline" or loan_status[i] == "Decline" or loan_status[i] == "declined" or loan_status[i] == "Declined":
-                    status_color = (0.8039, 0.3608, 0.3608, 1.0)
-                button2 = MDRaisedButton(
-                    text="View Details",
-                    size_hint=(None, None),
+                elif loan_status[i] == "decline" or loan_status[i] == "Decline" or loan_status[i] == "declined" or \
+                        loan_status[i] == "Declined":
+                    status_color = (0.902, 0.141, 0.141, 1)
+                button2 = MDFillRoundFlatButton(
+                    text="  View Details  ",
+                    # size_hint=(None, None),
                     height="40dp",
                     width="250dp",
                     pos_hint={"center_x": 1},
                     md_bg_color=(0.043, 0.145, 0.278, 1),
-                    on_release=lambda x, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id)
+                    on_release=lambda x, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id),
+                    text_color=(1, 1, 1, 1)
                 )
-                button1 = MDRaisedButton(
-                    text=f"{loan_status[i]}",
-                    size_hint=(None, None),
+                button_layout1 = BoxLayout(
+                    size_hint_y=None,
                     height="40dp",
-                    width="250dp",
+                    padding="10dp",
+                    spacing=30
+                )
+                #this status_text for status text to keep button
+                status_text = {
+                    "under process":    "Under Process",
+                    "disbursed loan":   "Disburse Loan",
+                    "closed loan":      "  Closed Loan  ",
+                    "extension":        " Extension Loan ",
+                    "foreclosure":      "   Foreclosure   ",
+                    "accepted":         "Accepted Loan",
+                    "rejected":         "Rejected Loan",
+                    "approved":         "Approved Loan",
+                    "decline":          " Declined Loan"
+                }
+                button1 = MDFillRoundFlatButton(
+                    text=status_text.get(loan_status[i], loan_status[i]),
+                    height=dp(40),
                     pos_hint={"center_x": 0},
                     md_bg_color=status_color,
-                    theme_text_color="Primary"
+                    text_color=(1, 1, 1, 1),
                 )
-                button_layout.add_widget(button1)
-                button_layout.add_widget(button2)
+                button_layout1.add_widget(button1)
+                button_layout2.add_widget(button2)
 
                 # Adding the Buttons to the card
-                card.add_widget(button_layout)
+                horizontal_layout1.add_widget(button_layout1)
+                horizontal_layout1.add_widget(button_layout2)
+                card.add_widget(horizontal_layout1)
+
+                self.ids.container.add_widget(card)
 
                 # Actual code for the future referance incase of failures
                 # item = ThreeLineAvatarIconListItem(
@@ -886,7 +941,7 @@ class OpenLoanVLB(Screen):
                 #
                 #
                 # card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
-                self.ids.container.add_widget(card)
+                # self.ids.container.add_widget(card)
 
     def icon_button_clicked(self, instance, loan_id):
         # Deselect all other items

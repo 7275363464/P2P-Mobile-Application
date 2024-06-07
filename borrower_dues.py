@@ -1,8 +1,6 @@
-
 import anvil
 from anvil.tables import app_tables
 from kivy import properties
-from kivy.factory import Factory
 from pytz import utc
 from kivy.core.window import Window
 from kivy.properties import ListProperty, Clock
@@ -142,6 +140,7 @@ user_helpers2 = """
                     text_color: 140/255, 140/255, 140/255, 1
                     bold: True
 
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -169,6 +168,21 @@ user_helpers2 = """
 
                 MDLabel:
                     id: account_number
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Loan Status'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
+
+                MDLabel:
+                    id: status
                     halign: 'left'
                     theme_text_color: 'Custom' 
                     text_color: 140/255, 140/255, 140/255, 1
@@ -380,6 +394,22 @@ user_helpers2 = """
                         MDLabel:
                             id: account_number
                             halign: 'left' 
+                            theme_text_color: 'Custom' 
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold: True
+
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: 'Loan Status'
+                            halign: 'left'
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1
+                            bold: True
+
+                        MDLabel:
+                            id: status
+                            halign: 'left'
                             theme_text_color: 'Custom' 
                             text_color: 140/255, 140/255, 140/255, 1
                             bold: True
@@ -632,6 +662,7 @@ class BorrowerDuesScreen(Screen):
             self.ids.name.text = str(borrower_name[index])
             self.ids.loan_amount1.text = str(loan_amount[index])
             self.ids.tenure.text = str(tenure[index])
+            self.ids.status.text = str(loan_status[index])
             self.ids.interest_rate.text = str(interest[index])
             self.ids.emi_amount.text = str(monthly_emi[index])
 
@@ -655,7 +686,8 @@ class BorrowerDuesScreen(Screen):
             if part_payment_type[last_index] == 'pay now' and part_payment_done[last_index] == None:
                 self.ids.pay.opacity = 1
                 self.ids.pay.disabled = False
-            elif part_payment_type[last_index] != "part payment" and part_payment_done[last_index] != 1 and emi_loan_id[last_index] != value:
+            elif part_payment_type[last_index] != "part payment" and part_payment_done[last_index] != 1 and emi_loan_id[
+                last_index] != value:
                 self.ids.pay.opacity = 1
                 self.ids.pay.disabled = False
             else:
@@ -664,7 +696,6 @@ class BorrowerDuesScreen(Screen):
         else:
             self.ids.pay.opacity = 1
             self.ids.pay.disabled = False
-
 
         extend_row = None
         extend_amount = 0
@@ -984,7 +1015,6 @@ class BorrowerDuesScreen(Screen):
                     self.ids.emi_amount.text = str(emi_amount1)
                     self.ids.total_amount.text = str(round(total_amount, 2))
 
-
                 print(foreclose_amount1, emi_amount1, total_amount)
 
     def go_to_paynow(self):
@@ -1023,6 +1053,9 @@ class BorrowerDuesScreen(Screen):
         borrower_email = []
         lender_email = []
         total_repay_amount = []
+        loan_amount = []
+        tenure_months = []
+        interest_rate = []
         for i in data1:
             loan_id.append(i['loan_id'])
             cos_id1.append(i['borrower_customer_id'])
@@ -1032,17 +1065,37 @@ class BorrowerDuesScreen(Screen):
             borrower_email.append(i['borrower_email_id'])
             lender_email.append(i['lender_email_id'])
             total_repay_amount.append(i['total_repayment_amount'])
+            loan_amount.append(i['loan_amount'])
+            tenure_months.append(i['tenure'])
+            interest_rate.append(i['interest_rate'])
 
         cos_id = []
         account_num = []
-
+        email_user = []
         for i in user_profile:
             cos_id.append(i['customer_id'])
             account_num.append(i['account_number'])
+            email_user.append(i['email_user'])
         index = 0
         if cos_id1[index] in cos_id:
             index2 = cos_id1.index(cos_id1[index])
             self.ids.account_number.text = str(account_num[index2])
+
+        email = anvil.server.call('another_method')
+        email_index = 0
+        if email in email_user:
+            email_index = email_user.index(email)
+
+        a = -1
+        id_list = []
+        print(cos_id, cos_id[email_index])
+        print(lender_customer_id)
+        for i in lender_customer_id:
+            a += 1
+            print(i, cos_id[email_index])
+            if i == cos_id[email_index]:
+                id_list.append(a)
+        print(id_list, len(id_list))
 
         wallet_customer_id = []
         wallet_amount = []
@@ -1057,37 +1110,58 @@ class BorrowerDuesScreen(Screen):
             lender_customer_id.append(i['lender_customer_id'])
 
         index = 0
+        lender_returns = 0
         if value in loan_id:
             index = loan_id.index(value)
+            interest_amount = (loan_amount[index] * interest_rate[index]) / 100
+            total_interest_amount = loan_amount[index] + interest_amount
+            lender_returns = total_interest_amount - loan_amount[index]
+        else:
+            print("loan id not found")
 
+        monthly_lenter_returns = lender_returns / tenure_months[index]
+
+        if emi_type_pay[index].strip() == 'Monthly':
+            monthly_lenter_returns = lender_returns / tenure_months[index]
+        elif emi_type_pay[index].strip() == 'Three Months':
+            monthly_lenter_returns = lender_returns / (tenure_months[index] / 3)
+        elif emi_type_pay[index].strip() == 'Six Months':
+            monthly_lenter_returns = lender_returns / (tenure_months[index] / 6)
+        elif emi_type_pay[index].strip() == 'One Time':
+            if tenure:
+                monthly_lenter_returns = lender_returns / (tenure_months[index] / tenure_months[index])
+
+
+
+        print(monthly_lenter_returns)
+        print(lender_returns)
         next_payment_date = None
         b_index = 0
         l_index = 0
 
         index1 = 0
-        print(lender_customer_id[index] in wallet_customer_id and int(cos_id1[index]) in wallet_customer_id)
+        print(lender_customer_id[index] in wallet_customer_id)
+        print(int(cos_id1[index]) in wallet_customer_id)
         if lender_customer_id[index] in wallet_customer_id and int(cos_id1[index]) in wallet_customer_id:
             b_index = wallet_customer_id.index(int(cos_id1[index]))
             l_index = wallet_customer_id.index(lender_customer_id[index])
-        print(b_index, l_index)
-        print(value)
-        print(wallet_amount[b_index], float(total))
-        print(wallet_amount[b_index] >= float(total))
         print(wallet[b_index]['wallet_amount'])
+        print(total)
+        print(b_index)
         if wallet[b_index]['wallet_amount'] >= float(total):
             wallet[b_index]['wallet_amount'] -= float(total)
             wallet[l_index]['wallet_amount'] += float(total)
 
             if emi_type_pay[index].strip() == 'Monthly':
-                next_payment_date = schedule_date[index] + timedelta(days=30)
+                next_payment_date = self.shechule_date[value] + timedelta(days=30)
                 print(schedule_date[index])
             elif emi_type_pay[index].strip() == 'Three Months':
-                next_payment_date = schedule_date[index] + timedelta(days=90)
+                next_payment_date = self.shechule_date[value] + timedelta(days=90)
             elif emi_type_pay[index].strip() == 'Six Months':
-                next_payment_date = schedule_date[index] + timedelta(days=180)
+                next_payment_date = self.shechule_date[value] + timedelta(days=180)
             elif emi_type_pay[index].strip() == 'One Time':
                 if tenure:
-                    next_payment_date = schedule_date[index] + timedelta(days=30 * int(tenure))
+                    next_payment_date = self.shechule_date[value] + timedelta(days=30 * int(tenure))
 
             paid_amount1 = 0
             for i in emi_loan_id:
@@ -1096,10 +1170,7 @@ class BorrowerDuesScreen(Screen):
                     paid_amount1 += paid_amount[index3] * emi_number
                 else:
                     paid_amount1 = 0
-
-            print(paid_amount1)
             remain_amount = total_repay_amount[index] - paid_amount1
-            print(remain_amount)
             app_tables.fin_emi_table.add_row(
                 loan_id=str(value),
                 extra_fee=float(extra_amount),
@@ -1120,6 +1191,11 @@ class BorrowerDuesScreen(Screen):
                 data1[index]['loan_updated_status'] = 'closed'
             data1[index]['total_amount_paid'] = float(paid_amount1)
             data1[index]['remaining_amount'] = float(remain_amount)
+            if data1[index]['lender_returns'] == None:
+                data1[index]['lender_returns'] = 0
+                data1[index]['lender_returns'] += monthly_lenter_returns
+            else:
+                data1[index]['lender_returns'] += monthly_lenter_returns
             anvil.server.call('loan_text', None)
             sm = self.manager
             wallet_screen = LastScreenWallet(name='LastScreenWallet')
@@ -1204,7 +1280,7 @@ class BorrowerDuesScreen(Screen):
         return False
 
     def go_back(self):
-        self.manager.add_widget(Factory.DuesScreen(name='DuesScreen'))
+        self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'DuesScreen'
 
     def current(self):
@@ -1305,6 +1381,7 @@ class PartPayment(Screen):
             self.ids.name.text = str(borrower_name[index])
             self.ids.loan_amount1.text = str(loan_amount[index])
             self.ids.tenure.text = str(tenure[index])
+            self.ids.status.text = str(loan_status[index])
             self.ids.interest_rate.text = str(interest[index])
             self.ids.emi_amount.text = str(monthly_emi[index])
 
@@ -1428,7 +1505,7 @@ class PartPayment(Screen):
 
                 self.ids.extra.text = "Extra Payment(NPA)"
                 self.ids.extra_amount.text = str(round(extra_amount + npa_amount + lapsed_amount + default_amount, 2))
-                self.ids.total_amount.text = str(round(total_amount +ex_free, 2))
+                self.ids.total_amount.text = str(round(total_amount + ex_free, 2))
                 self.ids.amount1.text = str(round(part_pay, 2))
 
                 data1[index]['loan_state_status'] = 'npa'
@@ -1650,7 +1727,8 @@ class PartPayment(Screen):
                         npa_amount = (monthly_emi[index] * npa_percentage) / 100
                     elif npa_type[product_index] == 'Non Performing Asset (₹)':
                         npa_amount = default_fee_amount[product_index]
-                    foreclose_amount1 += foreclosure_row['foreclose_amount'] + lapsed_amount + npa_amount + default_amount
+                    foreclose_amount1 += foreclosure_row[
+                                             'foreclose_amount'] + lapsed_amount + npa_amount + default_amount
                     part_pay = (total_amount + foreclose_amount1) / 2
                     self.ids.extra_amount.text = str(
                         round(foreclose_amount1 + npa_amount + default_amount + lapsed_amount, 2))
@@ -1755,7 +1833,6 @@ class PartPayment(Screen):
         if value in loan_id:
             index = loan_id.index(value)
 
-
         next_payment_date = None
         b_index = 0
         l_index = 0
@@ -1765,11 +1842,6 @@ class PartPayment(Screen):
         if lender_customer_id[index] in wallet_customer_id and int(cos_id1[index]) in wallet_customer_id:
             b_index = wallet_customer_id.index(int(cos_id1[index]))
             l_index = wallet_customer_id.index(lender_customer_id[index])
-        print(b_index, l_index)
-        print(value)
-        print(wallet_amount[b_index], float(total))
-        print(wallet_amount[b_index] >= float(total))
-        print(wallet[b_index]['wallet_amount'])
 
         if wallet[b_index]['wallet_amount'] >= float(total):
             wallet[b_index]['wallet_amount'] -= float(total)
@@ -1799,11 +1871,7 @@ class PartPayment(Screen):
                         paid_amount1 += paid_amount[index3] * emi_number
                     else:
                         paid_amount1 = 0
-
-                print(paid_amount1)
-                remain_amount = total_repay_amount[index] - paid_amount1
-                print(remain_amount)
-                print(payment_date)
+                remain_amount = round(total_repay_amount[index] - paid_amount1, 2)
 
                 app_tables.fin_emi_table.add_row(
                     loan_id=str(value),
@@ -1856,12 +1924,7 @@ class PartPayment(Screen):
                         paid_amount1 += paid_amount[index3] * emi_number
                     else:
                         paid_amount1 = 0
-
-                print(paid_amount1)
-                remain_amount = total_repay_amount[index] - paid_amount1
-                print(remain_amount)
-                print(payment_date)
-
+                remain_amount = round(total_repay_amount[index] - paid_amount1, 2)
                 app_tables.fin_emi_table.add_row(
                     loan_id=str(value),
                     extra_fee=float(extra_amount),
@@ -1879,7 +1942,7 @@ class PartPayment(Screen):
                     payment_type="part payment",
                     part_payment_amount=float(pay),
                     part_payment_done=int(1),
-                    next_payment= payment_date
+                    next_payment=payment_date
                 )
                 data1[index]['total_amount_paid'] = float(paid_amount1)
                 data1[index]['remaining_amount'] = float(remain_amount)
@@ -1888,7 +1951,8 @@ class PartPayment(Screen):
                 wallet_screen = LastScreenWallet(name='LastScreenWallet')
                 sm.add_widget(wallet_screen)
                 sm.current = 'LastScreenWallet'
-            elif value in emi_loan_id and part_payment_done[last_index] == 1 and part_payment_type[last_index] == 'part payment':
+            elif value in emi_loan_id and part_payment_done[last_index] == 1 and part_payment_type[
+                last_index] == 'part payment':
 
                 if value not in emi_loan_id:
                     emi_number = 1
@@ -1924,7 +1988,6 @@ class PartPayment(Screen):
                 emi_data[last_index]['part_payment_amount'] = float(pay) + float(pay)
                 emi_data[last_index]['part_payment_done'] = int(2)
                 emi_data[last_index]['next_payment'] = payment_date
-
 
                 data1[index]['total_amount_paid'] = float(paid_amount1)
                 data1[index]['remaining_amount'] = float(remain_amount)
@@ -1994,6 +2057,7 @@ class PartPayment(Screen):
     def current(self):
         self.manager.current = 'DuesScreen'
 
+
 class DuesScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -2033,16 +2097,26 @@ class DuesScreen(Screen):
             part_payment_done.append(i['part_payment_done'])
         profile_customer_id = []
         profile_mobile_number = []
+        profile_email_id = []
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
+            profile_email_id.append(i['email_user'])
+        email = anvil.server.call('another_method')
+
+        cos_id = None
+        index = 0
+        if email in profile_email_id:
+            index = profile_email_id.index(email)
+            cos_id = profile_customer_id[index]
         index_list = []
         a = -1
         shedule_date = {}
         for i in range(s):
             a += 1
-
-            if loan_status[i] == "disbursed" or loan_status[i] == "extension" or loan_status[i] == "foreclosure":
+            print(customer_id[i], profile_customer_id[index])
+            if customer_id[i] == profile_customer_id[index] and loan_status[i] == "disbursed" or loan_status[
+                i] == "extension" or loan_status[i] == "foreclosure":
                 if loan_id[i] not in emi_loan_id and schedule_date[i] is not None and today_date >= schedule_date[i]:
                     index_list.append(i)
                     shedule_date[loan_id[i]] = schedule_date[i]
@@ -2054,7 +2128,6 @@ class DuesScreen(Screen):
 
         print(index_list)
         print(shedule_date)
-        today_date = datetime.now(tz=utc).date()
         b = 1
         k = -1
         for i in reversed(index_list):

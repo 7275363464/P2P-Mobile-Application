@@ -1,7 +1,7 @@
 import base64
 import json
 from io import BytesIO
-
+from lender_portfolio import Lend_Portfolio
 from anvil.tables import app_tables
 from kivy.atlas import CoreImage
 from kivy.factory import Factory
@@ -648,7 +648,12 @@ user_helpers1 = """
                                 text: "Sai Mamidala"
                                 spacing: "4dp"
                                 padding: "12dp", 0, 0, "56dp"
-
+                            MDNavigationDrawerItem
+                                icon: "briefcase"
+                                text: "View Borrower Portfolio"
+                                icon_color: "#23639e"
+                                on_release: root.view_Borr_Portfolio()
+                            MDNavigationDrawerDivider:
                             MDNavigationDrawerItem
                                 icon: "calendar-check-outline"
                                 text: "Today's Dues"
@@ -690,7 +695,7 @@ user_helpers1 = """
                                 icon_color: "#23639e"
                                 on_release: root.view_lost_opportunities()
                             MDNavigationDrawerDivider:
-
+                            
                             MDNavigationDrawerItem
                                 icon: "history"
                                 text: "View Transactions History"
@@ -3377,6 +3382,32 @@ class LenderDashboard(Screen):
         self.manager.add_widget(notification_screen)
         self.manager.current = 'Lend_NotificationScreen'
 
+    def view_Borr_Portfolio(self):
+        modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])
+
+        # Create MDLabel with white text color, increased font size, and bold text
+        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
+                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
+                                font_size="50sp", bold=True)
+
+        # Set initial y-position off-screen
+        loading_label.y = -loading_label.height
+
+        modal_view.add_widget(loading_label)
+        modal_view.open()
+
+        # Perform the animation
+        self.animate_loading_text(loading_label, modal_view.height)
+
+        # Perform the actual action (e.g., fetching loan requests)
+        # You can replace the sleep with your actual logic
+        Clock.schedule_once(lambda dt: self.perform_view_Borr_Portfolio(modal_view), 2)
+
+    def perform_view_Borr_Portfolio(self, modal_view):
+        # Close the modal view after performing the action
+        modal_view.dismiss()
+        self.manager.add_widget(Factory.Lend_Portfolio(name='Lend_Portfolio'))
+        self.manager.current = 'Lend_Portfolio'
     def notification(self):
         pass
     def refresh6(self):

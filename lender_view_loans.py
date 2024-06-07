@@ -1,6 +1,7 @@
 import anvil.server
 from anvil.tables import app_tables
 from kivy.clock import Clock
+from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 from kivy.uix.label import Label
@@ -10,7 +11,7 @@ from kivy.core.window import Window
 import sqlite3
 from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
 from kivy.uix.widget import Widget
-from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.button import MDRaisedButton, MDFillRoundFlatButton
 from kivymd.uix.card import MDCard
 from kivymd.uix.list import *
 from kivy.animation import Animation
@@ -170,7 +171,7 @@ view_loans = '''
             MDBoxLayout:
                 id: container
                 orientation: 'vertical'
-                padding: dp(10)
+                padding: dp(30)
                 spacing: dp(10)
                 elevation: 3
                 size_hint_y: None
@@ -191,7 +192,7 @@ view_loans = '''
             MDBoxLayout:
                 id: container2
                 orientation: 'vertical'
-                padding: dp(10)
+                padding: dp(40)
                 spacing: dp(10)
                 elevation: 3
                 size_hint_y: None
@@ -733,7 +734,7 @@ class ALlLoansScreen(Screen):
             card = MDCard(
                 orientation='vertical',
                 size_hint=(None, None),
-                size=("280dp", "170dp"),
+                size=("280dp", "180dp"),
                 padding="8dp",
                 spacing="5dp",
                 elevation=3
@@ -742,7 +743,7 @@ class ALlLoansScreen(Screen):
             image = Image(
                 source='img.png',  # Update with the actual path to the image
                 size_hint_x=None,
-                height="70dp",
+                height="60dp",
                 width="70dp"
             )
             horizontal_layout.add_widget(image)
@@ -785,8 +786,8 @@ class ALlLoansScreen(Screen):
             button_layout = BoxLayout(
                 size_hint_y=None,
                 height="40dp",
-                padding="8dp",
-                spacing="25dp"
+                padding="10dp",
+                spacing="20dp"
             )
             status_color = (0.545, 0.765, 0.290, 1)  # default color
             if loan_status[i] in ["under process", "Under Process", "UnderProcess"]:
@@ -817,24 +818,37 @@ class ALlLoansScreen(Screen):
                 status_color = (0 / 255, 128 / 255, 0 / 255, 1)  # light green
             elif loan_status[i] in ["decline", "declined", "Declined", "Decline"]:
                 status_color = (210 / 255, 4 / 255, 45 / 255, 1)  # cherry
-            button1 = MDRaisedButton(
-                text=f"{loan_status[i]}",
+
+            status_text = {
+                "under process": "Under Process",
+                "disbursed loan": "Disburse Loan",
+                "closed loan": "  Closed Loan  ",
+                "extension": " Extension Loan ",
+                "foreclosure": "   Foreclosure   ",
+                "accepted": "Accepted Loan",
+                "rejected": "Rejected Loan",
+                "approved": "Approved Loan",
+                "decline": "Declined Loan"
+            }
+            button1 = MDFillRoundFlatButton(
+                text=status_text.get(loan_status[i], loan_status[i]),
                 size_hint=(None, None),
-                height=30,
-                width=20,
-                pos_hint={"left_x": 0},
+                height="40dp",
+                width="250dp",
+                pos_hint={"center_x": 0},
                 md_bg_color=status_color,
                 # on_release=lambda x, i=i: self.close_loan(i)
             )
-            button2 = MDRaisedButton(
+            button2 = MDFillRoundFlatButton(
                 text="View Details",
                 size_hint=(None, None),
-                height=30,
-                width=20,
-                pos_hint={"right_x": 0},
+                height="40dp",
+                width="250dp",
+                pos_hint={"center_x": 1},
                 md_bg_color=(0.043, 0.145, 0.278, 1),
                 on_release=lambda x, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id)
             )
+
             button_layout.add_widget(button1)
             button_layout.add_widget(button2)
             card.add_widget(button_layout)
@@ -1172,7 +1186,14 @@ class ViewLoansProfileScreens(Screen):
         super().__init__(**kwargs)
 
     def on_back_button_press(self):
-        self.manager.current = 'LenderDashboard'
+        if self.ids.status.text == 'disbursed':
+            self.manager.current = 'OpenViewLoanScreen'
+        elif self.ids.status.text == 'rejected':
+            self.manager.current = 'ViewRejectedLoansScreen'
+        elif self.ids.status.text == 'under process':
+            self.manager.current = 'ViewUnderProcessLoansScreen'
+        elif self.ids.status.text == 'closed':
+            self.manager.current = 'ViewClosedLoansScreen'
 
     def initialize_with_value(self, value, data):
         profile = app_tables.fin_user_profile.search()
@@ -1245,8 +1266,14 @@ class ViewLoansProfileScreens(Screen):
     def go_back(self):
         # Navigate to the previous screen with a slide transition
         self.manager.transition = SlideTransition(direction='right')
-
-        self.manager.current = 'LenderDashboard'
+        if self.ids.status.text == 'disbursed':
+            self.manager.current = 'OpenViewLoanScreen'
+        elif self.ids.status.text == 'rejected':
+            self.manager.current = 'ViewRejectedLoansScreen'
+        elif self.ids.status.text == 'under process':
+            self.manager.current = 'ViewUnderProcessLoansScreen'
+        elif self.ids.status.text == 'closed':
+            self.manager.current = 'ViewClosedLoansScreen'
 
 
 class ViewLoansProfileScreens2(Screen):

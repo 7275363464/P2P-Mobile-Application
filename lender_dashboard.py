@@ -831,32 +831,32 @@ user_helpers1 = """
             icon: 'cash'
             text_color_normal: '#4c594f'
             text_color_active: 1, 0, 0, 1
-            on_tab_press: root.refresh5()
-            BoxLayout:
-                orientation: 'vertical'
-                
-                MDTopAppBar:
-                    title: "View All Loans"
-                    elevation: 3
-                    left_action_items: [['arrow-left', lambda x: root.go_back()]]
-                    right_action_items: [['refresh', lambda x: root.refresh5()]]
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    
-                MDScrollView:
-                    MDBoxLayout:
-                        id: container
-                        orientation: 'vertical'
-                        padding: dp(25)
-                        spacing: dp(10)
-                        size_hint_y: None
-                        height: self.minimum_height
-                        width: self.minimum_width
-                        adaptive_size: True
-                        pos_hint: {"center_x": 0, "center_y":  0}
-                        
-                    # MDList:
-                    #     
-                    #     id: container
+            on_tab_press: root.view_loanscreen()
+            # BoxLayout:
+            #     orientation: 'vertical'
+            #     
+            #     MDTopAppBar:
+            #         title: "View All Loans"
+            #         elevation: 3
+            #         left_action_items: [['arrow-left', lambda x: root.go_back()]]
+            #         right_action_items: [['refresh', lambda x: root.refresh5()]]
+            #         md_bg_color: 0.043, 0.145, 0.278, 1
+            #         
+            #     MDScrollView:
+            #         MDBoxLayout:
+            #             id: container
+            #             orientation: 'vertical'
+            #             padding: dp(25)
+            #             spacing: dp(10)
+            #             size_hint_y: None
+            #             height: self.minimum_height
+            #             width: self.minimum_width
+            #             adaptive_size: True
+            #             pos_hint: {"center_x": 0, "center_y":  0}
+            #             
+            #         # MDList:
+            #         #     
+            #         #     id: container
 
         MDBottomNavigationItem:
             name: 'screen 3'
@@ -3857,30 +3857,32 @@ class LenderDashboard(Screen):
         print(log_index)
         print(investment)
 
-        if investment[log_index] != None:
-            self.ids.commitment.text = "Rs. " + str(investment[log_index])
+        try:
+            investment_value = float(investment[log_index])
+            self.ids.commitment.text = "Rs. " + str(investment_value)
             for i in range(a):
-                if float(investment[log_index]) >= min_amount[i] and float(investment[log_index]) < max_amount[i]:
+                if min_amount[i] <= investment_value < max_amount[i]:
                     self.ids.details.tertiary_text = f"Membership Type: {membership_type[i]}"
                     break
-        else:
+        except ValueError:
+            self.ids.commitment.text = "Invalid Investment"
             self.ids.details.tertiary_text = f"Membership Type: None"
-            print("Investment Amount Not There")
+            print("Investment Amount Not There or Invalid")
 
-        lender_data = app_tables.fin_lender.search()
-        lender_cus_id = []
-        create_date = []
-        for i in lender_data:
-            lender_cus_id.append(i['customer_id'])
-            create_date.append(i['lender_since'])
-
-        if p_customer_id[log_index] in lender_cus_id:
-            index1 = lender_cus_id.index(p_customer_id[log_index])
-            self.ids.details.secondary_text = "Joined Date: " + str(create_date[index1])
-            self.ids.date.text = "Joined Date: " + str(create_date[index1])
-        else:
-            self.ids.details.secondary_text = "Joined Date: "
-            self.ids.date.text = "Joined Date: "
+        # lender_data = app_tables.fin_lender.search()
+        # lender_cus_id = []
+        # create_date = []
+        # for i in lender_data:
+        #     lender_cus_id.append(i['customer_id'])
+        #     create_date.append(i['lender_since'])
+        #
+        # if p_customer_id[log_index] in lender_cus_id:
+        #     index1 = lender_cus_id.index(p_customer_id[log_index])
+        #     self.ids.details.secondary_text = "Joined Date: " + str(create_date[index1])
+        #     self.ids.date.text = "Joined Date: " + str(create_date[index1])
+        # else:
+        #     self.ids.details.secondary_text = "Joined Date: "
+        #     self.ids.date.text = "Joined Date: "
     def on_kv_post(self, base_widget):
         self.setup_menu()
 

@@ -5,6 +5,7 @@ from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 from kivymd.app import MDApp
+from borrower_dues import BorrowerDuesScreen, LastScreenWallet
 from kivymd.uix.button import MDRaisedButton, MDRectangleFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.list import *
@@ -14,9 +15,12 @@ from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
 from kivy.utils import platform
 from kivy.clock import mainthread
 from kivymd.uix.filemanager import MDFileManager
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 from kivymd.uix.snackbar import Snackbar
+from pytz import utc
+
+from borrower_wallet import WalletScreen
 
 if platform == 'android':
     from kivy.uix.button import Button
@@ -27,7 +31,6 @@ if platform == 'android':
         request_permissions, check_permission, Permission)
 
 import anvil.server
-
 
 loan_forecloseB = '''
 <WindowManager>:
@@ -63,7 +66,7 @@ loan_forecloseB = '''
         ScrollView:
             GridLayout:
                 cols: 1
-                
+
                 BoxLayout:
                     orientation: 'vertical'
                     spacing: dp(50)
@@ -78,10 +81,10 @@ loan_forecloseB = '''
                             size: self.size
                             radius: [1, 1, 1, 1]
                             source: "background.jpg"
-    
+
                     MDGridLayout:
                         cols: 2
-        
+
                         MDLabel:
                             text: 'Loan Amount:'
                             halign: 'left'
@@ -96,7 +99,7 @@ loan_forecloseB = '''
                             size_hint_y: None
                             height: dp(1)
                             bold: True
-        
+
                         MDLabel:
                             id: amount
                             halign: 'left' 
@@ -114,20 +117,20 @@ loan_forecloseB = '''
                             text: 'Borrower Name'
                             halign: 'left' 
                             bold: True
-        
+
                         MDLabel:
                             id: name
                             halign: 'left' 
                             theme_text_color: 'Custom'  
                             text_color: 140/255, 140/255, 140/255, 1   
-                        
+
                     MDGridLayout:
                         cols: 2
                         MDLabel:
                             text: 'Tenure(Months)'
                             halign: 'left'  
                             bold: True
-        
+
                         MDLabel:
                             id: tenure
                             halign: 'left' 
@@ -140,7 +143,7 @@ loan_forecloseB = '''
                             halign: 'left'
                             theme_text_color: 'Custom'  
                             bold: True
-        
+
                         MDLabel:
                             id: interest
                             halign: 'left'
@@ -417,7 +420,7 @@ loan_forecloseB = '''
                         MDLabel:
                             text: "Outstanding Amount"
                             halign: "left"
-                            
+
                         MDLabel:
                             id: outstanding_amount
                             halign: 'left' 
@@ -542,7 +545,235 @@ loan_forecloseB = '''
                         size_hint: 1, None
 
 
+<ForeclosePayment>:
+    GridLayout:
+        cols: 1
 
+        MDTopAppBar:
+            title:"Today's Dues"
+            md_bg_color:0.043, 0.145, 0.278, 1
+            theme_text_color: 'Custom'
+            text_color: 1,1,1,1 
+            size_hint:1,None
+            elevation: 3
+            left_action_items: [['arrow-left', lambda x: root.go_back()]]
+            right_action_items: [['wallet']]
+            pos_hint: {'top': 1} 
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(50)
+            padding: dp(30)
+            size_hint_y: None
+            height: self.minimum_height
+            canvas.before:
+                Color:
+                    rgba: 230/255, 245/255, 255/255, 1 
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [1, 1, 1, 1]
+                    source: "background.jpg"
+
+            MDGridLayout:
+                cols: 2
+
+                MDLabel:
+                    text: 'Loan Amount:'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
+            MDGridLayout:
+                cols: 2
+                MDIconButton:
+                    icon: 'currency-inr'
+                    halign: 'left'
+                    size_hint_y: None
+                    height: dp(1)
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
+
+                MDLabel:
+                    id: loan_amount1
+                    halign: 'left'
+                    bold: True
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
+
+            MDLabel:
+                text: ''
+                halign: 'left'
+                size_hint_y: None
+                height: dp(5)
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Borrower Name'
+                    halign: 'left'
+                    ttheme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
+
+                MDLabel:
+                    id: name
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True   
+
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Tenure'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
+
+                MDLabel:
+                    id: tenure
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
+
+
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Interest Rate'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
+
+                MDLabel:
+                    id: interest_rate
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
+
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Account Number'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
+
+                MDLabel:
+                    id: account_number
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Loan Status'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
+
+                MDLabel:
+                    id: status
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
+
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Emi Amount'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
+
+                MDLabel:
+                    id: emi_amount
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
+
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    id: extra
+                    text: 'Extra Payment'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
+
+                MDLabel:
+                    id: extra_amount
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
+
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    id: total
+                    text: 'Total Amount'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
+
+                MDLabel:
+                    id: total_amount
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
+
+        MDLabel:
+            text: ''
+            halign: 'left'
+            size_hint_y: None
+            height: dp(55)
+
+        MDBoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(30)
+            padding: dp(30)
+            size_hint_y: None
+            height: self.minimum_height
+            canvas.before:
+                Color:
+                    rgba: 249/255, 249/255, 247/255, 1 
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [25, 25, 25, 25]
+            MDRaisedButton:
+                text: "Cancel"
+                md_bg_color:0.043, 0.145, 0.278, 1
+                pos_hint: {'center_x': 0.5, 'center_y': 2}
+                size_hint: 0.4, None 
+                font_name:"Roboto-Bold"
+                font_size:dp(15) 
+
+            MDRaisedButton:
+                id: pay
+                text: "Pay Now"
+                md_bg_color:0.043, 0.145, 0.278, 1
+                on_release: root.payment_code() 
+                pos_hint: {'center_x': 0.5, 'center_y': 2}
+                size_hint: 0.4, None 
+                font_name:"Roboto-Bold"
+                font_size:dp(15) 
 
 '''
 Builder.load_string(loan_forecloseB)
@@ -580,67 +811,154 @@ class LoansDetailsB(Screen):
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
-            profile_email_id.append('email_user')
+            profile_email_id.append(i['email_user'])
 
         cos_id = None
-        index = -1
+        index = 0
         if email in profile_email_id:
             index = profile_email_id.index(email)
-
-        if email in email1:
-            index = email1.index(email)
-            cos_id = customer_id[index]
-
+            cos_id = profile_customer_id[index]
+        print(email, profile_email_id)
+        print(cos_id)
         if cos_id is not None:
             print(cos_id, type(cos_id))
             print(customer_id[-1], type(customer_id[-1]))
-            c = -1
-            index_list = []
-            for i in range(s):
-                c += 1
-                if customer_id[c] == cos_id and loan_status[c] == 'disbursed':
-                    index_list.append(c)
+        c = -1
+        index_list = []
+        print(profile_customer_id[index])
+        for i in range(s):
+            c += 1
+            print(customer_id[i], i)
 
-            b = 1
-            k = -1
-            for i in reversed(index_list):
-                b += 1
-                k += 1
-                number = profile_customer_id.index(customer_id[i])
-                item = ThreeLineAvatarIconListItem(
-                    IconLeftWidget(
-                        icon="card-account-details-outline"
-                    ),
-                    text=f"Borrower Name : {borrower_name[i]}",
-                    secondary_text=f"Borrower Mobile Number : {profile_mobile_number[number]}",
-                    tertiary_text=f"Product Name : {product_name[i]}",
-                    text_color=(0, 0, 0, 1),  # Black color
-                    theme_text_color='Custom',
-                    secondary_text_color=(0, 0, 0, 1),
-                    secondary_theme_text_color='Custom',
-                    tertiary_text_color=(0, 0, 0, 1),
-                    tertiary_theme_text_color='Custom'
-                )
-                # Create a lambda function with loan_id as an argument
-                item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
-                self.ids.container.add_widget(item)
+            if customer_id[i] == cos_id and loan_status[i] == 'disbursed' or loan_status[i] == 'foreclosure':
+                index_list.append(c)
+        print(index_list)
+        b = 1
+        k = -1
+        for i in reversed(index_list):
+            b += 1
+            k += 1
+            number = profile_customer_id.index(customer_id[i])
+            item = ThreeLineAvatarIconListItem(
+                IconLeftWidget(
+                    icon="card-account-details-outline"
+                ),
+                text=f"Borrower Name : {borrower_name[i]}",
+                secondary_text=f"Borrower Mobile Number : {profile_mobile_number[number]}",
+                tertiary_text=f"Product Name : {product_name[i]}",
+                text_color=(0, 0, 0, 1),  # Black color
+                theme_text_color='Custom',
+                secondary_text_color=(0, 0, 0, 1),
+                secondary_theme_text_color='Custom',
+                tertiary_text_color=(0, 0, 0, 1),
+                tertiary_theme_text_color='Custom'
+            )
+            # Create a lambda function with loan_id as an argument
+            item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
+            self.ids.container.add_widget(item)
 
-    def icon_button_clicked(self, instance, loan_id):
-            # Handle the on_release event here
-            value = instance.text.split(':')[-1].strip()
-            data = app_tables.fin_loan_details.search()
+    def icon_button_clicked(self, instance, loan_id1):
+        value = instance.text.split(':')[-1].strip()
+        data = app_tables.fin_loan_details.search()
+        foreclose = app_tables.fin_foreclosure.search()
+        today_date = datetime.now(tz=utc).date()
+        data = app_tables.fin_loan_details.search()
+        emi_data = app_tables.fin_emi_table.search()
+        profile = app_tables.fin_user_profile.search()
+        customer_id = []
+        loan_id = []
+        loan_status = []
+        borrower_id = []
+        borrower_name = []
+        schedule_date = []
+
+        s = 0
+
+        for i in data:
+            s += 1
+            loan_id.append(i['loan_id'])
+            customer_id.append(i['borrower_customer_id'])
+            loan_status.append(i['loan_updated_status'])
+            borrower_id.append(i['borrower_customer_id'])
+            borrower_name.append(i['borrower_full_name'])
+            schedule_date.append(i['first_emi_payment_due_date'])
+
+        emi_loan_id = []
+        emi_num = []
+        next_payment = []
+        part_payment_type = []
+        part_payment_done = []
+        for i in emi_data:
+            emi_loan_id.append(i['loan_id'])
+            emi_num.append(i['emi_number'])
+            next_payment.append(i['next_payment'])
+            part_payment_type.append((i['payment_type']))
+            part_payment_done.append(i['part_payment_done'])
+
+        print(emi_num)
+        profile_customer_id = []
+        profile_mobile_number = []
+        profile_email_id = []
+        for i in profile:
+            profile_customer_id.append(i['customer_id'])
+            profile_mobile_number.append(i['mobile'])
+            profile_email_id.append(i['email_user'])
+        email = anvil.server.call('another_method')
+
+        cos_id = None
+        index = 0
+        if email in profile_email_id:
+            index = profile_email_id.index(email)
+            cos_id = profile_customer_id[index]
+        index_list = []
+        a = -1
+        shedule_date = {}
+        for i in range(s):
+            a += 1
+            if customer_id[i] == profile_customer_id[index] and loan_status[i] == "foreclosure":
+                if loan_id[i] not in emi_loan_id and schedule_date[i] is not None:
+                    index_list.append(i)
+                    shedule_date[loan_id[i]] = schedule_date[i]
+                elif loan_id[i] in emi_loan_id:
+                    last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(loan_id[i])
+                    if next_payment[last_index] is not None:
+                        index_list.append(i)
+                        shedule_date[loan_id[i]] = next_payment[last_index]
+
+        print(shedule_date)
+        print(index_list)
+        loan_ida = []
+        loan_status_a = []
+        for i in data:
+            loan_ida.append(i['loan_id'])
+            loan_status_a.append(i['loan_updated_status'])
+
+        loan_idb = []
+        loan_status_b = []
+        for i in foreclose:
+            loan_idb.append(i['loan_id'])
+            loan_status_b.append(i['status'])
+        index_a = 0
+        index_b = 0
+        if loan_id1 in loan_ida:
+            index_a = loan_ida.index(loan_id1)
+        if loan_id1 in loan_idb:
+            index_b = loan_idb.index(loan_id1)
+
+        if loan_status_a[index_a] == "foreclosure" and loan_status_b[index_b] == "approved":
 
             sm = self.manager
-
-            # Create a new instance of the LoginScreen
-            approved = ViewProfileScreenFB(name='ViewProfileScreenFB')
-
-            # Add the LoginScreen to the existing ScreenManager
+            approved = BorrowerDuesScreen(name='BorrowerDuesScreen')
             sm.add_widget(approved)
+            sm.current = 'BorrowerDuesScreen'
+            self.manager.get_screen('BorrowerDuesScreen').initialize_with_value(loan_id1, shedule_date)
 
-            # Switch to the LoginScreen
+        else:
+            sm = self.manager
+            approved = ViewProfileScreenFB(name='ViewProfileScreenFB')
+            sm.add_widget(approved)
             sm.current = 'ViewProfileScreenFB'
-            self.manager.get_screen('ViewProfileScreenFB').initialize_with_value(loan_id, data)
+            self.manager.get_screen('ViewProfileScreenFB').initialize_with_value(loan_id1, data)
 
     def go_back(self):
         self.manager.current = 'DashboardScreen'
@@ -669,6 +987,7 @@ class LoansDetailsB(Screen):
         # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
         return anvil.server.call('another_method')
 
+
 class ViewProfileScreenFB(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -679,10 +998,56 @@ class ViewProfileScreenFB(Screen):
             self.check_box = True
         else:
             self.check_box = False
+
     def initialize_with_value(self, value, data):
         self.loan_id = value
         emi1 = app_tables.fin_emi_table.search()
         pro_details = app_tables.fin_product_details.search()
+        today_date = datetime.now(tz=utc).date()
+        data = app_tables.fin_loan_details.search()
+        emi_data = app_tables.fin_emi_table.search()
+        profile = app_tables.fin_user_profile.search()
+        customer_id = []
+        loan_id = []
+        loan_status = []
+        borrower_name = []
+
+        s = 0
+
+        for i in data:
+            s += 1
+            customer_id.append((i['borrower_customer_id']))
+            loan_id.append(i['loan_id'])
+            loan_status.append(i['loan_updated_status'])
+            borrower_name.append(i['borrower_full_name'])
+
+        emi_loan_id = []
+        emi_num = []
+        next_payment = []
+        part_payment_type = []
+        part_payment_done = []
+        for i in emi_data:
+            emi_loan_id.append(i['loan_id'])
+            emi_num.append(i['emi_number'])
+            next_payment.append(i['next_payment'])
+            part_payment_type.append((i['payment_type']))
+            part_payment_done.append(i['part_payment_done'])
+        profile_customer_id = []
+        profile_mobile_number = []
+        profile_email_id = []
+
+        for i in profile:
+            profile_customer_id.append(i['customer_id'])
+            profile_mobile_number.append(i['mobile'])
+            profile_email_id.append(i['email_user'])
+
+        email = anvil.server.call('another_method')
+        index0 = 0
+        if email in profile_email_id:
+            index0 = profile_email_id.index(email)
+        index_list = []
+        a = -1
+        shedule_date = {}
         loan_id = []
         loan_amount = []
         email1 = []
@@ -690,7 +1055,7 @@ class ViewProfileScreenFB(Screen):
         tenure = []
         interest = []
         credit = []
-        min_months = []
+        first_payment_date = []
 
         for i in data:
             loan_id.append(i['loan_id'])
@@ -700,7 +1065,9 @@ class ViewProfileScreenFB(Screen):
             tenure.append(i['tenure'])
             interest.append(i['interest_rate'])
             credit.append(i['credit_limit'])
-
+            first_payment_date.append(i['first_emi_payment_due_date'])
+        total_payment = 0
+        minimum_months = []
         if value in loan_id:
             index = loan_id.index(value)
             self.ids.amount.text = str(loan_amount[index])
@@ -709,8 +1076,10 @@ class ViewProfileScreenFB(Screen):
             self.ids.interest.text = str(interest[index])
             self.ids.limit.text = str(credit[index])
 
+            next_payment_date = [i['next_payment'] for i in emi1]
+
             emi_loan = [i['emi_number'] for i in emi1 if i['loan_id'] == value]
-            print(emi_loan)
+
             if emi_loan:
                 highest_number = max(emi_loan)
                 total_payment = highest_number
@@ -721,7 +1090,7 @@ class ViewProfileScreenFB(Screen):
 
             foreclose_type = [i['foreclose_type'] for i in pro_details if
                               i['product_id'] == data[index]['product_id']]
-            print(foreclose_type)
+
             if foreclose_type:
                 foreclose_value = foreclose_type[0]
                 self.ids.closer_type.text = str(foreclose_value)
@@ -733,14 +1102,45 @@ class ViewProfileScreenFB(Screen):
                     self.show_success_dialog(f"This Foreclose Value need to be Eligible")
 
             minimum_months = [i['min_months'] for i in pro_details if i['product_id'] == data[index]['product_id']]
-            print(minimum_months)
-            print(emi_loan)
-            if total_payment >= minimum_months[0]:
-                self.ids.foreclose_button.disabled = False
-            else:
-                self.ids.foreclose_button.disabled = True
 
-            print(minimum_months[0], total_payment)
+        cos_id = None
+        index = 0
+        if email in profile_email_id:
+            index = profile_email_id.index(email)
+            cos_id = profile_customer_id[index]
+
+        if cos_id is not None:
+            print(cos_id, type(cos_id))
+            print(customer_id[-1], type(customer_id[-1]))
+
+        for i in range(s):
+            a += 1
+
+            if customer_id[i] == cos_id and loan_status[i] == 'disbursed':
+                if loan_id[i] not in emi_loan_id and first_payment_date[i] is not None:
+                    index_list.append(i)
+                    shedule_date[loan_id[i]] = first_payment_date[i]
+                elif loan_id[i] in emi_loan_id:
+                    last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(loan_id[i])
+                    if next_payment[last_index] is not None:
+                        index_list.append(i)
+                        shedule_date[loan_id[i]] = next_payment[last_index]
+
+        if value in shedule_date:
+            day_left = (shedule_date[value] - today_date).days
+
+            if 0 <= day_left <= 3:
+                self.ids.foreclose_button.opacity = 0
+                self.ids.foreclose_button.disabled = True
+            else:
+                self.ids.foreclose_button.opacity = 1
+                if total_payment >= minimum_months[0]:
+                    self.ids.foreclose_button.disabled = False
+                else:
+                    self.ids.foreclose_button.disabled = True
+        else:
+            print(f"Error: {value} not found in schedule_date")
+            self.ids.foreclose_button.disabled = True
 
     def show_success_dialog(self, text):
         dialog = MDDialog(
@@ -824,6 +1224,7 @@ class ViewProfileScreenFB(Screen):
         )
         dialog.open()
 
+
 class ForecloseDetails(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -880,32 +1281,28 @@ class ForecloseDetails(Screen):
 
         total_payment = 0
         emi_loan = [i['emi_number'] for i in emi1 if i['loan_id'] == value]
-        print(emi_loan)
+
         if emi_loan:
             number = max(emi_loan)
             total_payment = number
             total_amount = month_emi[index2] * total_payment
-            print(month_emi[index2], total_payment)
             self.ids.totalamount.text = str(total_amount)
 
         if value in loan_id1:
             index3 = loan_id1.index(value)
             monthly_installment = loan_amount[index3] / tenure[index3]
-            print(loan_amount[index3], tenure[index3])
             monthly_installment = round(monthly_installment, 2)
             self.ids.monthly_installment.text = str(monthly_installment)
 
         if value in loan_id1:
             index4 = loan_id1.index(value)
             interest_amount = month_emi[index4] - monthly_installment
-            print(month_emi[index4], monthly_installment)
             interest_amount = round(interest_amount, 2)
             self.ids.interest_amount.text = str(interest_amount)
 
         if value in loan_id1:
             index5 = loan_id1.index(value)
             overall_outstanding_amount = loan_amount[index5] - (monthly_installment * total_payment)
-            print(loan_amount[index5], monthly_installment, total_payment)
             overall_outstanding_amount = round(overall_outstanding_amount, 2)
             self.ids.overall_amount.text = str(overall_outstanding_amount)
 
@@ -921,7 +1318,6 @@ class ForecloseDetails(Screen):
             index7 = loan_id1.index(value)
             interest_amount_per_month = month_emi[index7] - monthly_installment
             overall_interest_amount = interest_amount_per_month * outstanding_months
-            print(interest_amount_per_month, outstanding_months)
             overall_interest_amount = round(overall_interest_amount, 2)
             self.ids.overall_interest_amount.text = str(overall_interest_amount)
 
@@ -962,7 +1358,8 @@ class ForecloseDetails(Screen):
 
     date = datetime.today()
 
-    def add_data(self, outstanding_amount, foreclose_fee, foreclose_amount, reason, total_due_amount, totalamount, monthly_emi1):
+    def add_data(self, outstanding_amount, foreclose_fee, foreclose_amount, reason, total_due_amount, totalamount,
+                 monthly_emi1):
         loan_id = self.loan_id
         index = 0
         if len(self.ids.reason.text) < 3:
@@ -998,13 +1395,14 @@ class ForecloseDetails(Screen):
             total_payment = highest_number
 
             print(loan_id, outstanding_amount, foreclose_amount, foreclose_fee, interest_rate[index], reason,
-                  total_due_amount, borrower_name1[index], loan_amount[index], totalamount, monthly_emi1, date,total_payment )
+                  total_due_amount, borrower_name1[index], loan_amount[index], totalamount, monthly_emi1, date,
+                  total_payment)
             app_tables.fin_foreclosure.add_row(loan_id=loan_id, outstanding_amount=float(outstanding_amount),
                                                foreclose_fee=float(foreclose_fee),
                                                foreclose_amount=float(foreclose_amount),
                                                reason=reason, status='under process',
                                                total_due_amount=float(total_due_amount),
-                                               paid_amount= float(totalamount),
+                                               paid_amount=float(totalamount),
                                                emi_amount=float(monthly_emi1),
                                                requested_on=date,
                                                foreclosure_emi_num=total_payment,
@@ -1012,7 +1410,38 @@ class ForecloseDetails(Screen):
                                                borrower_name=borrower_name1[index],
                                                loan_amount=loan_amount[index])
         data[index]['loan_updated_status'] = 'foreclosure'
-        self.show_success_dialog(f"Your foreclosure request has been successfully submitted. You will receive a notification once it is approved.")
+        self.show_success_dialog(
+            f"Your foreclosure request has been successfully submitted. You will receive a notification once it is approved.")
+
+        data = app_tables.fin_foreclosure.search()
+        loan = app_tables.fin_loan_details.search()
+        today_date = datetime.now(timezone.utc).date()
+        loan_id = []
+        request_time = []
+        loan_status = []
+        a = 0
+        for i in data:
+            a += 1  # how much data was available in data it will print all data
+            loan_id.append(i['loan_id'])
+            request_time.append(i['requested_on'])
+            loan_status.append(i['status'])
+
+        loan_id1 = []
+        loan_status1 = []
+        s = 0
+        for i in loan:
+            s += 1
+            loan_id1.append(i['loan_id'])
+            loan_status1.append(i['loan_updated_status'])
+
+        for i in range(a):
+            day_left = (today_date - request_time[i].date()).days
+            if day_left >= 2 and loan_status[i] == "under process":
+                data[i]["status"] = "approved"
+                if loan_id[i] in loan_id1:
+                    index = loan_id1.index(loan_id[i])
+                    loan[i]["loan_updated_status"] = "foreclosure"
+            print(day_left)
 
     def show_success_dialog(self, text):
         dialog = MDDialog(
@@ -1044,10 +1473,13 @@ class ForecloseDetails(Screen):
             ]
         )
         dialog.open()
+
     def open_dashboard_screen(self, dialog):
 
         dialog.dismiss()
         self.manager.current = 'DashboardScreen'
+
+
 class MyScreenManager(ScreenManager):
     pass
 

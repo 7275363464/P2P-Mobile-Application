@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import anvil.server
 from kivy.config import value
 from kivy.lang import Builder
@@ -903,6 +903,36 @@ class ExtendLoansScreen(Screen):
             self.ids.reason.text = ""
             self.show_validation_errors("Your extension request has been successfully submitted. You will receive a notification once it is approved.")
             # Navigate to DashboardScreen after adding data
+            def __init__(self, **kwargs):
+                super().__init__(**kwargs)
+                data = app_tables.fin_extends_loan.search()
+                today_date = datetime.now(timezone.utc).date()
+                loan = app_tables.fin_loan_details.search()
+                loan_id = []
+                request_time = []
+                loan_status = []
+                a = 0
+                for i in data:
+                    a += 1
+                    loan_id.append(i['loan_id'])
+                    request_time.append(i['extension_request_date'])
+                    loan_status.append(i['status'])
+                loan_id1 = []
+                loan_status1 = []
+                s = 0
+                for i in loan:
+                    s += 1
+                    loan_id1.append(i['loan_id'])
+                    loan_status1.append(i['loan_updated_status'])
+
+                for i in range(a):
+                    day_left = (today_date - request_time[i].date()).days
+                    if day_left >= 2 and loan_status[i] == "under process":
+                        data[i]["status"] = "approved"
+                        if loan_id[i] in loan_id1:
+                            index = loan_id1.index(loan_id[i])
+                            loan[i]["loan_updated_status"] = "extension"
+                    print(day_left)
             sm = self.manager
             profile = ExtendLoansScreen(name='DashboardScreen')
             sm.add_widget(profile)  # Add the screen to the ScreenManager

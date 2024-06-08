@@ -1023,11 +1023,13 @@ class BorrowerDuesScreen(Screen):
         emi_num = []
         next_payment = []
         paid_amount = []
+        remain_tenure = []
         for i in emi_data:
             emi_loan_id.append(i['loan_id'])
             emi_num.append(i['emi_number'])
             next_payment.append(i['next_payment'])
             paid_amount.append(i['amount_paid'])
+            remain_tenure.append(i['remaining_tenure'])
 
         value = self.loan_id
         data1 = app_tables.fin_loan_details.search()
@@ -1119,21 +1121,19 @@ class BorrowerDuesScreen(Screen):
         else:
             print("loan id not found")
 
-        monthly_lenter_returns = lender_returns / tenure_months[index]
+        monthly_lender_returns = lender_returns / tenure_months[index]
 
         if emi_type_pay[index].strip() == 'Monthly':
-            monthly_lenter_returns = lender_returns / tenure_months[index]
+            monthly_lender_returns = lender_returns / tenure_months[index]
         elif emi_type_pay[index].strip() == 'Three Months':
-            monthly_lenter_returns = lender_returns / (tenure_months[index] / 3)
+            monthly_lender_returns = lender_returns / (tenure_months[index] / 3)
         elif emi_type_pay[index].strip() == 'Six Months':
-            monthly_lenter_returns = lender_returns / (tenure_months[index] / 6)
+            monthly_lender_returns = lender_returns / (tenure_months[index] / 6)
         elif emi_type_pay[index].strip() == 'One Time':
             if tenure:
-                monthly_lenter_returns = lender_returns / (tenure_months[index] / tenure_months[index])
+                monthly_lender_returns = lender_returns / (tenure_months[index] / tenure_months[index])
 
-
-
-        print(monthly_lenter_returns)
+        print(monthly_lender_returns)
         print(lender_returns)
         next_payment_date = None
         b_index = 0
@@ -1171,6 +1171,48 @@ class BorrowerDuesScreen(Screen):
                 else:
                     paid_amount1 = 0
             remain_amount = total_repay_amount[index] - paid_amount1
+
+            if value not in emi_loan_id:
+                re_ten = int(tenure)
+            else:
+                last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
+                re_ten = remain_tenure[last_index]
+
+            if emi_type_pay[index].strip() == 'Monthly':
+                if re_ten == 1:
+                    re_ten = 0
+                    data1[index]['loan_updated_status'] = 'closed'
+                else:
+                    re_ten -= 1
+                print(re_ten)
+
+            elif emi_type_pay[index].strip() == 'Three Months':
+                if re_ten > 3 and re_ten < 6:
+                    re_ten = 0
+                    data1[index]['loan_updated_status'] = 'closed'
+                elif re_ten == 3:
+                    re_ten = 0
+                    data1[index]['loan_updated_status'] = 'closed'
+                else:
+                    re_ten -= 3
+                print(re_ten)
+
+            elif emi_type_pay[index].strip() == 'Six Months':
+                if re_ten > 6 and re_ten < 12:
+                    re_ten = 0
+                    data1[index]['loan_updated_status'] = 'closed'
+
+                elif re_ten == 6:
+                    re_ten = 0
+                    data1[index]['loan_updated_status'] = 'closed'
+                else:
+                    re_ten -= 6
+
+            elif emi_type_pay[index].strip() == 'One Time':
+                if tenure:
+                    re_ten = 0
+                    data1[index]['loan_updated_status'] = 'closed'
+
             app_tables.fin_emi_table.add_row(
                 loan_id=str(value),
                 extra_fee=float(extra_amount),
@@ -1184,6 +1226,7 @@ class BorrowerDuesScreen(Screen):
                 borrower_customer_id=cos_id1[index],
                 lender_customer_id=lender_customer_id[index],
                 lender_email=lender_email[index],
+                remaining_tenure=re_ten,
                 payment_type="pay now"
 
             )
@@ -1193,9 +1236,9 @@ class BorrowerDuesScreen(Screen):
             data1[index]['remaining_amount'] = float(remain_amount)
             if data1[index]['lender_returns'] == None:
                 data1[index]['lender_returns'] = 0
-                data1[index]['lender_returns'] += monthly_lenter_returns
+                data1[index]['lender_returns'] += monthly_lender_returns
             else:
-                data1[index]['lender_returns'] += monthly_lenter_returns
+                data1[index]['lender_returns'] += monthly_lender_returns
             anvil.server.call('loan_text', None)
             sm = self.manager
             wallet_screen = LastScreenWallet(name='LastScreenWallet')

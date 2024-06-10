@@ -595,12 +595,14 @@ class BorrowerDuesScreen(Screen):
         next_payment = []
         part_payment_type = []
         part_payment_done = []
+        remaining_tenure = []
         for i in emi_data:
             emi_loan_id.append(i['loan_id'])
             emi_num.append(i['emi_number'])
             next_payment.append(i['next_payment'])
             part_payment_type.append((i['payment_type']))
             part_payment_done.append(i['part_payment_done'])
+            remaining_tenure.append(i['remaining_tenure'])
 
         product = app_tables.fin_product_details.search()
         product_id = []
@@ -639,6 +641,7 @@ class BorrowerDuesScreen(Screen):
         total_repay = []
         shedule_payment = []
         loan_product = []
+        remaining_tenure = []
         for i in data1:
             loan_id.append(i['loan_id'])
             borrower_name.append(i['borrower_full_name'])
@@ -655,6 +658,7 @@ class BorrowerDuesScreen(Screen):
             total_repay.append(i['total_repayment_amount'])
             shedule_payment.append(i['first_emi_payment_due_date'])
             loan_product.append(i['product_id'])
+
         index = 0
 
         if value in loan_id:
@@ -738,6 +742,8 @@ class BorrowerDuesScreen(Screen):
                     else:
                         days_left = 0
                     break
+
+
             if late_fee == 'lapsed fee':
                 product_index = product_id.index(loan_product[index])
                 lapsed_percentage = lapsed_fee[product_index] + days_left
@@ -798,6 +804,20 @@ class BorrowerDuesScreen(Screen):
                 self.ids.extra_amount.text = str(round(extra_amount, 2))
                 self.ids.total_amount.text = str(round(total_amount))
                 self.ids.extra.text = "Extra Payment "
+            if value not in emi_loan_id:
+                if emi_pay_type[index].strip() == 'Three Months' and tenure[index] > 3 and tenure[index] < 6:
+                    r = tenure[index] - 3
+                    i = monthly_emi[index] / 3
+                    emi = i * r
+                    print(monthly_emi[index], emi)
+                    self.ids.total_amount.text = str(round(float(self.ids.total_amount.text), 2) + emi)
+            if value in emi_loan_id and part_payment_type[last_index] != "part payment":
+                if emi_pay_type[index].strip() == 'Three Months' and remaining_tenure[last_index] > 3 and remaining_tenure[last_index] < 6:
+                    r = remaining_tenure[last_index] - 3
+                    i = monthly_emi[index] / 3
+                    emi = i * r
+                    print(monthly_emi[index] , emi)
+                    self.ids.total_amount.text = str(round(float(self.ids.total_amount.text), 2) + emi)
 
 
         elif loan_status[index] == "extension":
@@ -1111,6 +1131,12 @@ class BorrowerDuesScreen(Screen):
             loan_id_list.append(i['loan_id'])
             lender_customer_id.append(i['lender_customer_id'])
 
+        lender_data = app_tables.fin_lender.search()
+        lender_cus_id = []
+        create_date = []
+        for i in lender_data:
+            lender_cus_id.append(i['customer_id'])
+
         index = 0
         lender_returns = 0
         if value in loan_id:
@@ -1234,11 +1260,22 @@ class BorrowerDuesScreen(Screen):
                 data1[index]['loan_updated_status'] = 'closed'
             data1[index]['total_amount_paid'] = float(paid_amount1)
             data1[index]['remaining_amount'] = float(remain_amount)
+
+            if lender_customer_id[index] in lender_cus_id:
+                len_index = lender_cus_id.index(lender_customer_id[index])
+                if lender_data[len_index]['return_on_investment'] == None:
+                    lender_data[len_index]['return_on_investment'] = 0
+                    lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns,2))
+                else:
+                    lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
+            else:
+                print('customer id is not there')
+
             if data1[index]['lender_returns'] == None:
                 data1[index]['lender_returns'] = 0
-                data1[index]['lender_returns'] += monthly_lender_returns
+                data1[index]['lender_returns'] += float(round(monthly_lender_returns,2))
             else:
-                data1[index]['lender_returns'] += monthly_lender_returns
+                data1[index]['lender_returns'] += float(round(monthly_lender_returns,2))
             anvil.server.call('loan_text', None)
             sm = self.manager
             wallet_screen = LastScreenWallet(name='LastScreenWallet')
@@ -1839,6 +1876,9 @@ class PartPayment(Screen):
         borrower_email = []
         lender_email = []
         total_repay_amount = []
+        loan_amount = []
+        tenure_months = []
+        interest_rate = []
         for i in data1:
             loan_id.append(i['loan_id'])
             cos_id1.append(i['borrower_customer_id'])
@@ -1848,6 +1888,9 @@ class PartPayment(Screen):
             borrower_email.append(i['borrower_email_id'])
             lender_email.append(i['lender_email_id'])
             total_repay_amount.append(i['total_repayment_amount'])
+            loan_amount.append(i['loan_amount'])
+            tenure_months.append(i['tenure'])
+            interest_rate.append(i['interest_rate'])
 
         cos_id = []
         account_num = []
@@ -1872,10 +1915,36 @@ class PartPayment(Screen):
             loan_id_list.append(i['loan_id'])
             lender_customer_id.append(i['lender_customer_id'])
 
+        lender_data = app_tables.fin_lender.search()
+        lender_cus_id = []
+        create_date = []
+        for i in lender_data:
+            lender_cus_id.append(i['customer_id'])
+
         index = 0
+        lender_returns = 0
         if value in loan_id:
             index = loan_id.index(value)
+            interest_amount = (loan_amount[index] * interest_rate[index]) / 100
+            total_interest_amount = loan_amount[index] + interest_amount
+            lender_returns = total_interest_amount - loan_amount[index]
+        else:
+            print("loan id not found")
 
+        monthly_lender_returns = lender_returns / tenure_months[index]
+
+        if emi_type_pay[index].strip() == 'Monthly':
+            monthly_lender_returns = lender_returns / tenure_months[index]
+        elif emi_type_pay[index].strip() == 'Three Months':
+            monthly_lender_returns = lender_returns / (tenure_months[index] / 3)
+        elif emi_type_pay[index].strip() == 'Six Months':
+            monthly_lender_returns = lender_returns / (tenure_months[index] / 6)
+        elif emi_type_pay[index].strip() == 'One Time':
+            if tenure:
+                monthly_lender_returns = lender_returns / (tenure_months[index] / tenure_months[index])
+
+        print(monthly_lender_returns)
+        print(lender_returns)
         next_payment_date = None
         b_index = 0
         l_index = 0
@@ -1989,6 +2058,21 @@ class PartPayment(Screen):
                 )
                 data1[index]['total_amount_paid'] = float(paid_amount1)
                 data1[index]['remaining_amount'] = float(remain_amount)
+                if lender_customer_id[index] in lender_cus_id:
+                    len_index = lender_cus_id.index(lender_customer_id[index])
+                    if lender_data[len_index]['return_on_investment'] == None:
+                        lender_data[len_index]['return_on_investment'] = 0
+                        lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
+                    else:
+                        lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
+                else:
+                    print('customer id is not there')
+
+                if data1[index]['lender_returns'] == None:
+                    data1[index]['lender_returns'] = 0
+                    data1[index]['lender_returns'] += float(round(monthly_lender_returns, 2))
+                else:
+                    data1[index]['lender_returns'] += float(round(monthly_lender_returns, 2))
                 anvil.server.call('loan_text', None)
                 sm = self.manager
                 wallet_screen = LastScreenWallet(name='LastScreenWallet')
@@ -2034,6 +2118,21 @@ class PartPayment(Screen):
 
                 data1[index]['total_amount_paid'] = float(paid_amount1)
                 data1[index]['remaining_amount'] = float(remain_amount)
+                if lender_customer_id[index] in lender_cus_id:
+                    len_index = lender_cus_id.index(lender_customer_id[index])
+                    if lender_data[len_index]['return_on_investment'] == None:
+                        lender_data[len_index]['return_on_investment'] = 0
+                        lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
+                    else:
+                        lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
+                else:
+                    print('customer id is not there')
+
+                if data1[index]['lender_returns'] == None:
+                    data1[index]['lender_returns'] = 0
+                    data1[index]['lender_returns'] += float(round(monthly_lender_returns, 2))
+                else:
+                    data1[index]['lender_returns'] += float(round(monthly_lender_returns, 2))
                 anvil.server.call('loan_text', None)
                 sm = self.manager
                 wallet_screen = LastScreenWallet(name='LastScreenWallet')

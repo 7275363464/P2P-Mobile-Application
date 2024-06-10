@@ -240,6 +240,7 @@ user_helpers1 = """
                                                         width: 0.1
                                                         rectangle: (self.x, self.y, self.width, self.height)
                                                 MDLabel:
+                                                    id: return_amount
                                                     text: "Rs. 20,000"
                                                     size_hint_y: None
                                                     height: dp(30)
@@ -3869,20 +3870,24 @@ class LenderDashboard(Screen):
             self.ids.details.tertiary_text = f"Membership Type: None"
             print("Investment Amount Not There or Invalid")
 
-        # lender_data = app_tables.fin_lender.search()
-        # lender_cus_id = []
-        # create_date = []
-        # for i in lender_data:
-        #     lender_cus_id.append(i['customer_id'])
-        #     create_date.append(i['lender_since'])
+        lender_data = app_tables.fin_lender.search()
+        lender_cus_id = []
+        create_date = []
+        returns = []
+        for i in lender_data:
+            lender_cus_id.append(i['customer_id'])
+            create_date.append(i['lender_since'])
+            returns.append(i['return_on_investment'])
         #
-        # if p_customer_id[log_index] in lender_cus_id:
-        #     index1 = lender_cus_id.index(p_customer_id[log_index])
-        #     self.ids.details.secondary_text = "Joined Date: " + str(create_date[index1])
-        #     self.ids.date.text = "Joined Date: " + str(create_date[index1])
-        # else:
-        #     self.ids.details.secondary_text = "Joined Date: "
-        #     self.ids.date.text = "Joined Date: "
+        if p_customer_id[log_index] in lender_cus_id:
+            index1 = lender_cus_id.index(p_customer_id[log_index])
+            self.ids.details.secondary_text = "Joined Date: " + str(create_date[index1])
+            self.ids.date.text = "Joined Date: " + str(create_date[index1])
+            self.ids.return_amount.text = "Rs. " + str(returns[index1])
+        else:
+            self.ids.details.secondary_text = "Joined Date: "
+            self.ids.date.text = "Joined Date: "
+            self.ids.return_amount.text = "Rs. "
     def on_kv_post(self, base_widget):
         self.setup_menu()
 

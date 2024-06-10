@@ -4266,24 +4266,23 @@ class DashboardScreen(Screen):
                     padding="10dp",
                     spacing=30
                 )
-                button2 = MDRaisedButton(
-                    text="View Details",
-                    size_hint=(None, None),
+                button2 = MDFillRoundFlatButton(
+                    text="  View Details  ",
+                    # size_hint=(None, None),
                     height="40dp",
                     width="250dp",
                     pos_hint={"center_x": 1},
                     md_bg_color=(0.043, 0.145, 0.278, 1),
+                    text_color=(1, 1, 1, 1),
                     on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id)
                 )
 
-                button1 = MDRaisedButton(
-                    text=f"{loan_status[i]}",
-                    size_hint=(None, None),
-                    height="40dp",
-                    width="250dp",
+                button1 = MDFillRoundFlatButton(
+                    text=f'{loan_status[i]}',
+                    height=dp(40),
                     pos_hint={"center_x": 0},
-                    md_bg_color=(0.545, 0.765, 0.290, 1),
-                    # on_release=lambda x, i=i: self.close_loan(i)
+                    md_bg_color='black',
+                    text_color=(1, 1, 1, 1),
                 )
                 button_layout.add_widget(button1)
                 button_layout.add_widget(button2)
@@ -4293,7 +4292,7 @@ class DashboardScreen(Screen):
 
 
                 if button1.text == 'under process':
-                    button1.md_bg_color = '#FFFACD'
+                    button1.md_bg_color = '#ffc21c'
                 if button1.text == 'disbursed':
                     button1.md_bg_color = '#FFB6C1'
                 if button1.text == 'approved':

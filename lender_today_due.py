@@ -248,6 +248,9 @@ class TodayDuesTD(Screen):
         loan_status = []
         borrower_name = []
         schedule_date = []
+        lender_customer_id = []
+        loan_amount = []
+        email = anvil.server.call('another_method')
         s = 0
 
         for i in data1:
@@ -257,6 +260,8 @@ class TodayDuesTD(Screen):
             loan_status.append(i['loan_updated_status'])
             borrower_name.append(i['borrower_full_name'])
             schedule_date.append(i['first_emi_payment_due_date'])
+            lender_customer_id.append(i['lender_customer_id'])
+            loan_amount.append(i['loan_amount'])
 
         emi_loan_id = []
         emi_num = []
@@ -267,9 +272,18 @@ class TodayDuesTD(Screen):
             next_payment.append(i['next_payment'])
         profile_customer_id = []
         profile_mobile_number = []
+        profile_email = []
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
+            profile_email.append(i['email_user'])
+
+        log_index = 0
+        if email in profile_email:
+            log_index = profile_email.index(email)
+        else:
+            print("email not there")
+
         index_list = []
         a = -1
         shedule_date = {}
@@ -352,30 +366,13 @@ class TodayDuesTD(Screen):
                 md_bg_color=(0.043, 0.145, 0.278, 1),
                 on_release=lambda x, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id, shedule_date)
             )
-
-            card.add_widget(button1)
-
-            # card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
-            self.ids.container2.add_widget(card)
-            # item = ThreeLineAvatarIconListItem(
-            #
-            #     IconLeftWidget(
-            #         icon="card-account-details-outline"
-            #     ),
-            #     text=f"Borrower Name: {borrower_name[i]}",
-            #     secondary_text=f"Scheduled Date  : {shedule_date[loan_id[i]]}",
-            #     tertiary_text=f"Day Passed Due Date : {(today_date - shedule_date[loan_id[i]]).days}",
-            #     text_color=(0, 0, 0, 1),  # Black color
-            #     theme_text_color='Custom',
-            #     secondary_text_color=(0, 0, 0, 1),
-            #     secondary_theme_text_color='Custom',
-            #     tertiary_text_color=(0, 0, 0, 1),
-            #     tertiary_theme_text_color='Custom'
-            # )
-            # item.bind(on_release=lambda instance, loan_id=loan_id[i],: self.icon_button_clicked(instance, loan_id,
-            #                                                                                     shedule_date))
-            # self.ids.container.add_widget(item)
-
+        if len(present_commitmet) >= 1:
+            if lender_customer_id[log_index] in lender_cus_id:
+                lender_index = lender_cus_id.index(lender_customer_id[log_index])
+                lender_data[lender_index]['present_commitments'] = sum(present_commitmet)
+                print(present_commitmet, sum(present_commitmet))
+            else:
+                print('customer id not there')
     def icon_button_clicked(self, instance, loan_id, shedule_date):
         sm = self.manager
 
@@ -475,6 +472,7 @@ class ViewProfileTD(Screen):
         total_repay = []
         shedule_payment = []
         loan_product = []
+        lender_customer_id = []
         for i in data1:
             loan_id.append(i['loan_id'])
             borrower_name.append(i['borrower_full_name'])
@@ -491,6 +489,7 @@ class ViewProfileTD(Screen):
             total_repay.append(i['total_repayment_amount'])
             shedule_payment.append(i['first_emi_payment_due_date'])
             loan_product.append(i['product_id'])
+            lender_customer_id.append(i['lender_customer_id'])
         index = 0
         if value in loan_id:
             index = loan_id.index(value)
@@ -515,9 +514,9 @@ class ViewProfileTD(Screen):
         for i in user_profile:
             cos_id.append(i['customer_id'])
             account_num.append(i['account_number'])
-
+        index1 = 0
         if cos_id1[index] in cos_id:
-            index1 = cos_id1.index(cos_id1[index])
+            index1 = cos_id.index(cos_id1[index])
             self.ids.account_number.text = str(account_num[index1])
 
         if value in emi_loan_id:
@@ -854,7 +853,6 @@ class ViewProfileTD(Screen):
                     self.ids.total_amount.text = str(round(total_amount, 2))
 
                 print(foreclose_amount1, emi_amount1, total_amount)
-
     def show_success_dialog(self, text):
         dialog = MDDialog(
             text=text,

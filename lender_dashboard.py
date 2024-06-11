@@ -18,7 +18,7 @@ import anvil.server
 from kivy.uix.screenmanager import Screen, SlideTransition
 from kivy.utils import platform
 from kivy.clock import mainthread
-from kivymd.uix.button import MDRectangleFlatButton
+from kivymd.uix.button import MDRectangleFlatButton, MDFillRoundFlatButton
 from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.filemanager import MDFileManager
@@ -68,6 +68,7 @@ user_helpers1 = """
     ViewBusinessScreen:
     ViewProfileScreen:
     ViewEditScreen:
+    ReturnsScreen:
 
 <LenderDashboard>
     MDBottomNavigation:
@@ -264,6 +265,7 @@ user_helpers1 = """
                                                     pos_hint: {'center_x': 0.5}
                                                     theme_text_color: "Custom"
                                                     text_color: "#007BFF" 
+                                                    on_release: root.go_to_returns_screen()
                                             MDBoxLayout:
                                                 orientation: 'vertical'
                                                 size_hint_y: None
@@ -831,32 +833,32 @@ user_helpers1 = """
             icon: 'cash'
             text_color_normal: '#4c594f'
             text_color_active: 1, 0, 0, 1
-            on_tab_press: root.view_loanscreen()
-            # BoxLayout:
-            #     orientation: 'vertical'
-            #     
-            #     MDTopAppBar:
-            #         title: "View All Loans"
-            #         elevation: 3
-            #         left_action_items: [['arrow-left', lambda x: root.go_back()]]
-            #         right_action_items: [['refresh', lambda x: root.refresh5()]]
-            #         md_bg_color: 0.043, 0.145, 0.278, 1
-            #         
-            #     MDScrollView:
-            #         MDBoxLayout:
-            #             id: container
-            #             orientation: 'vertical'
-            #             padding: dp(25)
-            #             spacing: dp(10)
-            #             size_hint_y: None
-            #             height: self.minimum_height
-            #             width: self.minimum_width
-            #             adaptive_size: True
-            #             pos_hint: {"center_x": 0, "center_y":  0}
-            #             
-            #         # MDList:
-            #         #     
-            #         #     id: container
+            on_tab_press: root.refresh5()
+            BoxLayout:
+                orientation: 'vertical'
+
+                MDTopAppBar:
+                    title: "View All Loans"
+                    elevation: 3
+                    left_action_items: [['arrow-left', lambda x: root.go_back()]]
+                    right_action_items: [['refresh', lambda x: root.refresh5()]]
+                    md_bg_color: 0.043, 0.145, 0.278, 1
+
+                MDScrollView:
+                    MDBoxLayout:
+                        id: container
+                        orientation: 'vertical'
+                        padding: dp(25)
+                        spacing: dp(10)
+                        size_hint_y: None
+                        height: self.minimum_height
+                        width: self.minimum_width
+                        adaptive_size: True
+                        pos_hint: {"center_x": 0, "center_y":  0}
+
+                    # MDList:
+                    #     
+                    #     id: container
 
         MDBottomNavigationItem:
             name: 'screen 3'
@@ -3332,6 +3334,45 @@ user_helpers1 = """
                                 on_release:root.save_edited_data()
                                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                                 font_size:dp(15)
+
+<ReturnsScreen>
+    MDBoxLayout:
+        orientation: 'vertical'
+    
+        MDTopAppBar:                                   
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderDashboard')]]
+            title_align: 'center'
+            title: "My Returns"
+            md_bg_color: 0.043, 0.145, 0.278, 1
+        MDBoxLayout:
+            orientation: 'vertical'
+            MDLabel:
+                text: ''
+                size_hint_y: None
+                height: dp(50)
+            MDGridLayout:
+                cols: 2
+                spacing: dp(20)
+                padding: dp(20)
+                MDRaisedButton:
+                    text: "Total Returns"
+                    md_bg_color: 0.043, 0.145, 0.278, 1
+                    font_name: "Roboto-Bold"
+                    size_hint: 0.4, None
+                    height: dp(50)
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    font_size:dp(15)
+                MDRaisedButton:
+                    text: "Users Returns"
+                    md_bg_color: 0.043, 0.145, 0.278, 1
+                    font_name: "Roboto-Bold"
+                    size_hint: 0.4, None
+                    height: dp(50)
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    font_size:dp(15)
+    
 """
 
 conn = sqlite3.connect('fin_user.db')
@@ -3340,6 +3381,18 @@ cursor = conn.cursor()
 
 class LenderDashboard(Screen):
     Builder.load_string(user_helpers1)
+
+    def go_to_returns_screen(self):
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        returns_screen = ReturnsScreen(name='ReturnsScreen')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(returns_screen)
+
+        # Switch to the LoginScreen
+        sm.current = 'ReturnsScreen'
 
     def update_notification_count(self, count):
         self.ids.notification_label.text = str(count)
@@ -3863,13 +3916,11 @@ class LenderDashboard(Screen):
 
         try:
             investment_value = float(investment[log_index])
-            self.ids.commitment.text = "Rs. " + str(investment_value)
             for i in range(a):
                 if min_amount[i] <= investment_value < max_amount[i]:
                     self.ids.details.tertiary_text = f"Membership Type: {membership_type[i]}"
                     break
         except ValueError:
-            self.ids.commitment.text = "Invalid Investment"
             self.ids.details.tertiary_text = f"Membership Type: None"
             print("Investment Amount Not There or Invalid")
 
@@ -3877,21 +3928,23 @@ class LenderDashboard(Screen):
         lender_cus_id = []
         create_date = []
         returns = []
+        present_commitment = []
         for i in lender_data:
             lender_cus_id.append(i['customer_id'])
-            create_date.append(i['lender_since'])
+            create_date.append(i['member_since'])
             returns.append(i['return_on_investment'])
+            present_commitment.append(i['present_commitments'])
         #
         if p_customer_id[log_index] in lender_cus_id:
             index1 = lender_cus_id.index(p_customer_id[log_index])
             self.ids.details.secondary_text = "Joined Date: " + str(create_date[index1])
             self.ids.date.text = "Joined Date: " + str(create_date[index1])
             self.ids.return_amount.text = "Rs. " + str(returns[index1])
+            self.ids.commitment.text = "Rs. " + str(present_commitment[index1])
         else:
             self.ids.details.secondary_text = "Joined Date: "
             self.ids.date.text = "Joined Date: "
             self.ids.return_amount.text = "Rs. "
-
     def on_kv_post(self, base_widget):
         self.setup_menu()
 
@@ -4207,24 +4260,23 @@ class LenderDashboard(Screen):
                 padding="10dp",
                 spacing=30
             )
-            button2 = MDRaisedButton(
-                text="View Details",
-                size_hint=(None, None),
+            button2 = MDFillRoundFlatButton(
+                text="  View Details  ",
+                # size_hint=(None, None),
                 height="40dp",
                 width="250dp",
                 pos_hint={"center_x": 1},
                 md_bg_color=(0.043, 0.145, 0.278, 1),
+                text_color=(1, 1, 1, 1),
                 on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id)
             )
 
-            button1 = MDRaisedButton(
-                text=f"{loan_status[i]}",
-                size_hint=(None, None),
-                height="40dp",
-                width="250dp",
+            button1 = MDFillRoundFlatButton(
+                text=f'{loan_status[i]}',
+                height=dp(40),
                 pos_hint={"center_x": 0},
-                md_bg_color=(0.545, 0.765, 0.290, 1),
-                # on_release=lambda x, i=i: self.close_loan(i)
+                md_bg_color='black',
+                text_color=(1, 1, 1, 1),
             )
             button_layout.add_widget(button1)
             button_layout.add_widget(button2)
@@ -5175,6 +5227,9 @@ class ViewEditScreen(Screen):
 
     def on_back_button_press(self):
         self.manager.current = 'ViewProfileScreen'
+
+class ReturnsScreen(Screen):
+    pass
 
 
 class MyScreenManager(ScreenManager):

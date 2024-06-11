@@ -1167,7 +1167,7 @@ class ViewLoansScreen(Screen):
 #     def go_back(self):
 #         # Navigate to the previous screen with a slide transition
 #         self.manager.transition = SlideTransition(direction='right')
-#         sm = self.manager
+#         self.manager
 #         profile = ViewLoansScreen(name='ViewLoansScreen')
 #
 #         # Add the LoginScreen to the existing ScreenManager
@@ -1186,14 +1186,9 @@ class ViewLoansProfileScreens(Screen):
         super().__init__(**kwargs)
 
     def on_back_button_press(self):
-        if self.ids.status.text == 'disbursed':
-            self.manager.current = 'OpenViewLoanScreen'
-        elif self.ids.status.text == 'rejected':
-            self.manager.current = 'ViewRejectedLoansScreen'
-        elif self.ids.status.text == 'under process':
-            self.manager.current = 'ViewUnderProcessLoansScreen'
-        elif self.ids.status.text == 'closed':
-            self.manager.current = 'ViewClosedLoansScreen'
+        # Navigate to the previous screen with a slide transition
+        self.manager.transition = SlideTransition(direction='right')
+        self.manager.current = 'LenderDashboard'
 
     def initialize_with_value(self, value, data):
         profile = app_tables.fin_user_profile.search()
@@ -1266,14 +1261,7 @@ class ViewLoansProfileScreens(Screen):
     def go_back(self):
         # Navigate to the previous screen with a slide transition
         self.manager.transition = SlideTransition(direction='right')
-        if self.ids.status.text == 'disbursed':
-            self.manager.current = 'OpenViewLoanScreen'
-        elif self.ids.status.text == 'rejected':
-            self.manager.current = 'ViewRejectedLoansScreen'
-        elif self.ids.status.text == 'under process':
-            self.manager.current = 'ViewUnderProcessLoansScreen'
-        elif self.ids.status.text == 'closed':
-            self.manager.current = 'ViewClosedLoansScreen'
+        self.manager.current = 'LenderDashboard'
 
 
 class ViewLoansProfileScreens2(Screen):

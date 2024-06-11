@@ -236,6 +236,9 @@ class TodayDuesTD(Screen):
         loan_status = []
         borrower_name = []
         schedule_date = []
+        lender_customer_id = []
+        loan_amount = []
+        email = anvil.server.call('another_method')
         s = 0
 
         for i in data1:
@@ -245,6 +248,8 @@ class TodayDuesTD(Screen):
             loan_status.append(i['loan_updated_status'])
             borrower_name.append(i['borrower_full_name'])
             schedule_date.append(i['first_emi_payment_due_date'])
+            lender_customer_id.append(i['lender_customer_id'])
+            loan_amount.append(i['loan_amount'])
 
         emi_loan_id = []
         emi_num = []
@@ -255,9 +260,18 @@ class TodayDuesTD(Screen):
             next_payment.append(i['next_payment'])
         profile_customer_id = []
         profile_mobile_number = []
+        profile_email = []
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
+            profile_email.append(i['email_user'])
+
+        log_index = 0
+        if email in profile_email:
+            log_index = profile_email.index(email)
+        else:
+            print("email not there")
+
         index_list = []
         a = -1
         shedule_date = {}
@@ -305,7 +319,36 @@ class TodayDuesTD(Screen):
             item.bind(on_release=lambda instance, loan_id=loan_id[i],: self.icon_button_clicked(instance, loan_id,
                                                                                                 shedule_date))
             self.ids.container.add_widget(item)
+        lender_data = app_tables.fin_lender.search()
+        lender_cus_id = []
+        for i in lender_data:
+            lender_cus_id.append(i['customer_id'])
+        a = -1
+        total_commitment = []
+        present_commitmet = []
+        for i in range(s):
+            a += 1
+            if lender_customer_id[i] == lender_customer_id[log_index] and loan_status[a] != 'lost opportunities' and loan_status[a] != 'rejected':
+                total_commitment.append(loan_amount[i])
 
+            if lender_customer_id[i] == lender_customer_id[log_index] and loan_status[a] != 'lost opportunities' and loan_status[a] != 'rejected' and loan_status[a] != 'closed':
+                present_commitmet.append(loan_amount[i])
+
+        if len(total_commitment) >=1:
+            if lender_customer_id[log_index] in lender_cus_id:
+                lender_index = lender_cus_id.index(lender_customer_id[log_index])
+                lender_data[lender_index]['lender_total_commitments'] = sum(total_commitment)
+                print(total_commitment, sum(total_commitment))
+            else:
+                print('customer id not there')
+
+        if len(present_commitmet) >= 1:
+            if lender_customer_id[log_index] in lender_cus_id:
+                lender_index = lender_cus_id.index(lender_customer_id[log_index])
+                lender_data[lender_index]['present_commitments'] = sum(present_commitmet)
+                print(present_commitmet, sum(present_commitmet))
+            else:
+                print('customer id not there')
     def icon_button_clicked(self, instance, loan_id, shedule_date):
         sm = self.manager
 
@@ -405,6 +448,7 @@ class ViewProfileTD(Screen):
         total_repay = []
         shedule_payment = []
         loan_product = []
+        lender_customer_id = []
         for i in data1:
             loan_id.append(i['loan_id'])
             borrower_name.append(i['borrower_full_name'])
@@ -421,6 +465,7 @@ class ViewProfileTD(Screen):
             total_repay.append(i['total_repayment_amount'])
             shedule_payment.append(i['first_emi_payment_due_date'])
             loan_product.append(i['product_id'])
+            lender_customer_id.append(i['lender_customer_id'])
         index = 0
         if value in loan_id:
             index = loan_id.index(value)
@@ -445,9 +490,9 @@ class ViewProfileTD(Screen):
         for i in user_profile:
             cos_id.append(i['customer_id'])
             account_num.append(i['account_number'])
-
+        index1 = 0
         if cos_id1[index] in cos_id:
-            index1 = cos_id1.index(cos_id1[index])
+            index1 = cos_id.index(cos_id1[index])
             self.ids.account_number.text = str(account_num[index1])
 
         if value in emi_loan_id:
@@ -784,7 +829,6 @@ class ViewProfileTD(Screen):
                     self.ids.total_amount.text = str(round(total_amount, 2))
 
                 print(foreclose_amount1, emi_amount1, total_amount)
-
     def show_success_dialog(self, text):
         dialog = MDDialog(
             text=text,

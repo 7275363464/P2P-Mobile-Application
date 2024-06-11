@@ -50,7 +50,6 @@ from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.uix.modalview import ModalView
 
-
 if platform == 'android':
     from kivy.uix.button import Button
     from kivy.uix.modalview import ModalView
@@ -698,7 +697,7 @@ user_helpers1 = """
                                 icon_color: "#23639e"
                                 on_release: root.view_lost_opportunities()
                             MDNavigationDrawerDivider:
-                            
+
                             MDNavigationDrawerItem
                                 icon: "history"
                                 text: "View Transactions History"
@@ -1484,7 +1483,7 @@ user_helpers1 = """
                         height: dp(10)
                         spacing: dp(5)
                         padding:dp(7)
-                        
+
                         MDLabel:
                             text: ' Business name '
                             color: 0, 0, 0, 1
@@ -1956,7 +1955,7 @@ user_helpers1 = """
                         height: dp(10)
                         spacing: dp(5)
                         padding:dp(7)
-                        
+
                         MDLabel:
                             text: ' Account holder name '
                             color: 0, 0, 0, 1
@@ -2028,7 +2027,7 @@ user_helpers1 = """
                             rgba: 0, 0, 0, 1
                         Line:
                             points: self.x, self.y, self.x + self.width, self.y
-                
+
                 BoxLayout:
                     orientation: "vertical"
                     size_hint_y: None
@@ -2071,7 +2070,7 @@ user_helpers1 = """
                             rgba: 0, 0, 0, 1
                         Line:
                             points: self.x, self.y, self.x + self.width, self.y
-                
+
                 BoxLayout:
                     orientation: "vertical"
                     size_hint_y: None
@@ -3462,8 +3461,10 @@ class LenderDashboard(Screen):
         modal_view.dismiss()
         self.manager.add_widget(Factory.Lend_Portfolio(name='Lend_Portfolio'))
         self.manager.current = 'Lend_Portfolio'
+
     def notification(self):
         pass
+
     def refresh6(self):
         self.on_pre_enter()
 
@@ -3493,8 +3494,10 @@ class LenderDashboard(Screen):
         anim.bind(on_complete=lambda *args: self.animate_loading_text(loading_label,
                                                                       modal_height))  # Bind to the completion event to repeat the animation
         anim.start(loading_label)
+
     def refresh2(self):
         self.__init__()
+
     def go_to_profile(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
@@ -3531,6 +3534,7 @@ class LenderDashboard(Screen):
 
         # Switch to the TransactionBH screen
         sm.current = 'ViewProfileScreen'
+
     def wallet(self):
         self.type = None
         data = app_tables.fin_wallet.search()
@@ -3896,7 +3900,6 @@ class LenderDashboard(Screen):
             self.ids.balance.text = "Available Balance: "
             print("no email found")
 
-
         member = app_tables.fin_membership.search()
 
         a = 0
@@ -3942,7 +3945,6 @@ class LenderDashboard(Screen):
             self.ids.details.secondary_text = "Joined Date: "
             self.ids.date.text = "Joined Date: "
             self.ids.return_amount.text = "Rs. "
-            self.ids.commitment.text = "Rs. "
     def on_kv_post(self, base_widget):
         self.setup_menu()
 
@@ -4161,7 +4163,6 @@ class LenderDashboard(Screen):
             tenure.append(i['tenure'])
             interest_rate.append(i['interest_rate'])
 
-
         profile_customer_id = []
         profile_mobile_number = []
         for i in profile:
@@ -4172,13 +4173,11 @@ class LenderDashboard(Screen):
         if email in email1:
             index = email1.index(email)
 
-
         c = -1
         index_list = []
         for i in range(s):
             c += 1
             index_list.append(c)
-
 
         b = 1
         k = -1
@@ -4217,7 +4216,7 @@ class LenderDashboard(Screen):
                 halign='left',
                 markup=True,
                 font_size='10sp',
-                bold= True
+                bold=True
             ))
             text_layout.add_widget(MDLabel(
                 text=f" [b]Loan Amount:[/b] {loan_amount[i]}",
@@ -4284,7 +4283,6 @@ class LenderDashboard(Screen):
 
             # Adding the Buttons to the card
             card.add_widget(button_layout)
-
 
             if button1.text == 'under process':
                 button1.md_bg_color = '#FDDA0D'
@@ -4355,7 +4353,6 @@ class LenderDashboard(Screen):
         instance.bg_color = (0.5, 0.5, 0.5, 1)  # Change color as desired
         self.selected_item = instance
 
-
         sm = self.manager
 
         # Create a new instance of the LoginScreen
@@ -4373,6 +4370,7 @@ class LenderDashboard(Screen):
         for item in self.ids.container.children:
             if isinstance(item, ThreeLineAvatarIconListItem):
                 item.bg_color = (1, 1, 1, 1)  # Reset background color for all items
+
     def refresh_profile_data(self):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
@@ -4680,8 +4678,8 @@ class LenderDashboard(Screen):
         # self.manager.current = 'ViewProfileScreen'
         modal_view.dismiss()
 
-        self.manager.add_widget(Factory.NewExtension(name='NewExtension'))
-        self.manager.current = 'NewExtension'
+        self.manager.add_widget(Factory.ALLLoansEX(name='ALLLoansEX'))
+        self.manager.current = 'ALLLoansEX'
 
     def view_transaction_history(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])
@@ -4733,8 +4731,8 @@ class LenderDashboard(Screen):
 
     def performance_view_loan_foreclose(self, modal_view):
         modal_view.dismiss()
-        self.manager.add_widget(Factory.DashboardScreenLF(name='DashboardScreenLF'))
-        self.manager.current = 'DashboardScreenLF'
+        self.manager.add_widget(Factory.ViewAllLoansLF(name='ViewAllLoansLF'))
+        self.manager.current = 'ViewAllLoansLF'
 
     def go_to_wallet(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])
@@ -4881,6 +4879,7 @@ class ViewAccountScreen(Screen):
     def bank(self):
         self.manager.add_widget(Factory.ViewBankScreen(name='ViewBankScreen'))
         self.manager.current = 'ViewBankScreen'
+
 
 class ViewBankScreen(Screen):
     def __init__(self, **kwargs):

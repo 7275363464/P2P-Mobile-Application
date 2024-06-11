@@ -5,10 +5,15 @@ from bson import utc
 from kivy.factory import Factory
 from kivy.lang import Builder
 from kivy.core.window import Window
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
+from kivy.uix.widget import Widget
 from kivymd.app import MDApp
-from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.button import MDRaisedButton, MDFillRoundFlatButton
+from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.label import MDLabel
 from kivymd.uix.list import ThreeLineAvatarIconListItem, IconLeftWidget
 import anvil.server
 import anvil.server
@@ -29,9 +34,16 @@ lender_today_due = '''
             right_action_items: [['refresh', lambda x: root.refresh()]]
             md_bg_color: 0.043, 0.145, 0.278, 1
         MDScrollView:
-
-            MDList:
-                id: container
+            MDBoxLayout:
+                id: container2
+                orientation: 'vertical'
+                padding: dp(30)
+                spacing: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+                width: self.minimum_width
+                adaptive_size: True               
+                pos_hint: {"center_x": 0, "center_y":  0}
 <ViewProfileTD>:
     GridLayout:
         cols: 1
@@ -224,7 +236,7 @@ print(date)
 
 
 class TodayDuesTD(Screen):
-    def __init__(self, **kwargs):
+    def __init__(self, instance=None, **kwargs):
         super().__init__(**kwargs)
 
         data = app_tables.fin_emi_table.search()
@@ -300,48 +312,60 @@ class TodayDuesTD(Screen):
                 number = profile_customer_id.index(customer_id[i])
             else:
                 number = 0
-
-            item = ThreeLineAvatarIconListItem(
-
-                IconLeftWidget(
-                    icon="card-account-details-outline"
-                ),
-                text=f"Borrower Name: {borrower_name[i]}",
-                secondary_text=f"Scheduled Date  : {shedule_date[loan_id[i]]}",
-                tertiary_text=f"Day Passed Due Date : {(today_date - shedule_date[loan_id[i]]).days}",
-                text_color=(0, 0, 0, 1),  # Black color
-                theme_text_color='Custom',
-                secondary_text_color=(0, 0, 0, 1),
-                secondary_theme_text_color='Custom',
-                tertiary_text_color=(0, 0, 0, 1),
-                tertiary_theme_text_color='Custom'
+            card = MDCard(
+                orientation='vertical',
+                size_hint=(None, None),
+                size=("285dp", "180dp"),
+                padding="8dp",
+                spacing="5dp",
+                elevation=3
             )
-            item.bind(on_release=lambda instance, loan_id=loan_id[i],: self.icon_button_clicked(instance, loan_id,
-                                                                                                shedule_date))
-            self.ids.container.add_widget(item)
-        lender_data = app_tables.fin_lender.search()
-        lender_cus_id = []
-        for i in lender_data:
-            lender_cus_id.append(i['customer_id'])
-        a = -1
-        total_commitment = []
-        present_commitmet = []
-        for i in range(s):
-            a += 1
-            if lender_customer_id[i] == lender_customer_id[log_index] and loan_status[a] != 'lost opportunities' and loan_status[a] != 'rejected':
-                total_commitment.append(loan_amount[i])
+            horizontal_layout = BoxLayout(orientation='horizontal')
+            image = Image(
+                source='img.png',  # Update with the actual path to the image
+                size_hint_x=None,
+                height="60dp",
+                width="70dp"
+            )
+            horizontal_layout.add_widget(image)
 
-            if lender_customer_id[i] == lender_customer_id[log_index] and loan_status[a] != 'lost opportunities' and loan_status[a] != 'rejected' and loan_status[a] != 'closed':
-                present_commitmet.append(loan_amount[i])
+            horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
+            text_layout = BoxLayout(orientation='vertical')
+            text_layout.add_widget(MDLabel(
+                text=f"[b]{borrower_name[i]}[/b]  \n[b]{profile_mobile_number[number]}[/b]",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Due Date[/b]  : {shedule_date[loan_id[i]]}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Day Passed Due Date[/b] : {(today_date - shedule_date[loan_id[i]]).days}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
 
-        if len(total_commitment) >=1:
-            if lender_customer_id[log_index] in lender_cus_id:
-                lender_index = lender_cus_id.index(lender_customer_id[log_index])
-                lender_data[lender_index]['lender_total_commitments'] = sum(total_commitment)
-                print(total_commitment, sum(total_commitment))
-            else:
-                print('customer id not there')
+            horizontal_layout.add_widget(text_layout)
+            card.add_widget(horizontal_layout)
 
+            card.add_widget(Widget(size_hint_y=None, height='10dp'))
+            # horizontal_layout1 = BoxLayout(orientation='vertical')
+            button1 = MDFillRoundFlatButton(
+                text="View Details",
+                height="40dp",
+                width="250dp",
+                pos_hint={"center_x": 0.5, "centre_y": 0.5},
+                md_bg_color=(0.043, 0.145, 0.278, 1),
+                on_release=lambda x, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id, shedule_date)
+            )
         if len(present_commitmet) >= 1:
             if lender_customer_id[log_index] in lender_cus_id:
                 lender_index = lender_cus_id.index(lender_customer_id[log_index])

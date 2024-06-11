@@ -3,7 +3,11 @@ from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.factory import Factory
 from kivy.metrics import dp
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.image import Image
 from kivy.uix.modalview import ModalView
+from kivy.uix.widget import Widget
+from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
 from kivymd.uix.list import *
 import anvil.server
@@ -17,7 +21,7 @@ from kivy.uix.screenmanager import Screen, SlideTransition
 from kivymd.app import MDApp
 from datetime import datetime, timedelta, timezone
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.button import MDFlatButton, MDRaisedButton, MDRectangleFlatButton
+from kivymd.uix.button import MDFlatButton, MDRaisedButton, MDRectangleFlatButton, MDFillRoundFlatButton
 
 from borrower_wallet import WalletScreen
 from lender_wallet import LenderWalletScreen
@@ -40,9 +44,17 @@ view_loan_request = """
             md_bg_color: 0.043, 0.145, 0.278, 1
             title_align: 'left'
         MDScrollView:
+            MDBoxLayout:
+                id: container2
+                orientation: 'vertical'
+                padding: dp(30)
+                spacing: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+                width: self.minimum_width
+                adaptive_size: True
 
-            MDList:
-                id: container
+                pos_hint: {"center_x": 0, "center_y":  0}
 
 <ViewLoansProfileScreen>
     MDGridLayout:
@@ -738,9 +750,63 @@ Builder.load_string(view_loan_request)
 
 
 class ViewLoansRequest(Screen):
-    def __init__(self, **kwargs):
+    def __init__(self, instance=None, **kwargs):
         super().__init__(**kwargs)
 
+        # data = app_tables.fin_loan_details.search()
+        # profile = app_tables.fin_user_profile.search()
+        # customer_id = []
+        # loan_id = []
+        # borrower_name = []
+        # loan_status = []
+        # product_name = []
+        # s = 0
+        # for i in data:
+        #     s += 1
+        #     customer_id.append(i['borrower_customer_id'])
+        #     loan_id.append(i['loan_id'])
+        #     borrower_name.append(i['borrower_full_name'])
+        #     loan_status.append(i['loan_updated_status'])
+        #     product_name.append(i['product_name'])
+        #
+        # profile_customer_id = []
+        # profile_mobile_number = []
+        # for i in profile:
+        #     profile_customer_id.append(i['customer_id'])
+        #     profile_mobile_number.append(i['mobile'])
+        # c = -1
+        # index_list = []
+        # for i in range(s):
+        #     c += 1
+        #     if loan_status[c] == 'under process' or loan_status[c] == 'approved':
+        #         index_list.append(c)
+        #
+        # b = 1
+        # k = -1
+        # for i in index_list:
+        #     b += 1
+        #     k += 1
+        #     if customer_id[i] in profile_customer_id:
+        #         number = profile_customer_id.index(customer_id[i])
+        #     else:
+        #         number = 0
+        #     item = ThreeLineAvatarIconListItem(
+        #
+        #         IconLeftWidget(
+        #             icon="card-account-details-outline"
+        #         ),
+        #         text=f"Borrower Name : {borrower_name[i]}",
+        #         secondary_text=f"Borrower Number : {profile_mobile_number[number]}",
+        #         tertiary_text=f"Product Name : {product_name[i]}",
+        #         text_color=(0, 0, 0, 1),  # Black color
+        #         theme_text_color='Custom',
+        #         secondary_text_color=(0, 0, 0, 1),
+        #         secondary_theme_text_color='Custom',
+        #         tertiary_text_color=(0, 0, 0, 1),
+        #         tertiary_theme_text_color='Custom'
+        #     )
+        #     item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
+        #     self.ids.container.add_widget(item)
         data = app_tables.fin_loan_details.search()
         profile = app_tables.fin_user_profile.search()
         customer_id = []
@@ -748,6 +814,9 @@ class ViewLoansRequest(Screen):
         borrower_name = []
         loan_status = []
         product_name = []
+        interest_rate = []
+        loan_amount = []
+
         s = 0
         for i in data:
             s += 1
@@ -756,12 +825,17 @@ class ViewLoansRequest(Screen):
             borrower_name.append(i['borrower_full_name'])
             loan_status.append(i['loan_updated_status'])
             product_name.append(i['product_name'])
+            interest_rate.append(i['interest_rate'])
+            loan_amount.append(i['loan_amount'])
 
         profile_customer_id = []
         profile_mobile_number = []
+        ascend_value = []
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
+            ascend_value.append(i['ascend_value'])
+
         c = -1
         index_list = []
         for i in range(s):
@@ -771,30 +845,139 @@ class ViewLoansRequest(Screen):
 
         b = 1
         k = -1
-        for i in index_list:
+        for i in reversed(index_list):
             b += 1
             k += 1
             if customer_id[i] in profile_customer_id:
                 number = profile_customer_id.index(customer_id[i])
             else:
                 number = 0
-            item = ThreeLineAvatarIconListItem(
-
-                IconLeftWidget(
-                    icon="card-account-details-outline"
-                ),
-                text=f"Borrower Name : {borrower_name[i]}",
-                secondary_text=f"Borrower Number : {profile_mobile_number[number]}",
-                tertiary_text=f"Product Name : {product_name[i]}",
-                text_color=(0, 0, 0, 1),  # Black color
-                theme_text_color='Custom',
-                secondary_text_color=(0, 0, 0, 1),
-                secondary_theme_text_color='Custom',
-                tertiary_text_color=(0, 0, 0, 1),
-                tertiary_theme_text_color='Custom'
+            card = MDCard(
+                orientation='vertical',
+                size_hint=(None, None),
+                size=("280dp", "180dp"),
+                padding="10dp",
+                spacing="3dp",
+                elevation=3
             )
-            item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
-            self.ids.container.add_widget(item)
+            horizontal_layout = BoxLayout(orientation='horizontal')
+            image = Image(
+                source='img.png',  # Update with the actual path to the image
+                size_hint_x=None,
+                height="60dp",
+                width="70dp"
+            )
+            horizontal_layout.add_widget(image)
+
+            horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
+            text_layout = BoxLayout(orientation='vertical')
+            text_layout.add_widget(MDLabel(
+                text=f"[b]{borrower_name[i]}[/b]  \n[b]{profile_mobile_number[number]}[/b]",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+                font_size='10sp',
+                bold=True
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Loan Amount:[/b] {loan_amount[i]}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Ascend Score:[/b] {ascend_value[number]}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Interest Rate:[/b] {interest_rate[i]}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            horizontal_layout.add_widget(text_layout)
+            card.add_widget(horizontal_layout)
+
+            card.add_widget(Widget(size_hint_y=None, height='10dp'))
+            button_layout = BoxLayout(
+                size_hint_y=None,
+                height="40dp",
+                padding="10dp",
+                spacing="20dp"
+            )
+            status_color = (0.545, 0.765, 0.290, 1)  # default color
+            if loan_status[i] in ["under process", "Under Process", "UnderProcess"]:
+                status_color = (253 / 255, 218 / 255, 13 / 255, 1)  # yellow
+            elif loan_status[i] in ["Disbursed Loan", "disbursed loan", "disbursed", "Disbursed", "Disbursed loan",
+                                    "disbursed Loan", "DisbursedLoan", "disbursedloan", "Disbursedloan",
+                                    "disbursedLoan"]:
+                status_color = (255 / 255, 88 / 255, 93 / 255, 1)  # pink
+            elif loan_status[i] in ["closed", "Closed", "Closed loan", "closed Loan", "Closed Loan", "closed loan",
+                                    "Closedloan", "closedLoan", "ClosedLoan", "closedloan"]:
+                status_color = (0 / 255, 100 / 255, 0 / 255, 1)  # bottle-green
+            elif loan_status[i] in ["extension", "Extension", "Extension Loan", "Extension loan", "extension loan",
+                                    "extension Loan", "ExtensionLoan", "Extensionloan", "extensionloan",
+                                    "extensionLoan"]:
+                status_color = (255 / 255, 165 / 255, 0 / 255, 1)  # orange
+            elif loan_status[i] in ["foreclosure", "Foreclosure", "Foreclosure Loan", "Foreclosure loan",
+                                    "forclosure loan", "forclosure Loan", "ForeclosureLoan", "Foreclosureloan",
+                                    "forclosureloan", "forclosureLoan"]:
+                status_color = (0.424, 0.663, 0.859, 1.0)  # sky blue
+            elif loan_status[i] in ["accepted", "Accepted", "Accepted loan", "Accepted Loan", "accepted loan",
+                                    "accepted Loan", "Acceptedloan", "AcceptedLoan", "acceptedloan", "acceptedLoan"]:
+                status_color = (0 / 255, 128 / 255, 0 / 255, 1)  # light green
+            elif loan_status[i] in ["rejected", "Rejected", "rejected loan", "Rejected loan", "rejected Loan",
+                                    "Rejected Loan", "rejectedloan", "Rejectedloan", "rejectedLoan", "RejectedLoan"]:
+                status_color = (210 / 255, 4 / 255, 45 / 255, 1)  # cherry
+            elif loan_status[i] in ["approved", "Approved", "approved loan", "Approved Loan", "approved Loan",
+                                    "Approved loan", "approvedloan", "ApprovedLoan", "approvedLoan", "Approvedloan"]:
+                status_color = (0 / 255, 128 / 255, 0 / 255, 1)  # light green
+            elif loan_status[i] in ["decline", "declined", "Declined", "Decline"]:
+                status_color = (210 / 255, 4 / 255, 45 / 255, 1)  # cherry
+
+            status_text = {
+                "under process": "Under Process",
+                "disbursed loan": "Disburse Loan",
+                "closed loan": "  Closed Loan  ",
+                "extension": " Extension Loan ",
+                "foreclosure": "   Foreclosure   ",
+                "accepted": "Accepted Loan",
+                "rejected": "Rejected Loan",
+                "approved": "Approved Loan",
+                "decline": "Declined Loan"
+            }
+            button1 = MDFillRoundFlatButton(
+                text=status_text.get(loan_status[i], loan_status[i]),
+                size_hint=(None, None),
+                height="40dp",
+                width="250dp",
+                pos_hint={"center_x": 0},
+                md_bg_color=status_color,
+                # on_release=lambda x, i=i: self.close_loan(i)
+            )
+            button2 = MDFillRoundFlatButton(
+                text="View Details",
+                size_hint=(None, None),
+                height="40dp",
+                width="250dp",
+                pos_hint={"center_x": 1},
+                md_bg_color=(0.043, 0.145, 0.278, 1),
+                on_release=lambda x, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id)
+            )
+
+            button_layout.add_widget(button1)
+            button_layout.add_widget(button2)
+            card.add_widget(button_layout)
+
+            # card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
+            self.ids.container2.add_widget(card)
 
     def icon_button_clicked(self, instance, loan_id):
         # Handle the on_release event here
@@ -872,7 +1055,7 @@ class ViewLoansRequest(Screen):
         self.manager.current = 'LenderDashboard'
 
     def refresh(self):
-        self.ids.container.clear_widgets()
+        self.ids.container2.clear_widgets()
         self.__init__()
 
 

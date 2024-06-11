@@ -192,11 +192,14 @@ view_loans = '''
             MDBoxLayout:
                 id: container2
                 orientation: 'vertical'
-                padding: dp(40)
+                padding: dp(30)
                 spacing: dp(10)
-                elevation: 3
                 size_hint_y: None
                 height: self.minimum_height
+                width: self.minimum_width
+                adaptive_size: True
+
+                pos_hint: {"center_x": 0, "center_y":  0}
 
 
 <ViewRejectedLoansScreen>
@@ -734,7 +737,7 @@ class ALlLoansScreen(Screen):
             card = MDCard(
                 orientation='vertical',
                 size_hint=(None, None),
-                size=("280dp", "180dp"),
+                size=("300dp", "200dp"),
                 padding="8dp",
                 spacing="5dp",
                 elevation=3
@@ -751,7 +754,14 @@ class ALlLoansScreen(Screen):
             horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
             text_layout = BoxLayout(orientation='vertical')
             text_layout.add_widget(MDLabel(
-                text=f"[b]{borrower_name[i]}[/b],  [b]{profile_mobile_number[number]}[/b]",
+                text=f"[b]{borrower_name[i]}[/b],\n[b]{profile_mobile_number[number]}[/b]",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Product name:[/b] {product_name[i]}",
                 theme_text_color='Custom',
                 text_color=(0, 0, 0, 1),
                 halign='left',
@@ -772,13 +782,6 @@ class ALlLoansScreen(Screen):
                 markup=True,
             ))
 
-            text_layout.add_widget(MDLabel(
-                text=f"[b]Interest Rate:[/b] {interest_rate[i]}",
-                theme_text_color='Custom',
-                text_color=(0, 0, 0, 1),
-                halign='left',
-                markup=True,
-            ))
             horizontal_layout.add_widget(text_layout)
             card.add_widget(horizontal_layout)
 
@@ -821,10 +824,10 @@ class ALlLoansScreen(Screen):
 
             status_text = {
                 "under process": "Under Process",
-                "disbursed loan": "Disburse Loan",
-                "closed loan": "  Closed Loan  ",
+                "disbursed": "Disburse Loan",
+                "closed": "  Closed Loan  ",
                 "extension": " Extension Loan ",
-                "foreclosure": "   Foreclosure   ",
+                "foreclosure": "  Foreclosure ",
                 "accepted": "Accepted Loan",
                 "rejected": "Rejected Loan",
                 "approved": "Approved Loan",

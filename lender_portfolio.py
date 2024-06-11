@@ -1,6 +1,9 @@
 from anvil import Label
 from anvil.tables import app_tables
 from kivy.metrics import dp
+from kivy.uix.boxlayout import BoxLayout
+from kivymd.uix.button import MDFillRoundFlatButton
+from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
 from kivy.properties import ObjectProperty
 from kivy.lang import Builder
@@ -56,8 +59,18 @@ borrower_portfolio = '''
             title_align: 'left'
             md_bg_color: 0.043, 0.145, 0.278, 1
         MDScrollView:
-            MDList:
-                id: container
+            MDBoxLayout:
+                id: container2
+                orientation: 'vertical'
+                padding: dp(30)
+                spacing: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+                width: self.minimum_width
+                adaptive_size: True
+
+                pos_hint: {"center_x": 0, "center_y":  0}
+
 
 <LenViewPortfolio>:
 
@@ -465,7 +478,7 @@ class Lend_Portfolio(Screen):
         super().__init__(**kwargs)
         self.populate_lender_list()
 
-    def populate_lender_list(self):
+    def populate_lender_list(self, instance=None):
         data = app_tables.fin_loan_details.search()
         profile = app_tables.fin_user_profile.search()
 
@@ -478,29 +491,87 @@ class Lend_Portfolio(Screen):
                     borrower_details[borrower_id] = {
                         'full_name': loan['borrower_full_name'],
                         'mobile_number': '',
-                        'product_name': loan['product_name']
+                        'product_name': loan['product_name'],
+                        'loan_amount': loan['loan_amount'],
+                        'interest_rate': loan['interest_rate'],
+                        'loan_status': loan['loan_updated_status']
                     }
 
         for prof in profile:
             if prof['customer_id'] in borrower_details:
                 borrower_details[prof['customer_id']]['mobile_number'] = prof['mobile']
+                borrower_details[prof['customer_id']]['ascend_value'] = prof['ascend_value']
 
         for borrower_id, details in borrower_details.items():
-            item = ThreeLineAvatarIconListItem(
-                IconLeftWidget(icon="account"),
-                text=f"Borrower Name: {details['full_name']}",
-                secondary_text=f"Borrower Mobile Number: {details['mobile_number']}",
-                tertiary_text=f"Product Name: {details['product_name']}",
-                text_color=(0, 0, 0, 1),
-                theme_text_color='Custom',
-                secondary_text_color=(0, 0, 0, 1),
-                secondary_theme_text_color='Custom',
-                tertiary_text_color=(0, 0, 0, 1),
-                tertiary_theme_text_color='Custom'
+            card = MDCard(
+                orientation='vertical',
+                size_hint=(None, None),
+                size=("280dp", "180dp"),
+                padding="8dp",
+                spacing="5dp",
+                elevation=3
             )
-            item.bind(
-                on_release=lambda instance, borrower_id=borrower_id: self.icon_button_clicked(instance, borrower_id))
-            self.ids.container.add_widget(item)
+            horizontal_layout = BoxLayout(orientation='horizontal')
+            image = Image(
+                source='img.png',  # Update with the actual path to the image
+                size_hint_x=None,
+                height="60dp",
+                width="70dp"
+            )
+            horizontal_layout.add_widget(image)
+            horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
+            text_layout = BoxLayout(orientation='vertical')
+            text_layout.add_widget(MDLabel(
+                text=f"[b]{details['full_name']}[/b]\n[b]{details['mobile_number']}[/b]",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Loan Amount:[/b] {details['loan_amount']}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Ascend Score:[/b] {details.get('ascend_value', 'N/A')}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+
+            horizontal_layout.add_widget(text_layout)
+            card.add_widget(horizontal_layout)
+
+            card.add_widget(Widget(size_hint_y=None, height='10dp'))
+            button1 = MDFillRoundFlatButton(
+                text="View Details",
+                height="40dp",
+                width="250dp",
+                pos_hint={"center_x": 0.5, "center_y": 0.5},
+                md_bg_color=(0.043, 0.145, 0.278, 1),
+                on_release=lambda x, borrower_id=borrower_id: self.icon_button_clicked(instance, borrower_id)
+            )
+            card.add_widget(button1)
+            self.ids.container2.add_widget(card)
+            # item = ThreeLineAvatarIconListItem(
+            #     IconLeftWidget(icon="account"),
+            #     text=f"Borrower Name: {details['full_name']}",
+            #     secondary_text=f"Borrower Mobile Number: {details['mobile_number']}",
+            #     tertiary_text=f"Product Name: {details['product_name']}",
+            #     text_color=(0, 0, 0, 1),
+            #     theme_text_color='Custom',
+            #     secondary_text_color=(0, 0, 0, 1),
+            #     secondary_theme_text_color='Custom',
+            #     tertiary_text_color=(0, 0, 0, 1),
+            #     tertiary_theme_text_color='Custom'
+            # )
+            # item.bind(
+            #     on_release=lambda instance, borrower_id=borrower_id: self.icon_button_clicked(instance, borrower_id))
+            # self.ids.container.add_widget(item)
 
     def icon_button_clicked(self, instance, borrower_id):
         sm = self.manager
@@ -525,7 +596,7 @@ class Lend_Portfolio(Screen):
         return False
 
     def refresh(self):
-        self.ids.container.clear_widgets()
+        self.ids.container2.clear_widgets()
         self.__init__()
 
 

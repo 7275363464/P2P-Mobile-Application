@@ -9,7 +9,7 @@ from kivy.core.image import Image as CoreImage
 from kivy.graphics import Color,Ellipse
 import anvil
 from anvil.tables import app_tables
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 from kivy.uix.popup import Popup
@@ -62,6 +62,8 @@ user_helpers = '''
     BusinessScreen
     BankScreen:
     StudentScreen:
+    StudentScreen1:
+    ProfessionalScreen:
     FarmerScreen:
     EmployeeScreen:
     EditScreen:
@@ -916,7 +918,7 @@ user_helpers = '''
     MDBoxLayout:
         orientation: 'vertical'
         MDTopAppBar:
-            title: "Account Info"
+            title: "Account Information"
             elevation: 2
             pos_hint: {'top': 1}
             left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
@@ -1089,7 +1091,7 @@ user_helpers = '''
                         MDBoxLayout:
                             orientation: 'vertical'
                             size_hint_y: None
-                            height: dp(70)
+                            height: dp(70) 
                             md_bg_color: "#ffffff"
                             canvas.before:
                                 Color:
@@ -1116,10 +1118,11 @@ user_helpers = '''
                                     theme_text_color: "Custom"
                                     text_color: 0, 0, 0, 1
                                     halign: "center"
+                            
                         MDBoxLayout:
                             orientation: 'vertical'
                             size_hint_y: None
-                            height: dp(70)
+                            height: dp(70) 
                             md_bg_color: "#ffffff"
                             canvas.before:
                                 Color:
@@ -2176,6 +2179,7 @@ user_helpers = '''
                 MDLabel:
                     text: '  '
 
+
 <BusinessScreen>
     canvas.before:
         Color:
@@ -2662,7 +2666,7 @@ user_helpers = '''
         size_hint: 1, 1
         pos_hint: {'center_x':0.5, 'center_y':0.5}
         MDTopAppBar:
-            title: "Professional Info"
+            title: "Professional Information"
             elevation: 2
             pos_hint: {'top': 1}
             left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
@@ -2682,6 +2686,10 @@ user_helpers = '''
                     height: self.minimum_height
                     padding: dp(0)
                     spacing: dp(10)
+                    MDLabel:
+                        text: ' '
+                    MDLabel:
+                        text: ' '
                     MDLabel:
                         text: ' '
                     BoxLayout:
@@ -3118,6 +3126,78 @@ user_helpers = '''
                         Line:
                             points: self.x, self.y, self.x + self.width, self.y
 
+<ProfessionalScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            title: "Professional Information"
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            right_action_items: [['refresh', lambda x: root.refresh()]]
+            title_align: 'center'
+            md_bg_color: 0.043, 0.145, 0.278, 1
+        
+        
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(10)
+            padding: dp(20)
+            height:dp(5)
+            Image:
+                source: 'icon12.png'
+                size_hint: (None, None)
+                size: dp(100), dp(100)
+                pos_hint: {'center_x': 0.5}
+        
+            MDLabel:
+                text: "Professional details are not available."
+                halign: "center"
+                bold: True
+                theme_text_color: "Custom"
+                text_color: 0, 0, 0, 1
+                font_size: dp(16)
+                size_hint_y: None
+                height: self.texture_size[1]
+        MDLabel:
+            text: ' '
+        
+                
+<BusinessScreen1>:
+    BoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            title: "Business Information"
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            right_action_items: [['refresh', lambda x: root.refresh()]]
+            title_align: 'center'
+            md_bg_color: 0.043, 0.145, 0.278, 1
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(10)
+            padding: dp(20)
+            height:dp(5)
+            Image:
+                source: 'icon9.png'
+                size_hint: (None, None)
+                size: dp(100), dp(100)
+                pos_hint: {'center_x': 0.5}
+        
+            MDLabel:
+                text: "Business details are not available."
+                halign: "center"
+                bold: True
+                theme_text_color: "Custom"
+                text_color: 0, 0, 0, 1
+                font_size: dp(16)
+                size_hint_y: None
+                height: self.texture_size[1]
+                
+        MDLabel:
+            text: ' '
+            
 <StudentScreen>
     canvas.before:
         Color:
@@ -5259,6 +5339,7 @@ class DashboardScreen(Screen):
 
 
 class AccountScreen(Screen):
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         log_email = anvil.server.call('another_method')
@@ -5375,8 +5456,36 @@ class AccountScreen(Screen):
         self.manager.current = 'ProfileScreen'
 
     def go_to_business(self):
-        self.manager.add_widget(Factory.BusinessScreen(name='BusinessScreen'))
-        self.manager.current = 'BusinessScreen'
+        employee = self.get_profession1()
+        if employee is None:
+            self.show_no_business_screen()
+            print("Business is not available for the user.")
+            # Handle this case as per your application's logic
+        elif employee == 'business':
+            if not self.manager.has_screen('business'):
+                self.manager.add_widget(Factory.BusinessScreen(name='BusinessScreen'))
+            self.manager.current = 'BusinessScreen'
+        else:
+            if not self.manager.has_screen('None'):
+                self.manager.add_widget(Factory.BusinessScreen1(name='BusinessScreen1'))
+            self.manager.current = 'BusinessScreen1'
+
+    def show_no_business_screen(self):
+        if not self.manager.has_screen('None'):
+            self.manager.add_widget(Factory.BusinessScreen1(name='BusinessScreen1'))
+        self.manager.current = 'BusinessScreen1'
+
+    def get_profession1(self):
+        email = self.get_email()
+        profession_records = app_tables.fin_user_profile.search(email_user=email)
+
+        if profession_records:
+            # Assuming the profession is stored in the first record if found
+            employee = profession_records[0]['self_employment']
+            return employee
+        else:
+            # Handle case where profession is not found
+            return None
 
     def go_to_bank(self):
         self.manager.add_widget(Factory.BankScreen(name='BankScreen'))
@@ -5386,6 +5495,9 @@ class AccountScreen(Screen):
         # Define the areas for each profession
         profession, employee = self.get_profession()
         if profession is None:
+            if not self.manager.has_screen('None'):
+                self.manager.add_widget(Factory.ProfessionalScreen(name='ProfessionalScreen'))
+            self.manager.current = 'ProfessionalScreen'
             print("Profession is not available for the user.")
             # Handle this case as per your application's logic
         elif profession == 'student':
@@ -5401,6 +5513,9 @@ class AccountScreen(Screen):
                 self.manager.add_widget(Factory.FarmerScreen(name='farmer'))
             self.manager.current = 'farmer'
         else:
+            if not self.manager.has_screen('None'):
+                self.manager.add_widget(Factory.ProfessionalScreen(name='ProfessionalScreen'))
+            self.manager.current = 'ProfessionalScreen'
             print(f"Unknown profession: {profession}")
 
     def get_profession(self):
@@ -5416,23 +5531,86 @@ class AccountScreen(Screen):
             # Handle case where profession is not found
             return None, None
 
+class BusinessScreen1(Screen):
+    def on_back_button_press(self):
+        self.manager.current = 'AccountScreen'
+
+    def on_pre_enter(self):
+        Window.bind(on_keyboard=self.on_back_button)
+
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=self.on_back_button)
+
+    def on_back_button(self, instance, key, scancode, codepoint, modifier):
+        if key == 27:
+            self.on_back_button_press()
+            return True
+        return False
+
+
+class ProfessionalScreen(Screen):
+    def on_back_button_press(self):
+        self.manager.current = 'AccountScreen'
+
+    def on_pre_enter(self):
+        Window.bind(on_keyboard=self.on_back_button)
+
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=self.on_back_button)
+
+    def on_back_button(self, instance, key, scancode, codepoint, modifier):
+        if key == 27:
+            self.on_back_button_press()
+            return True
+        return False
+
 
 class EmployeeScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
-        credit = []
+        company_name = []
         email1 = []
-        borrower_since = []
+        occupation_type = []
+        employment_type = []
+        organization_type = []
+        company_address = []
+        landmark = []
+        company_ph_no = []
+        annual_salary = []
+        salary_type = []
+        designation = []
+        employee_id = []
+        last_six_months = []
         for row in data:
             email1.append(row['email_user'])
-            credit.append(row['credit_limit'])
-            borrower_since.append(row['borrower_since'])
+            company_name.append(row['company_name'])
+            occupation_type.append(row['occupation_type'])
+            employment_type.append(row['employment_type'])
+            organization_type.append(row['organization_type'])
+            company_address.append(row['company_address'])
+            landmark.append(row['company_landmark'])
+            company_ph_no.append(row['business_no'])
+            annual_salary.append(row['annual_salary'])
+            salary_type.append(row['salary_type'])
+            designation.append(row['designation'])
+            employee_id.append(row['emp_id_proof'])
+            last_six_months.append(row['last_six_month_bank_proof'])
         if email in email1:
             index = email1.index(email)
-            self.ids.credit.text = str(credit[index])
-            self.ids.borrower_since.text = str(borrower_since[index])
+            self.ids.employee_id.text = str(employee_id[index])
+            self.ids.designation.text = str(designation[index])
+            self.ids.salary_type.text = str(salary_type[index])
+            self.ids.annual_salary.text = str(annual_salary[index])
+            self.ids.company_phone_number.text = str(company_ph_no[index])
+            self.ids.company_name.text = str(company_name[index])
+            self.ids.occupation_type.text = str(occupation_type[index])
+            self.ids.employment_type.text = str(employment_type[index])
+            self.ids.landmark.text = str(landmark[index])
+            self.ids.last_six_months_bank_statement.text = str(last_six_months[index])
+            self.ids.organization_type.text = str(organization_type[index])
+            self.ids.company_address.text = str(company_address[index])
 
     def refresh(self):
         pass
@@ -5456,7 +5634,6 @@ class EmployeeScreen(Screen):
             self.on_back_button_press()
             return True
         return False
-
 
 class StudentScreen(Screen):
     def __init__(self, **kwargs):
@@ -5922,13 +6099,13 @@ class BusinessScreen(Screen):
     def refresh(self):
         pass
 
-    def on_back_button_press(self):
-        self.manager.current = 'AccountScreen'
-
     def get_email(self):
         # Make a call to the Anvil server function
         # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
         return anvil.server.call('another_method')
+
+    def on_back_button_press(self):
+        self.manager.current = 'AccountScreen'
 
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.on_back_button)

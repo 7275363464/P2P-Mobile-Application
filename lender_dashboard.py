@@ -63,10 +63,13 @@ if platform == 'android':
 user_helpers1 = """
 <WindowManager>:
     LenderDashboard:
+    ViewProfessionalScreen:
     ViewAccountScreen:
     ViewBankScreen:
     ViewBusinessScreen:
     ViewProfileScreen:
+    ViewBusinessScreen1:
+    ViewEmployeeScreen:
     ViewEditScreen:
     ReturnsScreen:
 
@@ -1330,9 +1333,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-
-
-
+                                on_release: root.professional()
                                 Image:
                                     source: "icon8.png"
                                     size_hint: (0.4, 1)
@@ -1362,7 +1363,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-
+                                on_release: root.go_to_business1()
 
                                 Image:
                                     source: "icon9.png"
@@ -1442,7 +1443,7 @@ user_helpers1 = """
                                     text_color: 0, 0, 0, 1
                                     halign: "center"
 
-<ViewBusinessScreen>
+<ViewEmployeeScreen>:
     canvas.before:
         Color:
             rgba: 1, 1, 1, 1
@@ -1455,7 +1456,7 @@ user_helpers1 = """
         size_hint: 1, 1
         pos_hint: {'center_x':0.5, 'center_y':0.5}
         MDTopAppBar:
-            title: "Bank Info"
+            title: "Professional Information"
             elevation: 2
             pos_hint: {'top': 1}
             left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
@@ -1475,6 +1476,554 @@ user_helpers1 = """
                     height: self.minimum_height
                     padding: dp(0)
                     spacing: dp(10)
+                    MDLabel:
+                        text: ' '
+                    MDLabel:
+                        text: ' '
+                    MDLabel:
+                        text: ' '
+                    BoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: None
+                        height: dp(10)
+                        spacing: dp(5)
+                        padding:dp(7)
+
+                        MDLabel:
+                            text: ' Company name '
+                            color: 0, 0, 0, 1
+                            halign: 'left'
+                            font_size: dp(13)
+                            size_hint_x: 0.4
+                            pos_hint: {'center_y': 0.5}
+                            bold: True
+                            multiline: False
+
+                        MDLabel:
+                            id: company_name
+                            font_size: dp(13)
+                            text:'Add company name'
+                            size_hint: None, None
+                            size_hint_x: 0.6
+                            multiline: False
+                            halign: 'left'
+                            pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Occupation type  '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: occupation_type 
+                        text:'Add occupation type '
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        font_size: dp(13)
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Employment type '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: employment_type
+                        text:'Add employment type'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        font_size: dp(13)
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Organization type  '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: organization_type 
+                        text:'Add organization type '
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        font_size: dp(13)
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Company address '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: company_address
+                        font_size: dp(13)
+                        text:'Add company address'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Landmark '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: landmark
+                        font_size: dp(13)
+                        text:'Add landmark'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Company phone number '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: company_phone_number
+                        text:'Add company phone number'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        font_size: dp(13)
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: " Annual salary "
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: annual_salary
+                        font_size: dp(13)
+                        text:"Add annual salary"
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Salary type '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: salary_type
+                        font_size: dp(13)
+                        text:'Add salary type'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Designation '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: designation
+                        text:'Add designation'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        font_size: dp(13)
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Employee id '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: employee_id
+                        text:'Add employee id'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        font_size: dp(13)
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Last six months bank statement '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: last_six_months_bank_statement
+                        text:'Add last six months bank statement'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        font_size: dp(13)
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+<ViewBusinessScreen1>:
+    BoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            title: "Business Information"
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            right_action_items: [['refresh', lambda x: root.refresh()]]
+            title_align: 'center'
+            md_bg_color: 0.043, 0.145, 0.278, 1
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(10)
+            padding: dp(20)
+            height:dp(5)
+            Image:
+                source: 'icon9.png'
+                size_hint: (None, None)
+                size: dp(100), dp(100)
+                pos_hint: {'center_x': 0.5}
+
+            MDLabel:
+                text: "Business details are not available."
+                halign: "center"
+                bold: True
+                theme_text_color: "Custom"
+                text_color: 0, 0, 0, 1
+                font_size: dp(16)
+                size_hint_y: None
+                height: self.texture_size[1]
+
+        MDLabel:
+            text: ' '
+
+<ViewProfessionalScreen>
+    BoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            title: "Professional Information"
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            right_action_items: [['refresh', lambda x: root.refresh()]]
+            title_align: 'center'
+            md_bg_color: 0.043, 0.145, 0.278, 1
+
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(10)
+            padding: dp(20)
+            height:dp(5)
+            Image:
+                source: 'icon12.png'
+                size_hint: (None, None)
+                size: dp(100), dp(100)
+                pos_hint: {'center_x': 0.5}
+
+            MDLabel:
+                text: "Professional details are not available."
+                halign: "center"
+                bold: True
+                theme_text_color: "Custom"
+                text_color: 0, 0, 0, 1
+                font_size: dp(16)
+                size_hint_y: None
+                height: self.texture_size[1]
+        MDLabel:
+            text: ' '
+
+<ViewBusinessScreen>
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: 1, 1
+        pos_hint: {'center_x':0.5, 'center_y':0.5}
+        MDTopAppBar:
+            title: "Business Information"
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            right_action_items: [['refresh', lambda x: root.refresh()]]
+            title_align: 'center'
+            md_bg_color: 0.043, 0.145, 0.278, 1
+        ScrollView:
+            BoxLayout:
+                orientation: "vertical"
+                padding: dp(0)
+                spacing: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(0)
+                    spacing: dp(10)
+                    MDLabel:
+                        text: ' '
+                    MDLabel:
+                        text: ' '
                     MDLabel:
                         text: ' '
                     BoxLayout:
@@ -1924,7 +2473,7 @@ user_helpers1 = """
         size_hint: 1, 1
         pos_hint: {'center_x':0.5, 'center_y':0.5}
         MDTopAppBar:
-            title: "Bank Info"
+            title: "Bank Information"
             elevation: 2
             pos_hint: {'top': 1}
             left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
@@ -1947,6 +2496,10 @@ user_helpers1 = """
                     height: self.minimum_height
                     padding: dp(0)
                     spacing: dp(10)
+                    MDLabel:
+                        text: ' '
+                    MDLabel:
+                        text: ' '
                     MDLabel:
                         text: ' '
                     BoxLayout:
@@ -4880,14 +5433,293 @@ class ViewAccountScreen(Screen):
         self.manager.add_widget(Factory.ViewBankScreen(name='ViewBankScreen'))
         self.manager.current = 'ViewBankScreen'
 
+    def go_to_business1(self):
+        employee = self.get_business1()
+        if employee is None:
+            self.show_no_business_screen1()
+            print("Business is not available for the user.")
+            # Handle this case as per your application's logic
+        elif employee == 'Individual':
+            if not self.manager.has_screen('Individual'):
+                self.manager.add_widget(Factory.ViewBusinessScreen(name='ViewBusinessScreen'))
+            self.manager.current = 'ViewBusinessScreen'
+        else:
+            if not self.manager.has_screen('None'):
+                self.manager.add_widget(Factory.ViewBusinessScreen1(name='ViewBusinessScreen1'))
+            self.manager.current = 'ViewBusinessScreen1'
 
-class ViewBankScreen(Screen):
+    def get_business1(self):
+        email = self.get_email()
+        profession_records = app_tables.fin_lender.search(email_user=email)
+
+        if profession_records:
+            # Assuming the profession is stored in the first record if found
+            employee = profession_records[0]['lending_type']
+            return employee
+        else:
+            # Handle case where profession is not found
+            return None
+
+    def show_no_business_screen1(self):
+        if not self.manager.has_screen('None'):
+            self.manager.add_widget(Factory.ViewBusinessScreen1(name='ViewBusinessScreen1'))
+        self.manager.current = 'ViewBusinessScreen1'
+
+    def professional(self):
+        employee = self.get_profession()
+        if employee is None:
+            self.show_no_business_screen1()
+            print("Professional is not available for the user.")
+            # Handle this case as per your application's logic
+        elif employee == 'institutional':
+            if not self.manager.has_screen('institutional'):
+                self.manager.add_widget(Factory.ViewEmployeeScreen(name='ViewEmployeeScreen'))
+            self.manager.current = 'ViewEmployeeScreen'
+        else:
+            if not self.manager.has_screen('None'):
+                self.manager.add_widget(Factory.ViewProfessionalScreen(name='ViewProfessionalScreen'))
+            self.manager.current = 'ViewProfessionalScreen'
+
+    def get_profession(self):
+        email = self.get_email()
+        profession_records = app_tables.fin_lender.search(email_user=email)
+
+        if profession_records:
+            # Assuming the profession is stored in the first record if found
+            employee = profession_records[0]['lending_type']
+            return employee
+        else:
+            # Handle case where profession is not found
+            return None
+
+    def show_no_business_screen1(self):
+        if not self.manager.has_screen('None'):
+            self.manager.add_widget(Factory.ViewBusinessScreen1(name='ViewBusinessScreen1'))
+        self.manager.current = 'ViewBusinessScreen1'
+
+
+class ViewEmployeeScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        email = self.get_email()
+        data = app_tables.fin_user_profile.search(email_user=email)
+        company_name = []
+        email1 = []
+        occupation_type = []
+        employment_type = []
+        organization_type = []
+        company_address = []
+        landmark = []
+        company_ph_no = []
+        annual_salary = []
+        salary_type = []
+        designation = []
+        employee_id = []
+        last_six_months = []
+        for row in data:
+            email1.append(row['email_user'])
+            company_name.append(row['company_name'])
+            occupation_type.append(row['occupation_type'])
+            employment_type.append(row['employment_type'])
+            organization_type.append(row['organization_type'])
+            company_address.append(row['company_address'])
+            landmark.append(row['company_landmark'])
+            company_ph_no.append(row['business_no'])
+            annual_salary.append(row['annual_salary'])
+            salary_type.append(row['salary_type'])
+            designation.append(row['designation'])
+            employee_id.append(row['emp_id_proof'])
+            last_six_months.append(row['last_six_month_bank_proof'])
+        if email in email1:
+            index = email1.index(email)
+            self.ids.employee_id.text = str(employee_id[index])
+            self.ids.designation.text = str(designation[index])
+            self.ids.salary_type.text = str(salary_type[index])
+            self.ids.annual_salary.text = str(annual_salary[index])
+            self.ids.company_phone_number.text = str(company_ph_no[index])
+            self.ids.company_name.text = str(company_name[index])
+            self.ids.occupation_type.text = str(occupation_type[index])
+            self.ids.employment_type.text = str(employment_type[index])
+            self.ids.landmark.text = str(landmark[index])
+            self.ids.last_six_months_bank_statement.text = str(last_six_months[index])
+            self.ids.organization_type.text = str(organization_type[index])
+            self.ids.company_address.text = str(company_address[index])
+
+    def refresh(self):
+        pass
 
     def on_back_button_press(self):
         self.manager.current = 'ViewAccountScreen'
 
+    def get_email(self):
+        # Make a call to the Anvil server function
+        # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
+        return anvil.server.call('another_method')
+
+    def on_pre_enter(self):
+        Window.bind(on_keyboard=self.on_back_button)
+
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=self.on_back_button)
+
+    def on_back_button(self, instance, key, scancode, codepoint, modifier):
+        if key == 27:
+            self.on_back_button_press()
+            return True
+        return False
+
+
+class ViewBusinessScreen1(Screen):
+    def on_back_button_press(self):
+        self.manager.current = 'ViewAccountScreen'
+
+    def on_pre_enter(self):
+        Window.bind(on_keyboard=self.on_back_button)
+
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=self.on_back_button)
+
+    def on_back_button(self, instance, key, scancode, codepoint, modifier):
+        if key == 27:
+            self.on_back_button_press()
+            return True
+        return False
+
+
+class ViewProfessionalScreen(Screen):
+    def on_back_button_press(self):
+        self.manager.current = 'ViewAccountScreen'
+
+    def on_pre_enter(self):
+        Window.bind(on_keyboard=self.on_back_button)
+
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=self.on_back_button)
+
+    def on_back_button(self, instance, key, scancode, codepoint, modifier):
+        if key == 27:
+            self.on_back_button_press()
+            return True
+        return False
+
+
+class ViewBusinessScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        email = self.get_email()
+        data = app_tables.fin_user_profile.search(email_user=email)
+        business_name = []
+        email1 = []
+        business_address = []
+        business_type = []
+        employee_working = []
+        year_of_establish = []
+        industry_type = []
+        last_six_months = []
+        upload_last_six_months = []
+        din = []
+        cin = []
+        office_address = []
+        for row in data:
+            email1.append(row['email_user'])
+            business_name.append(row['business_name'])
+            business_address.append(row['business_add'])
+            business_type.append(row['business_type'])
+            employee_working.append(row['employees_working'])
+            year_of_establish.append(row['year_estd'])
+            industry_type.append(row['industry_type'])
+            din.append(row['din'])
+            cin.append(row['cin'])
+            office_address.append(row['registered_off_add'])
+            last_six_months.append(row['six_month_turnover'])
+        if email in email1:
+            index = email1.index(email)
+            self.ids.din.text = str(din[index])
+            self.ids.cin.text = str(cin[index])
+            self.ids.last_six.text = str(last_six_months[index])
+            self.ids.industry_type.text = str(industry_type[index])
+            self.ids.business_name.text = str(business_name[index])
+            self.ids.business_address.text = str(business_address[index])
+            self.ids.business_type.text = str(business_type[index])
+            self.ids.year.text = str(year_of_establish[index])
+            self.ids.no_working.text = str(employee_working[index])
+            self.ids.office_address.text = str(office_address[index])
+
+    def refresh(self):
+        pass
+
+    def get_email(self):
+        # Make a call to the Anvil server function
+        # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
+        return anvil.server.call('another_method')
+
+    def on_back_button_press(self):
+        self.manager.current = 'ViewAccountScreen'
+
+    def on_pre_enter(self):
+        Window.bind(on_keyboard=self.on_back_button)
+
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=self.on_back_button)
+
+    def on_back_button(self, instance, key, scancode, codepoint, modifier):
+        if key == 27:
+            self.on_back_button_press()
+            return True
+        return False
+
+
+class ViewBankScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        email = self.get_email()
+        data = app_tables.fin_user_profile.search(email_user=email)
+        account_holder = []
+        email1 = []
+        account_type = []
+        account_number = []
+        bank_name = []
+        bank_id = []
+        branch_name = []
+        for row in data:
+            email1.append(row['email_user'])
+            account_holder.append(row['account_name'])
+            account_type.append(row['account_type'])
+            account_number.append(row['account_number'])
+            bank_name.append(row['bank_name'])
+            bank_id.append(row['bank_id'])
+            branch_name.append(row['account_bank_branch'])
+        if email in email1:
+            index = email1.index(email)
+            self.ids.branch_name.text = str(branch_name[index])
+            self.ids.holder.text = str(account_holder[index])
+            self.ids.account_type.text = str(account_type[index])
+            self.ids.bank_id.text = str(bank_id[index])
+            self.ids.bank_name.text = str(bank_name[index])
+            self.ids.account_number.text = str(account_number[index])
+
+    def refresh(self):
+        pass
+
+    def on_back_button_press(self):
+        self.manager.current = 'ViewAccountScreen'
+
+    def get_email(self):
+        # Make a call to the Anvil server function
+        # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
+        return anvil.server.call('another_method')
+
+    def on_pre_enter(self):
+        Window.bind(on_keyboard=self.on_back_button)
+
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=self.on_back_button)
+
+    def on_back_button(self, instance, key, scancode, codepoint, modifier):
+        if key == 27:
+            self.on_back_button_press()
+            return True
+        return False
 
 class ViewProfileScreen(Screen):
     def __init__(self, **kwargs):

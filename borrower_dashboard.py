@@ -67,8 +67,14 @@ user_helpers = '''
     FarmerScreen:
     EmployeeScreen:
     EditScreen:
+    EditScreen1:
+    EditScreen2:
+    EditScreen3:
+    EditScreen4:
+    EditScreen5:
+    EditScreen6:
+    
 <DashboardScreen>:
-
     MDBottomNavigation:
         panel_color: '#F5F5F5'
         text_color_active: "#007BFF"
@@ -1239,7 +1245,7 @@ user_helpers = '''
             do_scroll_x: False
             BoxLayout:
                 orientation: "vertical"
-                padding: dp(0)
+                padding: dp(5)
                 spacing: dp(10)
                 size_hint_y: None
                 height: self.minimum_height
@@ -1748,42 +1754,7 @@ user_helpers = '''
                         Line:
                             points: self.x, self.y, self.x + self.width, self.y
 
-                BoxLayout:
-                    orientation: "horizontal"
-                    size_hint_y: None
-                    height: dp(10)
-                    padding:dp(5)
-                    spacing: dp(7)
-
-                    MDLabel:
-                        text: ' City '
-                        multiline: False
-                        font_size: dp(13)
-                        color: 0, 0, 0, 1
-                        halign: 'left'
-                        size_hint_x: 0.4
-                        pos_hint: {'center_y': 0.5}
-                        bold: True
-
-                    MDLabel:
-                        id: city
-                        text:'Add city'
-                        size_hint: None, None
-                        size_hint_x: 0.6
-                        multiline: False
-                        halign: 'left'
-                        font_size: dp(13)
-                        pos_hint: {'center_y': 0.5}
-
-                Widget:
-                    size_hint_y: None
-                    height: dp(1)
-                    canvas:
-                        Color:
-                            rgba: 0, 0, 0, 1
-                        Line:
-                            points: self.x, self.y, self.x + self.width, self.y
-
+                
                 BoxLayout:
                     orientation: "horizontal"
                     size_hint_y: None
@@ -2153,17 +2124,6 @@ user_helpers = '''
                 MDLabel:
                     text: ' '
 
-                MDLabel:
-                    text: ' '
-
-                MDLabel:
-                    text: ' '
-
-                MDLabel:
-                    text: ' '
-
-                MDLabel:
-                    text: '  '
                 MDFloatLayout:
                     MDRaisedButton:
                         text: "Edit Profile"
@@ -3981,7 +3941,7 @@ user_helpers = '''
         size_hint: 1, 1
         pos_hint: {'center_x':0.5, 'center_y':0.5}
         MDTopAppBar:
-            title: "View Profile"
+            title: "Personal Information"
             elevation: 2
             pos_hint: {'top': 1}
             left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
@@ -3992,145 +3952,965 @@ user_helpers = '''
             do_scroll_x: False
             BoxLayout:
                 orientation: "vertical"
-                padding:dp(10)
-                spacing:dp(25)
+                padding: dp(5)
+                spacing: dp(10)
                 size_hint_y: None
                 height: self.minimum_height
-                MDBoxLayout:
-                    orientation: 'vertical'
+
+                MDFloatLayout:
                     size_hint_y: None
-                    height: self.minimum_height
+                    height: dp(100)
                     padding: dp(20)
-                    BoxLayout:
-                        id: box1
-                        orientation: 'vertical'
-                        size_hint_y: None
-                        height: dp(500)
-                        padding: [10, 0,0,0]
+                    spacing: dp(10)
+
+
+                    MDFloatLayout:
+
+                        size_hint: None, 0.7
+                        size: dp(60), dp(60)
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        radius:55
                         canvas.before:
                             Color:
-                                rgba: 0, 0, 0, 1  # Blue color for the box
+                                rgba: 174/255, 214/255, 241/255, 1
+                            Ellipse:
+                                size: self.width + 15, self.height + 15
+                                pos: self.x -5, self.y -5
+                        Image:
+                            id: selected_image1
+                            size_hint: None, 0.99
+                            size: dp(60), dp(80)  # Keeping the image size square for a circular crop
+                            source: ""  # Set the path to your image source if needed
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            allow_stretch: True
+                            keep_ratio: True
+
+                            canvas:
+                                StencilPush
+                                Ellipse:
+                                    size: self.width + 15, self.height + 15
+                                    pos: self.x -5, self.y -5
+                                StencilUse
+                                Rectangle:
+                                    texture: self.texture
+                                    size: self.width + 15, self.height + 15
+                                    pos: self.x -5, self.y -5
+                                StencilUnUse
+                                StencilPop
+                        MDIconButton:
+                            icon: 'camera'
+                            source: ""
+                            pos_hint: {'center_x': 1.1, 'center_y': 0.}
+                            on_release: app.root.get_screen('PersonalScreen').check_and_open_file_manager1()
+
+                Label:
+                    id: selected_file_label
+                    color: 0, 0, 0, 1
+                    text: 'Upload Photo'
+                    size_hint_y: None
+                    height: dp(10)
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(0)
+                    spacing: dp(10)
+
+                    BoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: None
+                        height: dp(10)
+                        spacing: dp(5)
+                        padding:dp(7)
+
+                        MDLabel:
+                            text: ' Full Name '
+                            color: 0, 0, 0, 1
+                            halign: 'left'
+                            font_size: dp(13)
+                            size_hint_x: 0.4
+                            pos_hint: {'center_y': 0.5}
+                            bold: True
+                            multiline: False
+
+                        MDTextField:
+                            id: name
+                            font_size: dp(13)
+                            text:'Add full name'
+                            size_hint: None, None
+                            size_hint_x: 0.6
+                            multiline: False
+                            halign: 'left'
+                            pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Gender '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    Spinner:
+                        id: gender
+                        text: "Select Gender"
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        width: dp(200)
+                        text_size: self.width - dp(20), None
+                        height:"20dp"
+                        font_size: dp(13)
+                        pos_hint: {'center_y': 0.5}
+                        halign: "center"
+                        background_color: 1, 1, 1, 0
+                        color: 0, 0, 0, 1
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 0, 1  
                             Line:
-                                rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
+                                width: 0.7
+                                rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Name:"
-                                size_hint_y:None
-                                height:dp(50)
-                                bold: True
-                                halign: "left"
-                            MDTextField:
-                                id: name
-                                text: ""
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Email:"
-                                size_hint_y:None
-                                height:dp(50)
-                                bold: True
-                                halign: "left"
-                            MDLabel:
-                                id: email
-                                text: ""
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
 
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Mobile No::"
-                                size_hint_y:None
-                                height:dp(50)
-                                bold: True
-                                halign: "left"
-                            MDTextField:
-                                id: mobile_no
-                                text: ""
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Date Of Birth::"
-                                size_hint_y:None
-                                height:dp(50)
-                                bold: True
-                                halign: "left"
-                            MDLabel:
-                                id: dob
-                                text: ""
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "City:"
-                                size_hint_y:None
-                                height:dp(50)
-                                bold: True
-                                halign: "left"
-                            MDTextField:
-                                id: city
-                                text: ""
-                                size_hint_y:None
-                                height:dp(50)
-                                halign: "left"
-                        MDGridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(10)
-                            MDLabel:
-                                text: "Gender:"
-                                size_hint_y:None
-                                height:dp(50)
-                                bold: True
-                                halign: "left"
-                            Spinner:
-                                id: gender
-                                text: "Select Gender"
-                                multiline: False
-                                size_hint: None, None
-                                size: "180dp", "45dp"
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
 
-                                halign: "center"
-                                background_color: 1, 1, 1, 0
-                                color: 0, 0, 0, 1
-                                canvas.before:
-                                    Color:
-                                        rgba: 0, 0, 0, 1
-                                    Line:
-                                        width: 0.7
-                                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+                    MDLabel:
+                        text: ' Date Of Birth '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
 
-                        MDFloatLayout:
-                            MDRaisedButton:
-                                text: "Save"
-                                md_bg_color: 0.043, 0.145, 0.278, 1
-                                font_name: "Roboto-Bold"
-                                size_hint: 0.4, None
-                                height: dp(50)
-                                on_release:root.save_edited_data()
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                                font_size:dp(15)
+                    MDLabel:
+                        id: dob
+                        text:'Add dob'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        font_size: dp(13)
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Mobile No '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDTextField:
+                        id: mobile_no
+                        text:'Add mobile no'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        font_size: dp(13)
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Email '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDLabel:
+                        id: email
+                        font_size: dp(13)
+                        text:'Add email'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Alternate Email '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDTextField:
+                        id: email_id
+                        font_size: dp(13)
+                        text:'Add email'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Gov ID1 '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDTextField:
+                        id: gov_id1
+                        text:'Add mobile no'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        font_size: dp(13)
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Gov ID2 '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDTextField:
+                        id: gov_id2
+                        font_size: dp(13)
+                        text:'Add email'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Type of address '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    Spinner:
+                        id: type
+                        text:'Add dob'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        width: dp(200)
+                        text_size: self.width - dp(20), None
+                        height:"20dp"
+                        font_size: dp(13)
+                        pos_hint: {'center_y': 0.5}
+                        halign: "center"
+                        background_color: 1, 1, 1, 0
+                        color: 0, 0, 0, 1
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 0, 1  
+                            Line:
+                                width: 0.7
+                                rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Address1 '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDTextField:
+                        id: address1
+                        font_size: dp(13)
+                        text:'Add email'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Address2 '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDTextField:
+                        id: address2
+                        text:'Add mobile no'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        font_size: dp(13)
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' How long are you staying at this address '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        font_size: dp(13)
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: True
+
+                    Spinner:
+                        id: stay
+                        text:'Select present address'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        width: dp(200)
+                        text_size: self.width - dp(20), None
+                        height:"20dp"
+                        font_size: dp(13)
+                        pos_hint: {'center_y': 0.5}
+                        halign: "center"
+                        background_color: 1, 1, 1, 0
+                        color: 0, 0, 0, 1
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 0, 1  
+                            Line:
+                                width: 0.7
+                                rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Zipcode '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDTextField:
+                        id: zip_code
+                        text:'Add gender'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        font_size: dp(13)
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' State '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDTextField:
+                        id: state
+                        text:'Add gender'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        font_size: dp(13)
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Country '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDTextField:
+                        id: country
+                        text:'Add gender'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        halign: 'left'
+                        font_size: dp(13)
+                        pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Qualification '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    Spinner:
+                        id: qualification
+                        text:'Add gender'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        width: dp(200)
+                        text_size: self.width - dp(20), None
+                        height:"20dp"
+                        font_size: dp(13)
+                        pos_hint: {'center_y': 0.5}
+                        halign: "center"
+                        background_color: 1, 1, 1, 0
+                        color: 0, 0, 0, 1
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 0, 1  
+                            Line:
+                                width: 0.7
+                                rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Profession '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    Spinner:
+                        id: profession
+                        text:'Select Profession'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        width: dp(200)
+                        text_size: self.width - dp(20), None
+                        height:"20dp"
+                        font_size: dp(13)
+                        pos_hint: {'center_y': 0.5}
+                        halign: "center"
+                        background_color: 1, 1, 1, 0
+                        color: 0, 0, 0, 1
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 0, 1  
+                            Line:
+                                width: 0.7
+                                rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Marrital Status '
+                        color: 0, 0, 0, 1
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        font_size: dp(13)
+                        multiline: False
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+
+                    Spinner:
+                        id: marrital_status
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        text:"Select marrital status"
+                        multiline: False
+                        width: dp(200)
+                        text_size: self.width - dp(20), None
+                        height:"20dp"
+                        font_size: dp(13)
+                        pos_hint: {'center_y': 0.5}
+                        halign: "center"
+                        background_color: 1, 1, 1, 0
+                        color: 0, 0, 0, 1
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 0, 1  
+                            Line:
+                                width: 0.7
+                                rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Home loan '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+                    
+                    MDTextField:
+                        id: home
+                        text:'Add home loan'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        font_size: dp(13)
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+                        
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Other loan '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDTextField:
+                        id: other
+                        text:'Select other loans'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        font_size: dp(13)
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+                        
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Personal Credit Card Loans '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDTextField:
+                        id: personal
+                        text:'Select credit card loans'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        font_size: dp(13)
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+                        
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(10)
+                    spacing: dp(5)
+                    padding:dp(7)
+
+                    MDLabel:
+                        text: ' Two Wheeler / Four Wheeler Loans '
+                        color: 0, 0, 0, 1
+                        font_size: dp(13)
+                        halign: 'left'
+                        size_hint_x: 0.4
+                        pos_hint: {'center_y': 0.5}
+                        bold: True
+                        multiline: False
+
+                    MDTextField:
+                        id: two
+                        text:'Select vehicle loans'
+                        size_hint: None, None
+                        size_hint_x: 0.6
+                        multiline: False
+                        font_size: dp(13)
+                        halign: 'left'
+                        pos_hint: {'center_y': 0.5}
+                        
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                MDLabel:
+                    text: ' '
+
+                MDLabel:
+                    text: ' '
+
+                MDLabel:
+                    text: ' '
+                
+                MDFloatLayout:
+                    MDRaisedButton:
+                        text: "Save"
+                        md_bg_color: 0.043, 0.145, 0.278, 1
+                        font_name: "Roboto-Bold"
+                        size_hint: 0.4, None
+                        height: dp(50)
+                        on_release:root.save_edited_data()
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        font_size:dp(15)
+                MDLabel:
+                    text: '  '
+                MDLabel:
+                    text: '  '
 '''
 
 
@@ -4545,8 +5325,8 @@ class DashboardScreen(Screen):
             self.file_manager_open(icon_id, label_id, file_label_id, image_id)
 
     def on_edit(self):
-        self.manager.add_widget(Factory.EditScreen(name='ViewEditScreen'))
-        self.manager.current = 'ViewEditScreen'
+        self.manager.add_widget(Factory.EditScreen(name='EditScreen'))
+        self.manager.current = 'EditScreen'
 
     def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
         self.file_manager = MDFileManager(
@@ -5744,7 +6524,6 @@ class PersonalScreen(Screen):
         email1 = []
         mobile_no = []
         dob = []
-        city = []
         gender = []
         marrital_status = []
         alternate_email = []
@@ -5800,7 +6579,6 @@ class PersonalScreen(Screen):
             email1.append(row['email_user'])
             mobile_no.append(row['mobile'])
             dob.append(row['date_of_birth'])
-            city.append(row['city'])
             staying_address.append(row['duration_at_address'])
             gov_id1.append(row['aadhaar_no'])
             gov_id2.append(row['pan_number'])
@@ -5831,10 +6609,9 @@ class PersonalScreen(Screen):
             self.ids.type.text = str(type_of_address[index])
             self.ids.gov_id1.text = str(gov_id1[index])
             self.ids.gov_id2.text = str(gov_id2[index])
-            self.ids.city.text = str(city[index])
             self.ids.zip_code.text = str(zip_code[index])
             self.ids.state.text = str(state[index])
-            self.ids.country.text = str(city[index])
+            self.ids.country.text = str(country[index])
             self.ids.qualification.text = str(qualification[index])
             self.ids.profession.text = str(profession[index])
             self.ids.home.text = str(home_loan[index])
@@ -6136,29 +6913,211 @@ class EditScreen(Screen):
         else:
             self.ids.gender.values = ['Select a Gender']
 
+        present_address = app_tables.fin_present_address.search()
+        present = []
+        for i in present_address:
+            present.append(i['present_address'])
+        self.unique_present = []
+        for i in present:
+            if i not in self.unique_present:
+                self.unique_present.append(i)
+        print(self.unique_present)
+        if len(self.unique_present) >= 1:
+            self.ids.type.values = ['Select present address'] + self.unique_present
+        else:
+            self.ids.type.values = ['Select present address']
+
+        gender_data = app_tables.fin_duration_at_address.search()
+        gender_list = []
+        for i in gender_data:
+            gender_list.append(i['duration_at_address'])
+        self.unique_gender = []
+        for i in gender_list:
+            if i not in self.unique_gender:
+                self.unique_gender.append(i)
+        print(self.unique_gender)
+        if len(self.unique_gender) >= 1:
+            self.ids.stay.values = ['Select staying address'] + self.unique_gender
+        else:
+            self.ids.stay.values = ['Select staying address']
+
+        gender_data = app_tables.fin_borrower_marrital_status.search()
+        gender_list = []
+        for i in gender_data:
+            gender_list.append(i['borrower_marrital_status'])
+        self.unique_gender = []
+        for i in gender_list:
+            if i not in self.unique_gender:
+                self.unique_gender.append(i)
+        print(self.unique_gender)
+        if len(self.unique_gender) >= 1:
+            self.ids.marrital_status.values = ['Select marrital status'] + self.unique_gender
+        else:
+            self.ids.marrital_status.values = ['Select marrital status']
+
+        gender_data = app_tables.fin_borrower_profession.search()
+        gender_list = []
+        for i in gender_data:
+            gender_list.append(i['borrower_profession'])
+        self.unique_gender = []
+        for i in gender_list:
+            if i not in self.unique_gender:
+                self.unique_gender.append(i)
+        print(self.unique_gender)
+        if len(self.unique_gender) >= 1:
+            self.ids.profession.values = ['Select profession'] + self.unique_gender
+        else:
+            self.ids.profession.values = ['Select profession']
+
+        gender_data = app_tables.fin_borrower_qualification.search()
+        gender_list = []
+        for i in gender_data:
+            gender_list.append(i['borrower_qualification'])
+        self.unique_gender = []
+        for i in gender_list:
+            if i not in self.unique_gender:
+                self.unique_gender.append(i)
+        print(self.unique_gender)
+        if len(self.unique_gender) >= 1:
+            self.ids.qualification.values = ['Select qualification'] + self.unique_gender
+        else:
+            self.ids.qualification.values = ['Select qualification']
+
         email = self.get_email()
-        data = app_tables.fin_user_profile.search()
+        data = app_tables.fin_user_profile.search(email_user=email)
+
+        if not data:
+            print("No data found for email:", email)
+            return
+
         name = []
         email1 = []
         mobile_no = []
         dob = []
-        city = []
         gender = []
+        marrital_status = []
+        alternate_email = []
+        gov_id1 = []
+        gov_id2 = []
+        address1 = []
+        address2 = []
+        type_of_address = []
+        staying_address = []
+        zip_code = []
+        state = []
+        country = []
+        qualification = []
+        profession = []
+        other_loan = []
+        home_loan = []
+        personal_credit = []
+        vehicle_loans = []
+        photo = []
+
         for row in data:
+            if row['user_photo']:
+                image_data = row['user_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                    # Assuming image_data is already a binary image file
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        photo.append(profile_texture_obj)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        photo.append(None)
+                else:
+                    # If image_data is not bytes, assume it's base64 encoded and decode it
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        print(f"Decoded image data length: {len(image_data_binary)}")
+                        profile_texture_io = BytesIO(image_data_binary)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        photo.append(profile_texture_obj)
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                        photo.append(None)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        photo.append(None)
+            else:
+                photo.append(None)
+
             name.append(row['full_name'])
+            alternate_email.append(row['mail_id'])
             email1.append(row['email_user'])
             mobile_no.append(row['mobile'])
             dob.append(row['date_of_birth'])
-            city.append(row['city'])
+            staying_address.append(row['duration_at_address'])
+            gov_id1.append(row['aadhaar_no'])
+            gov_id2.append(row['pan_number'])
+            address1.append(row['street_adress_1'])
+            address2.append(row['street_address_2'])
+            type_of_address.append(row['present_address'])
             gender.append(row['gender'])
+            marrital_status.append(row['marital_status'])
+            zip_code.append(row['pincode'])
+            state.append(row['state'])
+            country.append(row['city'])
+            qualification.append(row['qualification'])
+            profession.append(row['profession'])
+            other_loan.append(row['other_loan'])
+            home_loan.append(row['home_loan'])
+            personal_credit.append(row['credit_card_loans'])
+            vehicle_loans.append(row['vehicle_loan'])
+
         if email in email1:
             index = email1.index(email)
             self.ids.name.text = str(name[index])
+            self.ids.email_id.text = str(alternate_email[index])
             self.ids.email.text = str(email1[index])
             self.ids.mobile_no.text = str(mobile_no[index])
             self.ids.dob.text = str(dob[index])
-            self.ids.city.text = str(city[index])
+            self.ids.address1.text = str(address1[index])
+            self.ids.address2.text = str(address2[index])
+            self.ids.type.text = str(type_of_address[index])
+            self.ids.gov_id1.text = str(gov_id1[index])
+            self.ids.gov_id2.text = str(gov_id2[index])
+            self.ids.zip_code.text = str(zip_code[index])
+            self.ids.state.text = str(state[index])
+            self.ids.country.text = str(country[index])
+            self.ids.qualification.text = str(qualification[index])
+            self.ids.profession.text = str(profession[index])
+            self.ids.home.text = str(home_loan[index])
+            self.ids.other.text = str(other_loan[index])
+            self.ids.personal.text = str(personal_credit[index])
+            self.ids.two.text = str(str(vehicle_loans[index]))
+            self.ids.stay.text = str(staying_address[index])
             self.ids.gender.text = str(gender[index])
+            self.ids.marrital_status.text = str(marrital_status[index])
+
+            if photo[index]:
+                self.ids.selected_image1.texture = photo[index]
+            else:
+                print("No profile photo found for email:", email)
+        else:
+            print(f"Email {email} not found in data.")
+
+    def upload_image(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['user_photo'] = user_photo_media
+
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
 
     def get_email(self):
         # Make a call to the Anvil server function
@@ -6168,23 +7127,39 @@ class EditScreen(Screen):
     def save_edited_data(self):
         # Retrieve the edited data from the UI
         name = self.ids.name.text
-        email = self.ids.email.text
+        email1 = self.ids.email.text
         mobile_no = self.ids.mobile_no.text
         dob = self.ids.dob.text
-        city = self.ids.city.text
         gender = self.ids.gender.text
-
+        marrital_status = self.ids.marrital_status.text
+        alternate_email = self.ids.email_id.text
+        gov_id1 = self.ids.gov_id1.text
+        gov_id2 = self.ids.gov_id2.text
+        address1 = self.ids.address1.text
+        address2 = self.ids.address2.text
+        type_of_address = self.ids.type.text
+        staying_address = self.ids.stay.text
+        zip_code = self.ids.zip_code.text
+        state = self.ids.state.text
+        country = self.ids.country.text
+        qualification = self.ids.qualification.text
+        profession = self.ids.profession.text
+        other_loan = self.ids.other.text
+        home_loan = self.ids.home.text
+        personal_credit = self.ids.personal.text
+        vehicle_loans = self.ids.two.text
+        photo = self.ids.selected_image1.texture
         # Update the database with the edited data
         # Replace 'update_profile_data' with your actual database update function
-        success = self.update_profile_data(name, email, mobile_no, dob, city, gender)
+        success = self.update_profile_data(photo,vehicle_loans,personal_credit,home_loan,other_loan,profession,qualification,country,state,zip_code,staying_address,type_of_address,address1,address2,gov_id1,gov_id2,alternate_email,marrital_status,name, email1, mobile_no, dob, gender)
 
         if success:
             # If the update was successful, reload the profile data
             self.reload_profile_data()
             # self.show_validation_error("Database Update Sucessfully.")
             # If the update was successful, navigate back to the dashboard screen
-            self.manager.add_widget(Factory.DashboardScreen(name='DashboardScreen'))
-            self.manager.current = 'DashboardScreen'
+            self.manager.add_widget(Factory.AccountScreen(name='AccountScreen'))
+            self.manager.current = 'AccountScreen'
 
         else:
             # Handle the case where the update failed (e.g., display an error message)
@@ -6194,27 +7169,140 @@ class EditScreen(Screen):
         # Refresh the data in the ProfileScreen
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
+
+        if not data:
+            print("No data found for email:", email)
+            return
+
         name = []
         email1 = []
         mobile_no = []
         dob = []
-        city = []
         gender = []
+        marrital_status = []
+        alternate_email = []
+        gov_id1 = []
+        gov_id2 = []
+        address1 = []
+        address2 = []
+        type_of_address = []
+        staying_address = []
+        zip_code = []
+        state = []
+        country = []
+        qualification = []
+        profession = []
+        other_loan = []
+        home_loan = []
+        personal_credit = []
+        vehicle_loans = []
+        photo = []
+
         for row in data:
+            if row['user_photo']:
+                image_data = row['user_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                    # Assuming image_data is already a binary image file
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        photo.append(profile_texture_obj)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        photo.append(None)
+                else:
+                    # If image_data is not bytes, assume it's base64 encoded and decode it
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        print(f"Decoded image data length: {len(image_data_binary)}")
+                        profile_texture_io = BytesIO(image_data_binary)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        photo.append(profile_texture_obj)
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                        photo.append(None)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        photo.append(None)
+            else:
+                photo.append(None)
+
             name.append(row['full_name'])
+            alternate_email.append(row['mail_id'])
             email1.append(row['email_user'])
             mobile_no.append(row['mobile'])
             dob.append(row['date_of_birth'])
-            city.append(row['city'])
+            staying_address.append(row['duration_at_address'])
+            gov_id1.append(row['aadhaar_no'])
+            gov_id2.append(row['pan_number'])
+            address1.append(row['street_adress_1'])
+            address2.append(row['street_address_2'])
+            type_of_address.append(row['present_address'])
             gender.append(row['gender'])
+            marrital_status.append(row['marital_status'])
+            zip_code.append(row['pincode'])
+            state.append(row['state'])
+            country.append(row['city'])
+            qualification.append(row['qualification'])
+            profession.append(row['profession'])
+            other_loan.append(row['other_loan'])
+            home_loan.append(row['home_loan'])
+            personal_credit.append(row['credit_card_loans'])
+            vehicle_loans.append(row['vehicle_loan'])
+
         if email in email1:
             index = email1.index(email)
             self.ids.name.text = str(name[index])
+            self.ids.email_id.text = str(alternate_email[index])
             self.ids.email.text = str(email1[index])
             self.ids.mobile_no.text = str(mobile_no[index])
             self.ids.dob.text = str(dob[index])
-            self.ids.city.text = str(city[index])
+            self.ids.address1.text = str(address1[index])
+            self.ids.address2.text = str(address2[index])
+            self.ids.type.text = str(type_of_address[index])
+            self.ids.gov_id1.text = str(gov_id1[index])
+            self.ids.gov_id2.text = str(gov_id2[index])
+            self.ids.zip_code.text = str(zip_code[index])
+            self.ids.state.text = str(state[index])
+            self.ids.country.text = str(country[index])
+            self.ids.qualification.text = str(qualification[index])
+            self.ids.profession.text = str(profession[index])
+            self.ids.home.text = str(home_loan[index])
+            self.ids.other.text = str(other_loan[index])
+            self.ids.personal.text = str(personal_credit[index])
+            self.ids.two.text = str(str(vehicle_loans[index]))
+            self.ids.stay.text = str(staying_address[index])
             self.ids.gender.text = str(gender[index])
+            self.ids.marrital_status.text = str(marrital_status[index])
+
+            if photo[index]:
+                self.ids.selected_image1.texture = photo[index]
+            else:
+                print("No profile photo found for email:", email)
+        else:
+            print(f"Email {email} not found in data.")
+
+    def upload_image(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['user_photo'] = user_photo_media
+
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
 
     def show_validation_error(self, error_message):
         dialog = MDDialog(
@@ -6232,8 +7320,8 @@ class EditScreen(Screen):
         )
         dialog.open()
 
-    def update_profile_data(self, name, email, mobile_no, dob, city, gender):
-        user_profiles = app_tables.fin_user_profile.search(email_user=email)
+    def update_profile_data(self, photo,vehicle_loans,personal_credit,home_loan,other_loan,profession,qualification,country,state,zip_code,staying_address,type_of_address,address1,address2,gov_id1,gov_id2,alternate_email,marrital_status,name, email1, mobile_no, dob, gender):
+        user_profiles = app_tables.fin_user_profile.search(email_user=email1)
 
         # Check if any user profile exists
         if user_profiles:
@@ -6243,16 +7331,41 @@ class EditScreen(Screen):
 
             # Update the user's profile data
             user_profile.update(full_name=name,
-                                email_user=email,
+                                mail_id=alternate_email,
+                                email_user=email1,
                                 mobile=mobile_no,
                                 gender=gender,
-                                city=city,
-                                date_of_birth=dob
+                                duration_at_address=staying_address,
+                                aadhaar_no=gov_id1,
+                                pan_number=gov_id2,
+                                street_adress_1=address1,
+                                street_address_2=address2,
+                                present_address=type_of_address,
+                                marital_status=marrital_status,
+                                date_of_birth=dob,
+                                pincode=zip_code,
+                                state=state,
+                                city=country,
+                                qualification=qualification,
+                                profession=profession,
+                                other_loan=other_loan,
+                                home_loan=home_loan,
+                                credit_card_loans=personal_credit,
+                                vehicle_loan=vehicle_loans,
+                                user_photo=photo
                                 )
             return True
         else:
             # Handle the case where the user's profile does not exist
             return False
+
+    def get_email(self):
+        # Make a call to the Anvil server function
+        # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
+        return anvil.server.call('another_method')
+
+    def refresh(self):
+        pass
 
     def get_table(self):
         # Make a call to the Anvil server function
@@ -6269,7 +7382,6 @@ class EditScreen(Screen):
             else:
                 self.request_media_images_permission()
         else:
-            # For non-Android platforms, directly open the file manager
             self.file_manager_open(icon_id, label_id, file_label_id, image_id)
 
     def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
@@ -6281,11 +7393,11 @@ class EditScreen(Screen):
             primary_external_storage = "/storage/emulated/0"
             self.file_manager.show(primary_external_storage)
         else:
-            # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
     def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
-        self.ids[image_id].source = path  # Set the source of the Image widget
+        self.upload_image(path)  # Upload the selected image
+        self.ids[image_id].source = path
         self.file_manager.close()
 
     def exit_manager(self, *args):
@@ -6296,10 +7408,8 @@ class EditScreen(Screen):
 
     def permission_callback(self, permissions, grants):
         if all(grants.values()):
-            # Permission granted, open the file manager
             self.file_manager_open()
         else:
-            # Permission denied, show a modal view
             self.show_permission_denied()
 
     def show_permission_denied(self):
@@ -6313,6 +7423,8 @@ class EditScreen(Screen):
         )
         view.open()
 
+    def on_pre_enter(self):
+        Window.bind(on_keyboard=self.on_back_button)
 
     def on_pre_leave(self):
         Window.unbind(on_keyboard=self.on_back_button)
@@ -6325,13 +7437,13 @@ class EditScreen(Screen):
 
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'ProfileScreen'
+        self.manager.current = 'PersonalScreen'
 
     def on_back_button_press(self):
         sm = self.manager
-        wallet_screen = ProfileScreen(name='ProfileScreen')
+        wallet_screen = PersonalScreen(name='PersonalScreen')
         sm.add_widget(wallet_screen)
-        sm.current = 'ProfileScreen'
+        sm.current = 'PersonalScreen'
 
 
 class MyScreenManager(ScreenManager):

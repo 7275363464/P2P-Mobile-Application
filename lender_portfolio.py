@@ -1,9 +1,9 @@
+import anvil
 from anvil import Label
 from anvil.tables import app_tables
 from kivy.metrics import dp
+from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
-from kivymd.uix.button import MDFillRoundFlatButton
-from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
 from kivy.properties import ObjectProperty
 from kivy.lang import Builder
@@ -59,18 +59,8 @@ borrower_portfolio = '''
             title_align: 'left'
             md_bg_color: 0.043, 0.145, 0.278, 1
         MDScrollView:
-            MDBoxLayout:
-                id: container2
-                orientation: 'vertical'
-                padding: dp(30)
-                spacing: dp(10)
-                size_hint_y: None
-                height: self.minimum_height
-                width: self.minimum_width
-                adaptive_size: True
-
-                pos_hint: {"center_x": 0, "center_y":  0}
-
+            MDList:
+                id: container
 
 <LenViewPortfolio>:
 
@@ -88,20 +78,20 @@ borrower_portfolio = '''
             BoxLayout:
                 orientation: "vertical"
                 padding:dp(10)
-                spacing:dp(25)
+                spacing:dp(15)
                 size_hint_y: None
                 height: self.minimum_height
                 MDBoxLayout:
                     orientation: 'vertical'
                     size_hint_y: None
                     height: self.minimum_height
-                    padding: dp(20)
+                    padding: dp(10)
 
                     BoxLayout:
                         id: box1
                         orientation: 'vertical'
                         size_hint_y: None
-                        height: dp(800)
+                        height: dp(530)
                         padding: [10, 0,0,0]
                         canvas.before:
                             Color:
@@ -113,7 +103,7 @@ borrower_portfolio = '''
                             orientation: "vertical"
                             pos_hint: {"top": 1}
 
-                            spacing: dp(5)
+                            spacing: dp(-5)
                             padding:dp(10)
                             size_hint_y: None
                             height: dp(100)
@@ -314,7 +304,7 @@ borrower_portfolio = '''
                     size_hint_x: None
                     spacing:dp(5)
                     size_hint_y: None
-                    height: dp(660)
+                    height: dp(600)
                     width:dp(800)
                     pos_hint: {'center_x':0.5, 'center_y':0.5}
                     MDLabel:
@@ -382,11 +372,11 @@ borrower_portfolio = '''
                             font_size: dp(22)
                             halign: "center" 
                     MDBoxLayout:
-                        orientation: "horizontal"
+                        orientation: "vertical"
                         spacing: dp(1)
                         padding: dp(1)
                         size_hint: None, None
-                        height:dp(80)
+                        height:dp(40)
                         width:dp(400)
                         pos_hint: {'center_x': 0.5, 'center_y': 0.1}
                         MDLabel:
@@ -396,18 +386,167 @@ borrower_portfolio = '''
                             bold: True
                             spacing:dp(20)
                             padding:dp(20)
-                            height:dp(40)
+                            height:dp(-50)
                             font_size: dp(22)
                             halign: "center"  
                     PieChartWidget:
                         id: chart_widget
                         size_hint: None, None
-                        size: dp(400), dp(400)
+                        size: dp(400), dp(370)
                         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing: dp(5)  
+                        size_hint_y: None
+                        height: dp(-50)
+                        size_hint_x: None
+                        width: dp(400)
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        padding: dp(5)
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            spacing: dp(5)  # Space between the widget and label
+                            size_hint_y: None
+                            height: dp(40)
+                            Widget:
+                                size_hint_x: None
+                                width: dp(13)
+                                size_hint_y: None
+                                height: dp(13)
+                                canvas:
+                                    Color:
+                                        rgba:  0.914, 0.961, 0.129, 1
+                                    Rectangle:
+                                        pos: self.pos
+                                        size: self.size
+                            MDLabel:
+                                text: "Under Process"
+                                halign: 'left'
+                                valign: 'middle'
+                                size_hint_y: None
+                                height: dp(13)
+
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            spacing: dp(5)  # Space between the widget and label
+                            size_hint_y: None
+                            height: dp(40)
+                            Widget:
+                                size_hint_x: None
+                                width: dp(13)
+                                size_hint_y: None
+                                height: dp(13)
+                                canvas:
+                                    Color:
+                                        rgba: 0.980, 0.459, 0.200, 1
+                                    Rectangle:
+                                        pos: self.pos
+                                        size: self.size
+                            MDLabel:
+                                text: "Disbursed"
+                                halign: 'left'
+                                valign: 'middle'
+                                size_hint_y: None
+                                height: dp(13)
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            spacing: dp(5)  # Space between the widget and label
+                            size_hint_y: None
+                            height: dp(40)
+                            Widget:
+                                size_hint_x: None
+                                width: dp(13)
+                                size_hint_y: None
+                                height: dp(13)
+                                canvas:
+                                    Color:
+                                        rgba: 1, 0, 0, 1  # Green color
+                                    Rectangle:
+                                        pos: self.pos
+                                        size: self.size
+                            MDLabel:
+                                text: "Rejected"
+                                halign: 'left'
+                                valign: 'middle'
+                                size_hint_y: None
+                                height: dp(13)
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing: dp(5)  # Spacing between the two columns
+                        size_hint_y: None
+                        height: dp(20)
+                        size_hint_x: None
+                        width: dp(400)
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        padding: dp(5)            
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            spacing: dp(5)  # Space between the widget and label
+                            size_hint_y: None
+                            height: dp(40)
+                            Widget:
+                                size_hint_x: None
+                                width: dp(13)
+                                size_hint_y: None
+                                height: dp(13)
+                                canvas:
+                                    Color:
+                                        rgba: 0, 0, 1, 1  # Green color
+                                    Rectangle:
+                                        pos: self.pos
+                                        size: self.size
+                            MDLabel:
+                                text: "Extension"
+                                halign: 'left'
+                                valign: 'middle'
+                                size_hint_y: None
+                                height: dp(13)
 
 
-
-
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            spacing: dp(5)  # Space between the widget and label
+                            size_hint_y: None
+                            height: dp(40)
+                            Widget:
+                                size_hint_x: None
+                                width: dp(13)
+                                size_hint_y: None
+                                height: dp(13)
+                                canvas:
+                                    Color:
+                                        rgba: 0.729, 0.239, 0.976, 1
+                                    Rectangle:
+                                        pos: self.pos
+                                        size: self.size
+                            MDLabel:
+                                text: "Foreclosure"
+                                halign: 'left'
+                                valign: 'middle'
+                                size_hint_y: None
+                                height: dp(13)
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            spacing: dp(5)  # Space between the widget and label
+                            size_hint_y: None
+                            height: dp(40)
+                            Widget:
+                                size_hint_x: None
+                                width: dp(13)
+                                size_hint_y: None
+                                height: dp(13)
+                                canvas:
+                                    Color:
+                                        rgba:  0, 1, 0, 1  # Green color
+                                    Rectangle:
+                                        pos: self.pos
+                                        size: self.size
+                            MDLabel:
+                                text: "Closed"
+                                halign: 'left'
+                                valign: 'middle'
+                                size_hint_y: None
+                                height: dp(13)        
 
 <Gauge>:
     on_size: self.recalculate_lines()
@@ -478,7 +617,7 @@ class Lend_Portfolio(Screen):
         super().__init__(**kwargs)
         self.populate_lender_list()
 
-    def populate_lender_list(self, instance=None):
+    def populate_lender_list(self):
         data = app_tables.fin_loan_details.search()
         profile = app_tables.fin_user_profile.search()
 
@@ -492,86 +631,35 @@ class Lend_Portfolio(Screen):
                         'full_name': loan['borrower_full_name'],
                         'mobile_number': '',
                         'product_name': loan['product_name'],
-                        'loan_amount': loan['loan_amount'],
-                        'interest_rate': loan['interest_rate'],
-                        'loan_status': loan['loan_updated_status']
+                        'open_loans': 0,  # Initialize open loans count
+                        'closed_loans': 0  # Initialize closed loans count
                     }
+                # Count open and closed loans
+                if loan['loan_updated_status'] == 'disbursed':
+                    borrower_details[borrower_id]['open_loans'] += 1
+                else:
+                    borrower_details[borrower_id]['closed_loans'] += 1
 
         for prof in profile:
             if prof['customer_id'] in borrower_details:
                 borrower_details[prof['customer_id']]['mobile_number'] = prof['mobile']
-                borrower_details[prof['customer_id']]['ascend_value'] = prof['ascend_value']
 
         for borrower_id, details in borrower_details.items():
-            card = MDCard(
-                orientation='vertical',
-                size_hint=(None, None),
-                size=("280dp", "180dp"),
-                padding="8dp",
-                spacing="5dp",
-                elevation=3
-            )
-            horizontal_layout = BoxLayout(orientation='horizontal')
-            image = Image(
-                source='img.png',  # Update with the actual path to the image
-                size_hint_x=None,
-                height="60dp",
-                width="70dp"
-            )
-            horizontal_layout.add_widget(image)
-            horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
-            text_layout = BoxLayout(orientation='vertical')
-            text_layout.add_widget(MDLabel(
-                text=f"[b]{details['full_name']}[/b]\n[b]{details['mobile_number']}[/b]",
-                theme_text_color='Custom',
+            item = ThreeLineAvatarIconListItem(
+                IconLeftWidget(icon="account"),
+                text=f"Borrower Name: {details['full_name']}",
+                secondary_text=f"Borrower Mobile Number: {details['mobile_number']}",
+                tertiary_text=f"Product Name: {details['product_name']}",
                 text_color=(0, 0, 0, 1),
-                halign='left',
-                markup=True,
-            ))
-            text_layout.add_widget(MDLabel(
-                text=f"[b]Loan Amount:[/b] {details['loan_amount']}",
                 theme_text_color='Custom',
-                text_color=(0, 0, 0, 1),
-                halign='left',
-                markup=True,
-            ))
-            text_layout.add_widget(MDLabel(
-                text=f"[b]Ascend Score:[/b] {details.get('ascend_value', 'N/A')}",
-                theme_text_color='Custom',
-                text_color=(0, 0, 0, 1),
-                halign='left',
-                markup=True,
-            ))
-
-            horizontal_layout.add_widget(text_layout)
-            card.add_widget(horizontal_layout)
-
-            card.add_widget(Widget(size_hint_y=None, height='10dp'))
-            button1 = MDFillRoundFlatButton(
-                text="View Details",
-                height="40dp",
-                width="250dp",
-                pos_hint={"center_x": 0.5, "center_y": 0.5},
-                md_bg_color=(0.043, 0.145, 0.278, 1),
-                on_release=lambda x, borrower_id=borrower_id: self.icon_button_clicked(instance, borrower_id)
+                secondary_text_color=(0, 0, 0, 1),
+                secondary_theme_text_color='Custom',
+                tertiary_text_color=(0, 0, 0, 1),
+                tertiary_theme_text_color='Custom'
             )
-            card.add_widget(button1)
-            self.ids.container2.add_widget(card)
-            # item = ThreeLineAvatarIconListItem(
-            #     IconLeftWidget(icon="account"),
-            #     text=f"Borrower Name: {details['full_name']}",
-            #     secondary_text=f"Borrower Mobile Number: {details['mobile_number']}",
-            #     tertiary_text=f"Product Name: {details['product_name']}",
-            #     text_color=(0, 0, 0, 1),
-            #     theme_text_color='Custom',
-            #     secondary_text_color=(0, 0, 0, 1),
-            #     secondary_theme_text_color='Custom',
-            #     tertiary_text_color=(0, 0, 0, 1),
-            #     tertiary_theme_text_color='Custom'
-            # )
-            # item.bind(
-            #     on_release=lambda instance, borrower_id=borrower_id: self.icon_button_clicked(instance, borrower_id))
-            # self.ids.container.add_widget(item)
+            item.bind(
+                on_release=lambda instance, borrower_id=borrower_id: self.icon_button_clicked(instance, borrower_id))
+            self.ids.container.add_widget(item)
 
     def icon_button_clicked(self, instance, borrower_id):
         sm = self.manager
@@ -596,33 +684,93 @@ class Lend_Portfolio(Screen):
         return False
 
     def refresh(self):
-        self.ids.container2.clear_widgets()
-        self.__init__()
+        self.ids.container.clear_widgets()
+        self.populate_lender_list()
 
 
-class PieChartWidget(MDBoxLayout):
+class PieChartWidget(AnchorLayout):
+    borrower_id = NumericProperty()
+
     def __init__(self, **kwargs):
         super(PieChartWidget, self).__init__(**kwargs)
-        self.chart_image = Image(allow_stretch=True, size_hint=(5.5, 1))
+        self.chart_image = Image(allow_stretch=True)
         self.add_widget(self.chart_image)
+        self.borrower_id = kwargs.get('borrower_id', 0)  # Get borrower_id from kwargs
         self.plot_pie_chart()
 
     def plot_pie_chart(self):
-        Marks = [67, 88, 63, 77, 20]
-        Subject = ['Available Balance', 'No of loans closed', 'No of loans open', 'Total loan amount taken',
-                   'My Commitments']
-        plt.axis("equal")
-        plt.pie(Marks, labels=Subject, explode=[0, 0, 0, 0, 0.2], autopct="%1.2f%%")
+        if not self.borrower_id:
+            return
 
-        # Convert matplotlib plot to texture
-        buf = io.BytesIO()
-        plt.savefig(buf, format='png')
-        buf.seek(0)
-        im = CoreImage(buf, ext='png').texture
-        plt.close()
+        # Fetching data from the database dynamically
+        loan_data = app_tables.fin_loan_details.search(borrower_customer_id=self.borrower_id)
+        loan_status_count = {
+            'disbursed': 0,
+            'rejected': 0,
+            'extension': 0,
+            'foreclosure': 0,
+            'under_process': 0,
+            'closed': 0
+        }
 
-        # Display the plot
-        self.chart_image.texture = im
+        for loan in loan_data:
+            loan_status = loan['loan_updated_status']
+            if loan_status == 'under process':
+                loan_status_count['under_process'] += 1
+            elif loan_status in loan_status_count:
+                loan_status_count[loan_status] += 1
+
+        # Remove items with 0 count
+        loan_status_count = {status: count for status, count in loan_status_count.items() if count != 0}
+
+        # Define the colors for each status
+        status_colors = {
+            'disbursed': '#FA7533',
+            'rejected': '#F81B1E',
+            'extension': '#3D65F9',
+            'foreclosure': '#BA3DF9',
+            'under_process': '#E9F621',
+            'closed': '#30C624'
+        }
+
+        # Plot pie chart only if there are non-zero values
+        if any(loan_status_count.values()):
+            values = list(loan_status_count.values())
+            colors = [status_colors[label] for label in loan_status_count.keys()]
+
+            plt.axis("equal")
+            patches, _, autotexts = plt.pie(
+                values, labels=None, autopct='%1.0f%%', colors=colors,
+                textprops={'fontsize': 14}  # Remove fontweight here
+            )
+            # Display count labels below the percentage
+            for i, (count, color) in enumerate(zip(values, colors)):
+                percentage = '{:.0f}%'.format(count / sum(values) * 100)
+                autotexts[i].set_color('white')  # Set text color to white
+                autotexts[i].set_fontsize(14)  # Set font size for percentage
+                autotexts[i].set_text(percentage + f'\n{count} loan' + ('s' if count > 1 else ''))
+
+                # Set font weight only for percentage
+                if '%' in autotexts[i].get_text():
+                    autotexts[i].set_fontweight('bold')
+
+            # Convert matplotlib plot to texture
+            buf = io.BytesIO()
+            plt.savefig(buf, format='png')
+            buf.seek(0)
+            im = CoreImage(buf, ext='png').texture
+            plt.close()
+
+            # Display the plot
+            self.chart_image.texture = im
+
+            # Set the size of the chart image (adjust as needed)
+            self.chart_image.size = (400, 400)
+
+            # Center the chart in the layout
+            self.chart_image.pos_hint = {'center_x': 0.5, 'center_y': 0.5}
+            self.size_hint = (None, None)
+            self.size = self.chart_image.size
 
 
 class LenViewPortfolio(Screen):
@@ -630,6 +778,8 @@ class LenViewPortfolio(Screen):
         self.manager.current = 'Lend_Portfolio'
 
     def initialize_with_value(self, borrower_id):
+        self.ids.chart_widget.clear_widgets()
+
         profile = app_tables.fin_user_profile.get(customer_id=borrower_id)
 
         if profile:
@@ -642,7 +792,6 @@ class LenViewPortfolio(Screen):
             self.ids.qualification.text = f"{profile['qualification']}"
             self.ids.profession.text = f"{profile['profession']}"
             self.ids.annual_salary.text = f"{profile['annual_salary']}"
-            # Update the gauge widget color based on ascend_value
             ascend_value = profile['ascend_value']
             self.ids.ascend_percentage.text = f"{profile['ascend_value']}%"
             gauge_widget = self.ids.gauge
@@ -660,3 +809,6 @@ class LenViewPortfolio(Screen):
             else:
                 self.ids.status.text = "Bad"
                 self.ids.status.color = get_color_from_hex('#FF0000')  # Red
+
+            pie_chart_widget = PieChartWidget(borrower_id=borrower_id)
+            self.ids.chart_widget.add_widget(pie_chart_widget)

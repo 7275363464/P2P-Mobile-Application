@@ -1,6 +1,8 @@
-import base64
 import json
+import base64
+from anvil import media
 from io import BytesIO
+from kivy.core.image import Image as CoreImage
 from lender_portfolio import Lend_Portfolio
 from anvil.tables import app_tables
 from kivy.atlas import CoreImage
@@ -63,6 +65,7 @@ if platform == 'android':
 user_helpers1 = """
 <WindowManager>:
     LenderDashboard:
+    ViewPersonalScreen:
     ViewProfessionalScreen:
     ViewAccountScreen:
     ViewBankScreen:
@@ -915,7 +918,7 @@ user_helpers1 = """
                             text_color: 0.043, 0.145, 0.278, 1
                             size: dp(90), dp(90)
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                            on_touch_down:  root.go_to_profile() if self.collide_point(*args[1].pos) else None
+                            on_touch_down:  root.profile() if self.collide_point(*args[1].pos) else None
                             canvas.before:
                                 Color:
                                     rgba: 1, 1, 1, 1
@@ -979,7 +982,7 @@ user_helpers1 = """
                                         md_bg_color: "#ffffff"  # Customize background color
                                         orientation: "vertical"
                                         padding:dp(9), dp(3)
-                                        on_release: root.go_to_profile()
+                                        on_release: root.profile()
 
                                         Image:
                                             source: "icon7.png"
@@ -1151,7 +1154,7 @@ user_helpers1 = """
     MDBoxLayout:
         orientation: 'vertical'
         MDTopAppBar:
-            title: "Account Info"
+            title: "Account Information"
             elevation: 2
             pos_hint: {'top': 1}
             left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
@@ -1272,8 +1275,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-
-
+                                on_release:root.profile()
                                 Image:
                                     source: "icon7.png"
                                     size_hint: (0.4, 1)
@@ -1302,14 +1304,12 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-
-
+                                on_release:root.personal()
                                 Image:
                                     source: "icon6.png"
                                     size_hint: (0.4, 1)
                                     pos_hint:{"center_x":0.5,"center_y":0.2}
                                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
 
                                 MDLabel:
                                     text: "Personal Info"
@@ -1335,11 +1335,10 @@ user_helpers1 = """
                                 padding:dp(9), dp(3)
                                 on_release: root.professional()
                                 Image:
-                                    source: "icon8.png"
+                                    source: "icon12.png"
                                     size_hint: (0.4, 1)
                                     pos_hint:{"center_x":0.5,"center_y":0.2}
                                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
 
                                 MDLabel:
                                     text: "Professional Info"
@@ -2460,6 +2459,214 @@ user_helpers1 = """
                         Line:
                             points: self.x, self.y, self.x + self.width, self.y
 
+<ViewProfileScreen>
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: 1, 1
+        pos_hint: {'center_x':0.5, 'center_y':0.5}
+        MDTopAppBar:
+            title: "Profile Information"
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            right_action_items: [['refresh', lambda x: root.refresh()]]
+            title_align: 'center'
+            md_bg_color: 0.043, 0.145, 0.278, 1
+
+        ScrollView:  # Add ScrollView here
+            do_scroll_x: False
+            BoxLayout:
+                orientation: "vertical"
+                padding: dp(0)
+                spacing: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(0)
+                    spacing: dp(10)
+                    MDLabel:
+                        text: ' '
+                    MDLabel:
+                        text: ' '
+                    MDLabel:
+                        text: ' '
+                    BoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: None
+                        height: dp(10)
+                        spacing: dp(5)
+                        padding:dp(7)
+
+                        MDLabel:
+                            text: ' Investment '
+                            color: 0, 0, 0, 1
+                            halign: 'left'
+                            font_size: dp(13)
+                            size_hint_x: 0.4
+                            pos_hint: {'center_y': 0.5}
+                            bold: True
+                            multiline: False
+
+                        MDLabel:
+                            id: investment
+                            font_size: dp(13)
+                            text:'Add investment'
+                            size_hint: None, None
+                            size_hint_x: 0.6
+                            multiline: False
+                            halign: 'left'
+                            pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(0)
+                    spacing: dp(10)
+
+                    BoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: None
+                        height: dp(10)
+                        spacing: dp(5)
+                        padding:dp(7)
+
+                        MDLabel:
+                            text: ' Membership type '
+                            color: 0, 0, 0, 1
+                            halign: 'left'
+                            font_size: dp(13)
+                            size_hint_x: 0.4
+                            pos_hint: {'center_y': 0.5}
+                            bold: True
+                            multiline: False
+
+                        MDLabel:
+                            id: membership_type
+                            font_size: dp(13)
+                            text:'Add membership type'
+                            size_hint: None, None
+                            size_hint_x: 0.6
+                            multiline: False
+                            halign: 'left'
+                            pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(0)
+                    spacing: dp(10)
+
+                    BoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: None
+                        height: dp(10)
+                        spacing: dp(5)
+                        padding:dp(7)
+
+                        MDLabel:
+                            text: ' Lender returns '
+                            color: 0, 0, 0, 1
+                            halign: 'left'
+                            font_size: dp(13)
+                            size_hint_x: 0.4
+                            pos_hint: {'center_y': 0.5}
+                            bold: True
+                            multiline: False
+
+                        MDLabel:
+                            id: return_on_investment
+                            font_size: dp(13)
+                            text:'Add lender returns'
+                            size_hint: None, None
+                            size_hint_x: 0.6
+                            multiline: False
+                            halign: 'left'
+                            pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(0)
+                    spacing: dp(10)
+
+                    BoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: None
+                        height: dp(10)
+                        spacing: dp(5)
+                        padding:dp(7)
+
+                        MDLabel:
+                            text: ' Lending period '
+                            color: 0, 0, 0, 1
+                            halign: 'left'
+                            font_size: dp(13)
+                            size_hint_x: 0.4
+                            pos_hint: {'center_y': 0.5}
+                            bold: True
+                            multiline: False
+
+                        MDLabel:
+                            id: lending period
+                            font_size: dp(13)
+                            text:'Add lending period'
+                            size_hint: None, None
+                            size_hint_x: 0.6
+                            multiline: False
+                            halign: 'left'
+                            pos_hint: {'center_y': 0.5}
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    canvas:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+
+                
 <ViewBankScreen>
     canvas.before:
         Color:
@@ -2753,7 +2960,7 @@ user_helpers1 = """
                         Line:
                             points: self.x, self.y, self.x + self.width, self.y
 
-<ViewProfileScreen>
+<ViewPersonalScreen>
     canvas.before:
         Color:
             rgba: 1, 1, 1, 1
@@ -2766,7 +2973,7 @@ user_helpers1 = """
         size_hint: 1, 1
         pos_hint: {'center_x':0.5, 'center_y':0.5}
         MDTopAppBar:
-            title: "View Profile"
+            title: "Personal Information"
             elevation: 2
             pos_hint: {'top': 1}
             left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
@@ -2827,7 +3034,7 @@ user_helpers1 = """
                             icon: 'camera'
                             source: ""
                             pos_hint: {'center_x': 1.1, 'center_y': 0.}
-                            on_release: app.root.get_screen('ProfileScreen').check_and_open_file_manager1()
+                            on_release: app.root.get_screen('ViewPersonalScreen').check_and_open_file_manager1()
 
                 Label:
                     id: selected_file_label
@@ -2835,22 +3042,7 @@ user_helpers1 = """
                     text: 'Upload Photo'
                     size_hint_y: None
                     height: dp(10)
-                BoxLayout:
-                    orientation: "vertical"
-                    padding: dp(0)
-                    spacing: dp(10)
-                    size_hint_y: None
-                    height: self.minimum_height
-                    MDLabel:
-                        text: ' Personal Info '
-                        color: 0, 0, 0, 1
-                        halign: 'left'
-                        font_size: dp(13)
-                        size_hint_x: 0.4
-                        pos_hint: {'center_y': 0.5}
-                        bold: True
-                        multiline: False
-
+                    
                 Widget:
                     size_hint_y: None
                     height: dp(1)
@@ -3104,7 +3296,7 @@ user_helpers1 = """
 
                     MDLabel:
                         id: gov_id1
-                        text:'Add mobile no'
+                        text:'Add gov id'
                         size_hint: None, None
                         size_hint_x: 0.6
                         multiline: False
@@ -3142,7 +3334,7 @@ user_helpers1 = """
                     MDLabel:
                         id: gov_id2
                         font_size: dp(13)
-                        text:'Add email'
+                        text:'Add gov id'
                         size_hint: None, None
                         size_hint_x: 0.6
                         multiline: False
@@ -3178,7 +3370,7 @@ user_helpers1 = """
                     MDLabel:
                         id: address1
                         font_size: dp(13)
-                        text:'Add email'
+                        text:'Add address1'
                         size_hint: None, None
                         size_hint_x: 0.6
                         multiline: False
@@ -3213,7 +3405,7 @@ user_helpers1 = """
 
                     MDLabel:
                         id: address2
-                        text:'Add mobile no'
+                        text:'Add address2'
                         size_hint: None, None
                         size_hint_x: 0.6
                         multiline: False
@@ -3554,150 +3746,7 @@ user_helpers1 = """
                         Line:
                             points: self.x, self.y, self.x + self.width, self.y
 
-                BoxLayout:
-                    orientation: "horizontal"
-                    size_hint_y: None
-                    height: dp(10)
-                    spacing: dp(5)
-                    padding:dp(7)
-
-                    MDLabel:
-                        text: ' Home loan '
-                        color: 0, 0, 0, 1
-                        font_size: dp(13)
-                        halign: 'left'
-                        size_hint_x: 0.4
-                        pos_hint: {'center_y': 0.5}
-                        bold: True
-                        multiline: False
-
-                    MDLabel:
-                        id: home
-                        text:'Add gender'
-                        size_hint: None, None
-                        size_hint_x: 0.6
-                        multiline: False
-                        halign: 'left'
-                        font_size: dp(13)
-                        pos_hint: {'center_y': 0.5}
-
-                Widget:
-                    size_hint_y: None
-                    height: dp(1)
-                    canvas:
-                        Color:
-                            rgba: 0, 0, 0, 1
-                        Line:
-                            points: self.x, self.y, self.x + self.width, self.y
-
-                BoxLayout:
-                    orientation: "horizontal"
-                    size_hint_y: None
-                    height: dp(10)
-                    spacing: dp(5)
-                    padding:dp(7)
-
-                    MDLabel:
-                        text: ' Other loan '
-                        color: 0, 0, 0, 1
-                        font_size: dp(13)
-                        halign: 'left'
-                        size_hint_x: 0.4
-                        pos_hint: {'center_y': 0.5}
-                        bold: True
-                        multiline: False
-
-                    MDLabel:
-                        id: other
-                        text:'Add gender'
-                        size_hint: None, None
-                        size_hint_x: 0.6
-                        multiline: False
-                        halign: 'left'
-                        font_size: dp(13)
-                        pos_hint: {'center_y': 0.5}
-
-                Widget:
-                    size_hint_y: None
-                    height: dp(1)
-                    canvas:
-                        Color:
-                            rgba: 0, 0, 0, 1
-                        Line:
-                            points: self.x, self.y, self.x + self.width, self.y
-
-                BoxLayout:
-                    orientation: "horizontal"
-                    size_hint_y: None
-                    height: dp(10)
-                    spacing: dp(5)
-                    padding:dp(7)
-
-                    MDLabel:
-                        text: ' Personal Credit Card Loans '
-                        color: 0, 0, 0, 1
-                        font_size: dp(13)
-                        halign: 'left'
-                        size_hint_x: 0.4
-                        pos_hint: {'center_y': 0.5}
-                        bold: True
-                        multiline: False
-
-                    MDLabel:
-                        id: personal
-                        text:'Add gender'
-                        size_hint: None, None
-                        size_hint_x: 0.6
-                        multiline: False
-                        halign: 'left'
-                        font_size: dp(13)
-                        pos_hint: {'center_y': 0.5}
-
-                Widget:
-                    size_hint_y: None
-                    height: dp(1)
-                    canvas:
-                        Color:
-                            rgba: 0, 0, 0, 1
-                        Line:
-                            points: self.x, self.y, self.x + self.width, self.y
-
-                BoxLayout:
-                    orientation: "horizontal"
-                    size_hint_y: None
-                    height: dp(10)
-                    spacing: dp(5)
-                    padding:dp(7)
-
-                    MDLabel:
-                        text: ' Two Wheeler / Four Wheeler Loans '
-                        color: 0, 0, 0, 1
-                        font_size: dp(13)
-                        halign: 'left'
-                        size_hint_x: 0.4
-                        pos_hint: {'center_y': 0.5}
-                        bold: True
-                        multiline: False
-
-                    MDLabel:
-                        id: two
-                        text:'Add gender'
-                        size_hint: None, None
-                        size_hint_x: 0.6
-                        multiline: False
-                        halign: 'left'
-                        font_size: dp(13)
-                        pos_hint: {'center_y': 0.5}
-
-                Widget:
-                    size_hint_y: None
-                    height: dp(1)
-                    canvas:
-                        Color:
-                            rgba: 0, 0, 0, 1
-                        Line:
-                            points: self.x, self.y, self.x + self.width, self.y
-
+                
                 MDLabel:
                     text: ' '
 
@@ -3738,7 +3787,7 @@ user_helpers1 = """
         size_hint: 1, 1
         pos_hint: {'center_x':0.5, 'center_y':0.5}
         MDTopAppBar:
-            title: "View Profile"
+            title: "Personal Information"
             elevation: 2
             pos_hint: {'top': 1}
             left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
@@ -4051,7 +4100,7 @@ class LenderDashboard(Screen):
     def refresh2(self):
         self.__init__()
 
-    def go_to_profile(self):
+    def profile(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -4070,9 +4119,9 @@ class LenderDashboard(Screen):
 
         # Perform the actual action (e.g., fetching transaction history)
         # You can replace the sleep with your actual logic
-        Clock.schedule_once(lambda dt: self.go_to_profile_action(modal_view), 2)
+        Clock.schedule_once(lambda dt: self.profile_action(modal_view), 2)
 
-    def go_to_profile_action(self, modal_view):
+    def profile_action(self, modal_view):
         # Dismiss the modal view
         modal_view.dismiss()
 
@@ -4080,13 +4129,13 @@ class LenderDashboard(Screen):
         sm = self.manager
 
         # Create a new instance of the TransactionBH screen
-        transaction_bh_screen = ViewProfileScreen(name='ViewProfileScreen')
+        transaction_bh_screen = ViewPersonalScreen(name='ViewPersonalScreen')
 
         # Add the TransactionBH screen to the existing ScreenManager
         sm.add_widget(transaction_bh_screen)
 
         # Switch to the TransactionBH screen
-        sm.current = 'ViewProfileScreen'
+        sm.current = 'ViewPersonalScreen'
 
     def wallet(self):
         self.type = None
@@ -5433,6 +5482,14 @@ class ViewAccountScreen(Screen):
         self.manager.add_widget(Factory.ViewBankScreen(name='ViewBankScreen'))
         self.manager.current = 'ViewBankScreen'
 
+    def profile(self):
+        self.manager.add_widget(Factory.ViewProfileScreen(name='ViewProfileScreen'))
+        self.manager.current = 'ViewProfileScreen'
+
+    def personal(self):
+        self.manager.add_widget(Factory.ViewPersonalScreen(name='ViewPersonalScreen'))
+        self.manager.current = 'ViewPersonalScreen'
+
     def go_to_business1(self):
         employee = self.get_business1()
         if employee is None:
@@ -5450,7 +5507,7 @@ class ViewAccountScreen(Screen):
 
     def get_business1(self):
         email = self.get_email()
-        profession_records = app_tables.fin_lender.search(email_user=email)
+        profession_records = app_tables.fin_lender.search(email_id=email)
 
         if profession_records:
             # Assuming the profession is stored in the first record if found
@@ -5482,7 +5539,7 @@ class ViewAccountScreen(Screen):
 
     def get_profession(self):
         email = self.get_email()
-        profession_records = app_tables.fin_lender.search(email_user=email)
+        profession_records = app_tables.fin_lender.search(email_id=email)
 
         if profession_records:
             # Assuming the profession is stored in the first record if found
@@ -5496,6 +5553,53 @@ class ViewAccountScreen(Screen):
         if not self.manager.has_screen('None'):
             self.manager.add_widget(Factory.ViewBusinessScreen1(name='ViewBusinessScreen1'))
         self.manager.current = 'ViewBusinessScreen1'
+
+class ViewProfileScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        email = self.get_email()
+        data = app_tables.fin_lender.search(email_id=email)
+        investment = []
+        email1 = []
+        membership=[]
+        returns=[]
+        lending=[]
+        for row in data:
+            email1.append(row['email_id'])
+            investment.append(row['investment'])
+            membership.append(row['membership'])
+            returns.append(row['return_on_investment'])
+            lending.append(row['lending_period'])
+
+        if email in email1:
+            index = email1.index(email)
+            self.ids.investment.text = str(investment[index])
+            self.ids.membership_type.text = str(membership[index])
+            self.ids.return_on_investment.text = str(returns[index])
+            self.ids.lending_period.text = str(lending[index])
+
+    def refresh(self):
+        pass
+
+    def on_back_button_press(self):
+        self.manager.current = 'ViewAccountScreen'
+
+    def get_email(self):
+        # Make a call to the Anvil server function
+        # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
+        return anvil.server.call('another_method')
+
+    def on_pre_enter(self):
+        Window.bind(on_keyboard=self.on_back_button)
+
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=self.on_back_button)
+
+    def on_back_button(self, instance, key, scancode, codepoint, modifier):
+        if key == 27:
+            self.on_back_button_press()
+            return True
+        return False
 
 
 class ViewEmployeeScreen(Screen):
@@ -5721,11 +5825,7 @@ class ViewBankScreen(Screen):
             return True
         return False
 
-class ViewProfileScreen(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.refresh_profile_data()  # Initial data retrieval
-
+class ViewPersonalScreen(Screen):
     def refresh_profile_data(self, dt=None):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
@@ -5741,36 +5841,131 @@ class ViewProfileScreen(Screen):
         city = []
         gender = []
         marrital_status = []
+        alternate_email = []
+        gov_id1 = []
+        gov_id2 = []
+        address1 = []
+        address2 = []
+        type_of_address = []
+        staying_address = []
+        zip_code = []
+        state = []
+        country = []
+        qualification = []
+        profession = []
+        photo = []
+
         for row in data:
+            if row['user_photo']:
+                image_data = row['user_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                    # Assuming image_data is already a binary image file
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        photo.append(profile_texture_obj)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        photo.append(None)
+                else:
+                    # If image_data is not bytes, assume it's base64 encoded and decode it
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        print(f"Decoded image data length: {len(image_data_binary)}")
+                        profile_texture_io = BytesIO(image_data_binary)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        photo.append(profile_texture_obj)
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                        photo.append(None)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        photo.append(None)
+            else:
+                photo.append(None)
+
             name.append(row['full_name'])
+            alternate_email.append(row['mail_id'])
             email1.append(row['email_user'])
             mobile_no.append(row['mobile'])
             dob.append(row['date_of_birth'])
             city.append(row['city'])
+            staying_address.append(row['duration_at_address'])
+            gov_id1.append(row['aadhaar_no'])
+            gov_id2.append(row['pan_number'])
+            address1.append(row['street_adress_1'])
+            address2.append(row['street_address_2'])
+            type_of_address.append(row['present_address'])
             gender.append(row['gender'])
             marrital_status.append(row['marital_status'])
+            zip_code.append(row['pincode'])
+            state.append(row['state'])
+            country.append(row['city'])
+            qualification.append(row['qualification'])
+            profession.append(row['profession'])
+
         if email in email1:
             index = email1.index(email)
             self.ids.name.text = str(name[index])
+            self.ids.email_id.text = str(alternate_email[index])
             self.ids.email.text = str(email1[index])
             self.ids.mobile_no.text = str(mobile_no[index])
             self.ids.dob.text = str(dob[index])
+            self.ids.address1.text = str(address1[index])
+            self.ids.address2.text = str(address2[index])
+            self.ids.type.text = str(type_of_address[index])
+            self.ids.gov_id1.text = str(gov_id1[index])
+            self.ids.gov_id2.text = str(gov_id2[index])
             self.ids.city.text = str(city[index])
+            self.ids.zip_code.text = str(zip_code[index])
+            self.ids.state.text = str(state[index])
+            self.ids.country.text = str(city[index])
+            self.ids.qualification.text = str(qualification[index])
+            self.ids.profession.text = str(profession[index])
+            self.ids.stay.text = str(staying_address[index])
             self.ids.gender.text = str(gender[index])
             self.ids.marrital_status.text = str(marrital_status[index])
+
+            if photo[index]:
+                self.ids.selected_image1.texture = photo[index]
+            else:
+                print("No profile photo found for email:", email)
+        else:
+            print(f"Email {email} not found in data.")
+
+    def upload_image(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['user_photo'] = user_photo_media
+
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
 
     def get_email(self):
         # Make a call to the Anvil server function
         # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
         return anvil.server.call('another_method')
 
+    def refresh(self):
+        pass
+
     def get_table(self):
         # Make a call to the Anvil server function
         # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
         return anvil.server.call('profile')
-
-    def refresh(self):
-        pass
 
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
@@ -5782,12 +5977,7 @@ class ViewProfileScreen(Screen):
             else:
                 self.request_media_images_permission()
         else:
-            # For non-Android platforms, directly open the file manager
             self.file_manager_open(icon_id, label_id, file_label_id, image_id)
-
-    def on_edit(self):
-        self.manager.add_widget(Factory.EditScreen(name='ViewEditScreen'))
-        self.manager.current = 'ViewEditScreen'
 
     def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
         self.file_manager = MDFileManager(
@@ -5798,11 +5988,11 @@ class ViewProfileScreen(Screen):
             primary_external_storage = "/storage/emulated/0"
             self.file_manager.show(primary_external_storage)
         else:
-            # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
     def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
-        self.ids[image_id].source = path  # Set the source of the Image widget
+        self.upload_image(path)  # Upload the selected image
+        self.ids[image_id].source = path
         self.file_manager.close()
 
     def exit_manager(self, *args):
@@ -5813,10 +6003,8 @@ class ViewProfileScreen(Screen):
 
     def permission_callback(self, permissions, grants):
         if all(grants.values()):
-            # Permission granted, open the file manager
             self.file_manager_open()
         else:
-            # Permission denied, show a modal view
             self.show_permission_denied()
 
     def show_permission_denied(self):
@@ -5830,24 +6018,28 @@ class ViewProfileScreen(Screen):
         )
         view.open()
 
+    def on_pre_enter(self):
+        Window.bind(on_keyboard=self.on_back_button)
+
     def on_pre_leave(self):
-        # Unbind the back button event when leaving the screen
         Window.unbind(on_keyboard=self.on_back_button)
 
     def on_back_button(self, instance, key, scancode, codepoint, modifier):
-        # Handle the back button event
-        if key == 27:  # 27 is the keycode for the hardware back button on Android
+        if key == 27:
             self.on_back_button_press()
-            return True  # Consume the event, preventing further handling
-        return False  # Continue handling the event
+            return True
+        return False
+
+    def on_edit(self):
+        self.manager.add_widget(Factory.ViewEditScreen(name='ViewEditScreen'))
+        self.manager.current = 'ViewEditScreen'
 
     def go_back(self):
-        # Navigate to the previous screen with a slide transition
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'LenderDashboard'  # Replace with the actual name of your previous screen
+        self.manager.current = 'ViewAccountScreen'
 
     def on_back_button_press(self):
-        self.manager.current = 'LenderDashboard'
+        self.manager.current = 'ViewAccountScreen'
 
 
 class ViewEditScreen(Screen):
@@ -6055,10 +6247,10 @@ class ViewEditScreen(Screen):
 
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'ViewProfileScreen'
+        self.manager.current = 'ViewPersonalScreen'
 
     def on_back_button_press(self):
-        self.manager.current = 'ViewProfileScreen'
+        self.manager.current = 'ViewPersonalScreen'
 
 class ReturnsScreen(Screen):
     pass

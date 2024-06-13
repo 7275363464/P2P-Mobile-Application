@@ -873,7 +873,6 @@ class ViewAllLoansLF(Screen):
             loan_id.append(i['loan_id'])
             borrower_name.append(i['borrower_name'])
             loan_status.append(i['status'])
-            product_name.append(i['product_name'])
             interest_rate.append(i['interest_rate'])
             loan_amount.append(i['loan_amount'])
 
@@ -909,7 +908,7 @@ class ViewAllLoansLF(Screen):
                 card = MDCard(
                     orientation='vertical',
                     size_hint=(None, None),
-                    size=("300dp", "200dp"),
+                    size=("310dp", "200dp"),
                     padding="8dp",
                     spacing="5dp",
                     elevation=3
@@ -923,7 +922,7 @@ class ViewAllLoansLF(Screen):
                 )
                 horizontal_layout.add_widget(image)
 
-                horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
+                horizontal_layout.add_widget(Widget(size_hint_x=None, width='25dp'))
                 text_layout = BoxLayout(orientation='vertical')
                 text_layout.add_widget(MDLabel(
                     text=f"[b]{borrower_name[i]}[/b],\n[b]{profile_mobile_number[number]}[/b]",
@@ -934,6 +933,7 @@ class ViewAllLoansLF(Screen):
                     font_size='10sp',
                     bold=True
                 ))
+                text_layout.add_widget(Widget(size_hint_y=None, height=dp(5)))
                 text_layout.add_widget(MDLabel(
                     text=f"[b]Product Name:[/b] {product_name[i]}",
                     theme_text_color='Custom',
@@ -964,7 +964,7 @@ class ViewAllLoansLF(Screen):
                     size_hint_y=None,
                     height="40dp",
                     padding="10dp",
-                    spacing="20dp"
+                    spacing="25dp"
                 )
                 status_color = (0.545, 0.765, 0.290, 1)  # default color
                 if loan_status[i] in ["under process", "Under Process", "UnderProcess"]:
@@ -996,19 +996,19 @@ class ViewAllLoansLF(Screen):
                                         "Approved loan", "approvedloan", "ApprovedLoan", "approvedLoan",
                                         "Approvedloan"]:
                     status_color = (0 / 255, 128 / 255, 0 / 255, 1)  # light green
-                elif loan_status[i] in ["decline", "declined", "Declined", "Decline"]:
-                    status_color = (210 / 255, 4 / 255, 45 / 255, 1)  # cherry
+                elif loan_status[i] == "lost opportunities":
+                    status_color = (0.902, 0.141, 0.141, 1)
 
                 status_text = {
-                    "under process": "Under Process",
-                    "disbursed": "Disburse Loan",
-                    "closed": "  Closed Loan  ",
+                    "under process": "  Under Process ",
+                    "disbursed": "  Disburse Loan ",
+                    "closed": "    Closed Loan   ",
                     "extension": " Extension Loan ",
-                    "foreclosure": "  Foreclosure ",
-                    "accepted": "Accepted Loan",
-                    "rejected": "Rejected Loan",
-                    "approved": "Approved Loan",
-                    "decline": "Declined Loan"
+                    "foreclosure": "  Foreclosure  ",
+                    "accepted": " Accepted Loan ",
+                    "rejected": "  Rejected Loan ",
+                    "approved": "  Approved Loan ",
+                    "lost opportunities": "lost opportunities"
                 }
                 button1 = MDFillRoundFlatButton(
                     text=status_text.get(loan_status[i], loan_status[i]),
@@ -1020,7 +1020,7 @@ class ViewAllLoansLF(Screen):
                     # on_release=lambda x, i=i: self.close_loan(i)
                 )
                 button2 = MDFillRoundFlatButton(
-                    text="View Details",
+                    text="  View Details  ",
                     size_hint=(None, None),
                     height="40dp",
                     width="250dp",

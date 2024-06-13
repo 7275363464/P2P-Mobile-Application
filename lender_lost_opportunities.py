@@ -1,6 +1,7 @@
 from anvil.tables import app_tables
 from kivy.animation import Animation
 from kivy.clock import Clock
+from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 from kivy.uix.modalview import ModalView
@@ -252,7 +253,7 @@ class LostOpportunitiesScreen(Screen):
             card = MDCard(
                 orientation='vertical',
                 size_hint=(None, None),
-                size=("300dp", "180dp"),
+                size=("310dp", "200dp"),
                 padding="8dp",
                 spacing="5dp",
                 elevation=3
@@ -266,10 +267,18 @@ class LostOpportunitiesScreen(Screen):
             )
             horizontal_layout.add_widget(image)
 
-            horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
+            horizontal_layout.add_widget(Widget(size_hint_x=None, width='25dp'))
             text_layout = BoxLayout(orientation='vertical')
             text_layout.add_widget(MDLabel(
-                text=f"[b]{borrower_name[i]}[/b],  [b]{profile_mobile_number[number]}[/b]",
+                text=f"[b]{borrower_name[i]}[/b],\n[b]{profile_mobile_number[number]}[/b]",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(Widget(size_hint_y=None, height=dp(5)))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Product Name:[/b] {product_name[i]}",
                 theme_text_color='Custom',
                 text_color=(0, 0, 0, 1),
                 halign='left',
@@ -290,13 +299,6 @@ class LostOpportunitiesScreen(Screen):
                 markup=True,
             ))
 
-            text_layout.add_widget(MDLabel(
-                text=f"[b]Interest Rate:[/b] {interest_rate[i]}",
-                theme_text_color='Custom',
-                text_color=(0, 0, 0, 1),
-                halign='left',
-                markup=True,
-            ))
             horizontal_layout.add_widget(text_layout)
             card.add_widget(horizontal_layout)
 
@@ -334,19 +336,19 @@ class LostOpportunitiesScreen(Screen):
             elif loan_status[i] in ["approved", "Approved", "approved loan", "Approved Loan", "approved Loan",
                                     "Approved loan", "approvedloan", "ApprovedLoan", "approvedLoan", "Approvedloan"]:
                 status_color = (0 / 255, 128 / 255, 0 / 255, 1)  # light green
-            elif loan_status[i] in ["decline", "declined", "Declined", "Decline"]:
+            elif loan_status[i] in ["lost opportunities"]:
                 status_color = (210 / 255, 4 / 255, 45 / 255, 1)  # cherry
 
             status_text = {
                 "under process": "Under Process",
-                "disbursed loan": "Disburse Loan",
-                "closed loan": "  Closed Loan  ",
+                "disbursed": "Disburse Loan",
+                "closed": "  Closed Loan  ",
                 "extension": " Extension Loan ",
                 "foreclosure": "   Foreclosure   ",
                 "accepted": "Accepted Loan",
                 "rejected": "Rejected Loan",
                 "approved": "Approved Loan",
-                "decline": "Declined Loan"
+                "lost opportunities": "lost opportunities"
             }
             button1 = MDFillRoundFlatButton(
                 text=status_text.get(loan_status[i], loan_status[i]),
@@ -358,7 +360,7 @@ class LostOpportunitiesScreen(Screen):
                 # on_release=lambda x, i=i: self.close_loan(i)
             )
             button2 = MDFillRoundFlatButton(
-                text="View Details",
+                text="  View Details  ",
                 size_hint=(None, None),
                 height="40dp",
                 width="250dp",

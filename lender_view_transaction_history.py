@@ -303,7 +303,7 @@ class TransactionLH(Screen):
                 size_hint=(None, None),
                 size=("320dp", "240dp"),
                 padding="8dp",
-                spacing="1dp",
+                spacing="3dp",
                 elevation=3
             )
             horizontal_layout = BoxLayout(orientation='horizontal')
@@ -381,7 +381,7 @@ class TransactionLH(Screen):
                 size_hint_y=None,
                 height="40dp",
                 padding="10dp",
-                spacing="55dp"
+                spacing="30dp"
             )
             status_color = (0.545, 0.765, 0.290, 1)  # default color
             if status[i] in ["success"]:
@@ -389,8 +389,8 @@ class TransactionLH(Screen):
             elif status[i] in ["fail"]:
                 status_color = (210 / 255, 4 / 255, 45 / 255, 1)  # cherry
             status_text = {
-                "success": "   success   ",
-                "fail": "     fail    ",
+                "success": "    successful    ",
+                "fail": "      failed     ",
             }
             button1 = MDFillRoundFlatButton(
                 text=status_text.get(status[i]),
@@ -402,7 +402,7 @@ class TransactionLH(Screen):
                 # on_release=lambda x, i=i: self.close_loan(i)
             )
             button2 = MDFillRoundFlatButton(
-                text="View Details",
+                text="  View Details  ",
                 size_hint=(None, None),
                 height="40dp",
                 width="250dp",
@@ -417,25 +417,6 @@ class TransactionLH(Screen):
 
             # card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
             self.ids.container2.add_widget(card)
-            # item = ThreeLineAvatarIconListItem(
-            #
-            #     IconLeftWidget(
-            #         icon="card-account-details-outline"
-            #     ),
-            #     text=f"Lender Name : {borrower_name[number]}",
-            #     secondary_text=f"Lender Mobile Number : {pro_mobile_number[number]}",
-            #     tertiary_text=f"Transaction Name : {transaction_id[i]}",
-            #     text_color=(0, 0, 0, 1),  # Black color
-            #     theme_text_color='Custom',
-            #     secondary_text_color=(0, 0, 0, 1),
-            #     secondary_theme_text_color='Custom',
-            #     tertiary_text_color=(0, 0, 0, 1),
-            #     tertiary_theme_text_color='Custom'
-            # )
-            # item.bind(
-            #     on_release=lambda instance, transactions_id=transaction_id[i]: self.icon_button_clicked(instance,
-            #                                                                                             transactions_id))
-            # self.ids.container1.add_widget(item)
 
     def icon_button_clicked(self, instance, transactions_id):
         value = instance.text.split(':')

@@ -5,6 +5,7 @@ from bson import utc
 from kivy.factory import Factory
 from kivy.lang import Builder
 from kivy.core.window import Window
+from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
@@ -58,177 +59,176 @@ lender_today_due = '''
             left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
             pos_hint: {'top': 1} 
 
-        BoxLayout:
-            orientation: 'vertical'
-            spacing: dp(50)
-            padding: dp(30)
-            size_hint_y: None
-            height: self.minimum_height
-            canvas.before:
-                Color:
-                    rgba: 230/255, 245/255, 255/255, 1 
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [1, 1, 1, 1]
-                    source: "background.jpg"
+        ScrollView:
+            BoxLayout:
+                orientation: 'vertical'
+                spacing: dp(50)
+                padding: dp(30)
+                size_hint_y: None
+                height: self.minimum_height
+                canvas.before:
+                    Color:
+                        rgba: 230/255, 245/255, 255/255, 1 
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [1, 1, 1, 1]
+                        source: "background.jpg"
 
-            MDGridLayout:
-                cols: 2
+                MDGridLayout:
+                    cols: 2
 
+                    MDLabel:
+                        text: 'Loan Amount:'
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        text_color: 0, 0, 0, 1
+                        bold: True
+                MDGridLayout:
+                    cols: 2
+                    MDIconButton:
+                        icon: 'currency-inr'
+                        halign: 'left'
+                        size_hint_y: None
+                        height: dp(1)
+
+                    MDLabel:
+                        id: loan_amount1
+                        halign: 'left'
+                        bold: True
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
                 MDLabel:
-                    text: 'Loan Amount:'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    bold: True
-            MDGridLayout:
-                cols: 2
-                MDIconButton:
-                    icon: 'currency-inr'
+                    text: ''
                     halign: 'left'
                     size_hint_y: None
-                    height: dp(1)
+                    height: dp(5)
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        text: 'Borrower Name'
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        text_color: 0, 0, 0, 1
+                        bold: True
 
-                MDLabel:
-                    id: loan_amount1
-                    halign: 'left'
-                    bold: True
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-            MDLabel:
-                text: ''
-                halign: 'left'
-                size_hint_y: None
-                height: dp(5)
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Borrower Name'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    bold: True
+                    MDLabel:
+                        id: name
+                        halign: 'left'
+                        theme_text_color: 'Custom'
+                        text_color: 140/255, 140/255, 140/255, 1  
+                        bold: True  
 
-                MDLabel:
-                    id: name
-                    halign: 'left'
-                    theme_text_color: 'Custom'
-                    text_color: 140/255, 140/255, 140/255, 1  
-                    bold: True  
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        text: 'Tenure'
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        text_color: 0, 0, 0, 1 
+                        bold: True
 
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Tenure'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1 
-                    bold: True
+                    MDLabel:
+                        id: tenure
+                        halign: 'left'
+                        theme_text_color: 'Custom'
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
 
-                MDLabel:
-                    id: tenure
-                    halign: 'left'
-                    theme_text_color: 'Custom'
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        text: 'Interest Rate'
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        text_color: 0, 0, 0, 1 
+                        bold: True
 
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Interest Rate'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1 
-                    bold: True
+                    MDLabel:
+                        id: interest_rate
+                        halign: 'left'
+                        theme_text_color: 'Custom'
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
 
-                MDLabel:
-                    id: interest_rate
-                    halign: 'left'
-                    theme_text_color: 'Custom'
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        text: 'Account Number'
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        text_color: 0, 0, 0, 1 
+                        bold: True
 
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Account Number'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1 
-                    bold: True
+                    MDLabel:
+                        id: account_number
+                        halign: 'left'
+                        theme_text_color: 'Custom'
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
 
-                MDLabel:
-                    id: account_number
-                    halign: 'left'
-                    theme_text_color: 'Custom'
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        text: 'Emi Amount'
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        text_color: 0, 0, 0, 1  
+                        bold: True
 
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Emi Amount'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1  
-                    bold: True
+                    MDLabel:
+                        id: emi_amount
+                        halign: 'left'
+                        theme_text_color: 'Custom'
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        text: 'Payment Type '
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        text_color: 0, 0, 0, 1 
+                        bold: True
 
-                MDLabel:
-                    id: emi_amount
-                    halign: 'left'
-                    theme_text_color: 'Custom'
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Payment Type '
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1 
-                    bold: True
+                    MDLabel:
+                        id: pay
+                        halign: 'left'
+                        theme_text_color: 'Custom'
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
 
-                MDLabel:
-                    id: pay
-                    halign: 'left'
-                    theme_text_color: 'Custom'
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        id: extra
+                        text: 'Extra Payment'
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        text_color: 0, 0, 0, 1
+                        bold: True
 
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    id: extra
-                    text: 'Extra Payment'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    bold: True
+                    MDLabel:
+                        id: extra_amount
+                        halign: 'left'
+                        theme_text_color: 'Custom'
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
 
-                MDLabel:
-                    id: extra_amount
-                    halign: 'left'
-                    theme_text_color: 'Custom'
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        text: 'Total Amount'
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        bold: True
 
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Total Amount'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    bold: True
-
-                MDLabel:
-                    id: total_amount
-                    halign: 'left'
-                    theme_text_color: 'Custom'
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-
-
+                    MDLabel:
+                        id: total_amount
+                        halign: 'left'
+                        theme_text_color: 'Custom'
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
 '''
 Builder.load_string(lender_today_due)
 date = datetime.today().date()
@@ -250,6 +250,8 @@ class TodayDuesTD(Screen):
         schedule_date = []
         lender_customer_id = []
         loan_amount = []
+        interest_rate = []
+        tenure = []
         email = anvil.server.call('another_method')
         s = 0
 
@@ -262,6 +264,8 @@ class TodayDuesTD(Screen):
             schedule_date.append(i['first_emi_payment_due_date'])
             lender_customer_id.append(i['lender_customer_id'])
             loan_amount.append(i['loan_amount'])
+            interest_rate.append(i['interest_rate'])
+            tenure.append(i['tenure'])
 
         emi_loan_id = []
         emi_num = []
@@ -315,9 +319,9 @@ class TodayDuesTD(Screen):
             card = MDCard(
                 orientation='vertical',
                 size_hint=(None, None),
-                size=("285dp", "180dp"),
-                padding="8dp",
-                spacing="5dp",
+                size=("320dp", "240dp"),
+                padding="10dp",
+                spacing="3dp",
                 elevation=3
             )
             horizontal_layout = BoxLayout(orientation='horizontal')
@@ -329,17 +333,54 @@ class TodayDuesTD(Screen):
             )
             horizontal_layout.add_widget(image)
 
-            horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
+            horizontal_layout.add_widget(Widget(size_hint_x=None, width='20dp'))
             text_layout = BoxLayout(orientation='vertical')
             text_layout.add_widget(MDLabel(
-                text=f"[b]{borrower_name[i]}[/b]  \n[b]{profile_mobile_number[number]}[/b]",
+                text=f"[b]{borrower_name[i]}[/b],\n[b]{profile_mobile_number[number]}[/b]",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(Widget(size_hint_y=None, height=dp(10)))
+            # text_layout.add_widget(MDLabel(
+            #     text=f"[b]Mobile No[/b]: {profile_mobile_number[number]}",
+            #     theme_text_color='Custom',
+            #     text_color=(0, 0, 0, 1),
+            #     halign='left',
+            #     markup=True,
+            # ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Loan Amount[/b]: {loan_amount[number]}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            # text_layout.add_widget(MDLabel(
+            #     text=f"[b]Scheduled Payment:[/b] {scheduled_payment[number]}",
+            #     theme_text_color='Custom',
+            #     text_color=(0, 0, 0, 1),
+            #     halign='left',
+            #     markup=True,
+            # ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Interest Rate:[/b] {interest_rate[i]}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+                # font_size='10sp'
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Tenure:[/b] {tenure[i]}",
                 theme_text_color='Custom',
                 text_color=(0, 0, 0, 1),
                 halign='left',
                 markup=True,
             ))
             text_layout.add_widget(MDLabel(
-                text=f"[b]Due Date[/b]  : {shedule_date[loan_id[i]]}",
+                text=f"[b]Due Date[/b]: {shedule_date[loan_id[i]]}",
                 theme_text_color='Custom',
                 text_color=(0, 0, 0, 1),
                 halign='left',
@@ -355,24 +396,37 @@ class TodayDuesTD(Screen):
 
             horizontal_layout.add_widget(text_layout)
             card.add_widget(horizontal_layout)
-
             card.add_widget(Widget(size_hint_y=None, height='10dp'))
-            # horizontal_layout1 = BoxLayout(orientation='vertical')
+            # button2 = MDFillRoundFlatButton(
+            #     text="     Pay Now     ",
+            #     size_hint=(None, None),
+            #     height="40dp",
+            #     width="250dp",
+            #     pos_hint={"center_x": 0},
+            #     md_bg_color=(0, 0.502, 0, 1),
+            #     # on_release=lambda x, i=i: self.close_loan(i)
+            # )
             button1 = MDFillRoundFlatButton(
-                text="View Details",
+                text="            View Details             ",
                 height="40dp",
                 width="250dp",
-                pos_hint={"center_x": 0.5, "centre_y": 0.5},
+                pos_hint={"center_x": 0.5, "center_y": 0.5},
                 md_bg_color=(0.043, 0.145, 0.278, 1),
                 on_release=lambda x, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id, shedule_date)
             )
-        if len(present_commitmet) >= 1:
-            if lender_customer_id[log_index] in lender_cus_id:
-                lender_index = lender_cus_id.index(lender_customer_id[log_index])
-                lender_data[lender_index]['present_commitments'] = sum(present_commitmet)
-                print(present_commitmet, sum(present_commitmet))
-            else:
-                print('customer id not there')
+
+            # button_layout.add_widget(button2)
+            card.add_widget(button1)
+
+            # card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
+            self.ids.container2.add_widget(card)
+        # if len(present_commitmet) >= 1:
+        #     if lender_customer_id[log_index] in lender_cus_id:
+        #         lender_index = lender_cus_id.index(lender_customer_id[log_index])
+        #         lender_data[lender_index]['present_commitments'] = sum(present_commitmet)
+        #         print(present_commitmet, sum(present_commitmet))
+        #     else:
+        #         print('customer id not there')
     def icon_button_clicked(self, instance, loan_id, shedule_date):
         sm = self.manager
 
@@ -402,7 +456,7 @@ class TodayDuesTD(Screen):
         return False
 
     def refresh(self):
-        self.ids.container.clear_widgets()
+        self.ids.container2.clear_widgets()
         self.__init__()
 
     def go_back(self):

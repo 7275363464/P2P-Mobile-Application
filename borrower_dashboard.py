@@ -43,6 +43,8 @@ from kivymd.uix.label import MDLabel
 from kivy.factory import Factory
 from kivymd.uix.button import MDFillRoundFlatButton
 from borrower_portfolio import LenderDetails
+from borrower_report_issue import ReportScreen
+
 
 
 if platform == 'android':
@@ -483,6 +485,12 @@ user_helpers = '''
                             text: "View Portofolio"
                             icon_color: "#23639e"
                             on_release: root.go_to_borrower_portofolio()
+                        MDNavigationDrawerDivider:
+                        MDNavigationDrawerItem
+                            icon: "report_icon.png"
+                            text: "Report Issue!"
+                            icon_color: "#23639e"
+                            on_release: root.go_to_borrower_report_issue()
                         MDNavigationDrawerDivider:
                         MDNavigationDrawerItem
                             icon: "logout"
@@ -5266,6 +5274,43 @@ class DashboardScreen(Screen):
             self.ids.city.text = str(city[index])
             self.ids.gender.text = str(gender[index])
             self.ids.marrital_status.text = str(marrital_status[index])
+
+    def go_to_borrower_report_issue(self):
+        modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
+
+        # Create MDLabel with white text color, increased font size, and bold text
+        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
+                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
+                                font_size=dp(50), bold=True)
+
+        # Set initial y-position off-screen
+        loading_label.y = -loading_label.height
+
+        modal_view.add_widget(loading_label)
+        modal_view.open()
+
+        # Perform the animation
+        self.animate_loading_text(loading_label, modal_view.height)
+
+        # Perform the actual action (e.g., fetching transaction history)
+        # You can replace the sleep with your actual logic
+        Clock.schedule_once(lambda dt: self.perform_borrower_report_issue_action(modal_view), 2)
+
+    def perform_borrower_report_issue_action(self, modal_view):
+        # Dismiss the modal view
+        modal_view.dismiss()
+
+        # Get the ScreenManager
+        sm = self.manager
+
+        # Create a new instance of the TransactionBH screen
+        Report_Issue_screen = ReportScreen(name='ReportScreen')
+
+        # Add the TransactionBH screen to the existing ScreenManager
+        sm.add_widget(Report_Issue_screen)
+
+        # Switch to the TransactionBH screen
+        sm.current = 'ReportScreen'
 
     def get_email(self):
         # Make a call to the Anvil server function

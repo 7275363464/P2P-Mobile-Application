@@ -208,7 +208,7 @@ class ApplicationTrackerScreen(Screen):
                 self.ids.label5.bold = False
                 self.ids.label1.text = f"Application for {product_name[index]} product loan sent"
 
-            elif loan_status[index] == 'approved':
+            elif loan_status[index] == 'approved' or loan_status[index] == 'accepted':
                 self.ids.icon1.icon = 'circle-slice-8'
                 self.ids.label1.theme_text_color = "Custom"
                 self.ids.label1.text_color = 0, 0, 0, 1

@@ -840,7 +840,7 @@ class ViewLoansRequest(Screen):
         index_list = []
         for i in range(s):
             c += 1
-            if loan_status[c] == 'under process' or loan_status[c] == 'approved':
+            if loan_status[c] == 'under process' or loan_status[c] == 'approved' or loan_status == 'accepted':
                 index_list.append(c)
 
         b = 1
@@ -989,7 +989,7 @@ class ViewLoansRequest(Screen):
                 loan_status = loan['loan_updated_status']
                 break
 
-        if loan_status == 'approved':
+        if loan_status == 'approved' or loan_status == 'accepted':
             # Open the screen for approved loans
 
             sm = self.manager

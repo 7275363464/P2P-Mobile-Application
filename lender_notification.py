@@ -1133,7 +1133,7 @@ class Lend_NotificationScreen(Screen):
             sm.add_widget(screen)
             sm.current = 'ViewLoansProfileScreen'
             self.manager.get_screen('ViewLoansProfileScreen').initialize_with_value(loan_id, data)
-        elif loan_status == 'approved':
+        elif loan_status == 'approved' or loan_status == 'accepted':
             self.manager.add_widget(Factory.ViewLoansProfileScreenLR(name='ViewLoansProfileScreenLR'))
             sm.current = 'ViewLoansProfileScreenLR'
             self.manager.get_screen('ViewLoansProfileScreenLR').initialize_with_value(loan_id, data)

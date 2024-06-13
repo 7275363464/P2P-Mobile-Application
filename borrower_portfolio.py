@@ -12,7 +12,13 @@ from kivy.graphics import Color, Rectangle
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivymd.uix.progressbar import MDProgressBar
-
+import os
+from kivy.utils import platform
+from fpdf import FPDF
+from datetime import datetime
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.button import MDRectangleFlatButton
+from kivy.metrics import dp
 from kivymd.uix.button import MDRaisedButton, MDRectangleFlatButton, MDFillRoundFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.list import *
@@ -36,6 +42,7 @@ from kivy.uix.scrollview import ScrollView
 from kivymd.uix.gridlayout import MDGridLayout
 from kivymd.uix.progressbar import MDProgressBar
 from datetime import datetime
+from kivy.clock import Clock  # Import Clock from Kivy
 
 borrower_portfolio = '''
 <WindowManager>:
@@ -72,10 +79,13 @@ borrower_portfolio = '''
             title: "Lender Portfolio"
             elevation: 3
             left_action_items: [['arrow-left', lambda x: root.go_back()]]
+            right_action_items: [["download", lambda x: root.download_portfolio_as_pdf()]]  # Add download icon
+
             title_align: 'left'
             md_bg_color: 0.043, 0.145, 0.278, 1
 
         ScrollView:  # Add ScrollView here
+            id: scroll_view
             do_scroll_x: False
             BoxLayout:
                 orientation: "vertical"
@@ -402,6 +412,7 @@ borrower_portfolio = '''
                                 size_hint_y: None
                                 height: dp(13)
 
+
 '''
 Builder.load_string(borrower_portfolio)
 date = datetime.today()
@@ -625,6 +636,7 @@ class ViewPortfolio(Screen):
     def go_back(self):
         self.manager.current = 'LenderDetails'
 
+
     def initialize_with_value(self, lender_id):
         profile = app_tables.fin_user_profile.get(customer_id=lender_id)
 
@@ -643,9 +655,9 @@ class ViewPortfolio(Screen):
             if lender_data:
                 membership = lender_data['membership']
                 membership_color = {
-                    'silver': (255 / 255, 255 / 255, 0 / 255, 1),  # Yellow
-                    'gold': (255 / 255, 165 / 255, 0 / 255, 1),  # Orange
-                    'platinum': (0 / 255, 128 / 255, 0 / 255, 1)  # Green
+                    'silver': (255 / 255, 255 / 255, 0 / 255, 1),   # Yellow
+                    'gold': (255 / 255, 165 / 255, 0 / 255, 1),     # Orange
+                    'platinum': (0 / 255, 128 / 255, 0 / 255, 1)    # Green
                 }.get(membership.lower(), (0, 0, 0, 1))  # Default to black if no match
 
                 self.ids.membership.text = membership.capitalize()
@@ -654,12 +666,10 @@ class ViewPortfolio(Screen):
 
                 all_lenders = app_tables.fin_lender.search()
                 if all_lenders:
-                    valid_commitments = [lender['lender_total_commitments'] for lender in all_lenders if
-                                         lender['lender_total_commitments'] is not None]
-                    max_commitments = max(valid_commitments, default=0)
+                    max_commitments = max(lender['lender_total_commitments'] for lender in all_lenders)
 
-                    total_commitments = lender_data['lender_total_commitments'] or 0
-                    return_on_investment = lender_data['return_on_investment'] or 0
+                    total_commitments = lender_data['lender_total_commitments']
+                    return_on_investment = lender_data['return_on_investment']
 
                     if max_commitments > 0:
                         investment_percentage = (total_commitments / max_commitments) * 100
@@ -671,8 +681,8 @@ class ViewPortfolio(Screen):
                     else:
                         return_percentage = 0
 
-                    investment_amount = total_commitments
-                    return_amount = return_on_investment
+                    investment_amount = lender_data['lender_total_commitments']  # Assuming this is the column name
+                    return_amount = lender_data['return_on_investment']  # Assuming this is the column name
 
                     chart_widget = HorizontalLinesAndBarsWidget(investment_percentage, return_percentage,
                                                                 investment_amount, return_amount,
@@ -680,3 +690,88 @@ class ViewPortfolio(Screen):
 
                     self.ids.chart_container.clear_widgets()
                     self.ids.chart_container.add_widget(chart_widget)
+
+    def download_portfolio_as_pdf(self):
+        # Obtain the ScrollView and its content
+        scroll_view = self.ids.scroll_view  # Assuming your ScrollView has id 'scroll_view'
+        scroll_content = scroll_view.children[0]  # Assuming the content is the first (and only) child
+
+        # Save the original size of the ScrollView and its content
+        self.original_size_hint_y = scroll_content.size_hint_y
+        self.original_height = scroll_content.height
+
+        # Temporarily resize the ScrollView content to fit all the children
+        scroll_content.size_hint_y = None
+        scroll_content.height = scroll_content.minimum_height
+
+        # Schedule the screenshot to be taken after the layout update
+        Clock.schedule_once(self.capture_screenshot, 0)
+
+    def capture_screenshot(self, dt):
+        # Obtain the ScrollView and its content
+        scroll_view = self.ids.scroll_view  # Assuming your ScrollView has id 'scroll_view'
+        scroll_content = scroll_view.children[0]  # Assuming the content is the first (and only) child
+
+        # Capture the content of the ScrollView as an image
+        screenshot_path = 'portfolio_screenshot.png'
+        scroll_content.export_to_png(screenshot_path)
+
+        # Restore the original size of the ScrollView content
+        scroll_content.size_hint_y = self.original_size_hint_y
+        scroll_content.height = self.original_height
+
+        # Check if the screenshot was saved successfully
+        if os.path.exists(screenshot_path):
+            # Create a unique filename for the PDF
+            pdf_filename = f"portfolio_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+            # Determine the path to the Downloads folder based on the platform
+            if platform == 'android':
+                pdf_path = os.path.join(os.path.expanduser('~'), 'Download', pdf_filename)
+            else:
+                downloads_dir = os.path.join(os.path.expanduser('~'), 'Downloads')
+                pdf_path = os.path.join(downloads_dir, pdf_filename)
+
+            # Create a PDF
+            pdf = FPDF()
+            pdf.add_page()
+
+            # Calculate image dimensions to fit the PDF page
+            image_width, image_height = scroll_content.size
+            pdf_width, pdf_height = pdf.w - 20, pdf.h - 20
+            aspect_ratio = image_height / image_width
+            img_height = pdf_width * aspect_ratio
+            if img_height > pdf_height:
+                img_height = pdf_height
+                pdf_width = img_height / aspect_ratio
+
+            # Add the image to the PDF
+            pdf.image(screenshot_path, x=10, y=10, w=pdf_width, h=img_height)
+
+            # Save the PDF
+            pdf.output(pdf_path, 'F')
+            print(f"PDF saved as {pdf_path}")
+
+            # Optionally, remove the screenshot file after PDF creation
+            os.remove(screenshot_path)
+
+            # Show success dialog
+            self.show_success_dialog('Portfolio downloaded successfully!')
+
+        else:
+            print("Failed to save the screenshot. Please try again.")
+
+    def show_success_dialog(self, message):
+        dialog = MDDialog(
+            title="Success",
+            text=message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()

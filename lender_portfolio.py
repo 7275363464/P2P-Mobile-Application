@@ -1,9 +1,20 @@
+import os
+from kivy.graphics import Fbo, ClearColor, ClearBuffers, Scale, Translate, PushMatrix, PopMatrix
+from fpdf import FPDF
+from kivy.core.image import Image as CoreImage
+from kivy.graphics.context_instructions import PushMatrix, PopMatrix
+from kivy.graphics.opengl import glReadPixels, GL_RGBA, GL_UNSIGNED_BYTE
+from kivy.graphics.texture import Texture
 import anvil
 from anvil import Label
 from anvil.tables import app_tables
+from fpdf import FPDF
 from kivy.metrics import dp
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
+from kivymd.uix.button import MDRectangleFlatButton
+from kivymd.uix.dialog import MDDialog
+
 from kivymd.uix.label import MDLabel
 from kivy.properties import ObjectProperty
 from kivy.lang import Builder
@@ -12,7 +23,7 @@ from kivy.base import runTouchApp
 from kivy.properties import ListProperty, NumericProperty, ColorProperty
 from kivy.clock import Clock
 from kivy.utils import get_color_from_hex
-
+from kivy.app import App
 import numpy as np
 from math import sin, cos
 from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
@@ -70,10 +81,13 @@ borrower_portfolio = '''
             title: "Portfolio"
             elevation: 3
             left_action_items: [['arrow-left', lambda x: root.go_back()]]
+            right_action_items: [["download", lambda x: root.download_portfolio_as_pdf()]]  # Add download icon
+
             title_align: 'left'
             md_bg_color: 0.043, 0.145, 0.278, 1
 
         ScrollView:  # Add ScrollView here
+            id: scroll_view
             do_scroll_x: False
             BoxLayout:
                 orientation: "vertical"
@@ -398,7 +412,7 @@ borrower_portfolio = '''
                         orientation: 'horizontal'
                         spacing: dp(5)  
                         size_hint_y: None
-                        height: dp(-50)
+                        height: dp(-63)
                         size_hint_x: None
                         width: dp(400)
                         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
@@ -812,3 +826,70 @@ class LenViewPortfolio(Screen):
 
             pie_chart_widget = PieChartWidget(borrower_id=borrower_id)
             self.ids.chart_widget.add_widget(pie_chart_widget)
+
+    def download_portfolio_as_pdf(self):
+        # Obtain the ScrollView and its content
+        scroll_view = self.ids.scroll_view  # Assuming your ScrollView has id 'scroll_view'
+        scroll_content = scroll_view.children[0]  # Assuming the content is the first (and only) child
+
+        # Save the original size of the ScrollView and its content
+        original_content_size = scroll_content.size
+
+        # Temporarily resize the ScrollView content to fit all the children
+        scroll_content.size_hint_y = None
+        scroll_content.height = scroll_content.minimum_height
+
+        # Capture the content of the ScrollView as an image
+        screenshot_path = 'portfolio_screenshot.png'
+        scroll_content.export_to_png(screenshot_path)
+
+        # Restore the original size of the ScrollView content
+        scroll_content.size_hint_y = original_content_size[1] / scroll_view.height
+        scroll_content.height = original_content_size[1]
+
+        # Check if the screenshot was saved successfully
+        if os.path.exists(screenshot_path):
+            # Create a unique filename for the PDF
+            pdf_filename = f"portfolio_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+            # Determine the path to the Downloads folder based on the platform
+            if platform == 'android':
+                pdf_path = os.path.join(os.path.expanduser('~'), 'Download', pdf_filename)
+            else:
+                downloads_dir = os.path.join(os.path.expanduser('~'), 'Downloads')
+                pdf_path = os.path.join(downloads_dir, pdf_filename)
+
+            # Create a PDF
+            pdf = FPDF()
+            pdf.add_page()
+
+            # Add the image to the PDF
+            pdf.image(screenshot_path, x=10, y=10, w=pdf.w - 20)
+
+            # Save the PDF
+            pdf.output(pdf_path, 'F')
+            print(f"PDF saved as {pdf_path}")
+
+            # Optionally, remove the screenshot file after PDF creation
+            os.remove(screenshot_path)
+
+            # Show success dialog
+            self.show_success_dialog('Portfolio downloaded successfully!')
+
+        else:
+            print("Failed to save the screenshot. Please try again.")
+
+    def show_success_dialog(self, message):
+        dialog = MDDialog(
+            title="Success",
+            text=message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()

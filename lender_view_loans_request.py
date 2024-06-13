@@ -855,7 +855,7 @@ class ViewLoansRequest(Screen):
             card = MDCard(
                 orientation='vertical',
                 size_hint=(None, None),
-                size=("280dp", "180dp"),
+                size=("310dp", "200dp"),
                 padding="10dp",
                 spacing="3dp",
                 elevation=3
@@ -872,7 +872,7 @@ class ViewLoansRequest(Screen):
             horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
             text_layout = BoxLayout(orientation='vertical')
             text_layout.add_widget(MDLabel(
-                text=f"[b]{borrower_name[i]}[/b]  \n[b]{profile_mobile_number[number]}[/b]",
+                text=f"[b]{borrower_name[i]}[/b],  \n[b]{profile_mobile_number[number]}[/b]",
                 theme_text_color='Custom',
                 text_color=(0, 0, 0, 1),
                 halign='left',
@@ -880,6 +880,7 @@ class ViewLoansRequest(Screen):
                 font_size='10sp',
                 bold=True
             ))
+            text_layout.add_widget(Widget(size_hint_y=None, height=dp(5)))
             text_layout.add_widget(MDLabel(
                 text=f"[b]Loan Amount:[/b] {loan_amount[i]}",
                 theme_text_color='Custom',
@@ -939,19 +940,19 @@ class ViewLoansRequest(Screen):
             elif loan_status[i] in ["approved", "Approved", "approved loan", "Approved Loan", "approved Loan",
                                     "Approved loan", "approvedloan", "ApprovedLoan", "approvedLoan", "Approvedloan"]:
                 status_color = (0 / 255, 128 / 255, 0 / 255, 1)  # light green
-            elif loan_status[i] in ["decline", "declined", "Declined", "Decline"]:
-                status_color = (210 / 255, 4 / 255, 45 / 255, 1)  # cherry
+            elif loan_status[i] == "lost opportunities":
+                status_color = (0.902, 0.141, 0.141, 1)
 
             status_text = {
-                "under process": "Under Process",
-                "disbursed loan": "Disburse Loan",
-                "closed loan": "  Closed Loan  ",
+                "under process": "  Under Process ",
+                "disbursed": "  Disburse Loan ",
+                "closed": "    Closed Loan   ",
                 "extension": " Extension Loan ",
-                "foreclosure": "   Foreclosure   ",
-                "accepted": "Accepted Loan",
-                "rejected": "Rejected Loan",
-                "approved": "Approved Loan",
-                "decline": "Declined Loan"
+                "foreclosure": "  Foreclosure  ",
+                "accepted": " Accepted Loan ",
+                "rejected": "  Rejected Loan ",
+                "approved": "  Approved Loan ",
+                "lost opportunities": "lost opportunities"
             }
             button1 = MDFillRoundFlatButton(
                 text=status_text.get(loan_status[i], loan_status[i]),
@@ -963,7 +964,7 @@ class ViewLoansRequest(Screen):
                 # on_release=lambda x, i=i: self.close_loan(i)
             )
             button2 = MDFillRoundFlatButton(
-                text="View Details",
+                text="  View Details  ",
                 size_hint=(None, None),
                 height="40dp",
                 width="250dp",

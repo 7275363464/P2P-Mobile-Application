@@ -3,10 +3,15 @@ from anvil.tables import app_tables
 from kivy.metrics import dp
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.image import Image
 from kivy.uix.popup import Popup
+from kivy.uix.widget import Widget
 from kivymd.app import MDApp
+from kivymd.uix.card import MDCard
+from kivymd.uix.label import MDLabel
+
 from borrower_dues import BorrowerDuesScreen, LastScreenWallet
-from kivymd.uix.button import MDRaisedButton, MDRectangleFlatButton
+from kivymd.uix.button import MDRaisedButton, MDRectangleFlatButton, MDFillRoundFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.list import *
 from kivy.lang import Builder
@@ -42,16 +47,24 @@ loan_forecloseB = '''
     BoxLayout:
         orientation: 'vertical'
         MDTopAppBar:
-            title: "Open Loans"
+            title: "Foreclose Loans"
             elevation: 3
             left_action_items: [['arrow-left', lambda x: root.go_back()]]
             right_action_items: [['refresh', lambda x: root.refresh()]]
             title_align: 'left'
             md_bg_color: 0.043, 0.145, 0.278, 1
         MDScrollView:
-
-            MDList:
+            MDBoxLayout:
                 id: container
+                orientation: 'vertical'
+                padding: dp(30)
+                spacing: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+                width: self.minimum_width
+                adaptive_size: True
+                
+                pos_hint: {"center_x": 0, "center_y":  0}
 
 <ViewProfileScreenFB>
     GridLayout:
@@ -64,8 +77,13 @@ loan_forecloseB = '''
             title_align: 'left'
 
         ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+
             GridLayout:
                 cols: 1
+                size_hint_y: None
+                height: self.minimum_height
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -182,16 +200,18 @@ loan_forecloseB = '''
                             halign: 'left' 
                             theme_text_color: 'Custom'  
                             text_color: 140/255, 140/255, 140/255, 1
+
                 MDLabel:
                     text: ''
                     halign: 'left'
                     size_hint_y: None
                     height: dp(25)
+
                 BoxLayout:
                     orientation: 'horizontal'
                     size_hint_y: None
                     height: "48dp"
-                    spacing:dp(15)
+                    spacing: dp(15)
                     padding: dp(10)
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     CheckBox:
@@ -211,11 +231,13 @@ loan_forecloseB = '''
                         text_color: 0, 0, 0, 1
                         halign: "left"
                         valign: "center" 
+
                 MDLabel:
                     text: ''
                     halign: 'left'
                     size_hint_y: None
-                    height: dp(45)            
+                    height: dp(45)
+
                 MDBoxLayout:
                     orientation: 'horizontal'
                     spacing: dp(30)
@@ -236,13 +258,13 @@ loan_forecloseB = '''
                         text_color: 1, 1, 1, 1
                         size_hint: 1, None
 
-
                     MDRaisedButton:
                         id: foreclose_button
                         text: "FORECLOSE"
                         md_bg_color: 0.043, 0.145, 0.278, 1 
                         on_release: root.on_foreclose_press()
                         size_hint: 1, None
+
 
 
 <ForecloseDetails>
@@ -554,7 +576,7 @@ print(date)
 
 class LoansDetailsB(Screen):
 
-    def __init__(self, **kwargs):
+    def __init__(self, instance=None, **kwargs):
         super().__init__(**kwargs)
         data = app_tables.fin_loan_details.search()
         email = self.get_table()
@@ -565,6 +587,8 @@ class LoansDetailsB(Screen):
         email1 = []
         borrower_name = []
         loan_status = []
+        interest_rate = []
+        loan_amount = []
         s = 0
         for i in data:
             s += 1
@@ -574,15 +598,19 @@ class LoansDetailsB(Screen):
             borrower_name.append(i['borrower_full_name'])
             loan_status.append(i['loan_updated_status'])
             email1.append(i['borrower_email_id'])
+            interest_rate.append(i['interest_rate'])
+            loan_amount.append(i['loan_amount'])
 
         profile_customer_id = []
         profile_mobile_number = []
         profile_email_id = []
+        ascend_value = []
 
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
             profile_email_id.append(i['email_user'])
+            ascend_value.append(i['ascend_value'])
 
         cos_id = None
         index = 0
@@ -610,26 +638,145 @@ class LoansDetailsB(Screen):
             b += 1
             k += 1
             number = profile_customer_id.index(customer_id[i])
-            item = ThreeLineAvatarIconListItem(
-                IconLeftWidget(
-                    icon="card-account-details-outline"
-                ),
-                text=f"Borrower Name : {borrower_name[i]}",
-                secondary_text=f"Borrower Mobile Number : {profile_mobile_number[number]}",
-                tertiary_text=f"Product Name : {product_name[i]}",
-                text_color=(0, 0, 0, 1),  # Black color
-                theme_text_color='Custom',
-                secondary_text_color=(0, 0, 0, 1),
-                secondary_theme_text_color='Custom',
-                tertiary_text_color=(0, 0, 0, 1),
-                tertiary_theme_text_color='Custom'
+            card = MDCard(
+                orientation='vertical',
+                size_hint=(None, None),
+                size=("310dp", "200dp"),
+                padding="8dp",
+                spacing="5dp",
+                elevation=3
             )
-            # Create a lambda function with loan_id as an argument
-            item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
-            self.ids.container.add_widget(item)
+            horizontal_layout = BoxLayout(orientation='horizontal')
+            image = Image(
+                source='img.png',  # Update with the actual path to the image
+                size_hint_x=None,
+                height="60dp",
+                width="70dp"
+            )
+            horizontal_layout.add_widget(image)
+
+            horizontal_layout.add_widget(Widget(size_hint_x=None, width='25dp'))
+            text_layout = BoxLayout(orientation='vertical')
+            text_layout.add_widget(MDLabel(
+                text=f"[b]{borrower_name[i]}[/b],\n[b]{profile_mobile_number[number]}[/b]",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(Widget(size_hint_y=None, height=dp(5)))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Product Name :[/b]{product_name[i]}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+                # font_size='10sp'
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Loan Amount:[/b] {loan_amount[i]}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Ascend Score:[/b] {ascend_value[number]}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+
+            horizontal_layout.add_widget(text_layout)
+            card.add_widget(horizontal_layout)
+
+            card.add_widget(Widget(size_hint_y=None, height='10dp'))
+            button_layout = BoxLayout(
+                size_hint_y=None,
+                height="40dp",
+                padding="10dp",
+                spacing="25dp"
+            )
+            status_color = (0.545, 0.765, 0.290, 1)  # default color
+            if loan_status[i] == "under process" or loan_status[i] == "Under Process" or loan_status[
+                i] == "UnderProcess" or loan_status[i] == "underprocess":
+                status_color = (253 / 255, 218 / 255, 13 / 255, 1)
+            elif loan_status[i] == "disbursed loan" or loan_status[i] == "disbursed":
+                status_color = (0.8588, 0.4392, 0.5765, 1.0)
+            elif loan_status[i] == "closed loan" or loan_status[i] == "Closed Loan" or loan_status[
+                i] == "closedloan" or loan_status[i] == "ClosedLoan":
+                status_color = (0.4235, 0.5569, 0.1373, 1.0)
+            elif loan_status[i] == "extension" or loan_status[i] == "Extension":
+                status_color = (1.0, 0.6275, 0.4824, 1.0)
+            elif loan_status[i] == "foreclosure" or loan_status[i] == "Foreclosure":
+                status_color = (0.0, 0.749, 1.0, 1.0)
+            elif loan_status[i] == "accepted" or loan_status[i] == "Accepted":
+                status_color = (0.2353, 0.7019, 0.4431, 1.0)
+            elif loan_status[i] == "rejected" or loan_status[i] == "Rejected" or loan_status[
+                i] == "Rejected Loan" or loan_status[i] == "rejected loan":
+                status_color = (0.902, 0.141, 0.141, 1)
+            elif loan_status[i] == "approved" or loan_status[i] == "Approved" or loan_status[
+                i] == "approved loans" or loan_status[i] == "Approved Loans":
+                status_color = (0.2353, 0.7019, 0.4431, 1.0)
+            elif loan_status[i] == "lost opportunities":
+                status_color = (0.902, 0.141, 0.141, 1)
+
+            status_text = {
+                "under process": "  Under Process ",
+                "disbursed": "  Disburse Loan ",
+                "closed": "    Closed Loan   ",
+                "extension": " Extension Loan ",
+                "foreclosure": "  Foreclosure  ",
+                "accepted": " Accepted Loan ",
+                "rejected": "  Rejected Loan ",
+                "approved": "  Approved Loan ",
+                "lost opportunities": "lost opportunities"
+            }
+            button1 = MDFillRoundFlatButton(
+                text=status_text.get(loan_status[i], loan_status[i]),
+                size_hint=(None, None),
+                height="40dp",
+                width="250dp",
+                pos_hint={"center_x": 0},
+                md_bg_color=status_color,
+                # on_release=lambda x, i=i: self.close_loan(i)
+            )
+            button2 = MDFillRoundFlatButton(
+                text="  View Details  ",
+                size_hint=(None, None),
+                height="40dp",
+                width="250dp",
+                pos_hint={"center_x": 1},
+                md_bg_color=(0.043, 0.145, 0.278, 1),
+                on_release=lambda x, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id)
+            )
+
+            button_layout.add_widget(button1)
+            button_layout.add_widget(button2)
+            card.add_widget(button_layout)
+
+            # card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
+            self.ids.container.add_widget(card)
+            # item = ThreeLineAvatarIconListItem(
+            #     IconLeftWidget(
+            #         icon="card-account-details-outline"
+            #     ),
+            #     text=f"Borrower Name : {borrower_name[i]}",
+            #     secondary_text=f"Borrower Mobile Number : {profile_mobile_number[number]}",
+            #     tertiary_text=f"Product Name : {product_name[i]}",
+            #     text_color=(0, 0, 0, 1),  # Black color
+            #     theme_text_color='Custom',
+            #     secondary_text_color=(0, 0, 0, 1),
+            #     secondary_theme_text_color='Custom',
+            #     tertiary_text_color=(0, 0, 0, 1),
+            #     tertiary_theme_text_color='Custom'
+            # )
+            # # Create a lambda function with loan_id as an argument
+            # item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
+            # self.ids.container.add_widget(item)
 
     def icon_button_clicked(self, instance, loan_id1):
-        value = instance.text.split(':')[-1].strip()
         data = app_tables.fin_loan_details.search()
         foreclose = app_tables.fin_foreclosure.search()
         today_date = datetime.now(tz=utc).date()

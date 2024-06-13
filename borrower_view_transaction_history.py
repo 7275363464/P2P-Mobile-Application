@@ -1,13 +1,19 @@
 import anvil
 from anvil.tables import app_tables
 from kivy.core.window import Window
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.filechooser import platform
+from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen, ScreenManager
 import anvil.server
 from kivy.lang import Builder
 import anvil.server
 from kivy.uix.screenmanager import Screen, SlideTransition
+from kivy.uix.widget import Widget
 from kivymd.app import MDApp
+from kivymd.uix.button import MDFillRoundFlatButton
+from kivymd.uix.card import MDCard
+from kivymd.uix.label import MDLabel
 from kivymd.uix.list import ThreeLineAvatarIconListItem, IconLeftWidget
 
 if platform == 'android':
@@ -34,9 +40,17 @@ view_transaction_history = '''
             right_action_items: [['refresh', lambda x: root.refresh()]]
             md_bg_color: 0.043, 0.145, 0.278, 1
         MDScrollView:
-
-            MDList:
-                id: container1
+            MDBoxLayout:
+                id: container2
+                orientation: 'vertical'
+                padding: dp(30)
+                spacing: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+                width: self.minimum_width
+                adaptive_size: True
+                
+                pos_hint: {"center_x": 0, "center_y":  0}
 
 
 <ViewProfileScreenBTH>:
@@ -214,7 +228,7 @@ Builder.load_string(view_transaction_history)
 
 
 class TransactionBH(Screen):
-    def __init__(self, **kwargs):
+    def __init__(self, instance=None, **kwargs):
         super().__init__(**kwargs)
         email = self.get_table()
         profile = app_tables.fin_user_profile.search()
@@ -222,9 +236,17 @@ class TransactionBH(Screen):
         s = 0
         transaction_id = []
         wallet_customer_id = []
+        status = []
+        transaction_type = []
+        amount = []
+        transaction_time_stamp = []
         for i in transaction:
             transaction_id.append(i['transaction_id'])
             wallet_customer_id.append(i['customer_id'])
+            transaction_type.append(i['transaction_type'])
+            transaction_time_stamp.append(i['transaction_time_stamp'])
+            status.append(i['status'])
+            amount.append(i['amount'])
         print(transaction_id)
 
         pro_customer_id = []
@@ -260,27 +282,146 @@ class TransactionBH(Screen):
                 number = pro_customer_id.index(wallet_customer_id[i])
             else:
                 number = 0
-            item = ThreeLineAvatarIconListItem(
-
-                IconLeftWidget(
-                    icon="card-account-details-outline"
-                ),
-                text=f"Borrower Name : {borrower_name[number]}",
-                secondary_text=f"Borrower Mobile Number : {pro_mobile_number[number]}",
-                tertiary_text=f"Transaction Name : {transaction_id[i]}",
-                text_color=(0, 0, 0, 1),  # Black color
-                theme_text_color='Custom',
-                secondary_text_color=(0, 0, 0, 1),
-                secondary_theme_text_color='Custom',
-                tertiary_text_color=(0, 0, 0, 1),
-                tertiary_theme_text_color='Custom'
+            card = MDCard(
+                orientation='vertical',
+                size_hint=(None, None),
+                size=("320dp", "240dp"),
+                padding="8dp",
+                spacing="5dp",
+                elevation=3
             )
-            item.bind(
+            horizontal_layout = BoxLayout(orientation='horizontal')
+            image = Image(
+                source='img.png',  # Update with the actual path to the image
+                size_hint_x=None,
+                height="60dp",
+                width="70dp"
+            )
+            horizontal_layout.add_widget(image)
+
+            horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
+            text_layout = BoxLayout(orientation='vertical')
+            text_layout.add_widget(MDLabel(
+                text=f"[b]{borrower_name[number]}[/b],\n[b]{pro_mobile_number[number]}[/b]",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Transaction id[/b] : {transaction_id[i]}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Transaction Type[/b] : {transaction_type[i]}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Amount[/b] : {amount[i]}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Transaction time[/b] : {transaction_time_stamp[i].date()}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            horizontal_layout.add_widget(text_layout)
+            card.add_widget(horizontal_layout)
+            # item = ThreeLineAvatarIconListItem(
+            #
+            #     IconLeftWidget(
+            #         icon="card-account-details-outline"
+            #     ),
+            #     text=f"Borrower Name : {borrower_name[number]}",
+            #     secondary_text=f"Borrower Mobile Number : {pro_mobile_number[number]}",
+            #     tertiary_text=f"Transaction Name : {transaction_id[i]}",
+            #     text_color=(0, 0, 0, 1),  # Black color
+            #     theme_text_color='Custom',
+            #     secondary_text_color=(0, 0, 0, 1),
+            #     secondary_theme_text_color='Custom',
+            #     tertiary_text_color=(0, 0, 0, 1),
+            #     tertiary_theme_text_color='Custom'
+            # )
+            # item.bind(
+            #     on_release=lambda instance, transactions_id=transaction_id[i]: self.icon_button_clicked(instance,
+            #                                                                                             transactions_id))
+            # self.ids.container1.add_widget(item)
+            # else:
+            #     print("Index out of range!")
+            card.add_widget(Widget(size_hint_y=None, height='10dp'))
+            button_layout = BoxLayout(
+                size_hint_y=None,
+                height="40dp",
+                padding="10dp",
+                spacing="35dp"
+            )
+            status_color = (0.545, 0.765, 0.290, 1)  # default color
+            if status[i] in ["success"]:
+                status_color = (0.2353, 0.7019, 0.4431, 1.0)  # light green
+            elif status[i] in ["fail"]:
+                status_color = (0.902, 0.141, 0.141, 1)  # light green
+            status_text = {
+                "success": "   successful    ",
+                "fail": "      failed      ",
+            }
+            button1 = MDFillRoundFlatButton(
+                text=status_text.get(status[i], "Unknown status"),
+                size_hint=(None, None),
+                height="40dp",
+                width="250dp",
+                pos_hint={"center_x": 0},
+                md_bg_color=status_color,
+                # on_release=lambda x, i=i: self.close_loan(i)
+            )
+            button2 = MDFillRoundFlatButton(
+                text="  View Details  ",
+                size_hint=(None, None),
+                height="40dp",
+                width="250dp",
+                pos_hint={"center_x": 1},
+                md_bg_color=(0.043, 0.145, 0.278, 1),
                 on_release=lambda instance, transactions_id=transaction_id[i]: self.icon_button_clicked(instance,
-                                                                                                        transactions_id))
-            self.ids.container1.add_widget(item)
-        else:
-            print("Index out of range!")
+                                                                                                        transactions_id)
+            )
+            button_layout.add_widget(button1)
+            button_layout.add_widget(button2)
+            card.add_widget(button_layout)
+
+            # card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
+            self.ids.container2.add_widget(card)
+        #     item = ThreeLineAvatarIconListItem(
+        #
+        #         IconLeftWidget(
+        #             icon="card-account-details-outline"
+        #         ),
+        #         text=f"Borrower Name : {borrower_name[number]}",
+        #         secondary_text=f"Borrower Mobile Number : {pro_mobile_number[number]}",
+        #         tertiary_text=f"Transaction Name : {transaction_id[i]}",
+        #         text_color=(0, 0, 0, 1),  # Black color
+        #         theme_text_color='Custom',
+        #         secondary_text_color=(0, 0, 0, 1),
+        #         secondary_theme_text_color='Custom',
+        #         tertiary_text_color=(0, 0, 0, 1),
+        #         tertiary_theme_text_color='Custom'
+        #     )
+        #     item.bind(
+        #         on_release=lambda instance, transactions_id=transaction_id[i]: self.icon_button_clicked(instance,
+        #                                                                                                 transactions_id))
+        #     self.ids.container1.add_widget(item)
+        # else:
+        #     print("Index out of range!")
 
     def icon_button_clicked(self, instance, transactions_id):
         value = instance.text.split(':')
@@ -318,7 +459,7 @@ class TransactionBH(Screen):
         self.manager.current = 'DashboardScreen'
 
     def refresh(self):
-        self.ids.container1.clear_widgets()
+        self.ids.container2.clear_widgets()
         self.__init__()
 
     def get_table(self):

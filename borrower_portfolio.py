@@ -1,6 +1,8 @@
 from anvil import Label
 from anvil.tables import app_tables
 from kivy.metrics import dp
+from kivy.uix.image import Image
+from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -11,7 +13,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivymd.uix.progressbar import MDProgressBar
 
-from kivymd.uix.button import MDRaisedButton, MDRectangleFlatButton
+from kivymd.uix.button import MDRaisedButton, MDRectangleFlatButton, MDFillRoundFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.list import *
 from kivy.metrics import dp
@@ -51,8 +53,17 @@ borrower_portfolio = '''
             title_align: 'left'
             md_bg_color: 0.043, 0.145, 0.278, 1
         MDScrollView:
-            MDList:
-                id: container
+            MDBoxLayout:
+                id: container2
+                orientation: 'vertical'
+                padding: dp(30)
+                spacing: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+                width: self.minimum_width
+                adaptive_size: True
+
+                pos_hint: {"center_x": 0, "center_y":  0}
 
 <ViewPortfolio>:
     BoxLayout:
@@ -406,7 +417,7 @@ class LenderDetails(Screen):
         super().__init__(**kwargs)
         self.populate_lender_list()
 
-    def populate_lender_list(self):
+    def populate_lender_list(self, instance=None):
         data = app_tables.fin_loan_details.search()
         profile = app_tables.fin_user_profile.search()
 
@@ -419,28 +430,102 @@ class LenderDetails(Screen):
                     lender_details[lender_id] = {
                         'full_name': loan['lender_full_name'],
                         'mobile_number': '',
-                        'product_name': loan['product_name']
+                        'product_name': loan['product_name'],
+                        'loan_amount': loan['loan_amount'],
+                        'interest_rate': loan['interest_rate'],
+                        'loan_status': loan['loan_updated_status'],
+                        'membership_type': loan['membership_type'],
+                        'lending_type': '',
                     }
 
         for prof in profile:
             if prof['customer_id'] in lender_details:
                 lender_details[prof['customer_id']]['mobile_number'] = prof['mobile']
+                lender_details[prof['customer_id']]['lending_type'] = prof['lending_type']
 
         for lender_id, details in lender_details.items():
-            item = ThreeLineAvatarIconListItem(
-                IconLeftWidget(icon="account"),
-                text=f"Lender Name: {details['full_name']}",
-                secondary_text=f"Lender Mobile Number: {details['mobile_number']}",
-                tertiary_text=f"Product Name: {details['product_name']}",
-                text_color=(0, 0, 0, 1),
-                theme_text_color='Custom',
-                secondary_text_color=(0, 0, 0, 1),
-                secondary_theme_text_color='Custom',
-                tertiary_text_color=(0, 0, 0, 1),
-                tertiary_theme_text_color='Custom'
+            card = MDCard(
+                orientation='vertical',
+                size_hint=(None, None),
+                size=("320dp", "220dp"),
+                padding="8dp",
+                spacing="5dp",
+                elevation=3
             )
-            item.bind(on_release=lambda instance, lender_id=lender_id: self.icon_button_clicked(instance, lender_id))
-            self.ids.container.add_widget(item)
+            horizontal_layout = BoxLayout(orientation='horizontal')
+            image = Image(
+                source='img.png',  # Update with the actual path to the image
+                size_hint_x=None,
+                height="60dp",
+                width="70dp"
+            )
+            horizontal_layout.add_widget(image)
+            horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
+            text_layout = BoxLayout(orientation='vertical')
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Lender Name:[/b] {details['full_name']}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Mobile No:[/b] {details['mobile_number']}[/b]",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Lending Type:[/b] {details.get('lending_type')}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Membership Type:[/b] {details['membership_type']}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Product Name:[/b] {details['product_name']}",
+                theme_text_color='Custom',
+                text_color=(0, 0, 0, 1),
+                halign='left',
+                markup=True,
+            ))
+
+            horizontal_layout.add_widget(text_layout)
+            card.add_widget(horizontal_layout)
+
+            card.add_widget(Widget(size_hint_y=None, height='10dp'))
+            button1 = MDFillRoundFlatButton(
+                text="            View Details             ",
+                height="40dp",
+                width="250dp",
+                pos_hint={"center_x": 0.5, "center_y": 0.5},
+                md_bg_color=(0.043, 0.145, 0.278, 1),
+                on_release=lambda x, lender_id=lender_id: self.icon_button_clicked(instance, lender_id)
+            )
+            card.add_widget(button1)
+            self.ids.container2.add_widget(card)
+            # item = ThreeLineAvatarIconListItem(
+            #     IconLeftWidget(icon="account"),
+            #     text=f"Lender Name: {details['full_name']}",
+            #     secondary_text=f"Lender Mobile Number: {details['mobile_number']}",
+            #     tertiary_text=f"Product Name: {details['product_name']}",
+            #     text_color=(0, 0, 0, 1),
+            #     theme_text_color='Custom',
+            #     secondary_text_color=(0, 0, 0, 1),
+            #     secondary_theme_text_color='Custom',
+            #     tertiary_text_color=(0, 0, 0, 1),
+            #     tertiary_theme_text_color='Custom'
+            # )
+            # item.bind(on_release=lambda instance, lender_id=lender_id: self.icon_button_clicked(instance, lender_id))
+            # self.ids.container.add_widget(item)
 
     def icon_button_clicked(self, instance, lender_id):
         sm = self.manager
@@ -465,7 +550,7 @@ class LenderDetails(Screen):
         return False
 
     def refresh(self):
-        self.ids.container.clear_widgets()
+        self.ids.container2.clear_widgets()
         self.__init__()
 
 
@@ -558,9 +643,9 @@ class ViewPortfolio(Screen):
             if lender_data:
                 membership = lender_data['membership']
                 membership_color = {
-                    'silver': (255 / 255, 255 / 255, 0 / 255, 1),   # Yellow
-                    'gold': (255 / 255, 165 / 255, 0 / 255, 1),     # Orange
-                    'platinum': (0 / 255, 128 / 255, 0 / 255, 1)    # Green
+                    'silver': (255 / 255, 255 / 255, 0 / 255, 1),  # Yellow
+                    'gold': (255 / 255, 165 / 255, 0 / 255, 1),  # Orange
+                    'platinum': (0 / 255, 128 / 255, 0 / 255, 1)  # Green
                 }.get(membership.lower(), (0, 0, 0, 1))  # Default to black if no match
 
                 self.ids.membership.text = membership.capitalize()
@@ -569,10 +654,12 @@ class ViewPortfolio(Screen):
 
                 all_lenders = app_tables.fin_lender.search()
                 if all_lenders:
-                    max_commitments = max(lender['lender_total_commitments'] for lender in all_lenders)
+                    valid_commitments = [lender['lender_total_commitments'] for lender in all_lenders if
+                                         lender['lender_total_commitments'] is not None]
+                    max_commitments = max(valid_commitments, default=0)
 
-                    total_commitments = lender_data['lender_total_commitments']
-                    return_on_investment = lender_data['return_on_investment']
+                    total_commitments = lender_data['lender_total_commitments'] or 0
+                    return_on_investment = lender_data['return_on_investment'] or 0
 
                     if max_commitments > 0:
                         investment_percentage = (total_commitments / max_commitments) * 100
@@ -584,8 +671,8 @@ class ViewPortfolio(Screen):
                     else:
                         return_percentage = 0
 
-                    investment_amount = lender_data['lender_total_commitments']  # Assuming this is the column name
-                    return_amount = lender_data['return_on_investment']  # Assuming this is the column name
+                    investment_amount = total_commitments
+                    return_amount = return_on_investment
 
                     chart_widget = HorizontalLinesAndBarsWidget(investment_percentage, return_percentage,
                                                                 investment_amount, return_amount,

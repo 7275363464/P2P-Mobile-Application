@@ -859,7 +859,7 @@ class ViewUnderProcess(Screen):
                 loan_status = loan['loan_updated_status']
                 break
 
-        if loan_status == 'approved':
+        if loan_status == 'approved' or loan_status == 'accepted':
             # Open the screen for approved loans
 
             sm = self.manager

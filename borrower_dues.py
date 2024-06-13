@@ -1055,6 +1055,7 @@ class BorrowerDuesScreen(Screen):
 
     def go_to_paynow(self):
         emi_data = app_tables.fin_emi_table.search()
+        ex_amount = app_tables.fin_platform_fees.search()
         emi_loan_id = []
         emi_num = []
         next_payment = []
@@ -1106,6 +1107,10 @@ class BorrowerDuesScreen(Screen):
             loan_amount.append(i['loan_amount'])
             tenure_months.append(i['tenure'])
             interest_rate.append(i['interest_rate'])
+
+        platform_fee = []
+        for i in ex_amount:
+            platform_fee.append(i['platform_returns'])
 
         cos_id = []
         account_num = []
@@ -1204,6 +1209,16 @@ class BorrowerDuesScreen(Screen):
             elif emi_type_pay[index].strip() == 'One Time':
                 if tenure:
                     next_payment_date = self.shechule_date[value] + timedelta(days=30 * int(tenure))
+
+            if len(platform_fee) < 1:
+                app_tables.fin_platform_fees.add_row(
+                    platform_returns=float(extra_amount)
+                )
+            else:
+                if ex_amount[0]['platform_returns'] is None:
+                    ex_amount[0]['platform_returns'] = 0.0
+                ex_amount[0]['platform_returns'] += float(extra_amount)
+
 
             paid_amount1 = 0
             for i in emi_loan_id:
@@ -1849,6 +1864,7 @@ class PartPayment(Screen):
 
     def go_to_paynow1(self):
         emi_data = app_tables.fin_emi_table.search()
+        ex_amount = app_tables.fin_platform_fees.search()
         emi_loan_id = []
         emi_num = []
         next_payment = []
@@ -1907,6 +1923,10 @@ class PartPayment(Screen):
             loan_amount.append(i['loan_amount'])
             tenure_months.append(i['tenure'])
             interest_rate.append(i['interest_rate'])
+
+        platform_fee = []
+        for i in ex_amount:
+            platform_fee.append(i['platform_returns'])
 
         cos_id = []
         account_num = []
@@ -1992,6 +2012,16 @@ class PartPayment(Screen):
                 elif emi_type_pay[index].strip() == 'One Time':
                     if tenure:
                         payment_date = schedule_date[index]
+
+                if len(platform_fee) < 1:
+                    app_tables.fin_platform_fees.add_row(
+                        platform_returns=float(extra_amount)
+                    )
+                else:
+                    if ex_amount[0]['platform_returns'] is None:
+                        ex_amount[0]['platform_returns'] = 0.0
+                    ex_amount[0]['platform_returns'] += float(extra_amount)
+
                 paid_amount1 = 0
                 for i in emi_loan_id:
                     if i == value:
@@ -2044,6 +2074,15 @@ class PartPayment(Screen):
                 elif emi_type_pay[index].strip() == 'One Time':
                     if tenure:
                         payment_date = schedule_date[index] + timedelta(days=30 * int(tenure))
+
+                if len(platform_fee) < 1:
+                    app_tables.fin_platform_fees.add_row(
+                        platform_returns=float(extra_amount)
+                    )
+                else:
+                    if ex_amount[0]['platform_returns'] is None:
+                        ex_amount[0]['platform_returns'] = 0.0
+                    ex_amount[0]['platform_returns'] += float(extra_amount)
 
                 paid_amount1 = 0
                 for i in emi_loan_id:

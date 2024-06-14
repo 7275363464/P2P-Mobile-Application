@@ -55,6 +55,7 @@ from kivymd.uix.label import MDLabel
 from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.uix.modalview import ModalView
+from lender_report_issue import ReportScreenLender
 
 if platform == 'android':
     from kivy.uix.button import Button
@@ -713,6 +714,12 @@ user_helpers1 = """
                                 text: "View Transactions History"
                                 icon_color: "#23639e"
                                 on_release: root.view_transaction_history()
+                            MDNavigationDrawerDivider:
+                            MDNavigationDrawerItem
+                                icon: "report_icon.png"
+                                text: "Report Issue!"
+                                icon_color: "#23639e"
+                                on_release: root.go_to_lender_report_issue()
                             MDNavigationDrawerDivider:
                             MDNavigationDrawerItem
                                 icon: "logout"
@@ -4988,6 +4995,44 @@ class LenderDashboard(Screen):
         for item in self.ids.container.children:
             if isinstance(item, ThreeLineAvatarIconListItem):
                 item.bg_color = (1, 1, 1, 1)  # Reset background color for all items
+
+    def go_to_lender_report_issue(self):
+        modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
+
+        # Create MDLabel with white text color, increased font size, and bold text
+        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
+                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
+                                font_size=dp(50), bold=True)
+
+        # Set initial y-position off-screen
+        loading_label.y = -loading_label.height
+
+        modal_view.add_widget(loading_label)
+        modal_view.open()
+
+        # Perform the animation
+        self.animate_loading_text(loading_label, modal_view.height)
+
+        # Perform the actual action (e.g., fetching transaction history)
+        # You can replace the sleep with your actual logic
+        Clock.schedule_once(lambda dt: self.perform_lender_report_issue_action(modal_view), 2)
+
+    def perform_lender_report_issue_action(self, modal_view):
+        # Dismiss the modal view
+        modal_view.dismiss()
+
+        # Get the ScreenManager
+        sm = self.manager
+
+        # Create a new instance of the TransactionBH screen
+        Report_Issue_screen = ReportScreenLender(name='ReportScreenLender')
+
+        # Add the TransactionBH screen to the existing ScreenManager
+        sm.add_widget(Report_Issue_screen)
+
+        # Switch to the TransactionBH screen
+        sm.current = 'ReportScreenLender'
+
 
     def refresh_profile_data(self):
         email = self.get_email()

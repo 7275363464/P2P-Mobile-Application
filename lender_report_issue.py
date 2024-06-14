@@ -12,9 +12,9 @@ from kivymd.uix.filemanager import MDFileManager
 
 report_issue = '''
 <WindowManager>:
-    ReportScreen:
+    ReportScreenLender:
 
-<ReportScreen>:
+<ReportScreenLender>:
     BoxLayout:
         orientation: 'vertical'
 
@@ -38,6 +38,15 @@ report_issue = '''
                     height: dp(30)
                     halign: "left"
                     font_size: 20
+
+                #MDLabel:
+                #    id: name
+                #    text:"Name"
+                #    size_hint_y: None
+                #    height: dp(30)
+                #    font_size: 20
+                #    size_hint_x: None
+                #    width: dp(300)
                 MDTextField:
                     id: name
                     hint_text: "Enter your name"   
@@ -58,6 +67,14 @@ report_issue = '''
                     size_hint_y: None
                     height: dp(40)
                     mode: "rectangle"
+                #MDLabel:
+                #    id: email
+                #    text:"Email ID"
+                #    size_hint_y: None
+                #    height: dp(30)
+                #    font_size: 20
+                #    size_hint_x: None
+                #    width: dp(300)
 
                 MDLabel:
                     text: "Mobile Number:"
@@ -72,6 +89,14 @@ report_issue = '''
                     size_hint_y: None
                     height: dp(40)
                     mode: "rectangle"
+                #MDLabel:
+                #    id: mobile_no
+                #    text:"Mobile_No"
+                #    size_hint_y: None
+                #    height: dp(30)
+                #    font_size: 20
+                #    size_hint_x: None
+                #    width: dp(300)
 
                 MDLabel:
                     text: "Category:"
@@ -185,7 +210,7 @@ report_issue = '''
 Builder.load_string(report_issue)
 
 
-class ReportScreen(Screen):
+class ReportScreenLender(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -208,10 +233,9 @@ class ReportScreen(Screen):
         # Fetching the data for category and subcategory details
         report_data = app_tables.fin_report_issue_category.search()
         category_data = app_tables.fin_category.search()
-
         self.category_list = [item['category'] for item in category_data]
 
-        self.subcategory_loan_list = [item['borrower_subcategory_loan_issue'] for item in report_data]
+        self.subcategory_loan_list = [item['lender_subcategory_loan_issue'] for item in report_data]
         print(self.subcategory_loan_list)
         self.subcategory_Technical_list = [item['subcategory_Technical_issue'] for item in report_data]
         print(self.subcategory_Technical_list)
@@ -263,8 +287,6 @@ class ReportScreen(Screen):
         mobile_regex = r'^\+?1?\d{9,15}$'
         return re.match(mobile_regex, mobile_number) is not None
 
-        # Method to show a dialog
-
     # dialog box
     def show_dialog(self, title, text):
         if not self.dialog:
@@ -314,17 +336,15 @@ class ReportScreen(Screen):
             self.show_dialog("Invalid Input", "Invalid mobile number format")
             return
 
-        # for check user email and input email same
+        # for get user email
         user_profile = app_tables.fin_user_profile.get(email_user=email)
-
         if not user_profile:
-            self.show_dialog("Something Went Wrong!", "User profile not found")
+            self.show_dialog("Error", "User profile not found Email Is Invalid!")
             return
 
-        # for check mobile number same or not
         user_profile_number = app_tables.fin_user_profile.get(mobile=mobile_number)
         if not user_profile_number:
-            self.show_dialog("Something Went Wrong!", "Mobile Number Not Registered")
+            self.show_dialog("Something Went Wrong!", "Mobile Number Not Registered!")
             return
 
         user_profile_number = app_tables.fin_user_profile.get(full_name=name)
@@ -334,8 +354,8 @@ class ReportScreen(Screen):
 
         user_type = user_profile['usertype']
         # Check if the current user is a borrower
-        if user_type != 'borrower':
-            self.show_dialog("Something Went Wrong!", "Enter Same Email ID As Registered")
+        if user_type != 'lender':
+            self.show_dialog("Error", "Only User can report issues Check Email ID")
             return
 
         print(name, email, mobile_number, Category, SubCategory, issue_description, it_is_urgent, user_type)
@@ -369,11 +389,10 @@ class ReportScreen(Screen):
     # this method for go back to dashboard
     def go_back(self):
         # Logic to go back to the previous screen
-        self.manager.current = 'DashboardScreen'  # replace 'dashboard' with your actual screen name
+        self.manager.current = 'LenderDashboard'  # replace 'dashboard' with your actual screen name
 
     # this method for refresh the page
     def refresh(self):
-        # Logic to refresh the screen
         log_email = anvil.server.call('another_method')
         user_email_log = app_tables.fin_user_profile.get(email_user=log_email)
         if user_email_log:

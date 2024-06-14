@@ -420,13 +420,46 @@ class TodayDuesTD(Screen):
 
             # card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
             self.ids.container2.add_widget(card)
-        # if len(present_commitmet) >= 1:
-        #     if lender_customer_id[log_index] in lender_cus_id:
-        #         lender_index = lender_cus_id.index(lender_customer_id[log_index])
-        #         lender_data[lender_index]['present_commitments'] = sum(present_commitmet)
-        #         print(present_commitmet, sum(present_commitmet))
-        #     else:
-        #         print('customer id not there')
+        lender_data = app_tables.fin_lender.search()
+        lender_cus_id = []
+        create_date = []
+        returns = []
+        present_commitment = []
+
+        for i in lender_data:
+            lender_cus_id.append(i['customer_id'])
+            create_date.append(i['member_since'])
+            returns.append(i['return_on_investment'])
+            present_commitment.append(i['present_commitments'])
+
+        a = -1
+        total_commitment = []
+        present_commitmet = []
+        for i in range(s):
+            a += 1
+            if lender_customer_id[i] == profile_customer_id[log_index] and loan_status[i] != 'lost opportunities' and \
+                    loan_status[i] != 'rejected':
+                total_commitment.append(loan_amount[i])
+
+            if lender_customer_id[i] == profile_customer_id[log_index] and loan_status[i] != 'lost opportunities' and \
+                    loan_status[i] != 'rejected' and loan_status[i] != 'closed':
+                present_commitmet.append(loan_amount[i])
+
+        if len(total_commitment) >= 1:
+            if lender_customer_id[log_index] in lender_cus_id:
+                lender_index = lender_cus_id.index(lender_customer_id[log_index])
+                lender_data[lender_index]['lender_total_commitments'] = sum(total_commitment)
+                print(total_commitment, sum(total_commitment))
+            else:
+                print('customer id not there')
+
+        if len(present_commitmet) >= 1:
+            if lender_customer_id[log_index] in lender_cus_id:
+                lender_index = lender_cus_id.index(lender_customer_id[log_index])
+                lender_data[lender_index]['present_commitments'] = sum(present_commitmet)
+                print(present_commitmet, sum(present_commitmet))
+            else:
+                print('customer id not there')
     def icon_button_clicked(self, instance, loan_id, shedule_date):
         sm = self.manager
 

@@ -1054,6 +1054,88 @@ class ViewAllLoansLF(Screen):
             #     self.ids.container5.add_widget(item)
             # else:
             #     print("Index out of range!")
+        data = app_tables.fin_foreclosure.search()
+        loan = app_tables.fin_loan_details.search()
+        today_date = datetime.now(timezone.utc).date()
+        profile = app_tables.fin_user_profile.search()
+        loan_id = []
+        request_time = []
+        loan_status = []
+        a = 0
+        for i in data:
+            a += 1  # how much data was available in data it will print all data
+            loan_id.append(i['loan_id'])
+            request_time.append(i['requested_on'])
+            loan_status.append(i['status'])
+
+        loan_id1 = []
+        loan_status1 = []
+        lender_customer_id = []
+        loan_amount = []
+        email = anvil.server.call('another_method')
+        s = 0
+        for i in loan:
+            s += 1
+            loan_id1.append(i['loan_id'])
+            loan_status1.append(i['loan_updated_status'])
+            lender_customer_id.append(i['lender_customer_id'])
+            loan_amount.append(i['loan_amount'])
+        profile_customer_id = []
+        profile_mobile_number = []
+        profile_email = []
+        for i in profile:
+            profile_customer_id.append(i['customer_id'])
+            profile_mobile_number.append(i['mobile'])
+            profile_email.append(i['email_user'])
+
+        for i in range(a):
+            day_left = (today_date - request_time[i].date()).days
+            if day_left >= 2 and loan_status[i] == "under process":
+                data[i]["status"] = "approved"
+                if loan_id[i] in loan_id1:
+                    index = loan_id1.index(loan_id[i])
+                    loan[i]["loan_updated_status"] = "foreclosure"
+            print(day_left)
+
+        lender_data = app_tables.fin_lender.search()
+        lender_cus_id = []
+        for i in lender_data:
+            lender_cus_id.append(i['customer_id'])
+
+        log_index = 0
+        if email in profile_email:
+            log_index = profile_email.index(email)
+        else:
+            print("email not there")
+
+        a = -1
+        total_commitment = []
+        present_commitmet = []
+        for i in range(s):
+            a += 1
+            if lender_customer_id[i] == profile_customer_id[log_index] and loan_status1[i] != 'lost opportunities' and \
+                    loan_status1[i] != 'rejected':
+                total_commitment.append(loan_amount[i])
+
+            if lender_customer_id[i] == profile_customer_id[log_index] and loan_status1[i] != 'lost opportunities' and \
+                    loan_status1[i] != 'rejected' and loan_status1[i] != 'closed':
+                present_commitmet.append(loan_amount[i])
+
+        if len(total_commitment) >= 1:
+            if lender_customer_id[log_index] in lender_cus_id:
+                lender_index = lender_cus_id.index(lender_customer_id[log_index])
+                lender_data[lender_index]['lender_total_commitments'] = sum(total_commitment)
+                print(total_commitment, sum(total_commitment))
+            else:
+                print('customer id not there')
+
+        if len(present_commitmet) >= 1:
+            if lender_customer_id[log_index] in lender_cus_id:
+                lender_index = lender_cus_id.index(lender_customer_id[log_index])
+                lender_data[lender_index]['present_commitments'] = sum(present_commitmet)
+                print(present_commitmet, sum(present_commitmet))
+            else:
+                print('customer id not there')
 
     def icon_button_clicked(self, instance, loan_id):
         # Handle the on_release event here

@@ -699,7 +699,7 @@ class ALlLoansScreen(Screen):
         product_name = []
         interest_rate = []
         loan_amount = []
-
+        lender_customer_id = []
         s = 0
         for i in data:
             s += 1
@@ -710,14 +710,59 @@ class ALlLoansScreen(Screen):
             product_name.append(i['product_name'])
             interest_rate.append(i['interest_rate'])
             loan_amount.append(i['loan_amount'])
+            lender_customer_id.append(i['lender_customer_id'])
 
         profile_customer_id = []
         profile_mobile_number = []
         ascend_value = []
+        profile_email = []
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
             ascend_value.append(i['ascend_value'])
+            profile_email.append(i['email_user'])
+
+        lender_data = app_tables.fin_lender.search()
+        lender_cus_id = []
+        for i in lender_data:
+            lender_cus_id.append(i['customer_id'])
+
+        email = anvil.server.call('another_method')
+
+        log_index = 0
+        if email in profile_email:
+            log_index = profile_email.index(email)
+        else:
+            print("email not there")
+
+        a = -1
+        total_commitment = []
+        present_commitmet = []
+        for i in range(s):
+            a += 1
+            if lender_customer_id[i] == profile_customer_id[log_index] and loan_status[i] != 'lost opportunities' and \
+                    loan_status[i] != 'rejected':
+                total_commitment.append(loan_amount[i])
+
+            if lender_customer_id[i] == profile_customer_id[log_index] and loan_status[i] != 'lost opportunities' and \
+                    loan_status[i] != 'rejected' and loan_status[i] != 'closed':
+                present_commitmet.append(loan_amount[i])
+
+        if len(total_commitment) >= 1:
+            if lender_customer_id[log_index] in lender_cus_id:
+                lender_index = lender_cus_id.index(lender_customer_id[log_index])
+                lender_data[lender_index]['lender_total_commitments'] = sum(total_commitment)
+                print(total_commitment, sum(total_commitment))
+            else:
+                print('customer id not there')
+
+        if len(present_commitmet) >= 1:
+            if lender_customer_id[log_index] in lender_cus_id:
+                lender_index = lender_cus_id.index(lender_customer_id[log_index])
+                lender_data[lender_index]['present_commitments'] = sum(present_commitmet)
+                print(present_commitmet, sum(present_commitmet))
+            else:
+                print('customer id not there')
 
         c = -1
         index_list = []

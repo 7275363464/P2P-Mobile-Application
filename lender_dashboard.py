@@ -1,8 +1,12 @@
+import io
 import json
 import base64
 from anvil import media
 from io import BytesIO
 from kivy.core.image import Image as CoreImage
+from matplotlib import pyplot as plt
+from matplotlib.figure import Figure
+
 from lender_portfolio import Lend_Portfolio
 from anvil.tables import app_tables
 from kivy.atlas import CoreImage
@@ -3940,7 +3944,6 @@ user_helpers1 = """
 <ReturnsScreen>
     MDBoxLayout:
         orientation: 'vertical'
-    
         MDTopAppBar:                                   
             elevation: 2
             pos_hint: {'top': 1}
@@ -3950,6 +3953,8 @@ user_helpers1 = """
             md_bg_color: 0.043, 0.145, 0.278, 1
         MDBoxLayout:
             orientation: 'vertical'
+            size_hint_y: None
+            heigt: dp(70)
             MDLabel:
                 text: ''
                 size_hint_y: None
@@ -3959,6 +3964,7 @@ user_helpers1 = """
                 spacing: dp(20)
                 padding: dp(20)
                 MDRaisedButton:
+                    id: total_returns
                     text: "Total Returns"
                     md_bg_color: 0.043, 0.145, 0.278, 1
                     font_name: "Roboto-Bold"
@@ -3966,7 +3972,9 @@ user_helpers1 = """
                     height: dp(50)
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     font_size:dp(15)
+                    on_release: root.total_return_screeen()
                 MDRaisedButton:
+                    id: user_returns
                     text: "Users Returns"
                     md_bg_color: 0.043, 0.145, 0.278, 1
                     font_name: "Roboto-Bold"
@@ -3974,6 +3982,14 @@ user_helpers1 = """
                     height: dp(50)
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     font_size:dp(15)
+                    on_release: root.user_return_screeen()
+        
+        MDBoxLayout:
+            id: box
+            Image:
+                id: image
+                size_hint: (1, None)
+                height: dp(420)
     
 """
 
@@ -6253,7 +6269,252 @@ class ViewEditScreen(Screen):
         self.manager.current = 'ViewPersonalScreen'
 
 class ReturnsScreen(Screen):
-    pass
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.returns_screen = None
+
+    def user_return_screeen(self):
+        self.ids.total_returns.md_bg_color = '#8f9691'
+        self.ids.user_returns.md_bg_color = 0.043, 0.145, 0.278, 1
+        data1 = app_tables.fin_loan_details.search()
+        profile = app_tables.fin_user_profile.search()
+        email = anvil.server.call('another_method')
+        loan_id = []
+        borrower_name = []
+        cos_id1 = []
+        loan_amount = []
+        loan_amount_1 = []
+        loan_status = []
+        tenure = []
+        interest = []
+        monthly_emi = []
+        emi_pay_type = []
+        total_int_amount = []
+        total_pro_fee_amount = []
+        total_repay = []
+        shedule_payment = []
+        loan_product = []
+        lender_customer_id = []
+        lender_returns = []
+        product_name = []
+        s = 0
+        for i in data1:
+            s += 1
+            loan_id.append(i['loan_id'])
+            borrower_name.append(i['borrower_full_name'])
+            cos_id1.append(i['borrower_customer_id'])
+            loan_amount.append(i['loan_amount'])
+            loan_amount_1.append(i['loan_amount'])
+            loan_status.append(i['loan_updated_status'])
+            tenure.append(i['tenure'])
+            interest.append(i['interest_rate'])
+            monthly_emi.append(i['monthly_emi'])
+            emi_pay_type.append(i['emi_payment_type'])
+            total_int_amount.append(i['total_interest_amount'])
+            total_pro_fee_amount.append(i['total_processing_fee_amount'])
+            total_repay.append(i['total_repayment_amount'])
+            shedule_payment.append(i['first_emi_payment_due_date'])
+            loan_product.append(i['product_id'])
+            lender_customer_id.append(i['lender_customer_id'])
+            lender_returns.append(i['lender_returns'])
+            product_name.append(i['product_name'])
+
+        profile_customer_id = []
+        profile_mobile_number = []
+        profile_email = []
+        for i in profile:
+            profile_customer_id.append(i['customer_id'])
+            profile_mobile_number.append(i['mobile'])
+            profile_email.append(i['email_user'])
+
+        log_index = 0
+        if email in profile_email:
+            log_index = profile_email.index(email)
+        else:
+            print("email not there")
+
+        index_list = []
+        for i in range(s):
+            if lender_customer_id[i] == lender_customer_id[log_index] and loan_status[i] == 'closed':
+                index_list.append(i)
+
+        print(index_list)
+
+        investment1 = []
+        returns1 = []
+        products1 = []
+        a = 0
+        for i in index_list:
+            a += 1
+            investment1.append(loan_amount[i] / 1000000)
+            products1.append(product_name[i] + f'{a}')
+            if lender_returns[i] != None:
+                returns1.append(lender_returns[i] / 1000000)
+            else:
+                returns1.append(0)
+
+        print(returns1)
+        print(products1)
+        print(investment1)
+
+        # Create a figure and axis
+        fig = Figure()
+
+        # Data
+        products = products1
+        investment = investment1
+        returns = returns1
+        ax = fig.add_subplot(111)
+        bar_width = 0.45
+        ax.bar(products, investment, bar_width, label='Investment', color='blue')
+        ax.bar(products, returns, bar_width, label='Returns', color='green')
+
+        ax.set_xlabel('')
+        ax.set_ylabel('Amount (0.1M = 100000)')
+        ax.set_title('Investment and Returns by Product')
+        ax.legend()
+
+        # Render the figure as an image
+        buf = io.BytesIO()
+        fig.savefig(buf, format='png')
+        buf.seek(0)
+
+        # Save the image temporarily
+        temp_file = "temp_plot.png"
+        with open(temp_file, "wb") as f:
+            f.write(buf.read())
+
+        # Add the image to the main layout
+        self.ids.image.source = temp_file
+
+    def total_return_screeen(self):
+        self.ids.user_returns.md_bg_color = '#a6ada8'
+        self.ids.total_returns.md_bg_color = 0.043, 0.145, 0.278, 1
+        data1 = app_tables.fin_loan_details.search()
+        profile = app_tables.fin_user_profile.search()
+        email = anvil.server.call('another_method')
+        loan_id = []
+        borrower_name = []
+        cos_id1 = []
+        loan_amount = []
+        loan_amount_1 = []
+        loan_status = []
+        tenure = []
+        interest = []
+        monthly_emi = []
+        emi_pay_type = []
+        total_int_amount = []
+        total_pro_fee_amount = []
+        total_repay = []
+        shedule_payment = []
+        loan_product = []
+        lender_customer_id = []
+        lender_returns = []
+        product_name = []
+        s = 0
+        for i in data1:
+            s += 1
+            loan_id.append(i['loan_id'])
+            borrower_name.append(i['borrower_full_name'])
+            cos_id1.append(i['borrower_customer_id'])
+            loan_amount.append(i['loan_amount'])
+            loan_amount_1.append(i['loan_amount'])
+            loan_status.append(i['loan_updated_status'])
+            tenure.append(i['tenure'])
+            interest.append(i['interest_rate'])
+            monthly_emi.append(i['monthly_emi'])
+            emi_pay_type.append(i['emi_payment_type'])
+            total_int_amount.append(i['total_interest_amount'])
+            total_pro_fee_amount.append(i['total_processing_fee_amount'])
+            total_repay.append(i['total_repayment_amount'])
+            shedule_payment.append(i['first_emi_payment_due_date'])
+            loan_product.append(i['product_id'])
+            lender_customer_id.append(i['lender_customer_id'])
+            lender_returns.append(i['lender_returns'])
+            product_name.append(i['product_name'])
+
+        profile_customer_id = []
+        profile_mobile_number = []
+        profile_email = []
+        for i in profile:
+            profile_customer_id.append(i['customer_id'])
+            profile_mobile_number.append(i['mobile'])
+            profile_email.append(i['email_user'])
+
+        log_index = 0
+        if email in profile_email:
+            log_index = profile_email.index(email)
+        else:
+            print("email not there")
+
+        lender_data = app_tables.fin_lender.search()
+        lender_cus_id = []
+        total_commitment = []
+        lender_returns_on_lender = []
+        for i in lender_data:
+            lender_cus_id.append(i['customer_id'])
+            total_commitment.append(i['lender_total_commitments'])
+            lender_returns_on_lender.append(i['return_on_investment'])
+
+        index_list = []
+        for i in range(s):
+            if lender_customer_id[i] == lender_customer_id[log_index] and loan_status[i] != 'lost opportunities' and \
+                    loan_status[i] != 'rejected':
+                index_list.append(i)
+
+        print(index_list)
+        lender_index = 0
+        if profile_customer_id[log_index] in lender_cus_id:
+            lender_index = lender_cus_id.index(profile_customer_id[log_index])
+
+        # total_investment = []
+        # returns1 = []
+        # a = 0
+        # for i in index_list:
+        # a += 1
+        # total_investment.append(loan_amount[i])
+        # if lender_returns[i] != None:
+        #    returns1.append(lender_returns[i])
+        # else:
+        #    returns1.append(0)
+
+        print(total_commitment[lender_index])
+        print(lender_returns_on_lender[lender_index])
+
+        fig, ax = plt.subplots()
+
+        # Data
+        if total_commitment[lender_index] != None and lender_returns_on_lender[lender_index] != None:
+            products = ['Total', 'Returns']
+            investment = [total_commitment[lender_index] / 1000000, 0]  # Summarizing investment for 'Total'
+            returns = [0, lender_returns_on_lender[lender_index] / 1000000]  # Summarizing returns for 'Returns'
+            bar_width = 0.7
+        else:
+            products = ['Total', 'Returns']
+            investment = [0 / 1000000, 0]  # Summarizing investment for 'Total'
+            returns = [0, 0 / 1000000]  # Summarizing returns for 'Returns'
+            bar_width = 0.7
+
+        ax.bar(products, investment, bar_width, label='Investment', color='blue')
+        ax.bar(products, returns, bar_width, label='Returns', color='green')
+
+        ax.set_xlabel('')
+        ax.set_ylabel('Amount (0.1M = 100000)')
+        ax.set_title('Investment and Returns by Product')
+        ax.legend()
+
+        # Render the figure as an image
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+
+        # Save the image temporarily
+        temp_file = "temp_plot1.png"
+        with open(temp_file, "wb") as f:
+            f.write(buf.read())
+
+        # Add the image to the main layout
+        self.ids.image.source = temp_file
 
 
 class MyScreenManager(ScreenManager):

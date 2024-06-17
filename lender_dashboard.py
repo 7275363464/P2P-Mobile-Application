@@ -80,12 +80,14 @@ user_helpers1 = """
     ViewEmployeeScreen:
     ViewEditScreen:
     ReturnsScreen:
+    CommitmentScreen:
 
 <LenderDashboard>
     MDBottomNavigation:
         panel_color: '#F5F5F5'
         text_color_active: "#007BFF"
         elevation: 10
+        selected_color_background: "#F5F5F5"
         MDBottomNavigationItem:
             name: 'screen 1'
             text: 'Home'
@@ -201,6 +203,7 @@ user_helpers1 = """
                                                     pos_hint: {'center_x': 0.5}
                                                     theme_text_color: "Custom"
                                                     text_color: "#007BFF"
+                                                    on_release: root.go_to_commitment_screen()
                                             MDBoxLayout:
                                                 orientation: 'vertical'
                                                 size_hint_y: None
@@ -3998,6 +4001,28 @@ user_helpers1 = """
                 id: image
                 size_hint: (1, None)
                 height: dp(420)
+                
+<CommitmentScreen>
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:                                   
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderDashboard')]]
+            title_align: 'center'
+            title: "My Commitments"
+            md_bg_color: 0.043, 0.145, 0.278, 1
+        MDBoxLayout:
+            id: box
+            Image:
+                id: image
+                size_hint: (1, None)
+                height: dp(450)
+        MDLabel:
+            text: ''
+            size_hint_y: None
+            height: dp(100)
+
 
 """
 
@@ -4019,6 +4044,18 @@ class LenderDashboard(Screen):
 
         # Switch to the LoginScreen
         sm.current = 'ReturnsScreen'
+
+    def go_to_commitment_screen(self):
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        commitment_screen = CommitmentScreen(name='CommitmentScreen')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(commitment_screen)
+
+        # Switch to the LoginScreen
+        sm.current = 'CommitmentScreen'
 
     def update_notification_count(self, count):
         self.ids.notification_label.text = str(count)
@@ -6516,36 +6553,32 @@ class ReturnsScreen(Screen):
         if profile_customer_id[log_index] in lender_cus_id:
             lender_index = lender_cus_id.index(profile_customer_id[log_index])
 
-        # total_investment = []
-        # returns1 = []
-        # a = 0
-        # for i in index_list:
-        # a += 1
-        # total_investment.append(loan_amount[i])
-        # if lender_returns[i] != None:
-        #    returns1.append(lender_returns[i])
-        # else:
-        #    returns1.append(0)
-
         print(total_commitment[lender_index])
         print(lender_returns_on_lender[lender_index])
 
         fig, ax = plt.subplots()
 
         # Data
-        if total_commitment[lender_index] != None and lender_returns_on_lender[lender_index] != None:
+        if total_commitment[lender_index] is not None and lender_returns_on_lender[lender_index] is not None:
             products = ['Total', 'Returns']
             investment = [total_commitment[lender_index] / 1000000, 0]  # Summarizing investment for 'Total'
             returns = [0, lender_returns_on_lender[lender_index] / 1000000]  # Summarizing returns for 'Returns'
             bar_width = 0.7
+            # Calculate percentage of returns
+            returns_percentage = (lender_returns_on_lender[lender_index] / total_commitment[lender_index]) * 100
         else:
             products = ['Total', 'Returns']
             investment = [0 / 1000000, 0]  # Summarizing investment for 'Total'
             returns = [0, 0 / 1000000]  # Summarizing returns for 'Returns'
             bar_width = 0.7
+            returns_percentage = 0
 
         ax.bar(products, investment, bar_width, label='Investment', color='blue')
         ax.bar(products, returns, bar_width, label='Returns', color='green')
+
+        # Annotate the returns bar with the percentage
+        if returns_percentage > 0:
+            ax.text(1, returns[1] + 0.05, f'{returns_percentage:.1f}%', ha='center', va='bottom')
 
         ax.set_xlabel('')
         ax.set_ylabel('Amount (0.1M = 100000)')
@@ -6559,6 +6592,123 @@ class ReturnsScreen(Screen):
 
         # Save the image temporarily
         temp_file = "temp_plot1.png"
+        with open(temp_file, "wb") as f:
+            f.write(buf.read())
+
+        # Add the image to the main layout
+        self.ids.image.source = temp_file
+
+class CommitmentScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        data1 = app_tables.fin_loan_details.search()
+        profile = app_tables.fin_user_profile.search()
+        email = anvil.server.call('another_method')
+        loan_id = []
+        borrower_name = []
+        cos_id1 = []
+        loan_amount = []
+        loan_amount_1 = []
+        loan_status = []
+        tenure = []
+        interest = []
+        monthly_emi = []
+        emi_pay_type = []
+        total_int_amount = []
+        total_pro_fee_amount = []
+        total_repay = []
+        shedule_payment = []
+        loan_product = []
+        lender_customer_id = []
+        lender_returns = []
+        product_name = []
+        s = 0
+        for i in data1:
+            s += 1
+            loan_id.append(i['loan_id'])
+            borrower_name.append(i['borrower_full_name'])
+            cos_id1.append(i['borrower_customer_id'])
+            loan_amount.append(i['loan_amount'])
+            loan_amount_1.append(i['loan_amount'])
+            loan_status.append(i['loan_updated_status'])
+            tenure.append(i['tenure'])
+            interest.append(i['interest_rate'])
+            monthly_emi.append(i['monthly_emi'])
+            emi_pay_type.append(i['emi_payment_type'])
+            total_int_amount.append(i['total_interest_amount'])
+            total_pro_fee_amount.append(i['total_processing_fee_amount'])
+            total_repay.append(i['total_repayment_amount'])
+            shedule_payment.append(i['first_emi_payment_due_date'])
+            loan_product.append(i['product_id'])
+            lender_customer_id.append(i['lender_customer_id'])
+            lender_returns.append(i['lender_returns'])
+            product_name.append(i['product_name'])
+
+        profile_customer_id = []
+        profile_mobile_number = []
+        profile_email = []
+        for i in profile:
+            profile_customer_id.append(i['customer_id'])
+            profile_mobile_number.append(i['mobile'])
+            profile_email.append(i['email_user'])
+
+        log_index = 0
+        if email in profile_email:
+            log_index = profile_email.index(email)
+        else:
+            print("email not there")
+
+        lender_data = app_tables.fin_lender.search()
+        lender_cus_id = []
+        total_commitment = []
+        lender_returns_on_lender = []
+        present_commitments = []
+        for i in lender_data:
+            lender_cus_id.append(i['customer_id'])
+            total_commitment.append(i['lender_total_commitments'])
+            lender_returns_on_lender.append(i['return_on_investment'])
+            present_commitments.append(i['present_commitments'])
+
+        index_list = []
+        for i in range(s):
+            if lender_customer_id[i] == lender_customer_id[log_index] and loan_status[i] != 'lost opportunities' and \
+                    loan_status[i] != 'rejected':
+                index_list.append(i)
+
+        print(index_list)
+        lender_index = 0
+        if profile_customer_id[log_index] in lender_cus_id:
+            lender_index = lender_cus_id.index(profile_customer_id[log_index])
+
+        print(total_commitment[lender_index])
+        print(lender_returns_on_lender[lender_index])
+
+        fig, ax = plt.subplots()
+
+        # Data for pie chart
+        if total_commitment[lender_index] != None and present_commitments[lender_index] != None:
+            labels = ['Total               \nCommitments', 'Present\nCommitments']
+            sizes = [total_commitment[lender_index], present_commitments[lender_index]]
+            colors = ['orange', 'yellow']
+            explode = (0.1, 0)  # explode the 1st slice (Total Investment)
+        else:
+            labels = ['Total               \nCommitments', 'Present\nCommitments']
+            sizes = [0, 0]
+            colors = ['orange', 'yellow']
+            explode = (0.1, 0)  # explode the 1st slice (Total Investment)
+
+        ax.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%',
+               shadow=True, startangle=55)
+
+        ax.set_title('Lender Commitments')
+
+        # Render the figure as an image
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+
+        # Save the image temporarily
+        temp_file = "temp_plot2.png"
         with open(temp_file, "wb") as f:
             f.write(buf.read())
 

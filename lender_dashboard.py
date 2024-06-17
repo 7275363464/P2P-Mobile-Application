@@ -661,12 +661,7 @@ user_helpers1 = """
                                 text: "Sai Mamidala"
                                 spacing: "4dp"
                                 padding: "12dp", 0, 0, "56dp"
-                            MDNavigationDrawerItem
-                                icon: "briefcase"
-                                text: "View Borrower Portfolio"
-                                icon_color: "#23639e"
-                                on_release: root.view_Borr_Portfolio()
-                            MDNavigationDrawerDivider:
+
                             MDNavigationDrawerItem
                                 icon: "calendar-check-outline"
                                 text: "Today's Dues"
@@ -720,6 +715,12 @@ user_helpers1 = """
                                 text: "Report Issue!"
                                 icon_color: "#23639e"
                                 on_release: root.go_to_lender_report_issue()
+                            MDNavigationDrawerDivider:
+                            MDNavigationDrawerItem
+                                icon: "briefcase"
+                                text: "View  Portfolio"
+                                icon_color: "#23639e"
+                                on_release: root.view_Borr_Portfolio()
                             MDNavigationDrawerDivider:
                             MDNavigationDrawerItem
                                 icon: "logout"
@@ -2677,7 +2678,7 @@ user_helpers1 = """
                         Line:
                             points: self.x, self.y, self.x + self.width, self.y
 
-                
+
 <ViewBankScreen>
     canvas.before:
         Color:
@@ -3053,7 +3054,7 @@ user_helpers1 = """
                     text: 'Upload Photo'
                     size_hint_y: None
                     height: dp(10)
-                    
+
                 Widget:
                     size_hint_y: None
                     height: dp(1)
@@ -3757,7 +3758,7 @@ user_helpers1 = """
                         Line:
                             points: self.x, self.y, self.x + self.width, self.y
 
-                
+
                 MDLabel:
                     text: ' '
 
@@ -3990,14 +3991,14 @@ user_helpers1 = """
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     font_size:dp(15)
                     on_release: root.user_return_screeen()
-        
+
         MDBoxLayout:
             id: box
             Image:
                 id: image
                 size_hint: (1, None)
                 height: dp(420)
-    
+
 """
 
 conn = sqlite3.connect('fin_user.db')
@@ -4570,6 +4571,7 @@ class LenderDashboard(Screen):
             self.ids.details.secondary_text = "Joined Date: "
             self.ids.date.text = "Joined Date: "
             self.ids.return_amount.text = "Rs. "
+
     def on_kv_post(self, base_widget):
         self.setup_menu()
 
@@ -5032,7 +5034,6 @@ class LenderDashboard(Screen):
 
         # Switch to the TransactionBH screen
         sm.current = 'ReportScreenLender'
-
 
     def refresh_profile_data(self):
         email = self.get_email()
@@ -5615,6 +5616,7 @@ class ViewAccountScreen(Screen):
             self.manager.add_widget(Factory.ViewBusinessScreen1(name='ViewBusinessScreen1'))
         self.manager.current = 'ViewBusinessScreen1'
 
+
 class ViewProfileScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -5622,9 +5624,9 @@ class ViewProfileScreen(Screen):
         data = app_tables.fin_lender.search(email_id=email)
         investment = []
         email1 = []
-        membership=[]
-        returns=[]
-        lending=[]
+        membership = []
+        returns = []
+        lending = []
         for row in data:
             email1.append(row['email_id'])
             investment.append(row['investment'])
@@ -5885,6 +5887,7 @@ class ViewBankScreen(Screen):
             self.on_back_button_press()
             return True
         return False
+
 
 class ViewPersonalScreen(Screen):
     def refresh_profile_data(self, dt=None):
@@ -6312,6 +6315,7 @@ class ViewEditScreen(Screen):
 
     def on_back_button_press(self):
         self.manager.current = 'ViewPersonalScreen'
+
 
 class ReturnsScreen(Screen):
     def __init__(self, **kwargs):

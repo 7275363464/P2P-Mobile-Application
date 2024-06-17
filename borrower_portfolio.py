@@ -1,3 +1,9 @@
+import anvil
+from io import BytesIO
+from kivy.core.image import Image as CoreImage
+from kivy.graphics import Color,Ellipse
+import base64
+
 from anvil import Label
 from anvil.tables import app_tables
 from kivy.metrics import dp
@@ -111,59 +117,31 @@ borrower_portfolio = '''
                             Line:
                                 width: 0.25
                                 rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-                        MDBoxLayout:
-                            orientation: "vertical"
-                            pos_hint: {"top": 1}
-
-                            spacing: dp(5)
-                            padding:dp(10)
-                            size_hint_y: None
-                            height: dp(100)
-                            spacing:
+                        Image:
+                            id: selected_image1
+                            size_hint: None, None
+                            size: dp(70), dp(70)  # Make sure the size is a perfect square for a circular shape
+                            source: ""  # Set the path to your image source if needed
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            allow_stretch: True
+                            keep_ratio: True
                             canvas.before:
-                                Color:
-                                    rgba: 0, 0, 0, 1
-                                Line:
-                                    width: 0.1
-                                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-
-                            text_size: self.width - dp(20), None
-
-                            Image:
-                                id: selected_image1
-                                source: 'background.jpg'
-                                halign: 'center'
-                                valign: 'middle'
-                                size_hint_x: None
-                                allow_stretch: True
-                                keep_ratio: True
-                                width: dp(20)
-                                spacing: dp(30)
-                                padding: dp(30)
-                                height:dp(20)
-                                theme_text_color: 'Custom'
-                                text_color: 0.043, 0.145, 0.278, 1
-                                size: dp(60), dp(20)
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-                                canvas.before:
-                                    Color:
-                                        rgba: 1, 1, 1, 1
-
-                                canvas:
-                                    StencilPush
-                                    Ellipse:
-                                        size: self.width + 15, self.height + 8
-                                        pos: self.x -5, self.y -5
-                                    StencilUse
-                                    RoundedRectangle:
-                                        texture: self.texture
-                                        size: self.width + 25, self.height + 15
-                                        pos: self.x -5, self.y -5
-
-                                    StencilUnUse
-                                    StencilPop
+                                StencilPush
+                                Ellipse:
+                                    size: self.width - dp(10), self.height - dp(10)
+                                    pos: self.x + dp(5), self.y + dp(5)
+                                StencilUse
+                            canvas:
+                                Rectangle:
+                                    texture: self.texture
+                                    size: self.width - dp(10), self.height - dp(10)
+                                    pos: self.x + dp(5), self.y + dp(5)
+                            canvas.after:
+                                StencilUnUse
+                                Ellipse:
+                                    size: self.width - dp(10), self.height - dp(10)
+                                    pos: self.x + dp(5), self.y + dp(5)
+                                StencilPop
 
                         MDGridLayout:
                             cols: 2
@@ -635,7 +613,59 @@ class HorizontalLinesAndBarsWidget(Widget):
 class ViewPortfolio(Screen):
     def go_back(self):
         self.manager.current = 'LenderDetails'
+    def get_email(self):
+        # Make a call to the Anvil server function
+        # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
+        return anvil.server.call('another_method')
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        email = self.get_email()
+        data = app_tables.fin_user_profile.search(email_user=email)
 
+        if not data:
+            print("No data found for email:", email)
+            return
+        photo = []
+        email1 = []
+        for row in data:
+            if row['user_photo']:
+                image_data = row['user_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                    # Assuming image_data is already a binary image file
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        photo.append(profile_texture_obj)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        photo.append(None)
+                else:
+                    # If image_data is not bytes, assume it's base64 encoded and decode it
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        print(f"Decoded image data length: {len(image_data_binary)}")
+                        profile_texture_io = BytesIO(image_data_binary)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        photo.append(profile_texture_obj)
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                        photo.append(None)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        photo.append(None)
+            else:
+                photo.append(None)
+            email1.append(row['email_user'])
+            if email in email1:
+                index = email1.index(email)
+
+                if photo[index]:
+                    self.ids.selected_image1.texture = photo[index]
+                else:
+                    print("No profile photo found for email:", email)
+            else:
+                print(f"Email {email} not found in data.")
 
     def initialize_with_value(self, lender_id):
         profile = app_tables.fin_user_profile.get(customer_id=lender_id)

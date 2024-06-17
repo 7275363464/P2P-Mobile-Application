@@ -12,7 +12,7 @@ from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
 from kivymd.uix.label import MDLabel
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDRaisedButton, MDFlatButton
-from kivy.properties import ListProperty
+from kivy.properties import ListProperty, StringProperty
 from kivymd.uix.textfield import MDTextField
 import anvil.server
 from dashboard import DashScreen
@@ -25,12 +25,18 @@ import server
 
 KV = """
 <WindowManager>:
+    id: screen_manager
+    PreLoginScreen:
     LoginScreen:
+        name: 'login'
+    OTPScreen:
+        name: 'otp'
 
-<LoginScreen>:
+<PreLoginScreen>:
+    name: "prelogin"
     MDFloatLayout:
-        id: login_screen
         md_bg_color:1,1,1,1
+
         MDIconButton:
             icon: "arrow-left"
             pos_hint: {"center_y": .95}
@@ -47,7 +53,7 @@ KV = """
 
         MDLabel:
             id: label1
-            text: 'Welcome,'
+            text: 'Welcome'
             font_size:dp(23)
 
             halign: 'center'
@@ -56,12 +62,13 @@ KV = """
             pos_hint: {'center_x': 0.5, 'center_y': 0.81}
         MDLabel:
 
-            text: 'Sign in to continue'
+            text: 'Login in to continue'
             color:6/255, 143/255, 236/255, 1
             font_size:dp(16)
             halign: 'center'
 
             pos_hint: {'center_x': 0.5, 'center_y': 0.77}
+
         BoxLayout:
             id: float1
             orientation: 'vertical'
@@ -84,7 +91,7 @@ KV = """
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
                 font_name: "Roboto-Bold"
-                pos_hint: {'center_x': 0.5, 'center_y': 0.57}
+                pos_hint: {'center_x': 0.5, 'center_y': 0.61}
                 theme_text_color: "Custom"
                 text_color: 0, 0, 0, 1  # Change the text color here (black in this example)
 
@@ -105,7 +112,7 @@ KV = """
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
-                pos_hint: {'center_x': 0.5, 'center_y': 0.46}
+                pos_hint: {'center_x': 0.5, 'center_y': 0.51}
                 on_text_validate: app.validate_password()
                 theme_text_color: "Custom"
                 text_color: 0, 0, 0, 1  # Change the text color here (black in this example)
@@ -132,20 +139,24 @@ KV = """
                 valign: "center"      
         GridLayout:
             id:grid1
-            cols: 2
+            cols: 1
+            width:dp(330)
             spacing:dp(20)
             padding:dp(20)
-            pos_hint: {'center_x': 0.5, 'center_y': 0.32}
-            size_hint: 1, None
-            height: "50dp"
-            MDRaisedButton:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.36}
+            size_hint: None, None
+            height: "20dp"
+            MDRoundFlatButton:
                 text: "Login"
+                text_color: 1, 1, 1, 1
                 on_release: root.go_to_dashboard()
                 md_bg_color:0.043, 0.145, 0.278, 1
                 pos_hint: {'right': 1, 'y': 0.5}
                 size_hint: 1, None
                 height: "50dp"
                 font_name: "Roboto-Bold"
+
+
         MDLabel:
             id: error_text
             text: ""
@@ -159,12 +170,71 @@ KV = """
             opacity: 0
             anim_delay: 0.05       
     BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: None
+        height: "29dp"
+        spacing:dp(5)
+        padding:dp(5)
+        pos_hint: {'center_x': 0.5, 'center_y': 0.18}
+        MDLabel:
+            text: "OR"
+            font_size:dp(14)
+            size: "30dp", "30dp"
+            theme_text_color: "Secondary"
+            halign: "center"
+            bold:True
+            valign: "center"
+        GridLayout:
+            id:grid1
+            cols: 1
+            width:dp(330)
+            spacing:dp(20)
+            padding:dp(20)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.36}
+            size_hint: None, None
+            height: "50dp"
+
+            MDRoundFlatButton:
+                on_release: root.go_to_login_otp()
+
+                md_bg_color: 1,1,1,1
+                theme_text_color: 'Custom'
+                text_color: 0, 0, 0, 1
+                size_hint: 1, None
+                height: "35dp"
+                line_color: 0, 0, 0, 1  
+                line_width: 1
+                font_name: "Roboto-Bold"
+                BoxLayout:
+                    size_hint: None, None
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    height:dp(20)
+                    width:dp(150)
+                    pos_hint: {'center_x': 0.7, 'center_y': 0.5}
+
+                    Image:
+                        source: "login.png"
+                        size_hint: None, None
+                        size: "20dp", "25dp"  
+                        pos_hint: {'center_x': 0.8, 'center_y': 0.5}
+
+                    MDLabel:
+                        text: "Login with OTP"
+                        theme_text_color: 'Custom'
+                        text_color: 0, 0, 0, 1
+                        pos_hint: {'center_x': 0.8, 'center_y': 0.5}
+                        bold: True
+
+
+
+    BoxLayout:
         id:box1
-        orientation: 'horizontal'
+        orientation: 'vertical'
         size_hint: None, None
         width: "190dp"
         height: "15dp"
-        pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+        pos_hint: {'center_x': 0.5, 'center_y': 0.1}
 
         MDTextButton:
             text: "Already have an account? [color=#0699FF]Sign In[/color]"
@@ -177,11 +247,198 @@ KV = """
             text_color: 0.043, 0.145, 0.278, 1
             on_release: root.go_to_signup()
 
+<LoginScreen>:
+    id: login_otp_screen
+    BoxLayout:
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        MDIconButton:
+            icon: "arrow-left"
+            pos_hint: {"center_x": 0.06,"center_y": 1}
+            user_font_size: "30sp"
+            theme_text_color: "Custom"
+            text_color: rgba(26, 24, 58, 255)
+            on_release: root.go_back()
+        BoxLayout:
+            orientation: 'vertical'
+            padding: dp(20)
+            spacing: dp(20)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+
+            Image:
+                source: "user.png"
+                size_hint: None, None
+                size: "100dp", "100dp"
+                pos_hint: {'center_x': 0.5}
+        Widget:
+            size_hint_y: 1
+        MDBoxLayout:
+            orientation: 'vertical'
+            spacing: dp(36)
+            padding: [dp(10), dp(15)]
+            size_hint: 1, None
+            height: dp(50)
+            MDLabel:
+                text: "Login"
+                halign: "center"
+                bold: True
+                font_style: "H6"
+                halign: "center"
+                font_size: "24sp"
+                valign: "middle"
+            MDTextField:
+                id: user_input
+                hint_text: " Email ID"
+                mode: "rectangle"
+                helper_text: "Enter an valid email "
+                icon_right: "account"
+                size_hint: 1, None
+                height: dp(80)
+                pos_hint: {'center_x': 0.5}
+                font_size: "18sp"
+
+
+            MDRoundFlatButton:
+                id: login_with_otp
+                text: "Send OTP"
+                size_hint_y: None
+                size_hint_x: 1
+                height: dp(40)
+                bold: True
+                font_name: "Roboto-Bold"
+                md_bg_color: 0.043, 0.145, 0.278, 1
+                on_release: app.verify_login()
+                text_color: 1, 1, 1, 1
+        Widget:
+            size_hint_y: 1
+<OTPScreen>:
+    id: otp_screen
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [dp(20), dp(2)]
+        spacing: dp(20)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1  # Light gray background
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        MDIconButton:
+            icon: "arrow-left"
+            pos_hint: {"center_x": 0.01,"center_y": 1}
+            user_font_size: "30sp"
+            theme_text_color: "Custom"
+            text_color: rgba(26, 24, 58, 255)
+            on_release: root.go_back()
+        Widget:
+            size_hint_y: 1
+
+        BoxLayout:
+            orientation: 'vertical'
+            padding: dp(20)
+            spacing: dp(20)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            MDLabel:
+                text: " "
+            MDLabel:
+                text: " "
+            MDLabel:
+                text: " "
+
+            Image:
+                source: "one-time-password.png"
+                size_hint: None, None
+                size: "100dp", "100dp"
+                pos_hint: {'center_x': 0.5}
+        MDBoxLayout:
+            orientation: 'vertical'
+            spacing: dp(20)
+            padding: [dp(10), dp(15)]
+            size_hint: 1, None
+            height: self.minimum_height
+            MDLabel:
+                text: "Enter Verification Code"
+                halign: "center"
+                bold: True
+                font_style: "H6"
+                halign: "center"
+                valign: "middle"
+            MDBoxLayout:
+                orientation: 'vertical'
+                size_hint: 1, None
+                height: dp(38)
+                MDLabel:
+                    id: otp_message
+                    text: "We have sent you an OTP on "
+                    size_hint_x: 1
+                    theme_text_color: "Primary"
+                    font_size: "14sp"
+
+                    halign: "center"
+                    valign: "middle"
+
+                MDLabel:
+                    id: user_contact
+                    text: "mani"
+                    size_hint_x: 1
+                    theme_text_color: "Primary"
+                    font_size: "14sp"
+                    halign: "center"
+                    valign: "middle"
+            MDTextField:
+                id: otp_input
+                hint_text: "OTP"
+                mode: "rectangle"
+                icon_right: "key"
+                size_hint: 1, None
+                height: dp(40)
+                pos_hint: {'center_x': 0.5}
+                font_size: "14sp"
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(25)
+                spacing: dp(5)
+                padding: [0, dp(5)]
+                MDLabel:
+                    text: "Still not received OTP?"
+                    size_hint_x: None
+                    width: dp(120)
+
+                    font_size: "12sp"
+                MDTextButton:
+                    text: "Resend OTP"
+                    font_size: dp(16)
+                    markup: True
+                    halign: 'left'
+                    height: "60dp"
+                    underline:"True"
+                    text_color: 1/255, 26/255, 51/255, 1
+                    on_release: app.resend_otp()
+
+            MDRoundFlatButton:
+                text: "Verify OTP"
+                size_hint_y: None
+                size_hint_x: 1
+                height: dp(40)
+                bold: True
+                font_name: "Roboto-Bold"
+                md_bg_color: 0.043, 0.145, 0.278, 1
+                on_release: app.check_otp()
+                text_color: 1, 1, 1, 1
+        Widget:
+            size_hint_y: 1
 """
 Builder.load_string(KV)
 
 
-class LoginScreen(Screen):
+class PreLoginScreen(Screen):
 
     def on_checkbox_active(self, checkbox, value):
         # Handle checkbox state change
@@ -209,6 +466,16 @@ class LoginScreen(Screen):
 
     def go_to_dashboard(self):
         entered_email = self.ids.email.text
+        entered_password = self.ids.password.text
+
+        if not entered_email:
+            self.show_error_dialog("Please enter an email address")
+            return
+
+        if not entered_password:
+            self.show_error_dialog("Please enter a password")
+            return
+
         # Show loading spinner
         self.ids.error_text.text = ""
         self.show_loading_spinner()
@@ -381,6 +648,7 @@ class LoginScreen(Screen):
         # Write updated data back to the file
         with open("emails.json", "w") as file:
             json.dump(data, file)
+
     def show_dashboard(self, screen_name):
         def switch_screen(dt):
 
@@ -422,6 +690,10 @@ class LoginScreen(Screen):
         self.manager.add_widget(Factory.SignupScreen(name='SignupScreen'))
         self.manager.current = 'SignupScreen'
 
+    def go_to_login_otp(self):
+        self.manager.add_widget(Factory.LoginScreen(name='login'))
+        self.manager.current = 'login'
+
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.on_keyboard)
         Window.bind(on_keyboard=self.on_back_button)
@@ -452,6 +724,31 @@ class LoginScreen(Screen):
 
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'MainScreen'
+
+
+from kivymd.app import MDApp
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.lang import Builder
+from kivy.properties import BooleanProperty
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
+from twilio.rest import Client
+import random
+import smtplib
+from email.message import EmailMessage
+
+
+class LoginScreen(Screen):
+
+    def go_back(self):
+        self.manager.add_widget(Factory.PreLoginScreen(name='prelogin'))
+        self.manager.current = 'prelogin'
+
+
+class OTPScreen(Screen):
+    def go_back(self):
+        self.manager.add_widget(Factory.LoginScreen(name='login'))
+        self.manager.current = 'login'
 
 
 class MyScreenManager(ScreenManager):

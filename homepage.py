@@ -9,14 +9,14 @@ from kivymd.uix.label import MDLabel
 from kivy.properties import ObjectProperty
 
 from dashboard import DashScreen
-from login import LoginScreen
+from login import PreLoginScreen
 
 from signup import SignupScreen
 
 KV = """
 <WindowManager>:
     MainScreen:
-    
+
 <MainScreen>:
     id: main
     canvas.before:
@@ -193,13 +193,13 @@ class MainScreen(Screen):
         sm = self.manager
 
         # Create a new instance of the LoginScreen
-        login_screen = LoginScreen(name='LoginScreen')
+        login_screen = PreLoginScreen(name='prelogin')
 
         # Add the LoginScreen to the existing ScreenManager
         sm.add_widget(login_screen)
 
         # Switch to the LoginScreen
-        sm.current = 'LoginScreen'
+        sm.current = 'prelogin'
 
 
 class MyScreenManager(ScreenManager):

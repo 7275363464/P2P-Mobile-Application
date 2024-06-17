@@ -66,7 +66,7 @@ loan_forecloseB = '''
                 height: self.minimum_height
                 width: self.minimum_width
                 adaptive_size: True
-                
+
                 pos_hint: {"center_x": 0, "center_y":  0}
 
 <ViewProfileScreenFB>
@@ -800,10 +800,12 @@ class LoansDetailsB(Screen):
             # # Create a lambda function with loan_id as an argument
             # item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
             # self.ids.container.add_widget(item)
+
     def get_email(self):
         # Make a call to the Anvil server function
         # Replace 'another_method' with the actual name of your Anvil server function
         return anvil.server.call('another_method')
+
     def icon_button_clicked(self, instance, loan_id1):
         data = app_tables.fin_loan_details.search()
         foreclose = app_tables.fin_foreclosure.search()
@@ -891,7 +893,8 @@ class LoansDetailsB(Screen):
         if loan_id1 in loan_idb:
             index_b = loan_idb.index(loan_id1)
 
-        if loan_status_a[index_a] == "foreclosure" and loan_status_b[index_b] == "approved" or loan_status_b[index_b] == "accepted":
+        if loan_status_a[index_a] == "foreclosure" and loan_status_b[index_b] == "approved" or loan_status_b[
+            index_b] == "accepted":
 
             sm = self.manager
             approved = BorrowerDuesScreen(name='BorrowerDuesScreen')

@@ -32,6 +32,7 @@ from kivy.uix.label import Label
 import base64
 from kivy.core.image import Image as CoreImage
 from io import BytesIO
+
 user_helpers2 = """
 <WindowManager>:
     BorrowerDuesScreen:
@@ -57,7 +58,7 @@ user_helpers2 = """
                 height: self.minimum_height
                 width: self.minimum_width
                 adaptive_size: True
-                
+
                 pos_hint: {"center_x": 0, "center_y":  0}
 
 
@@ -764,7 +765,6 @@ class BorrowerDuesScreen(Screen):
                         days_left = 0
                     break
 
-
             if late_fee == 'lapsed fee':
                 product_index = product_id.index(loan_product[index])
                 lapsed_percentage = lapsed_fee[product_index] + days_left
@@ -833,11 +833,12 @@ class BorrowerDuesScreen(Screen):
                     print(monthly_emi[index], emi)
                     self.ids.total_amount.text = str(round(float(self.ids.total_amount.text), 2) + emi)
             if value in emi_loan_id and part_payment_type[last_index] != "part payment":
-                if emi_pay_type[index].strip() == 'Three Months' and remaining_tenure[last_index] > 3 and remaining_tenure[last_index] < 6:
+                if emi_pay_type[index].strip() == 'Three Months' and remaining_tenure[last_index] > 3 and \
+                        remaining_tenure[last_index] < 6:
                     r = remaining_tenure[last_index] - 3
                     i = monthly_emi[index] / 3
                     emi = i * r
-                    print(monthly_emi[index] , emi)
+                    print(monthly_emi[index], emi)
                     self.ids.total_amount.text = str(round(float(self.ids.total_amount.text), 2) + emi)
 
             if value not in emi_loan_id:
@@ -1240,7 +1241,6 @@ class BorrowerDuesScreen(Screen):
                     ex_amount[0]['platform_returns'] = 0.0
                 ex_amount[0]['platform_returns'] += float(extra_amount)
 
-
             paid_amount1 = 0
             for i in emi_loan_id:
                 if i == value:
@@ -1317,7 +1317,7 @@ class BorrowerDuesScreen(Screen):
                 len_index = lender_cus_id.index(lender_customer_id[index])
                 if lender_data[len_index]['return_on_investment'] == None:
                     lender_data[len_index]['return_on_investment'] = 0
-                    lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns,2))
+                    lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
                 else:
                     lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
             else:
@@ -1325,9 +1325,9 @@ class BorrowerDuesScreen(Screen):
 
             if data1[index]['lender_returns'] == None:
                 data1[index]['lender_returns'] = 0
-                data1[index]['lender_returns'] += float(round(monthly_lender_returns,2))
+                data1[index]['lender_returns'] += float(round(monthly_lender_returns, 2))
             else:
-                data1[index]['lender_returns'] += float(round(monthly_lender_returns,2))
+                data1[index]['lender_returns'] += float(round(monthly_lender_returns, 2))
             anvil.server.call('loan_text', None)
             sm = self.manager
             wallet_screen = LastScreenWallet(name='LastScreenWallet')
@@ -2304,7 +2304,6 @@ class DuesScreen(Screen):
                         print(f"Base64 decoding error for email {row['email_user']}: {e}")
                     except Exception as e:
                         print(f"Error processing image for email {row['email_user']}: {e}")
-
 
         today_date = datetime.now(tz=utc).date()
         data = app_tables.fin_loan_details.search()

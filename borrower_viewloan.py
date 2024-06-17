@@ -26,6 +26,7 @@ from kivy.uix.label import Label
 import base64
 from kivy.core.image import Image as CoreImage
 from io import BytesIO
+
 if platform == 'android':
     from kivy.uix.button import Button
     from kivy.uix.modalview import ModalView
@@ -172,7 +173,7 @@ borrower_view_loan = '''
             md_bg_color: 0.043, 0.145, 0.278, 1
 
         MDScrollView:
-            
+
             MDBoxLayout:
                 id: container
                 orientation: 'vertical'
@@ -182,9 +183,9 @@ borrower_view_loan = '''
                 height: self.minimum_height
                 width: self.minimum_width
                 adaptive_size: True
-                
+
                 pos_hint: {"center_x": 0, "center_y":  0}
-                
+
 
             # MDList:
             #     
@@ -208,8 +209,8 @@ borrower_view_loan = '''
 
             MDList:
                 id: container1
-                
-                
+
+
 <RejectedLoanVLB>
     BoxLayout:
         orientation: 'vertical'
@@ -335,7 +336,7 @@ borrower_view_loan = '''
                     theme_text_color: 'Custom'  
                     text_color: 140/255, 140/255, 140/255, 1
                     bold: True
-                    
+
             MDGridLayout:
                 cols: 2
                 MDLabel:
@@ -747,7 +748,7 @@ class OpenLoanVLB(Screen):
         loan_amount = []
         tenure = []
         interest_rate = []
-        #ascend_value = []
+        # ascend_value = []
         s = 0
         for i in data:
             s += 1
@@ -760,7 +761,7 @@ class OpenLoanVLB(Screen):
             loan_amount.append(i['loan_amount'])
             tenure.append(i['tenure'])
             interest_rate.append(i['interest_rate'])
-            #ascend_value.append(i['ascend_value'])
+            # ascend_value.append(i['ascend_value'])
 
         profile_customer_id = []
         profile_mobile_number = []
@@ -925,7 +926,6 @@ class OpenLoanVLB(Screen):
 
                 self.ids.container.add_widget(card)
 
-
                 # Actual code for the future referance incase of failures
                 # item = ThreeLineAvatarIconListItem(
                 #
@@ -971,6 +971,7 @@ class OpenLoanVLB(Screen):
                 #
                 # card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
                 # self.ids.container.add_widget(card)
+
     def get_email(self):
         # Make a call to the Anvil server function
         # Replace 'another_method' with the actual name of your Anvil server function
@@ -990,8 +991,8 @@ class OpenLoanVLB(Screen):
             if loan['loan_id'] == loan_id:
                 loan_status = loan['loan_updated_status']
                 break
-        #if loan_status == 'under process' or loan_status == 'disbursed loan' or loan_status == 'foreclosure':
-            # Open the screen for approved loans
+        # if loan_status == 'under process' or loan_status == 'disbursed loan' or loan_status == 'foreclosure':
+        # Open the screen for approved loans
 
         sm = self.manager
 

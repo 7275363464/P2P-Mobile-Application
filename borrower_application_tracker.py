@@ -21,6 +21,7 @@ from kivy.uix.label import Label
 import base64
 from kivy.core.image import Image as CoreImage
 from io import BytesIO
+
 application_tracker = """
 
 <WindowManager>:
@@ -45,7 +46,7 @@ application_tracker = """
                 height: self.minimum_height
                 width: self.minimum_width
                 adaptive_size: True
-                
+
                 pos_hint: {"center_x": 0, "center_y":  0}
 
 <ApplicationTrackerScreen>
@@ -528,10 +529,12 @@ class ALLLoansAPT(Screen):
                 # )
                 # item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
                 # self.ids.container.add_widget(item)
+
     def get_email(self):
         # Make a call to the Anvil server function
         # Replace 'another_method' with the actual name of your Anvil server function
         return anvil.server.call('another_method')
+
     def icon_button_clicked(self, instance, loan_id):
         # Highlight the selected item
         self.highlight_item(instance)

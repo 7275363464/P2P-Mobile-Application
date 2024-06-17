@@ -462,7 +462,7 @@ class NotificationScreen(Screen):
             # Determine and fetch the appropriate timestamp based on loan status and append it to status_timestamp list
             if i['loan_updated_status'] == 'disbursed':
                 status_timestamp.append(i['loan_disbursed_timestamp'])
-            elif i['loan_updated_status'] == 'approved' or i['loan_updated_status'] == 'accepted':
+            elif i['loan_updated_status'] == 'approved':
                 status_timestamp.append(i['lender_accepted_timestamp'])
             elif i['loan_updated_status'] == 'rejected':
                 status_timestamp.append(i['lender_rejected_timestamp'])
@@ -489,7 +489,7 @@ class NotificationScreen(Screen):
             index_list = []
             for i in range(len(loan_data)):
                 c += 1
-                if loan_status[c] in ('approved', 'disbursed', 'rejected', 'accepted') and customer_id[c] == cos_id:
+                if loan_status[c] in ('approved', 'disbursed', 'rejected') and customer_id[c] == cos_id:
                     index_list.append(c)
 
             self.display_notifications(index_list, loan_id, borrower_name, loan_status, loan_amount, product_name, loan_data, status_timestamp)
@@ -497,13 +497,13 @@ class NotificationScreen(Screen):
         # Fetch data from fin_extend_loans table
         extension_data = app_tables.fin_extends_loan.search()
         for item in extension_data:
-            if item['status'] in ('approved', 'rejected', 'accepted'):
+            if item['status'] in ('approved', 'rejected'):
                 self.add_notification_item(item['lender_full_name'], item['loan_id'], item['status'], 'extension', item['loan_amount'], item['product_name'], item['status_timestamp'])
 
         # Fetch data from fin_foreclosure table
         foreclosure_data = app_tables.fin_foreclosure.search()
         for item in foreclosure_data:
-            if item['status'] in ('approved', 'rejected', 'accepted'):
+            if item['status'] in ('approved', 'rejected'):
                 self.add_notification_item(item['lender_full_name'], item['loan_id'], item['status'], 'foreclosure', item['loan_amount'], item['product_name'], item['status_timestamp'])
         self.print_container1_items()
 

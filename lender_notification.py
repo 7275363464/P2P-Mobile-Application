@@ -234,7 +234,7 @@ extension_loan_request = """
                                 size_hint: 1, None
 
                             MDRaisedButton:
-                                text: "Accept"
+                                text: "Approve"
                                 md_bg_color: 5/255, 235/255, 77/255, 1
                                 on_release: root.approved_click()
                                 theme_text_color: 'Primary'
@@ -651,7 +651,7 @@ class Lend_NotificationScreen(Screen):
             )
 
             accept_button = Button(
-                text="Accept",
+                text="Approve",
                 size_hint=(None, None),
                 size=(dp(100), dp(28)),
                 background_color=(0, 1, 0, 1),
@@ -831,7 +831,7 @@ class Lend_NotificationScreen(Screen):
             message = f"for Rs:{loan_amount} loan amount in {product_name} product"
             # Create accept and reject buttons
             accept_button = Button(
-                text="Accept",
+                text="Approve",
                 size_hint=(None, None),
                 size=(dp(100), dp(28)),  # Adjust button size
                 background_color=(0, 1, 0, 1),  # Green background
@@ -1090,7 +1090,7 @@ class Lend_NotificationScreen(Screen):
                 )
 
                 accept_button = Button(
-                    text="Accept",
+                    text="Approve",
                     size_hint=(None, None),
                     size=(dp(100), dp(28)),  # Adjust button size
                     background_color=(0, 1, 0, 1),  # Green background
@@ -1133,7 +1133,7 @@ class Lend_NotificationScreen(Screen):
             sm.add_widget(screen)
             sm.current = 'ViewLoansProfileScreen'
             self.manager.get_screen('ViewLoansProfileScreen').initialize_with_value(loan_id, data)
-        elif loan_status == 'approved' or loan_status == 'accepted':
+        elif loan_status == 'approved':
             self.manager.add_widget(Factory.ViewLoansProfileScreenLR(name='ViewLoansProfileScreenLR'))
             sm.current = 'ViewLoansProfileScreenLR'
             self.manager.get_screen('ViewLoansProfileScreenLR').initialize_with_value(loan_id, data)

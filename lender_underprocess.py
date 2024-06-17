@@ -293,7 +293,7 @@ view_loans = """
                 size_hint: 1, None
 
             MDRaisedButton:
-                text: "Accept"
+                text: "Approve"
                 md_bg_color: 5/255, 235/255, 77/255, 1
                 on_release: root.approved_click()
                 theme_text_color: 'Primary'
@@ -859,7 +859,7 @@ class ViewUnderProcess(Screen):
                 loan_status = loan['loan_updated_status']
                 break
 
-        if loan_status == 'approved' or loan_status == 'accepted':
+        if loan_status == 'approved':
             # Open the screen for approved loans
 
             sm = self.manager

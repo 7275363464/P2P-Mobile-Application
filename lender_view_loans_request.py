@@ -283,7 +283,7 @@ view_loan_request = """
                 size_hint: 1, None
 
             MDRaisedButton:
-                text: "Accept"
+                text: "Approve"
                 md_bg_color: 5/255, 235/255, 77/255, 1
                 on_release: root.approved_click()
                 theme_text_color: 'Primary'
@@ -840,7 +840,7 @@ class ViewLoansRequest(Screen):
         index_list = []
         for i in range(s):
             c += 1
-            if loan_status[c] == 'under process' or loan_status[c] == 'approved' or loan_status == 'accepted':
+            if loan_status[c] == 'under process' or loan_status[c] == 'approved':
                 index_list.append(c)
 
         b = 1
@@ -914,31 +914,19 @@ class ViewLoansRequest(Screen):
                 spacing="20dp"
             )
             status_color = (0.545, 0.765, 0.290, 1)  # default color
-            if loan_status[i] in ["under process", "Under Process", "UnderProcess"]:
+            if loan_status[i] in ["under process"]:
                 status_color = (253 / 255, 218 / 255, 13 / 255, 1)  # yellow
-            elif loan_status[i] in ["Disbursed Loan", "disbursed loan", "disbursed", "Disbursed", "Disbursed loan",
-                                    "disbursed Loan", "DisbursedLoan", "disbursedloan", "Disbursedloan",
-                                    "disbursedLoan"]:
+            elif loan_status[i] in ["disbursed"]:
                 status_color = (255 / 255, 88 / 255, 93 / 255, 1)  # pink
-            elif loan_status[i] in ["closed", "Closed", "Closed loan", "closed Loan", "Closed Loan", "closed loan",
-                                    "Closedloan", "closedLoan", "ClosedLoan", "closedloan"]:
+            elif loan_status[i] in ["closed"]:
                 status_color = (0 / 255, 100 / 255, 0 / 255, 1)  # bottle-green
-            elif loan_status[i] in ["extension", "Extension", "Extension Loan", "Extension loan", "extension loan",
-                                    "extension Loan", "ExtensionLoan", "Extensionloan", "extensionloan",
-                                    "extensionLoan"]:
+            elif loan_status[i] in ["extension"]:
                 status_color = (255 / 255, 165 / 255, 0 / 255, 1)  # orange
-            elif loan_status[i] in ["foreclosure", "Foreclosure", "Foreclosure Loan", "Foreclosure loan",
-                                    "forclosure loan", "forclosure Loan", "ForeclosureLoan", "Foreclosureloan",
-                                    "forclosureloan", "forclosureLoan"]:
+            elif loan_status[i] in ["foreclosure"]:
                 status_color = (0.424, 0.663, 0.859, 1.0)  # sky blue
-            elif loan_status[i] in ["accepted", "Accepted", "Accepted loan", "Accepted Loan", "accepted loan",
-                                    "accepted Loan", "Acceptedloan", "AcceptedLoan", "acceptedloan", "acceptedLoan"]:
-                status_color = (0 / 255, 128 / 255, 0 / 255, 1)  # light green
-            elif loan_status[i] in ["rejected", "Rejected", "rejected loan", "Rejected loan", "rejected Loan",
-                                    "Rejected Loan", "rejectedloan", "Rejectedloan", "rejectedLoan", "RejectedLoan"]:
+            elif loan_status[i] in ["rejected"]:
                 status_color = (210 / 255, 4 / 255, 45 / 255, 1)  # cherry
-            elif loan_status[i] in ["approved", "Approved", "approved loan", "Approved Loan", "approved Loan",
-                                    "Approved loan", "approvedloan", "ApprovedLoan", "approvedLoan", "Approvedloan"]:
+            elif loan_status[i] in ["approved"]:
                 status_color = (0 / 255, 128 / 255, 0 / 255, 1)  # light green
             elif loan_status[i] == "lost opportunities":
                 status_color = (0.902, 0.141, 0.141, 1)
@@ -990,7 +978,7 @@ class ViewLoansRequest(Screen):
                 loan_status = loan['loan_updated_status']
                 break
 
-        if loan_status == 'approved' or loan_status == 'accepted':
+        if loan_status == 'approved':
             # Open the screen for approved loans
 
             sm = self.manager

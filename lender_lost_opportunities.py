@@ -310,33 +310,7 @@ class LostOpportunitiesScreen(Screen):
                 spacing="20dp"
             )
             status_color = (0.545, 0.765, 0.290, 1)  # default color
-            if loan_status[i] in ["under process", "Under Process", "UnderProcess"]:
-                status_color = (253 / 255, 218 / 255, 13 / 255, 1)  # yellow
-            elif loan_status[i] in ["Disbursed Loan", "disbursed loan", "disbursed", "Disbursed", "Disbursed loan",
-                                    "disbursed Loan", "DisbursedLoan", "disbursedloan", "Disbursedloan",
-                                    "disbursedLoan"]:
-                status_color = (255 / 255, 88 / 255, 93 / 255, 1)  # pink
-            elif loan_status[i] in ["closed", "Closed", "Closed loan", "closed Loan", "Closed Loan", "closed loan",
-                                    "Closedloan", "closedLoan", "ClosedLoan", "closedloan"]:
-                status_color = (0 / 255, 100 / 255, 0 / 255, 1)  # bottle-green
-            elif loan_status[i] in ["extension", "Extension", "Extension Loan", "Extension loan", "extension loan",
-                                    "extension Loan", "ExtensionLoan", "Extensionloan", "extensionloan",
-                                    "extensionLoan"]:
-                status_color = (255 / 255, 165 / 255, 0 / 255, 1)  # orange
-            elif loan_status[i] in ["foreclosure", "Foreclosure", "Foreclosure Loan", "Foreclosure loan",
-                                    "forclosure loan", "forclosure Loan", "ForeclosureLoan", "Foreclosureloan",
-                                    "forclosureloan", "forclosureLoan"]:
-                status_color = (0.424, 0.663, 0.859, 1.0)  # sky blue
-            elif loan_status[i] in ["accepted", "Accepted", "Accepted loan", "Accepted Loan", "accepted loan",
-                                    "accepted Loan", "Acceptedloan", "AcceptedLoan", "acceptedloan", "acceptedLoan"]:
-                status_color = (0 / 255, 128 / 255, 0 / 255, 1)  # light green
-            elif loan_status[i] in ["rejected", "Rejected", "rejected loan", "Rejected loan", "rejected Loan",
-                                    "Rejected Loan", "rejectedloan", "Rejectedloan", "rejectedLoan", "RejectedLoan"]:
-                status_color = (210 / 255, 4 / 255, 45 / 255, 1)  # cherry
-            elif loan_status[i] in ["approved", "Approved", "approved loan", "Approved Loan", "approved Loan",
-                                    "Approved loan", "approvedloan", "ApprovedLoan", "approvedLoan", "Approvedloan"]:
-                status_color = (0 / 255, 128 / 255, 0 / 255, 1)  # light green
-            elif loan_status[i] in ["lost opportunities"]:
+            if loan_status[i] in ["lost opportunities"]:
                 status_color = (210 / 255, 4 / 255, 45 / 255, 1)  # cherry
 
             status_text = {

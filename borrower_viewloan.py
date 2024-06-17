@@ -859,25 +859,19 @@ class OpenLoanVLB(Screen):
                 # this colors for loan status button colors based on loan status
 
                 status_color = (0.545, 0.765, 0.290, 1)  # default color
-                if loan_status[i] == "under process" or loan_status[i] == "Under Process" or loan_status[
-                    i] == "UnderProcess" or loan_status[i] == "underprocess":
+                if loan_status[i] == "under process":
                     status_color = (253 / 255, 218 / 255, 13 / 255, 1)
-                elif loan_status[i] == "disbursed loan" or loan_status[i] == "disbursed":
+                elif loan_status[i] == "disbursed":
                     status_color = (0.8588, 0.4392, 0.5765, 1.0)
-                elif loan_status[i] == "closed loan" or loan_status[i] == "Closed Loan" or loan_status[
-                    i] == "closedloan" or loan_status[i] == "ClosedLoan":
+                elif loan_status[i] == "closed":
                     status_color = (0.4235, 0.5569, 0.1373, 1.0)
-                elif loan_status[i] == "extension" or loan_status[i] == "Extension":
+                elif loan_status[i] == "extension":
                     status_color = (1.0, 0.6275, 0.4824, 1.0)
-                elif loan_status[i] == "foreclosure" or loan_status[i] == "Foreclosure":
+                elif loan_status[i] == "foreclosure":
                     status_color = (0.0, 0.749, 1.0, 1.0)
-                elif loan_status[i] == "accepted" or loan_status[i] == "Accepted":
-                    status_color = (0.2353, 0.7019, 0.4431, 1.0)
-                elif loan_status[i] == "rejected" or loan_status[i] == "Rejected" or loan_status[
-                    i] == "Rejected Loan" or loan_status[i] == "rejected loan":
+                elif loan_status[i] == "rejected":
                     status_color = (0.902, 0.141, 0.141, 1)
-                elif loan_status[i] == "approved" or loan_status[i] == "Approved" or loan_status[
-                    i] == "approved loans" or loan_status[i] == "Approved Loans":
+                elif loan_status[i] == "approved":
                     status_color = (0.2353, 0.7019, 0.4431, 1.0)
                 elif loan_status[i] == "lost opportunities":
                     status_color = (0.902, 0.141, 0.141, 1)

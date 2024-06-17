@@ -28,6 +28,10 @@ from kivymd.uix.spinner import MDSpinner
 import anvil.tables.query as q
 from borrower_wallet import WalletScreen
 from datetime import datetime
+from kivy.uix.label import Label
+import base64
+from kivy.core.image import Image as CoreImage
+from io import BytesIO
 
 user_helpers2 = """
 <WindowManager>:
@@ -54,7 +58,7 @@ user_helpers2 = """
                 height: self.minimum_height
                 width: self.minimum_width
                 adaptive_size: True
-                
+
                 pos_hint: {"center_x": 0, "center_y":  0}
 
 
@@ -761,7 +765,6 @@ class BorrowerDuesScreen(Screen):
                         days_left = 0
                     break
 
-
             if late_fee == 'lapsed fee':
                 product_index = product_id.index(loan_product[index])
                 lapsed_percentage = lapsed_fee[product_index] + days_left
@@ -830,11 +833,12 @@ class BorrowerDuesScreen(Screen):
                     print(monthly_emi[index], emi)
                     self.ids.total_amount.text = str(round(float(self.ids.total_amount.text), 2) + emi)
             if value in emi_loan_id and part_payment_type[last_index] != "part payment":
-                if emi_pay_type[index].strip() == 'Three Months' and remaining_tenure[last_index] > 3 and remaining_tenure[last_index] < 6:
+                if emi_pay_type[index].strip() == 'Three Months' and remaining_tenure[last_index] > 3 and \
+                        remaining_tenure[last_index] < 6:
                     r = remaining_tenure[last_index] - 3
                     i = monthly_emi[index] / 3
                     emi = i * r
-                    print(monthly_emi[index] , emi)
+                    print(monthly_emi[index], emi)
                     self.ids.total_amount.text = str(round(float(self.ids.total_amount.text), 2) + emi)
 
             if value not in emi_loan_id:
@@ -1237,7 +1241,6 @@ class BorrowerDuesScreen(Screen):
                     ex_amount[0]['platform_returns'] = 0.0
                 ex_amount[0]['platform_returns'] += float(extra_amount)
 
-
             paid_amount1 = 0
             for i in emi_loan_id:
                 if i == value:
@@ -1314,7 +1317,7 @@ class BorrowerDuesScreen(Screen):
                 len_index = lender_cus_id.index(lender_customer_id[index])
                 if lender_data[len_index]['return_on_investment'] == None:
                     lender_data[len_index]['return_on_investment'] = 0
-                    lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns,2))
+                    lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
                 else:
                     lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
             else:
@@ -1322,9 +1325,9 @@ class BorrowerDuesScreen(Screen):
 
             if data1[index]['lender_returns'] == None:
                 data1[index]['lender_returns'] = 0
-                data1[index]['lender_returns'] += float(round(monthly_lender_returns,2))
+                data1[index]['lender_returns'] += float(round(monthly_lender_returns, 2))
             else:
-                data1[index]['lender_returns'] += float(round(monthly_lender_returns,2))
+                data1[index]['lender_returns'] += float(round(monthly_lender_returns, 2))
             anvil.server.call('loan_text', None)
             sm = self.manager
             wallet_screen = LastScreenWallet(name='LastScreenWallet')
@@ -2276,6 +2279,31 @@ class PartPayment(Screen):
 class DuesScreen(Screen):
     def __init__(self, instance=None, **kwargs):
         super().__init__(**kwargs)
+        email = self.get_email()
+        data = app_tables.fin_user_profile.search(email_user=email)
+
+        if not data:
+            print("No data found for email:", email)
+            return
+
+        for row in data:
+            if row['user_photo']:
+                image_data = row['user_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                else:
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        profile_texture_io = BytesIO(image_data_binary)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
 
         today_date = datetime.now(tz=utc).date()
         data = app_tables.fin_loan_details.search()
@@ -2367,13 +2395,9 @@ class DuesScreen(Screen):
                 elevation=3
             )
             horizontal_layout = BoxLayout(orientation='horizontal')
-            image = Image(
-                source='img.png',  # Update with the actual path to the image
-                size_hint_x=None,
-                height="60dp",
-                width="70dp"
-            )
-            horizontal_layout.add_widget(image)
+            if photo_texture:
+                image = Image(texture=photo_texture, size_hint_x=None, height="30dp", width="60dp")
+                horizontal_layout.add_widget(image)
 
             horizontal_layout.add_widget(Widget(size_hint_x=None, width='20dp'))
             text_layout = BoxLayout(orientation='vertical')
@@ -2486,6 +2510,11 @@ class DuesScreen(Screen):
             # item.bind(on_release=lambda instance, loan_id=loan_id[i],: self.icon_button_clicked(instance, loan_id,
             #                                                                                     shedule_date))
             # self.ids.container.add_widget(item)
+
+    def get_email(self):
+        # Make a call to the Anvil server function
+        # Replace 'another_method' with the actual name of your Anvil server function
+        return anvil.server.call('another_method')
 
     def icon_button_clicked(self, instance, loan_id, shedule_date):
         sm = self.manager

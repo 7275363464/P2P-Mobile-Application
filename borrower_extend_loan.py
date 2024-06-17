@@ -21,6 +21,10 @@ import anvil.users
 import server
 from anvil.tables import app_tables
 from kivy.uix.screenmanager import Screen, SlideTransition, ScreenManager
+from kivy.uix.label import Label
+import base64
+from kivy.core.image import Image as CoreImage
+from io import BytesIO
 
 extension_loan_request = """
 <WindowManager>:
@@ -48,7 +52,7 @@ extension_loan_request = """
                 height: self.minimum_height
                 width: self.minimum_width
                 adaptive_size: True
-                
+
                 pos_hint: {"center_x": 0, "center_y":  0}
 
 <ExtensionLoansProfileScreen>
@@ -83,7 +87,7 @@ extension_loan_request = """
                             source: "background.jpg"
                     MDGridLayout:
                         cols: 1
-        
+
                         MDLabel:
                             text: 'Loan Amount:'
                             halign: 'left'
@@ -98,7 +102,7 @@ extension_loan_request = """
                             size_hint_y: None
                             height: dp(1)
                             bold: True
-        
+
                         MDLabel:
                             id: loan_amount
                             halign: 'left'
@@ -205,7 +209,7 @@ extension_loan_request = """
                             font_size:dp(1)
                             text: "" 
                             height:dp(1)
-                    
+
                     MDGridLayout:
                         cols: 2
                         MDLabel:
@@ -318,7 +322,7 @@ extension_loan_request = """
                         halign: 'left'
                         size_hint_y: None
                         height: dp(2)
-                            
+
                     MDGridLayout:
                         cols: 2
                         MDLabel:
@@ -335,7 +339,7 @@ extension_loan_request = """
                         halign: 'left'
                         size_hint_y: None
                         height: dp(2)
-                            
+
                     MDGridLayout:
                         cols: 2
                         MDLabel:
@@ -347,7 +351,7 @@ extension_loan_request = """
                             halign: 'left' 
                             theme_text_color: 'Custom'  
                             text_color: 140/255, 140/255, 140/255, 1
-                            
+
                     MDLabel:
                         text: ''
                         halign: 'left'
@@ -380,7 +384,7 @@ extension_loan_request = """
                             halign: 'left' 
                             theme_text_color: 'Custom'  
                             text_color: 140/255, 140/255, 140/255, 1
-                            
+
                 MDLabel:
                     text: ""
                     size_hint_y: None
@@ -426,7 +430,7 @@ extension_loan_request = """
                         halign: "left"
                         valign: "center" 
                         on_touch_down: app.root.get_screen("ExtendLoansScreen").show_terms_dialog() if self.collide_point(*args[1].pos) else None   
-                                                
+
                 BoxLayout:
                     orientation: 'horizontal'
                     spacing: dp(30)
@@ -454,9 +458,36 @@ Builder.load_string(extension_loan_request)
 date = datetime.today()
 print(date)
 
+
 class ExtensionLoansRequest(Screen):
     def __init__(self, instance=None, **kwargs):
         super().__init__(**kwargs)
+        email = self.get_email()
+        data = app_tables.fin_user_profile.search(email_user=email)
+
+        if not data:
+            print("No data found for email:", email)
+            return
+
+        for row in data:
+            if row['user_photo']:
+                image_data = row['user_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                else:
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        profile_texture_io = BytesIO(image_data_binary)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+
         data = app_tables.fin_loan_details.search()
         email = anvil.server.call('another_method')
         profile = app_tables.fin_user_profile.search(email_user=email)
@@ -503,7 +534,7 @@ class ExtensionLoansRequest(Screen):
             index_list = []
             for i in range(s):
                 c += 1
-                if loan_status[c] == 'disbursed' and customer_id[c] == cos_id :
+                if loan_status[c] == 'disbursed' and customer_id[c] == cos_id:
                     index_list.append(c)
             b = 1
             k = -1
@@ -524,12 +555,9 @@ class ExtensionLoansRequest(Screen):
                 )
                 # Horizontal layout to keep the text and image in to the card
                 horizontal_layout = BoxLayout(orientation='horizontal')
-                image = Image(
-                    source="img.png",  # Assuming you want to use the same image for now
-                    size_hint_x=None,
-                    height="10dp",
-                )
-                horizontal_layout.add_widget(image)
+                if photo_texture:
+                    image = Image(texture=photo_texture, size_hint_x=None, height="30dp", width="60dp")
+                    horizontal_layout.add_widget(image)
 
                 # Text Layout to keep the text on card
                 horizontal_layout.add_widget(Widget(size_hint_x=None, width='25dp'))
@@ -665,6 +693,11 @@ class ExtensionLoansRequest(Screen):
                 # )
                 # item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
                 # self.ids.container1.add_widget(item)
+
+    def get_email(self):
+        # Make a call to the Anvil server function
+        # Replace 'another_method' with the actual name of your Anvil server function
+        return anvil.server.call('another_method')
 
     def on_back_button_press(self):
         self.manager.current = 'DashboardScreen'
@@ -868,15 +901,15 @@ class ExtensionLoansProfileScreen(Screen):
                 sm.current = 'ExtendLoansScreen'
             else:
                 # Show error message if extension months are not between 0 and 6
-                self.show_popup( "Please enter a number between 1 and 6.")
+                self.show_popup("Please enter a number between 1 and 6.")
         else:
             # Show error message if extension months is not a valid positive integer
-            self.show_popup( "Please enter extension months.")
+            self.show_popup("Please enter extension months.")
 
     def on_text_validate(self, instance):
         extension_months = instance.text
         if not extension_months.isdigit() or int(extension_months) <= 1:
-            self.show_popup( "Please enter a valid number of extension months.")
+            self.show_popup("Please enter a valid number of extension months.")
             # Clear the invalid value from the field
             instance.text = ''
 
@@ -894,7 +927,6 @@ class ExtendLoansScreen(Screen):
     loan_id = ""
     loan_amount = ""
     extension_fee = ""
-
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -942,7 +974,7 @@ class ExtendLoansScreen(Screen):
         try:
             total_tenure = total_tenure[0]['emi_number']
         except IndexError:
-            self.show_validation_error( "EMI number not found for the loan")
+            self.show_validation_error("EMI number not found for the loan")
             return
 
         remaining_tenure = (float(tenure) - float(total_tenure)) + float(loan_extension_months)
@@ -1009,9 +1041,9 @@ class ExtendLoansScreen(Screen):
             borrower_name = data[0]['borrower_full_name']
             customer_id = data[0]['borrower_customer_id']
             email = data[0]['borrower_email_id']
-            lender_id=data[0]['lender_customer_id']
-            lender_email=data[0]['lender_email_id']
-            lender_name=data[0]['lender_full_name']
+            lender_id = data[0]['lender_customer_id']
+            lender_email = data[0]['lender_email_id']
+            lender_name = data[0]['lender_full_name']
         emi = app_tables.fin_emi_table.search(loan_id=loan_id)
         if emi:
             emi_number = emi[0]['emi_number']
@@ -1047,12 +1079,14 @@ class ExtendLoansScreen(Screen):
                 status="under process",
                 extension_request_date=date
             )
-            data[0]['loan_updated_status']='extension'
+            data[0]['loan_updated_status'] = 'extension'
             # Clear the data after submitting
 
             self.root_screen.ids.extension_months.text = ""
             self.ids.reason.text = ""
-            self.show_validation_errors("Your extension request has been successfully submitted. You will receive a notification once it is approved.")
+            self.show_validation_errors(
+                "Your extension request has been successfully submitted. You will receive a notification once it is approved.")
+
             # Navigate to DashboardScreen after adding data
             def __init__(self, **kwargs):
                 super().__init__(**kwargs)
@@ -1084,13 +1118,15 @@ class ExtendLoansScreen(Screen):
                             index = loan_id1.index(loan_id[i])
                             loan[i]["loan_updated_status"] = "extension"
                     print(day_left)
+
             sm = self.manager
             profile = ExtendLoansScreen(name='DashboardScreen')
             sm.add_widget(profile)  # Add the screen to the ScreenManager
             sm.current = 'DashboardScreen'
         else:
             self.show_validation_error("Please fill all the required fields.")
-    def show_validation_errors(self,error_message):
+
+    def show_validation_errors(self, error_message):
         dialog = MDDialog(
             title="Sucessfully Submitted",
             text=error_message,

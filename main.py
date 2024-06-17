@@ -30,7 +30,7 @@ import anvil.server
 from login import OTPScreen
 from lender_dashboard import LenderDashboard
 
-anvil.server.connect("server_5WJ74GLTRMMBC7IEPT2BMWMV-KGBKO5L5TX6S2KW2")
+anvil.server.connect("server_SCQAA7522N262HFSYZ7GLPPK-DVKXHXN3FMGIYIJX")
 
 
 class MyApp(MDApp):

@@ -3,6 +3,7 @@ from io import BytesIO
 from kivy.core.image import Image as CoreImage
 from kivy.graphics import Color,Ellipse
 import base64
+from kivy.uix.screenmanager import ScreenManager
 
 from anvil import Label
 from anvil.tables import app_tables
@@ -404,19 +405,20 @@ class WindowManager(ScreenManager):
 class LenderDetails(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.lender_details = {}  # Ensure lender_details is initialized
         self.populate_lender_list()
 
     def populate_lender_list(self, instance=None):
         data = app_tables.fin_loan_details.search()
         profile = app_tables.fin_user_profile.search()
 
-        lender_details = {}
+        self.lender_details = {}  # Ensure lender_details is cleared and re-populated
 
         for loan in data:
             if loan['loan_updated_status'] in ['disbursed', 'foreclosure', 'extension']:
                 lender_id = loan['lender_customer_id']
-                if lender_id not in lender_details:
-                    lender_details[lender_id] = {
+                if lender_id not in self.lender_details:
+                    self.lender_details[lender_id] = {
                         'full_name': loan['lender_full_name'],
                         'mobile_number': '',
                         'product_name': loan['product_name'],
@@ -425,14 +427,36 @@ class LenderDetails(Screen):
                         'loan_status': loan['loan_updated_status'],
                         'membership_type': loan['membership_type'],
                         'lending_type': '',
+                        'photo_texture': None  # Placeholder for the photo texture
                     }
 
         for prof in profile:
-            if prof['customer_id'] in lender_details:
-                lender_details[prof['customer_id']]['mobile_number'] = prof['mobile']
-                lender_details[prof['customer_id']]['lending_type'] = prof['lending_type']
+            if prof['customer_id'] in self.lender_details:
+                self.lender_details[prof['customer_id']]['mobile_number'] = prof['mobile']
+                self.lender_details[prof['customer_id']]['lending_type'] = prof['lending_type']
 
-        for lender_id, details in lender_details.items():
+                # Load profile photo if available
+                if prof['user_photo']:
+                    image_data = prof['user_photo'].get_bytes()
+                    if isinstance(image_data, bytes):
+                        try:
+                            profile_texture_io = BytesIO(image_data)
+                            photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                            self.lender_details[prof['customer_id']]['photo_texture'] = photo_texture
+                        except Exception as e:
+                            print(f"Error processing image for lender {prof['customer_id']}: {e}")
+                    else:
+                        try:
+                            image_data_binary = base64.b64decode(image_data)
+                            profile_texture_io = BytesIO(image_data_binary)
+                            photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                            self.lender_details[prof['customer_id']]['photo_texture'] = photo_texture
+                        except base64.binascii.Error as e:
+                            print(f"Base64 decoding error for lender {prof['customer_id']}: {e}")
+                        except Exception as e:
+                            print(f"Error processing image for lender {prof['customer_id']}: {e}")
+
+        for lender_id, details in self.lender_details.items():
             card = MDCard(
                 orientation='vertical',
                 size_hint=(None, None),
@@ -442,13 +466,10 @@ class LenderDetails(Screen):
                 elevation=3
             )
             horizontal_layout = BoxLayout(orientation='horizontal')
-            image = Image(
-                source='img.png',  # Update with the actual path to the image
-                size_hint_x=None,
-                height="60dp",
-                width="70dp"
-            )
-            horizontal_layout.add_widget(image)
+            photo_texture = details.get('photo_texture')  # Get the photo texture for the current lender
+            if photo_texture:
+                image = Image(texture=photo_texture, size_hint_x=None, height="30dp", width="60dp")
+                horizontal_layout.add_widget(image)
             horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
             text_layout = BoxLayout(orientation='vertical')
             text_layout.add_widget(MDLabel(
@@ -517,11 +538,14 @@ class LenderDetails(Screen):
             # self.ids.container.add_widget(item)
 
     def icon_button_clicked(self, instance, lender_id):
+        print(f"icon_button_clicked called with lender_id: {lender_id}")
+        print(f"Current lender_details: {self.lender_details}")
         sm = self.manager
         approved = ViewPortfolio(name='ViewPortfolio')
         sm.add_widget(approved)
         sm.current = 'ViewPortfolio'
-        self.manager.get_screen('ViewPortfolio').initialize_with_value(lender_id)
+        details = self.lender_details[lender_id]
+        self.manager.get_screen('ViewPortfolio').initialize_with_value(lender_id, details.get('photo_texture'))
 
     def go_back(self):
         self.manager.current = 'DashboardScreen'
@@ -667,7 +691,7 @@ class ViewPortfolio(Screen):
             else:
                 print(f"Email {email} not found in data.")
 
-    def initialize_with_value(self, lender_id):
+    def initialize_with_value(self, lender_id, photo_texture=None):
         profile = app_tables.fin_user_profile.get(customer_id=lender_id)
 
         if profile:
@@ -720,7 +744,10 @@ class ViewPortfolio(Screen):
 
                     self.ids.chart_container.clear_widgets()
                     self.ids.chart_container.add_widget(chart_widget)
-
+            if photo_texture:
+                self.ids.selected_image1.texture = photo_texture
+            else:
+                print("No profile photo texture passed.")
     def download_portfolio_as_pdf(self):
         # Obtain the ScrollView and its content
         scroll_view = self.ids.scroll_view  # Assuming your ScrollView has id 'scroll_view'

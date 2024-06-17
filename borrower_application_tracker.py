@@ -17,7 +17,10 @@ from kivy.factory import Factory
 from kivymd.uix.label import MDLabel
 from kivymd.uix.list import ThreeLineAvatarIconListItem, IconLeftWidget
 import anvil.server
-
+from kivy.uix.label import Label
+import base64
+from kivy.core.image import Image as CoreImage
+from io import BytesIO
 application_tracker = """
 
 <WindowManager>:
@@ -309,6 +312,32 @@ class ALLLoansAPT(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        email = self.get_email()
+        data = app_tables.fin_user_profile.search(email_user=email)
+
+        if not data:
+            print("No data found for email:", email)
+            return
+
+        for row in data:
+            if row['user_photo']:
+                image_data = row['user_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                else:
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        profile_texture_io = BytesIO(image_data_binary)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+
         data = app_tables.fin_loan_details.search()
         email = self.get_table()
         profile = app_tables.fin_user_profile.search()
@@ -376,13 +405,9 @@ class ALLLoansAPT(Screen):
                     elevation=3
                 )
                 horizontal_layout = BoxLayout(orientation='horizontal')
-                image = Image(
-                    source='img.png',  # Update with the actual path to the image
-                    size_hint_x=None,
-                    height="60dp",
-                    width="70dp"
-                )
-                horizontal_layout.add_widget(image)
+                if photo_texture:
+                    image = Image(texture=photo_texture, size_hint_x=None, height="30dp", width="60dp")
+                    horizontal_layout.add_widget(image)
 
                 horizontal_layout.add_widget(Widget(size_hint_x=None, width='25dp'))
                 text_layout = BoxLayout(orientation='vertical')
@@ -503,7 +528,10 @@ class ALLLoansAPT(Screen):
                 # )
                 # item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
                 # self.ids.container.add_widget(item)
-
+    def get_email(self):
+        # Make a call to the Anvil server function
+        # Replace 'another_method' with the actual name of your Anvil server function
+        return anvil.server.call('another_method')
     def icon_button_clicked(self, instance, loan_id):
         # Highlight the selected item
         self.highlight_item(instance)

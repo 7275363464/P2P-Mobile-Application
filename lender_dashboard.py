@@ -4,6 +4,7 @@ import base64
 from anvil import media
 from io import BytesIO
 from kivy.core.image import Image as CoreImage
+from kivy.uix.widget import Widget
 from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
 
@@ -145,22 +146,61 @@ user_helpers1 = """
                                         orientation: 'vertical'
                                         padding: "10dp", "5dp", "10dp", "0dp"
                                         size_hint_y: None
-                                        height: dp(1050)
+                                        height: dp(1150)
                                         spacing: dp(20)
-                                        ThreeLineAvatarListItem:
-                                            id: details
-                                            text: "Welcome Sai Mamidala"
-                                            secondary_text: "Joined Date: 22-03-12"
-                                            tertiary_text: "Membership_type: Elite"
-                                            bg_color: '#F5F5F5'
-                                            theme_text_color: 'Custom'
-                                            secondary_theme_text_color: 'Custom'
-                                            tertiary_theme_text_color: 'Custom'
-                                            text_color: '#007BFF'
-                                            secondary_text_color: '#666666'
-                                            tertiary_text_color: '#666666'
+                                        
+                                        
+                                        MDCard:
+                                            id: card
+                                            orientation: 'vertical'
+                                            size_hint: 1, None
+                                            height: dp(120)
+                                            padding: dp(15)
+                                            spacing: dp(3)
+                                            elevation: 1
                                             on_release: root.account()
-                                            ImageLeftWidget:
+                                    
+                                            BoxLayout:
+                                                orientation: 'horizontal'
+                                                spacing: dp(5)
+                                    
+                                                Image:
+                                                    source: 'img.png'  # Update with the actual path to the image
+                                                    size_hint_x: None
+                                                    height: dp(60)
+                                                    width: dp(70)
+                                    
+                                                Widget:
+                                                    size_hint_x: None
+                                                    width: dp(10)
+                                    
+                                                BoxLayout:
+                                                    orientation: 'vertical'
+                                    
+                                                    MDLabel:
+                                                        id: details
+                                                        text: "[b]Name[/b] : John Doe"
+                                                        theme_text_color: 'Custom'
+                                                        text_color: 0, 0, 0, 1
+                                                        halign: 'left'
+                                                        markup: True
+                                    
+                                                    MDLabel:
+                                                        id: joined_date
+                                                        text: "[b]Joined Date id[/b] : '12-12-2012'"
+                                                        theme_text_color: 'Custom'
+                                                        text_color: 0, 0, 0, 1
+                                                        halign: 'left'
+                                                        markup: True
+                                    
+                                                    MDLabel:
+                                                        id: memmber_type
+                                                        text: "[b]Membership Type[/b] : Elite"
+                                                        theme_text_color: 'Custom'
+                                                        text_color: 0, 0, 0, 1
+                                                        halign: 'left'
+                                                        markup: True
+                                                        
 
                                         GridLayout:
                                             cols: 2
@@ -4577,14 +4617,18 @@ class LenderDashboard(Screen):
         print(log_index)
         print(investment)
 
-        try:
-            investment_value = float(investment[log_index])
-            for i in range(a):
-                if min_amount[i] <= investment_value < max_amount[i]:
-                    self.ids.details.tertiary_text = f"Membership Type: {membership_type[i]}"
+        if investment[log_index] != None:
+            try:
+                investment_value = float(investment[log_index])
+                for i in range(a):
+                    if min_amount[i] <= investment_value < max_amount[i]:
+                        self.ids.memmber_type.text = f"Membership Type: {membership_type[i]}"
                     break
-        except ValueError:
-            self.ids.details.tertiary_text = f"Membership Type: None"
+            except ValueError:
+                self.ids.memmber_type.text = f"Membership Type: None"
+
+        else:
+            self.ids.memmber_type.text = f"Membership Type: None"
             print("Investment Amount Not There or Invalid")
 
         lender_data = app_tables.fin_lender.search()
@@ -4600,14 +4644,15 @@ class LenderDashboard(Screen):
         #
         if p_customer_id[log_index] in lender_cus_id:
             index1 = lender_cus_id.index(p_customer_id[log_index])
-            self.ids.details.secondary_text = "Joined Date: " + str(create_date[index1])
-            self.ids.date.text = "Joined Date: " + str(create_date[index1])
+            self.ids.joined_date.text = "[b]Joined Date[/b]: " + str(create_date[index1])
             self.ids.return_amount.text = "Rs. " + str(returns[index1])
             self.ids.commitment.text = "Rs. " + str(present_commitment[index1])
+            self.ids.date.text = "Joined Date: " + str(create_date[index1])
         else:
-            self.ids.details.secondary_text = "Joined Date: "
-            self.ids.date.text = "Joined Date: "
+            self.ids.joined_date.text = "[b]Joined Date[/b]: "
             self.ids.return_amount.text = "Rs. "
+            self.ids.commitment.text = "Rs. "
+            self.ids.date.text = "Joined Date: "
 
     def on_kv_post(self, base_widget):
         self.setup_menu()
@@ -4856,156 +4901,114 @@ class LenderDashboard(Screen):
             card = MDCard(
                 orientation='vertical',
                 size_hint=(None, None),
-                size=("280dp", "190dp"),
-                # size: "280dp", "180dp",
-                padding="10dp",
-                spacing="3dp",
-                elevation=3,
+                size=("310dp", "200dp"),
+                padding="8dp",
+                spacing="5dp",
+                elevation=3
             )
-            # Horizontal layout to keep the text and image in to the card
             horizontal_layout = BoxLayout(orientation='horizontal')
             image = Image(
-                source="icon8.png",  # Assuming you want to use the same image for now
+                source='img.png',  # Update with the actual path to the image
                 size_hint_x=None,
-                height="10dp",
+                height="60dp",
+                width="70dp"
             )
             horizontal_layout.add_widget(image)
 
-            # Text Layout to keep the text on card
+            horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
             text_layout = BoxLayout(orientation='vertical')
             text_layout.add_widget(MDLabel(
-                text=f" {borrower_name[i]}\n {profile_mobile_number[number]}",
+                text=f"[b]{borrower_name[i]}[/b],\n[b]{profile_mobile_number[number]}[/b]",
                 theme_text_color='Custom',
                 text_color=(0, 0, 0, 1),
                 halign='left',
                 markup=True,
-                font_size='10sp',
-                bold=True
             ))
             text_layout.add_widget(MDLabel(
-                text=f" [b]Loan Amount:[/b] {loan_amount[i]}",
+                text=f"[b]Product name:[/b] {product_name[i]}",
                 theme_text_color='Custom',
                 text_color=(0, 0, 0, 1),
                 halign='left',
                 markup=True,
-                font_size='10sp'
             ))
             text_layout.add_widget(MDLabel(
-                text=f" [b]Ascend Score :[/b]{ascend_score[number]}",
+                text=f"[b]Loan Amount:[/b] {loan_amount[i]}",
                 theme_text_color='Custom',
                 text_color=(0, 0, 0, 1),
                 halign='left',
                 markup=True,
-                font_size='10sp'
             ))
             text_layout.add_widget(MDLabel(
-                text=f" [b]Interest Rate :[/b]{interest_rate[i]}",
+                text=f"[b]Ascend Score:[/b] {ascend_score[number]}",
                 theme_text_color='Custom',
                 text_color=(0, 0, 0, 1),
                 halign='left',
                 markup=True,
-                font_size='10sp'
             ))
-            # text_layout.add_widget(MDLabel(
-            #     text=f" [b]Mobile Number :[/b]{profile_mobile_number[number]}",
-            #     theme_text_color='Custom',
-            #     text_color=(0, 0, 0, 1),
-            #     halign='left',
-            #     markup=True,
-            #     font_size='10sp'
-            # ))
+
             horizontal_layout.add_widget(text_layout)
             card.add_widget(horizontal_layout)
 
-            # Button layout to align the Buttons
+            card.add_widget(Widget(size_hint_y=None, height='10dp'))
             button_layout = BoxLayout(
                 size_hint_y=None,
                 height="40dp",
                 padding="10dp",
-                spacing=30
+                spacing="20dp"
+            )
+            status_color = (0.545, 0.765, 0.290, 1)  # default color
+            if loan_status[i] in ["under process"]:
+                status_color = (253 / 255, 218 / 255, 13 / 255, 1)  # yellow
+            elif loan_status[i] in ["disbursed"]:
+                status_color = (255 / 255, 88 / 255, 93 / 255, 1)  # pink
+            elif loan_status[i] in ["closed"]:
+                status_color = (0 / 255, 100 / 255, 0 / 255, 1)  # bottle-green
+            elif loan_status[i] in ["extension"]:
+                status_color = (255 / 255, 165 / 255, 0 / 255, 1)  # orange
+            elif loan_status[i] in ["foreclosure"]:
+                status_color = (0.424, 0.663, 0.859, 1.0)  # sky blue
+            elif loan_status[i] in ["rejected"]:
+                status_color = (210 / 255, 4 / 255, 45 / 255, 1)  # cherry
+            elif loan_status[i] in ["approved"]:
+                status_color = (0 / 255, 128 / 255, 0 / 255, 1)  # light green
+            elif loan_status[i] == "lost opportunities":
+                status_color = (0.902, 0.141, 0.141, 1)
+
+            status_text = {
+                "under process": "  Under Process ",
+                "disbursed": "  Disburse Loan ",
+                "closed": "    Closed Loan   ",
+                "extension": " Extension Loan ",
+                "foreclosure": "  Foreclosure  ",
+                "accepted": " Accepted Loan ",
+                "rejected": "  Rejected Loan ",
+                "approved": "  Approved Loan ",
+                "lost opportunities": "lost opportunities"
+            }
+            button1 = MDFillRoundFlatButton(
+                text=status_text.get(loan_status[i], loan_status[i]),
+                size_hint=(None, None),
+                height="40dp",
+                width="250dp",
+                pos_hint={"center_x": 0},
+                md_bg_color=status_color,
+                # on_release=lambda x, i=i: self.close_loan(i)
             )
             button2 = MDFillRoundFlatButton(
-                text="  View Details  ",
-                # size_hint=(None, None),
+                text=" View Details ",
+                size_hint=(None, None),
                 height="40dp",
                 width="250dp",
                 pos_hint={"center_x": 1},
                 md_bg_color=(0.043, 0.145, 0.278, 1),
-                text_color=(1, 1, 1, 1),
                 on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id)
             )
 
-            button1 = MDFillRoundFlatButton(
-                text=f'{loan_status[i]}',
-                height=dp(40),
-                pos_hint={"center_x": 0},
-                md_bg_color='black',
-                text_color=(1, 1, 1, 1),
-            )
             button_layout.add_widget(button1)
             button_layout.add_widget(button2)
-
-            # Adding the Buttons to the card
             card.add_widget(button_layout)
 
-            if button1.text == 'under process':
-                button1.md_bg_color = '#FDDA0D'
-            if button1.text == 'disbursed':
-                button1.md_bg_color = '#ff585d'
-            if button1.text == 'approved':
-                button1.md_bg_color = '#008000'
-            if button1.text == 'rejected':
-                button1.md_bg_color = '#D2042D'
-            if button1.text == 'closed':
-                button1.md_bg_color = '#006400'
-            if button1.text == 'extension':
-                button1.md_bg_color = '#FFA500'
-            if button1.text == 'foreclosure':
-                button1.md_bg_color = '#87CEEB'
-            # Actual code for the future referance incase of failures
-            # item = ThreeLineAvatarIconListItem(
-            #
-            #     IconLeftWidget(
-            #         icon="icon1.jpg", size_hint_x=None, width=50
-            #         # icon = f"{customer_id}"
-            #     ),
-            #
-            #     text=f"User Name :{borrower_name[i]},       Product Name :{product_name[i]}",
-            #     secondary_text=f"Mobile Number :{profile_mobile_number[number]},            Loan Amount :{loan_amount[i]}",
-            #     tertiary_text=f"Interest Rate :{interest_rate[i]},      Tenure: {tenure[i]},        Loan Status: {loan_status[i]}",
-            #     text_color=(0, 0, 0, 1),  # Black color
-            #     theme_text_color='Custom',
-            #     secondary_text_color=(0, 0, 0, 1),
-            #     secondary_theme_text_color='Custom',
-            #     tertiary_text_color=(0, 0, 0, 1),
-            #     tertiary_theme_text_color='Custom',
-            #
-            # )
-            # item.ids._lbl_primary.halign = 'center'
-            # item.ids._lbl_primary.valign = 'top'
-            # item.ids._lbl_secondary.halign = 'center'
-            # item.ids._lbl_primary.valign = 'middle'
-            # item.ids._lbl_tertiary.halign = 'center'
-            # item.ids._lbl_primary.valign = 'bottom'
-            #
-            # button = MDRaisedButton(
-            #     text="Close Loan",
-            #     size_hint=(None, None),
-            #     height=30,
-            #     width=20,
-            #     #pos_hint={"center_x": 1, "center_y": 0},
-            #     pos_hint={"right": 1, "bottom": 0}
-            #
-            #     # on_release=lambda x, i=i: self.close_loan(i)
-            # )
-            #
-            # # Add the button to the item
-            # right_icon = IconRightWidget()
-            # right_icon.add_widget(button)
-            # item.add_widget(right_icon)
-            #
-            #
-            card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
+            # card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
             self.ids.container.add_widget(card)
 
     def icon_button_clicked(self, instance, loan_id):
@@ -6454,12 +6457,18 @@ class ReturnsScreen(Screen):
         bar_width = 0.45
         ax.bar(products, investment, bar_width, label='Investment', color='blue')
         ax.bar(products, returns, bar_width, label='Returns', color='green')
+        #bars = ax.bar(products, returns, bar_width, label='Returns', color='green')
 
-        ax.set_xlabel('')
+        ax.set_xlabel('Product Details')
         ax.set_ylabel('Amount (0.1M = 100000)')
         ax.set_title('Investment and Returns by Product')
         ax.legend()
 
+        # for bar, inv, ret in zip(bars, investment, returns):
+        #     if inv > 0:  # Avoid division by zero
+        #         percentage = (ret / inv) * 100
+        #         ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height(), f'{percentage:.1f}%',
+        #                 ha='center', va='bottom', fontsize=10, color='black')
         # Render the figure as an image
         buf = io.BytesIO()
         fig.savefig(buf, format='png')
@@ -6565,7 +6574,7 @@ class ReturnsScreen(Screen):
             returns = [0, lender_returns_on_lender[lender_index] / 1000000]  # Summarizing returns for 'Returns'
             bar_width = 0.7
             # Calculate percentage of returns
-            returns_percentage = (lender_returns_on_lender[lender_index] / total_commitment[lender_index]) * 100
+            #returns_percentage = (lender_returns_on_lender[lender_index] / total_commitment[lender_index]) * 100
         else:
             products = ['Total', 'Returns']
             investment = [0 / 1000000, 0]  # Summarizing investment for 'Total'
@@ -6577,10 +6586,10 @@ class ReturnsScreen(Screen):
         ax.bar(products, returns, bar_width, label='Returns', color='green')
 
         # Annotate the returns bar with the percentage
-        if returns_percentage > 0:
-            ax.text(1, returns[1] + 0.05, f'{returns_percentage:.1f}%', ha='center', va='bottom')
+        # if returns_percentage > 0:
+        #     ax.text(1, returns[1] + 0.05, f'{returns_percentage:.1f}%', ha='center', va='bottom')
 
-        ax.set_xlabel('')
+        ax.set_xlabel('Category')
         ax.set_ylabel('Amount (0.1M = 100000)')
         ax.set_title('Investment and Returns by Product')
         ax.legend()

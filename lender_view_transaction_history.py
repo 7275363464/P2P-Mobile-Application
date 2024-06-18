@@ -15,7 +15,9 @@ from kivymd.uix.button import MDFillRoundFlatButton
 from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
 from kivymd.uix.list import ThreeLineAvatarIconListItem, IconLeftWidget
-
+import base64
+from kivy.core.image import Image as CoreImage
+from io import BytesIO
 lender_view_transaction_history = '''
 
 <WindowManager>:
@@ -244,12 +246,11 @@ Builder.load_string(lender_view_transaction_history)
 
 
 class TransactionLH(Screen):
-    def _init_(self, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
         email = self.get_table()
         profile = app_tables.fin_user_profile.search()
         transaction = app_tables.fin_wallet_transactions.search()
-        s = 0
         transaction_id = []
         wallet_customer_id = []
         status = []
@@ -269,12 +270,34 @@ class TransactionLH(Screen):
         pro_mobile_number = []
         pro_email_id = []
         borrower_name = []
+        profile_photo = {}
 
         for i in profile:
             pro_customer_id.append(i['customer_id'])
             pro_mobile_number.append(i['mobile'])
             pro_email_id.append(i['email_user'])
             borrower_name.append(i['full_name'])
+
+            # Load profile photo if available
+            if i['user_photo']:
+                image_data = i['user_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                        profile_photo[i['customer_id']] = photo_texture
+                    except Exception as e:
+                        print(f"Error processing image for customer {i['customer_id']}: {e}")
+                else:
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        profile_texture_io = BytesIO(image_data_binary)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                        profile_photo[i['customer_id']] = photo_texture
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for customer {i['customer_id']}: {e}")
+                    except Exception as e:
+                        print(f"Error processing image for customer {i['customer_id']}: {e}")
 
         index = -1
         if email in pro_email_id:
@@ -307,12 +330,20 @@ class TransactionLH(Screen):
                 elevation=3
             )
             horizontal_layout = BoxLayout(orientation='horizontal')
-            image = Image(
-                source='img.png',  # Update with the actual path to the image
-                size_hint_x=None,
-                height="60dp",
-                width="70dp"
-            )
+            if wallet_customer_id[i] in profile_photo:
+                image = Image(
+                    texture=profile_photo[wallet_customer_id[i]],  # Get the profile photo texture
+                    size_hint_x=None,
+                    height="60dp",
+                    width="70dp"
+                )
+            else:
+                image = Image(
+                    source='img.png',  # Update with the actual path to the image
+                    size_hint_x=None,
+                    height="60dp",
+                    width="70dp"
+                )
             horizontal_layout.add_widget(image)
 
             horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))

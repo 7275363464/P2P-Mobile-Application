@@ -19,7 +19,10 @@ from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.label import MDLabel
 from kivymd.uix.list import ThreeLineAvatarIconListItem, IconLeftWidget
-
+from kivy.uix.label import Label
+import base64
+from kivy.core.image import Image as CoreImage
+from io import BytesIO
 if platform == 'android':
     from kivy.uix.button import Button
     from kivy.uix.modalview import ModalView
@@ -884,10 +887,33 @@ class ViewAllLoansLF(Screen):
         profile_customer_id = []
         profile_mobile_number = []
         ascend_value = []
+        profile_photo = {}
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
             ascend_value.append(i['ascend_value'])
+
+            # Load profile photo if available
+            if i['user_photo']:
+                image_data = i['user_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                        profile_photo[i['customer_id']] = photo_texture
+                    except Exception as e:
+                        print(f"Error processing image for customer {i['customer_id']}: {e}")
+                else:
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        profile_texture_io = BytesIO(image_data_binary)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                        profile_photo[i['customer_id']] = photo_texture
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for customer {i['customer_id']}: {e}")
+                    except Exception as e:
+                        print(f"Error processing image for customer {i['customer_id']}: {e}")
+
         c = -1
         index_list = []
         for i in range(s):
@@ -914,12 +940,20 @@ class ViewAllLoansLF(Screen):
                     elevation=3
                 )
                 horizontal_layout = BoxLayout(orientation='horizontal')
-                image = Image(
-                    source='img.png',  # Update with the actual path to the image
-                    size_hint_x=None,
-                    height="60dp",
-                    width="70dp"
-                )
+                if customer_id[i] in profile_photo:
+                    image = Image(
+                        texture=profile_photo[customer_id[i]],  # Get the profile photo texture
+                        size_hint_x=None,
+                        height="30dp",
+                        width="60dp"
+                    )
+                else:
+                    image = Image(
+                        source='img.png',  # Update with the actual path to the image
+                        size_hint_x=None,
+                        height="30dp",
+                        width="60dp"
+                    )
                 horizontal_layout.add_widget(image)
 
                 horizontal_layout.add_widget(Widget(size_hint_x=None, width='25dp'))
@@ -1020,25 +1054,7 @@ class ViewAllLoansLF(Screen):
 
                 # card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
                 self.ids.container2.add_widget(card)
-            #     item = ThreeLineAvatarIconListItem(
-            #         IconLeftWidget(
-            #             icon="card-account-details-outline"
-            #         ),
-            #         text=f"Borrower Name : {borrower_name[i]}",
-            #         secondary_text=f"Borrower Mobile Number : {profile_mobile_number[number]}",
-            #         tertiary_text=f"Product Name : {product_name[i]}",
-            #         text_color=(0, 0, 0, 1),  # Black color
-            #         theme_text_color='Custom',
-            #         secondary_text_color=(0, 0, 0, 1),
-            #         secondary_theme_text_color='Custom',
-            #         tertiary_text_color=(0, 0, 0, 1),
-            #         tertiary_theme_text_color='Custom'
-            #     )
-            #     item.bind(
-            #         on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
-            #     self.ids.container5.add_widget(item)
-            # else:
-            #     print("Index out of range!")
+
         data = app_tables.fin_foreclosure.search()
         loan = app_tables.fin_loan_details.search()
         today_date = datetime.now(timezone.utc).date()

@@ -27,7 +27,10 @@ import anvil.users
 from anvil.tables import app_tables
 from kivy.uix.modalview import ModalView
 from kivy.clock import Clock
-
+from kivy.uix.label import Label
+import base64
+from kivy.core.image import Image as CoreImage
+from io import BytesIO
 if platform == 'android':
     from kivy.uix.button import Button
 
@@ -744,417 +747,7 @@ lender_view_extension = """
 Builder.load_string(lender_view_extension)
 
 
-# class NewExtension(Screen):
-#
-#     def __init__(self, **kwargs):
-#         super().__init__(**kwargs)
-#         data = app_tables.fin_extends_loan.search()
-#         today_date = datetime.now(timezone.utc).date()
-#         loan = app_tables.fin_loan_details.search()
-#         loan_id = []
-#         request_time = []
-#         loan_status = []
-#         a = 0
-#         for i in data:
-#             a += 1
-#             loan_id.append(i['loan_id'])
-#             request_time.append(i['extension_request_date'])
-#             loan_status.append(i['status'])
-#         loan_id1 = []
-#         loan_status1 = []
-#         s = 0
-#         for i in loan:
-#             s += 1
-#             loan_id1.append(i['loan_id'])
-#             loan_status1.append(i['loan_updated_status'])
-#
-#         for i in range(a):
-#             day_left = (today_date - request_time[i].date()).days
-#             if day_left >= 2 and loan_status[i] == "under process":
-#                 data[i]["status"] = "approved"
-#                 if loan_id[i] in loan_id1:
-#                     index = loan_id1.index(loan_id[i])
-#                     loan[i]["loan_updated_status"] = "extension"
-#             print(day_left)
-#
-#     def on_pre_enter(self):
-#         Window.bind(on_keyboard=self.on_back_button)
-#
-#     def on_pre_leave(self):
-#         Window.unbind(on_keyboard=self.on_back_button)
-#
-#     def on_back_button(self, instance, key, scancode, codepoint, modifier):
-#         if key == 27:
-#             self.go_back()
-#             return True
-#         return False
-#
-#     def go_back(self):
-#         self.manager.transition = SlideTransition(direction='right')
-#         self.manager.current = 'LenderDashboard'
-#
-#     def on_back_button_press(self):
-#         self.manager.current = 'LenderDashboard'
-#
-#     def animate_loading_text(self, loading_label, modal_height):
-#         # Define the animation to move the label vertically
-#         anim = Animation(y=modal_height - loading_label.height, duration=1) + \
-#                Animation(y=0, duration=1)
-#         # Loop the animation
-#         anim.repeat = True
-#         anim.bind(on_complete=lambda *args: self.animate_loading_text(loading_label, modal_height))
-#         anim.start(loading_label)
-#         # Store the animation object
-#         loading_label.animation = anim  # Store the animation object in a custom attribute
-#
-#     def go_to_approved_loans(self):
-#         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
-#
-#         # Create MDLabel with white text color, increased font size, and bold text
-#         loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
-#                                 theme_text_color="Custom", text_color=[1, 1, 1, 1],
-#                                 font_size="50sp", bold=True)
-#
-#         # Set initial y-position off-screen
-#         loading_label.y = -loading_label.height
-#
-#         modal_view.add_widget(loading_label)
-#         modal_view.open()
-#
-#         # Perform the animation
-#         self.animate_loading_text(loading_label, modal_view.height)
-#
-#         # Perform the actual action (e.g., fetching loan requests)
-#         # You can replace the sleep with your actual logic
-#         Clock.schedule_once(lambda dt: self.performance_go_to_approved_loans(modal_view), 2)
-#
-#     def performance_go_to_approved_loans(self, modal_view):
-#         # Cancel the animation
-#         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
-#         # Close the modal view after performing the action
-#         modal_view.dismiss()
-#         # Get the existing ScreenManager
-#         self.manager.add_widget(Factory.ApprovedLoansEX(name='ApprovedLoansEX'))
-#         self.manager.current = 'ApprovedLoansEX'
-#
-#     def go_to_under_process_loans(self):
-#         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
-#
-#         # Create MDLabel with white text color, increased font size, and bold text
-#         loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
-#                                 theme_text_color="Custom", text_color=[1, 1, 1, 1],
-#                                 font_size="50sp", bold=True)
-#
-#         # Set initial y-position off-screen
-#         loading_label.y = -loading_label.height
-#
-#         modal_view.add_widget(loading_label)
-#         modal_view.open()
-#
-#         # Perform the animation
-#         self.animate_loading_text(loading_label, modal_view.height)
-#
-#         # Perform the actual action (e.g., fetching loan requests)
-#         # You can replace the sleep with your actual logic
-#         Clock.schedule_once(lambda dt: self.performance_go_to_under_process_loans(modal_view), 2)
-#
-#     def performance_go_to_under_process_loans(self, modal_view):
-#         # Cancel the animation
-#         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
-#         # Close the modal view after performing the action
-#         modal_view.dismiss()
-#         # Get the existing ScreenManager
-#         self.manager.add_widget(Factory.UnderProcessLoansEX(name='UnderProcessLoansEX'))
-#         self.manager.current = 'UnderProcessLoansEX'
-#
-#     def go_to_rejected_loans(self):
-#         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
-#
-#         # Create MDLabel with white text color, increased font size, and bold text
-#         loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
-#                                 theme_text_color="Custom", text_color=[1, 1, 1, 1],
-#                                 font_size="50sp", bold=True)
-#
-#         # Set initial y-position off-screen
-#         loading_label.y = -loading_label.height
-#
-#         modal_view.add_widget(loading_label)
-#         modal_view.open()
-#
-#         # Perform the animation
-#         self.animate_loading_text(loading_label, modal_view.height)
-#
-#         # Perform the actual action (e.g., fetching loan requests)
-#         # You can replace the sleep with your actual logic
-#         Clock.schedule_once(lambda dt: self.performance_go_to_rejected_loans(modal_view), 2)
-#
-#     def performance_go_to_rejected_loans(self, modal_view):
-#         # Cancel the animation
-#         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
-#         # Close the modal view after performing the action
-#         modal_view.dismiss()
-#         # Get the existing ScreenManager
-#         self.manager.add_widget(Factory.RejectedLoansEX(name='RejectedLoansEX'))
-#         self.manager.current = 'RejectedLoansEX'
-#
-#     def all_loan_screen(self):
-#         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
-#
-#         # Create MDLabel with white text color, increased font size, and bold text
-#         loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
-#                                 theme_text_color="Custom", text_color=[1, 1, 1, 1],
-#                                 font_size="50sp", bold=True)
-#
-#         # Set initial y-position off-screen
-#         loading_label.y = -loading_label.height
-#
-#         modal_view.add_widget(loading_label)
-#         modal_view.open()
-#
-#         # Perform the animation
-#         self.animate_loading_text(loading_label, modal_view.height)
-#
-#         # Perform the actual action (e.g., fetching loan requests)
-#         # You can replace the sleep with your actual logic
-#         Clock.schedule_once(lambda dt: self.performance_all_loan_screen(modal_view), 2)
-#
-#     def performance_all_loan_screen(self, modal_view):
-#         # Cancel the animation
-#         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
-#         # Close the modal view after performing the action
-#         modal_view.dismiss()
-#         # Get the existing ScreenManager
-#         self.manager.add_widget(Factory.ALLLoansEX(name='ALLLoansEX'))
-#         self.manager.current = 'ALLLoansEX'
-#
-#
-# class ApprovedLoansEX(Screen):
-#     def __init__(self, instance=None, **kwargs):
-#         super().__init__(**kwargs)
-#         view = app_tables.fin_loan_details.search()
-#         profile = app_tables.fin_user_profile.search()
-#         data = app_tables.fin_extends_loan.search()
-#         loan_id = []
-#         borrower_name = []
-#         loan_status = []
-#         cus_id = []
-#         s = 0
-#         for i in data:
-#             s += 1
-#             cus_id.append(i['borrower_customer_id'])
-#             loan_id.append(i['loan_id'])
-#             borrower_name.append(i['borrower_full_name'])
-#             loan_status.append(i['status'])
-#
-#         customer_id = []
-#         product_name = []
-#         for i in view:
-#             customer_id.append(i['borrower_customer_id'])
-#             product_name.append(i['product_name'])
-#         profile_customer_id = []
-#         profile_mobile_number = []
-#         for i in profile:
-#             profile_customer_id.append(i['customer_id'])
-#             profile_mobile_number.append(i['mobile'])
-#         c = -1
-#         index_list = []
-#         for i in range(s):
-#             c += 1
-#             if loan_status[c] == 'approved':
-#                 index_list.append(c)
-#
-#         b = 1
-#         k = -1
-#         for i in reversed(index_list):
-#             b += 1
-#             k += 1
-#             if i < len(customer_id):
-#                 print(customer_id[i])
-#                 if customer_id[i] in profile_customer_id:
-#                     number = profile_customer_id.index(customer_id[i])
-#                 else:
-#                     number = 0
-#                 card = MDCard(
-#                     orientation='vertical',
-#                     size_hint=(None, None),
-#                     size=("280dp", "180dp"),
-#                     padding="8dp",
-#                     spacing="5dp",
-#                     elevation=3
-#                 )
-#                 horizontal_layout = BoxLayout(orientation='horizontal')
-#                 image = Image(
-#                     source='img.png',  # Update with the actual path to the image
-#                     size_hint_x=None,
-#                     height="60dp",
-#                     width="70dp"
-#                 )
-#                 horizontal_layout.add_widget(image)
-#
-#                 horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
-#                 text_layout = BoxLayout(orientation='vertical')
-#                 text_layout.add_widget(MDLabel(
-#                     text=f"[b]{borrower_name[i]}[/b],  [b]{profile_mobile_number[number]}[/b]",
-#                     theme_text_color='Custom',
-#                     text_color=(0, 0, 0, 1),
-#                     halign='left',
-#                     markup=True,
-#                 ))
-#                 text_layout.add_widget(MDLabel(
-#                     text=f"[b]Loan Amount:[/b] {loan_amount[i]}",
-#                     theme_text_color='Custom',
-#                     text_color=(0, 0, 0, 1),
-#                     halign='left',
-#                     markup=True,
-#                 ))
-#                 text_layout.add_widget(MDLabel(
-#                     text=f"[b]Ascend Score:[/b] {ascend_value[number]}",
-#                     theme_text_color='Custom',
-#                     text_color=(0, 0, 0, 1),
-#                     halign='left',
-#                     markup=True,
-#                 ))
-#
-#                 text_layout.add_widget(MDLabel(
-#                     text=f"[b]Interest Rate:[/b] {interest_rate[i]}",
-#                     theme_text_color='Custom',
-#                     text_color=(0, 0, 0, 1),
-#                     halign='left',
-#                     markup=True,
-#                 ))
-#                 horizontal_layout.add_widget(text_layout)
-#                 card.add_widget(horizontal_layout)
-#
-#                 card.add_widget(Widget(size_hint_y=None, height='10dp'))
-#                 button_layout = BoxLayout(
-#                     size_hint_y=None,
-#                     height="40dp",
-#                     padding="10dp",
-#                     spacing="20dp"
-#                 )
-#                 status_color = (0.545, 0.765, 0.290, 1)  # default color
-#                 if loan_status[i] in ["under process", "Under Process", "UnderProcess"]:
-#                     status_color = (253 / 255, 218 / 255, 13 / 255, 1)  # yellow
-#                 elif loan_status[i] in ["Disbursed Loan", "disbursed loan", "disbursed", "Disbursed", "Disbursed loan",
-#                                         "disbursed Loan", "DisbursedLoan", "disbursedloan", "Disbursedloan",
-#                                         "disbursedLoan"]:
-#                     status_color = (255 / 255, 88 / 255, 93 / 255, 1)  # pink
-#                 elif loan_status[i] in ["closed", "Closed", "Closed loan", "closed Loan", "Closed Loan", "closed loan",
-#                                         "Closedloan", "closedLoan", "ClosedLoan", "closedloan"]:
-#                     status_color = (0 / 255, 100 / 255, 0 / 255, 1)  # bottle-green
-#                 elif loan_status[i] in ["extension", "Extension", "Extension Loan", "Extension loan", "extension loan",
-#                                         "extension Loan", "ExtensionLoan", "Extensionloan", "extensionloan",
-#                                         "extensionLoan"]:
-#                     status_color = (255 / 255, 165 / 255, 0 / 255, 1)  # orange
-#                 elif loan_status[i] in ["foreclosure", "Foreclosure", "Foreclosure Loan", "Foreclosure loan",
-#                                         "forclosure loan", "forclosure Loan", "ForeclosureLoan", "Foreclosureloan",
-#                                         "forclosureloan", "forclosureLoan"]:
-#                     status_color = (0.424, 0.663, 0.859, 1.0)  # sky blue
-#                 elif loan_status[i] in ["accepted", "Accepted", "Accepted loan", "Accepted Loan", "accepted loan",
-#                                         "accepted Loan", "Acceptedloan", "AcceptedLoan", "acceptedloan",
-#                                         "acceptedLoan"]:
-#                     status_color = (0 / 255, 128 / 255, 0 / 255, 1)  # light green
-#                 elif loan_status[i] in ["rejected", "Rejected", "rejected loan", "Rejected loan", "rejected Loan",
-#                                         "Rejected Loan", "rejectedloan", "Rejectedloan", "rejectedLoan",
-#                                         "RejectedLoan"]:
-#                     status_color = (210 / 255, 4 / 255, 45 / 255, 1)  # cherry
-#                 elif loan_status[i] in ["approved", "Approved", "approved loan", "Approved Loan", "approved Loan",
-#                                         "Approved loan", "approvedloan", "ApprovedLoan", "approvedLoan",
-#                                         "Approvedloan"]:
-#                     status_color = (0 / 255, 128 / 255, 0 / 255, 1)  # light green
-#                 elif loan_status[i] in ["decline", "declined", "Declined", "Decline"]:
-#                     status_color = (210 / 255, 4 / 255, 45 / 255, 1)  # cherry
-#
-#                 status_text = {
-#                     "under process": "Under Process",
-#                     "disbursed loan": "Disburse Loan",
-#                     "closed loan": "  Closed Loan  ",
-#                     "extension": " Extension Loan ",
-#                     "foreclosure": "   Foreclosure   ",
-#                     "accepted": "Accepted Loan",
-#                     "rejected": "Rejected Loan",
-#                     "approved": "Approved Loan",
-#                     "decline": "Declined Loan"
-#                 }
-#                 button1 = MDFillRoundFlatButton(
-#                     text=status_text.get(loan_status[i], loan_status[i]),
-#                     size_hint=(None, None),
-#                     height="40dp",
-#                     width="250dp",
-#                     pos_hint={"center_x": 0},
-#                     md_bg_color=status_color,
-#                     # on_release=lambda x, i=i: self.close_loan(i)
-#                 )
-#                 button2 = MDFillRoundFlatButton(
-#                     text="View Details",
-#                     size_hint=(None, None),
-#                     height="40dp",
-#                     width="250dp",
-#                     pos_hint={"center_x": 1},
-#                     md_bg_color=(0.043, 0.145, 0.278, 1),
-#                     on_release=lambda x, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id)
-#                 )
-#
-#                 button_layout.add_widget(button1)
-#                 button_layout.add_widget(button2)
-#                 card.add_widget(button_layout)
-#
-#                 # card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
-#                 self.ids.container2.add_widget(card)
-#                 # item = ThreeLineAvatarIconListItem(
-#                 #
-#                 #     IconLeftWidget(
-#                 #         icon="card-account-details-outline"
-#                 #     ),
-#                 #     text=f"Borrower Name : {borrower_name[i]}",
-#                 #     secondary_text=f"Borrower Mobile Number : {profile_mobile_number[number]}",
-#                 #     tertiary_text=f"Product Name : {product_name[i]}",
-#                 #     text_color=(0, 0, 0, 1),  # Black color
-#                 #     theme_text_color='Custom',
-#                 #     secondary_text_color=(0, 0, 0, 1),
-#                 #     secondary_theme_text_color='Custom',
-#                 #     tertiary_text_color=(0, 0, 0, 1),
-#                 #     tertiary_theme_text_color='Custom'
-#                 # )
-#                 # item.bind(
-#                 #     on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
-#                 # self.ids.container11.add_widget(item)
-#
-#     def icon_button_clicked(self, instance, loan_id):
-#         value = instance.text.split(':')
-#         value = value[-1][1:]
-#         data = app_tables.fin_extends_loan.search()
-#         sm = self.manager
-#         # Create a new instance of the LoginScreen
-#         disbursed = ViewProfileEX(name='ViewProfileEX')
-#         # Add the LoginScreen to the existing ScreenManager
-#         sm.add_widget(disbursed)
-#
-#         # Switch to the LoginScreen
-#         sm.current = 'ViewProfileEX'
-#         self.manager.get_screen('ViewProfileEX').initialize_with_value(loan_id, data)
-#
-#     def on_pre_enter(self):
-#         # Bind the back button event to the on_back_button method
-#         Window.bind(on_keyboard=self.on_back_button)
-#
-#     def on_pre_leave(self):
-#         # Unbind the back button event when leaving the screen
-#         Window.unbind(on_keyboard=self.on_back_button)
-#
-#     def on_back_button(self, instance, key, scancode, codepoint, modifier):
-#         # Handle the back button event
-#         if key == 27:  # 27 is the keycode for the hardware back button on Android
-#             self.go_back()
-#             return True  # Consume the event, preventing further handling
-#         return False  # Continue handling the event
-#
-#     def go_back(self):
-#         self.manager.current = 'NewExtension'
-#
-#     def refresh(self):
-#         self.ids.container11.clear_widgets()
-#         self.__init__()
+
 
 
 class ALLLoansEX(Screen):
@@ -1185,10 +778,32 @@ class ALLLoansEX(Screen):
         profile_customer_id = []
         profile_mobile_number = []
         ascend_value = []
+        profile_photo = {}
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
             ascend_value.append(i['ascend_value'])
+
+            # Load profile photo if available
+            if i['user_photo']:
+                image_data = i['user_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                        profile_photo[i['customer_id']] = photo_texture
+                    except Exception as e:
+                        print(f"Error processing image for customer {i['customer_id']}: {e}")
+                else:
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        profile_texture_io = BytesIO(image_data_binary)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                        profile_photo[i['customer_id']] = photo_texture
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for customer {i['customer_id']}: {e}")
+                    except Exception as e:
+                        print(f"Error processing image for customer {i['customer_id']}: {e}")
 
         c = -1
         index_list = []
@@ -1216,12 +831,20 @@ class ALLLoansEX(Screen):
                     elevation=3
                 )
                 horizontal_layout = BoxLayout(orientation='horizontal')
-                image = Image(
-                    source='img.png',  # Update with the actual path to the image
-                    size_hint_x=None,
-                    height="60dp",
-                    width="70dp"
-                )
+                if customer_id[i] in profile_photo:
+                    image = Image(
+                        texture=profile_photo[customer_id[i]],  # Get the profile photo texture
+                        size_hint_x=None,
+                        height="60dp",
+                        width="70dp"
+                    )
+                else:
+                    image = Image(
+                        source='img.png',  # Update with the actual path to the image
+                        size_hint_x=None,
+                        height="60dp",
+                        width="70dp"
+                    )
                 horizontal_layout.add_widget(image)
 
                 horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))

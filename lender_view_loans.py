@@ -18,7 +18,10 @@ from kivy.animation import Animation
 from kivymd.uix.label import MDLabel
 from kivymd.uix.list import IconLeftWidget, IconRightWidget, ImageLeftWidget
 from lender_view_loans_request import view_loan_request, ViewLoansProfileScreenLR, ViewLoansProfileScreenRL
-
+from kivy.uix.label import Label
+import base64
+from kivy.core.image import Image as CoreImage
+from io import BytesIO
 view_loans = '''
 <WindowManager>
     # ViewLoansScreen:
@@ -716,11 +719,33 @@ class ALlLoansScreen(Screen):
         profile_mobile_number = []
         ascend_value = []
         profile_email = []
+        profile_photo = {}
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
             ascend_value.append(i['ascend_value'])
             profile_email.append(i['email_user'])
+
+            # Load profile photo if available
+            if i['user_photo']:
+                image_data = i['user_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                        profile_photo[i['customer_id']] = photo_texture
+                    except Exception as e:
+                        print(f"Error processing image for customer {i['customer_id']}: {e}")
+                else:
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        profile_texture_io = BytesIO(image_data_binary)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                        profile_photo[i['customer_id']] = photo_texture
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for customer {i['customer_id']}: {e}")
+                    except Exception as e:
+                        print(f"Error processing image for customer {i['customer_id']}: {e}")
 
         lender_data = app_tables.fin_lender.search()
         lender_cus_id = []
@@ -737,16 +762,14 @@ class ALlLoansScreen(Screen):
 
         a = -1
         total_commitment = []
-        present_commitmet = []
+        present_commitment = []
         for i in range(s):
             a += 1
-            if lender_customer_id[i] == profile_customer_id[log_index] and loan_status[i] != 'lost opportunities' and \
-                    loan_status[i] != 'rejected':
+            if lender_customer_id[i] == profile_customer_id[log_index] and loan_status[i] not in ['lost opportunities', 'rejected']:
                 total_commitment.append(loan_amount[i])
 
-            if lender_customer_id[i] == profile_customer_id[log_index] and loan_status[i] != 'lost opportunities' and \
-                    loan_status[i] != 'rejected' and loan_status[i] != 'closed':
-                present_commitmet.append(loan_amount[i])
+            if lender_customer_id[i] == profile_customer_id[log_index] and loan_status[i] not in ['lost opportunities', 'rejected', 'closed']:
+                present_commitment.append(loan_amount[i])
 
         if len(total_commitment) >= 1:
             if lender_customer_id[log_index] in lender_cus_id:
@@ -756,11 +779,11 @@ class ALlLoansScreen(Screen):
             else:
                 print('customer id not there')
 
-        if len(present_commitmet) >= 1:
+        if len(present_commitment) >= 1:
             if lender_customer_id[log_index] in lender_cus_id:
                 lender_index = lender_cus_id.index(lender_customer_id[log_index])
-                lender_data[lender_index]['present_commitments'] = sum(present_commitmet)
-                print(present_commitmet, sum(present_commitmet))
+                lender_data[lender_index]['present_commitments'] = sum(present_commitment)
+                print(present_commitment, sum(present_commitment))
             else:
                 print('customer id not there')
 
@@ -788,12 +811,20 @@ class ALlLoansScreen(Screen):
                 elevation=3
             )
             horizontal_layout = BoxLayout(orientation='horizontal')
-            image = Image(
-                source='img.png',  # Update with the actual path to the image
-                size_hint_x=None,
-                height="60dp",
-                width="70dp"
-            )
+            if customer_id[i] in profile_photo:
+                image = Image(
+                    texture=profile_photo[customer_id[i]],  # Get the profile photo texture
+                    size_hint_x=None,
+                    height="30dp",
+                    width="60dp"
+                )
+            else:
+                image = Image(
+                    source='img.png',  # Update with the actual path to the image
+                    size_hint_x=None,
+                    height="60dp",
+                    width="70dp"
+                )
             horizontal_layout.add_widget(image)
 
             horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
@@ -891,7 +922,6 @@ class ALlLoansScreen(Screen):
 
             # card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
             self.ids.container2.add_widget(card)
-
     def icon_button_clicked(self, instance, loan_id):
         data = app_tables.fin_loan_details.search()
         sm = self.manager

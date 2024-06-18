@@ -25,7 +25,10 @@ from kivymd.uix.button import MDFlatButton, MDRaisedButton, MDRectangleFlatButto
 
 from borrower_wallet import WalletScreen
 from lender_wallet import LenderWalletScreen
-
+from kivy.uix.label import Label
+import base64
+from kivy.core.image import Image as CoreImage
+from io import BytesIO
 view_loan_request = """
 <WindowManager>:
     ViewLoansRequest:
@@ -752,61 +755,6 @@ Builder.load_string(view_loan_request)
 class ViewLoansRequest(Screen):
     def __init__(self, instance=None, **kwargs):
         super().__init__(**kwargs)
-
-        # data = app_tables.fin_loan_details.search()
-        # profile = app_tables.fin_user_profile.search()
-        # customer_id = []
-        # loan_id = []
-        # borrower_name = []
-        # loan_status = []
-        # product_name = []
-        # s = 0
-        # for i in data:
-        #     s += 1
-        #     customer_id.append(i['borrower_customer_id'])
-        #     loan_id.append(i['loan_id'])
-        #     borrower_name.append(i['borrower_full_name'])
-        #     loan_status.append(i['loan_updated_status'])
-        #     product_name.append(i['product_name'])
-        #
-        # profile_customer_id = []
-        # profile_mobile_number = []
-        # for i in profile:
-        #     profile_customer_id.append(i['customer_id'])
-        #     profile_mobile_number.append(i['mobile'])
-        # c = -1
-        # index_list = []
-        # for i in range(s):
-        #     c += 1
-        #     if loan_status[c] == 'under process' or loan_status[c] == 'approved':
-        #         index_list.append(c)
-        #
-        # b = 1
-        # k = -1
-        # for i in index_list:
-        #     b += 1
-        #     k += 1
-        #     if customer_id[i] in profile_customer_id:
-        #         number = profile_customer_id.index(customer_id[i])
-        #     else:
-        #         number = 0
-        #     item = ThreeLineAvatarIconListItem(
-        #
-        #         IconLeftWidget(
-        #             icon="card-account-details-outline"
-        #         ),
-        #         text=f"Borrower Name : {borrower_name[i]}",
-        #         secondary_text=f"Borrower Number : {profile_mobile_number[number]}",
-        #         tertiary_text=f"Product Name : {product_name[i]}",
-        #         text_color=(0, 0, 0, 1),  # Black color
-        #         theme_text_color='Custom',
-        #         secondary_text_color=(0, 0, 0, 1),
-        #         secondary_theme_text_color='Custom',
-        #         tertiary_text_color=(0, 0, 0, 1),
-        #         tertiary_theme_text_color='Custom'
-        #     )
-        #     item.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
-        #     self.ids.container.add_widget(item)
         data = app_tables.fin_loan_details.search()
         profile = app_tables.fin_user_profile.search()
         customer_id = []
@@ -816,7 +764,6 @@ class ViewLoansRequest(Screen):
         product_name = []
         interest_rate = []
         loan_amount = []
-
         s = 0
         for i in data:
             s += 1
@@ -831,10 +778,32 @@ class ViewLoansRequest(Screen):
         profile_customer_id = []
         profile_mobile_number = []
         ascend_value = []
+        profile_photo = {}
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
             ascend_value.append(i['ascend_value'])
+
+            # Load profile photo if available
+            if i['user_photo']:
+                image_data = i['user_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                        profile_photo[i['customer_id']] = photo_texture
+                    except Exception as e:
+                        print(f"Error processing image for customer {i['customer_id']}: {e}")
+                else:
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        profile_texture_io = BytesIO(image_data_binary)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                        profile_photo[i['customer_id']] = photo_texture
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for customer {i['customer_id']}: {e}")
+                    except Exception as e:
+                        print(f"Error processing image for customer {i['customer_id']}: {e}")
 
         c = -1
         index_list = []
@@ -861,12 +830,20 @@ class ViewLoansRequest(Screen):
                 elevation=3
             )
             horizontal_layout = BoxLayout(orientation='horizontal')
-            image = Image(
-                source='img.png',  # Update with the actual path to the image
-                size_hint_x=None,
-                height="60dp",
-                width="70dp"
-            )
+            if customer_id[i] in profile_photo:
+                image = Image(
+                    texture=profile_photo[customer_id[i]],  # Get the profile photo texture
+                    size_hint_x=None,
+                    height="30dp",
+                    width="60dp"
+                )
+            else:
+                image = Image(
+                    source='img.png',  # Update with the actual path to the image
+                    size_hint_x=None,
+                    height="60dp",
+                    width="70dp"
+                )
             horizontal_layout.add_widget(image)
 
             horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
@@ -895,7 +872,6 @@ class ViewLoansRequest(Screen):
                 halign='left',
                 markup=True,
             ))
-
             text_layout.add_widget(MDLabel(
                 text=f"[b]Interest Rate:[/b] {interest_rate[i]}",
                 theme_text_color='Custom',

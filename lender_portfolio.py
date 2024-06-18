@@ -616,6 +616,7 @@ class WindowManager(ScreenManager):
 class Lend_Portfolio(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.borrower_details = {}  # Ensure borrower_details is initialized
         self.populate_lender_list()
 
     def populate_lender_list(self, instance=None):
@@ -637,6 +638,7 @@ class Lend_Portfolio(Screen):
                         'interest_rate': loan['interest_rate'],
                         'loan_status': loan['loan_updated_status'],
                         'member_since': loan['member_since'],
+                        'photo_texture': None  # Placeholder for the photo texture
                     }
                 # Count open and closed loans
                 if loan['loan_updated_status'] == 'disbursed':
@@ -649,6 +651,27 @@ class Lend_Portfolio(Screen):
                 borrower_details[prof['customer_id']]['mobile_number'] = prof['mobile']
                 borrower_details[prof['customer_id']]['ascend_value'] = prof['ascend_value']
 
+                # Load profile photo if available
+                if prof['user_photo']:
+                    image_data = prof['user_photo'].get_bytes()
+                    if isinstance(image_data, bytes):
+                        try:
+                            profile_texture_io = BytesIO(image_data)
+                            photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                            borrower_details[prof['customer_id']]['photo_texture'] = photo_texture
+                        except Exception as e:
+                            print(f"Error processing image for borrower {prof['customer_id']}: {e}")
+                    else:
+                        try:
+                            image_data_binary = base64.b64decode(image_data)
+                            profile_texture_io = BytesIO(image_data_binary)
+                            photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                            borrower_details[prof['customer_id']]['photo_texture'] = photo_texture
+                        except base64.binascii.Error as e:
+                            print(f"Base64 decoding error for borrower {prof['customer_id']}: {e}")
+                        except Exception as e:
+                            print(f"Error processing image for borrower {prof['customer_id']}: {e}")
+        self.borrower_details = borrower_details  # Assign borrower_details to the instance attribute
         for borrower_id, details in borrower_details.items():
             card = MDCard(
                 orientation='vertical',
@@ -659,13 +682,10 @@ class Lend_Portfolio(Screen):
                 elevation=3
             )
             horizontal_layout = BoxLayout(orientation='horizontal')
-            image = Image(
-                source='img.png',  # Update with the actual path to the image
-                size_hint_x=None,
-                height="60dp",
-                width="70dp"
-            )
-            horizontal_layout.add_widget(image)
+            photo_texture = details.get('photo_texture')  # Get the photo texture for the current borrower
+            if photo_texture:
+                image = Image(texture=photo_texture, size_hint_x=None, height="30dp", width="60dp")
+                horizontal_layout.add_widget(image)
             horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
             text_layout = BoxLayout(orientation='vertical')
             text_layout.add_widget(MDLabel(
@@ -709,7 +729,7 @@ class Lend_Portfolio(Screen):
 
             card.add_widget(Widget(size_hint_y=None, height='10dp'))
             button1 = MDFillRoundFlatButton(
-                text="            View Details             ",
+                text="View Details",
                 height="40dp",
                 width="250dp",
                 pos_hint={"center_x": 0.5, "center_y": 0.5},
@@ -718,29 +738,16 @@ class Lend_Portfolio(Screen):
             )
             card.add_widget(button1)
             self.ids.container2.add_widget(card)
-            # item = ThreeLineAvatarIconListItem(
-            #     IconLeftWidget(icon="account"),
-            #     text=f"Borrower Name: {details['full_name']}",
-            #     secondary_text=f"Borrower Mobile Number: {details['mobile_number']}",
-            #     tertiary_text=f"Product Name: {details['product_name']}",
-            #     text_color=(0, 0, 0, 1),
-            #     theme_text_color='Custom',
-            #     secondary_text_color=(0, 0, 0, 1),
-            #     secondary_theme_text_color='Custom',
-            #     tertiary_text_color=(0, 0, 0, 1),
-            #     tertiary_theme_text_color='Custom'
-            # )
-            # item.bind(
-            #     on_release=lambda instance, borrower_id=borrower_id: self.icon_button_clicked(instance, borrower_id))
-            # self.ids.container.add_widget(item)
 
     def icon_button_clicked(self, instance, borrower_id):
+        print(f"icon_button_clicked called with borrower_id: {borrower_id}")
+        print(f"Current borrower_details: {self.borrower_details}")
         sm = self.manager
         approved = LenViewPortfolio(name='LenViewPortfolio')
         sm.add_widget(approved)
         sm.current = 'LenViewPortfolio'
-        self.manager.get_screen('LenViewPortfolio').initialize_with_value(borrower_id)
-
+        details = self.borrower_details[borrower_id]  # Corrected to use self.borrower_details
+        self.manager.get_screen('LenViewPortfolio').initialize_with_value(borrower_id, details.get('photo_texture'))
     def go_back(self):
         self.manager.current = 'LenderDashboard'
 
@@ -905,7 +912,7 @@ class LenViewPortfolio(Screen):
             else:
                 print(f"Email {email} not found in data.")
 
-    def initialize_with_value(self, borrower_id):
+    def initialize_with_value(self, borrower_id, photo_texture=None):
         self.ids.chart_widget.clear_widgets()
         profile = app_tables.fin_user_profile.get(customer_id=borrower_id)
 
@@ -939,7 +946,10 @@ class LenViewPortfolio(Screen):
 
             pie_chart_widget = PieChartWidget(borrower_id=borrower_id)
             self.ids.chart_widget.add_widget(pie_chart_widget)
-
+            if photo_texture:
+                self.ids.selected_image1.texture = photo_texture
+            else:
+                print("No profile photo texture passed.")
     def download_portfolio_as_pdf(self):
         # Obtain the ScrollView and its content
         scroll_view = self.ids.scroll_view  # Assuming your ScrollView has id 'scroll_view'

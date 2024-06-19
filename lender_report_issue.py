@@ -231,13 +231,15 @@ class ReportScreenLender(Screen):
         self.selected_image_path = None
 
         # Fetching the data for category and subcategory details
-        report_data = app_tables.fin_report_issue_category.search()
-        category_data = app_tables.fin_category.search()
-        self.category_list = [item['category'] for item in category_data]
+        lender_sub_issue_data = app_tables.fin_lender_subcategory_loan_issue.search()
+        technical_issue_data = app_tables.fin_subcategory_technical_issue.search()
+        category_data = app_tables.fin_issue_category.search()
 
-        self.subcategory_loan_list = [item['lender_subcategory_loan_issue'] for item in report_data]
+        self.category_list = [item['issue_category'] for item in category_data]
+        print(self.category_list)
+        self.subcategory_loan_list = [item['lender_subcategory_loan_issue'] for item in lender_sub_issue_data]
         print(self.subcategory_loan_list)
-        self.subcategory_Technical_list = [item['subcategory_Technical_issue'] for item in report_data]
+        self.subcategory_Technical_list = [item['subcategory_technical_issue'] for item in technical_issue_data]
         print(self.subcategory_Technical_list)
 
         self.Report_category = list(set(self.category_list))
@@ -380,7 +382,7 @@ class ReportScreenLender(Screen):
             report_date=current_date,  # Add the current date
             issue_photo=img_media,
             it_is_urgent=it_is_urgent,
-            user_type=user_type
+            usertype=user_type
         )
         print("Success")
         self.show_dialog("Success", "Issue reported successfully")

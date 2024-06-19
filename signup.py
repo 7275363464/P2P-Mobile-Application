@@ -21,12 +21,13 @@ import anvil.server
 from datetime import datetime, timedelta, timezone
 from kivymd.uix.spinner import MDSpinner
 from kivy.factory import Factory
-from login import LoginScreen
+from login import LoginScreen, PreLoginScreen
 
 KV = """
 <WindowManager>:
     SignupScreen:
-
+    EmailOTPScreen:
+        name: 'email_otp'
 <SignupScreen>:
     MDIconButton:
         icon: "arrow-left"
@@ -78,18 +79,45 @@ KV = """
             input_type: 'number'  
             on_touch_down: root.on_mobile_number_touch_down()
 
-        MDTextField:
-            id: email
-            hint_text: 'Enter your email'
-            multiline: False
-            helper_text: 'Enter a valid email'
-            helper_text_mode: 'on_focus'
-            icon_left: 'email'
-            hint_text_color: 0, 0, 0, 1
-            hint_text_color_normal: "black"
-            text_color_normal: "black"
-            helper_text_color_normal: "black"
-            font_name: "Roboto-Bold"
+        MDFloatLayout:
+            size_hint: None, None
+            size: dp(250), dp(40)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint_x: 1.02
+
+
+            MDTextField:
+                id: user_input
+                hint_text: 'Enter your email'
+                size_hint: None, None
+                size_hint_x: 0.98
+                multiline: False
+                underline:True
+                helper_text: 'Enter a valid email'
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                helper_text_mode: 'on_focus'
+                icon_left: 'email'
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                font_name: "Roboto-Bold" 
+            MDFlatButton:
+                id: verify_button
+                text: "Verify"
+                size_hint_y: None
+                padding:dp(-10)
+                size_hint_x: 0.4
+                height: dp(25)
+
+                font_name: "Roboto-Bold"
+                font_size:dp(12)
+                text_color:6/255, 143/255, 236/255, 1
+
+                theme_text_color: 'Custom'
+                text_color: 6/255, 143/255, 236/255, 1
+                pos_hint: {'center_x': 1, 'center_y': 0.5}
+                on_release: app.verify_email()
 
         MDTextField:
             id: password
@@ -165,10 +193,10 @@ KV = """
                 size_hint: 1, None
                 height: "50dp"
                 font_name: "Roboto-Bold"
-        
+
         MDLabel:
             text: ""  # Add an empty label for spacing
-        
+
         BoxLayout:
             id:box1
             orientation: 'horizontal'
@@ -176,7 +204,7 @@ KV = """
             width: "190dp"
             height: "15dp"
             pos_hint: {'center_x': 0.5, 'center_y': 0.2}
-    
+
             MDFlatButton:
                 text: "Already have an account? [color=#0699FF]Sign In[/color]"
                 font_name: "Roboto"
@@ -187,7 +215,123 @@ KV = """
                 height: "50dp"
                 text_color: 0.043, 0.145, 0.278, 1
                 on_release: root.go_to_signin()
-                
+<EmailOTPScreen>:
+    id: email_otp_screen
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [dp(20), dp(2)]
+        spacing: dp(20)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1  # Light gray background
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        MDIconButton:
+            icon: "arrow-left"
+            pos_hint: {"center_x": 0.01,"center_y": 1}
+            user_font_size: "30sp"
+            theme_text_color: "Custom"
+            text_color: rgba(26, 24, 58, 255)
+            on_release: root.go_back()
+        Widget:
+            size_hint_y: 1
+
+        BoxLayout:
+            orientation: 'vertical'
+            padding: dp(20)
+            spacing: dp(20)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            MDLabel:
+                text: " "
+            MDLabel:
+                text: " "
+            MDLabel:
+                text: " "
+
+            Image:
+                source: "one-time-password.png"
+                size_hint: None, None
+                size: "100dp", "100dp"
+                pos_hint: {'center_x': 0.5}
+        MDBoxLayout:
+            orientation: 'vertical'
+            spacing: dp(20)
+            padding: [dp(10), dp(15)]
+            size_hint: 1, None
+            height: self.minimum_height
+            MDLabel:
+                text: "Enter Email Verification Code"
+                halign: "center"
+                bold: True
+                font_style: "H6"
+                halign: "center"
+                valign: "middle"
+            MDBoxLayout:
+                orientation: 'vertical'
+                size_hint: 1, None
+                height: dp(38)
+                MDLabel:
+                    id: otp_message
+                    text: "We have sent you an OTP on "
+                    size_hint_x: 1
+                    theme_text_color: "Primary"
+                    font_size: "14sp"
+
+                    halign: "center"
+                    valign: "middle"
+
+                MDLabel:
+                    id: user_contact
+                    text: "mani"
+                    size_hint_x: 1
+                    theme_text_color: "Primary"
+                    font_size: "14sp"
+                    halign: "center"
+                    valign: "middle"
+            MDTextField:
+                id: otp_input
+                hint_text: "OTP"
+                mode: "rectangle"
+                icon_right: "key"
+                size_hint: 1, None
+                height: dp(40)
+                pos_hint: {'center_x': 0.5}
+                font_size: "14sp"
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(25)
+                spacing: dp(5)
+                padding: [0, dp(5)]
+                MDLabel:
+                    text: "Still not received OTP?"
+                    size_hint_x: None
+                    width: dp(120)
+
+                    font_size: "12sp"
+                MDTextButton:
+                    text: "Resend OTP"
+                    font_size: dp(16)
+                    markup: True
+                    halign: 'left'
+                    height: "60dp"
+                    underline:"True"
+                    text_color: 1/255, 26/255, 51/255, 1
+                    on_release: app.resend_otp()
+
+            MDRoundFlatButton:
+                text: "Verify OTP"
+                size_hint_y: None
+                size_hint_x: 1
+                height: dp(40)
+                bold: True
+                font_name: "Roboto-Bold"
+                md_bg_color: 0.043, 0.145, 0.278, 1
+                on_release: app.email_check_otp()
+                text_color: 1, 1, 1, 1
+        Widget:
+            size_hint_y: 1
 
 """
 
@@ -198,8 +342,9 @@ class SignupScreen(Screen):
     create_registration_table()
 
     def go_to_signin(self):
-        self.manager.add_widget(Factory.LoginScreen(name='LoginScreen'))
-        self.manager.current = 'LoginScreen'
+        self.manager.add_widget(Factory.PreLoginScreen(name='prelogin'))
+        self.manager.current = 'prelogin'
+
     def on_mobile_number_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
         self.ids.mobile.input_type = 'number'
@@ -245,7 +390,7 @@ class SignupScreen(Screen):
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 next_user_id,
-                self.ids.name.text, self.ids.email.text, self.ids.mobile.text,
+                self.ids.name.text, self.ids.user_input.text, self.ids.mobile.text,
                 hash_pashword, hash_pashword,
                 "Accepted" if self.ids.terms_checkbox.active else "Rejected",
                 "Accepted" if self.ids.kyc_checkbox.active else "Rejected"
@@ -254,9 +399,9 @@ class SignupScreen(Screen):
             conn.commit()
             cursor.execute('''INSERT INTO fin_registration_table (customer_id) VALUES (?)''', (next_user_id,))
 
-            self.add_data(user_id=user_id, email=self.ids.email.text, password=hash_pashword,
+            self.add_data(user_id=user_id, email=self.ids.user_input.text, password=hash_pashword,
                           name=self.ids.name.text, number=self.ids.mobile.text, enable=True)
-            self.wallet_generator(self.ids.email.text, self.ids.name.text, user_id)
+            self.wallet_generator(self.ids.user_input.text, self.ids.name.text, user_id)
             conn.commit()
         except sqlite3.Error as e:
 
@@ -264,8 +409,14 @@ class SignupScreen(Screen):
 
     def add_data(self, user_id, email, password, name, number, enable):
         approved_date = datetime.now()
+
         # Ensure 'YOUR_ANVIL_UPLINK_KEY' is replaced with your actual Anvil Uplink key
-        app_tables.users.add_row(email=email, password_hash=password, enabled=enable, signed_up=approved_date)
+        user = app_tables.users.get(email=email)
+        if user:
+            user.update(password_hash=password, enabled=enable, signed_up=approved_date)
+        else:
+            app_tables.users.add_row(email=email, password_hash=password, enabled=enable, signed_up=approved_date)
+
         app_tables.fin_user_profile.add_row(customer_id=user_id, email_user=email, full_name=name,
                                             mobile=number)
         app_tables.fin_guarantor_details.add_row(customer_id=user_id)
@@ -307,7 +458,7 @@ class SignupScreen(Screen):
         modal_view.dismiss()
         name = self.ids.name.text
         mobile = self.ids.mobile.text
-        email = self.ids.email.text
+        email = self.ids.user_input.text
         password = self.ids.password.text
         password2 = self.ids.password2.text
         terms_checkbox = self.ids.terms_checkbox
@@ -334,6 +485,19 @@ class SignupScreen(Screen):
         for i in c_id:
             anvil_email.append(i['email_user'])
 
+        # Check if the email is verified in the users table
+        user = app_tables.users.get(email=email)
+        email_verified = False
+        if user:
+            try:
+                email_verified = user['email_verified']
+            except KeyError:
+                # Add debug statement
+                print(f"Unexpected user object: {user}")
+        else:
+            # Add debug statement
+            print(f"No user found for email: {email}")
+
         # Other input validations
         if not name or len(name.split()) < 2 or not re.match(r'^[a-zA-Z\s]+$', name):
             validation_errors.append(
@@ -349,13 +513,16 @@ class SignupScreen(Screen):
 
         # Email validation
         if not email or not re.match(email_regex, email):
-            validation_errors.append((self.ids.email, "Invalid email address"))
+            validation_errors.append((self.ids.user_input, "Invalid email address"))
         elif email in anvil_email:
-            validation_errors.append((self.ids.email, "Email already exists"))
+            validation_errors.append((self.ids.user_input, "Email already exists"))
         elif existing_user:
-            validation_errors.append((self.ids.email, "Email already exists"))
+            validation_errors.append((self.ids.user_input, "Email already exists"))
+        elif not email_verified:
+            validation_errors.append(
+                (self.ids.user_input, "Email verification is pending.Please Verify to Continue."))
         else:
-            self.ids.email.helper_text = ''
+            self.ids.user_input.helper_text = ''
 
         # Password validation
         if not password or not self.is_strong_password(password):
@@ -390,19 +557,24 @@ class SignupScreen(Screen):
         # Reset input fields
         self.ids.name.text = ""
         self.ids.mobile.text = ""
-        self.ids.email.text = ""
+        self.ids.user_input.text = ""
         self.ids.password.text = ""
         self.ids.password2.text = ""
         self.ids.terms_checkbox.active = False
         self.ids.kyc_checkbox.active = False
 
-        # self.share_email_with_anvil(email)
-        # self.manager.current = 'LoginScreen'
-        sm = self.manager
-        lender_screen = LoginScreen(name='LoginScreen')
-        sm.add_widget(lender_screen)
-        sm.transition.direction = 'left'  # Set the transition direction explicitly
-        sm.current = 'LoginScreen'
+        # Transition to the next screen if email is verified
+        if email_verified:
+            sm = self.manager
+            if not sm.has_screen('prelogin'):
+                lender_screen = PreLoginScreen(name='prelogin')
+                sm.add_widget(lender_screen)
+            sm.transition.direction = 'left'  # Set the transition direction explicitly
+            sm.current = 'prelogin'
+
+        else:
+            self.show_validation_error(self.ids.user_input,
+                                       "Email verification is pending. Please verify your email before proceeding.")
 
     def wallet_generator(self, email_user, name, customer_id1):
         wallet = app_tables.fin_wallet.search()
@@ -483,11 +655,9 @@ class SignupScreen(Screen):
         Window.bind(on_keyboard=self.on_keyboard)
         Window.bind(on_keyboard=self.on_back_button)
 
-
     def on_pre_leave(self):
         Window.bind(on_keyboard=self.on_keyboard)
         Window.unbind(on_keyboard=self.on_back_button)
-
 
     def on_back_button(self, instance, key, scancode, codepoint, modifier):
         if key == 27:
@@ -508,6 +678,12 @@ class SignupScreen(Screen):
         # Navigate to the previous screen with a slide transition
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'MainScreen'
+
+
+class EmailOTPScreen(Screen):
+    def go_back(self):
+        self.manager.add_widget(Factory.SignupScreen(name='SignupScreen'))
+        self.manager.current = 'SignupScreen'
 
 
 class MyScreenManager(ScreenManager):

@@ -189,7 +189,7 @@ class MainScreen(Screen):
         sm.current = 'SignupScreen'
 
     def go_to_dashboard(self):
-        # Get the existing ScreenManager
+
         sm = self.manager
 
         # Create a new instance of the LoginScreen

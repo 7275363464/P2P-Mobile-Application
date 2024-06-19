@@ -10,7 +10,7 @@ from matplotlib.figure import Figure
 
 from lender_portfolio import Lend_Portfolio
 from anvil.tables import app_tables
-from kivy.atlas import CoreImage
+import base64
 from kivy.factory import Factory
 from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
@@ -151,8 +151,8 @@ user_helpers1 = """
                                         size_hint_y: None
                                         height: dp(1150)
                                         spacing: dp(20)
-                                        
-                                        
+
+
                                         MDCard:
                                             id: card
                                             orientation: 'vertical'
@@ -162,24 +162,44 @@ user_helpers1 = """
                                             spacing: dp(3)
                                             elevation: 1
                                             on_release: root.account()
-                                    
+
                                             BoxLayout:
                                                 orientation: 'horizontal'
                                                 spacing: dp(5)
-                                    
+
                                                 Image:
+                                                    id: image
                                                     source: 'img.png'  # Update with the actual path to the image
                                                     size_hint_x: None
                                                     height: dp(60)
-                                                    width: dp(70)
-                                    
+                                                    width: dp(90)
+                                                    allow_stretch: True
+                                                    keep_ratio: True
+                                                    canvas.before:
+                                                        StencilPush
+                                                        Ellipse:
+                                                            size: self.width - dp(10), self.height - dp(10)
+                                                            pos: self.x + dp(5), self.y + dp(5)
+                                                        StencilUse
+                                                    canvas:
+                                                        Rectangle:
+                                                            texture: self.texture
+                                                            size: self.width - dp(10), self.height - dp(10)
+                                                            pos: self.x + dp(5), self.y + dp(5)
+                                                    canvas.after:
+                                                        StencilUnUse
+                                                        Ellipse:
+                                                            size: self.width - dp(10), self.height - dp(10)
+                                                            pos: self.x + dp(5), self.y + dp(5)
+                                                        StencilPop
+
                                                 Widget:
                                                     size_hint_x: None
                                                     width: dp(10)
-                                    
+
                                                 BoxLayout:
                                                     orientation: 'vertical'
-                                    
+
                                                     MDLabel:
                                                         id: details
                                                         text: "[b]Name[/b] : John Doe"
@@ -187,7 +207,7 @@ user_helpers1 = """
                                                         text_color: 0, 0, 0, 1
                                                         halign: 'left'
                                                         markup: True
-                                    
+
                                                     MDLabel:
                                                         id: joined_date
                                                         text: "[b]Joined Date id[/b] : '12-12-2012'"
@@ -195,7 +215,7 @@ user_helpers1 = """
                                                         text_color: 0, 0, 0, 1
                                                         halign: 'left'
                                                         markup: True
-                                    
+
                                                     MDLabel:
                                                         id: memmber_type
                                                         text: "[b]Membership Type[/b] : Elite"
@@ -203,7 +223,7 @@ user_helpers1 = """
                                                         text_color: 0, 0, 0, 1
                                                         halign: 'left'
                                                         markup: True
-                                                        
+
 
                                         GridLayout:
                                             cols: 2
@@ -965,24 +985,30 @@ user_helpers1 = """
                         text_size: self.width - dp(20), None
 
                         Image:
+                            id: image1
                             source: 'icon8.png'
-                            halign: 'center'
-                            valign: 'middle'
                             size_hint_x: None
-                            width: dp(34)
-                            spacing: dp(30)
-                            padding: dp(30)
-                            theme_text_color: 'Custom'
-                            text_color: 0.043, 0.145, 0.278, 1
-                            size: dp(90), dp(90)
-                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                            on_touch_down:  root.profile() if self.collide_point(*args[1].pos) else None
+                            height: dp(60)
+                            width: dp(90)
+                            allow_stretch: True
+                            keep_ratio: True
                             canvas.before:
-                                Color:
-                                    rgba: 1, 1, 1, 1
+                                StencilPush
                                 Ellipse:
-                                    size: self.size
-                                    pos: self.pos
+                                    size: self.width - dp(10), self.height - dp(10)
+                                    pos: self.x + dp(5), self.y + dp(5)
+                                StencilUse
+                            canvas:
+                                Rectangle:
+                                    texture: self.texture
+                                    size: self.width - dp(10), self.height - dp(10)
+                                    pos: self.x + dp(5), self.y + dp(5)
+                            canvas.after:
+                                StencilUnUse
+                                Ellipse:
+                                    size: self.width - dp(10), self.height - dp(10)
+                                    pos: self.x + dp(5), self.y + dp(5)
+                                StencilPop
 
                         MDBoxLayout:
                             orientation: "vertical"
@@ -990,6 +1016,7 @@ user_helpers1 = """
                             height: self.minimum_height
                             pos_hint: {"center_y": 0.5}
                             padding: dp(5)
+                            spacing: dp(5)
 
                             MDLabel:
                                 id: username
@@ -5349,6 +5376,7 @@ user_helpers1 = """
             elevation: 2
             pos_hint: {'top': 1}
             left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderDashboard')]]
+            right_action_items: [['refresh', lambda x: root.return_refresh()]]
             title_align: 'center'
             title: "My Returns"
             md_bg_color: 0.043, 0.145, 0.278, 1
@@ -6279,6 +6307,7 @@ class LenderDashboard(Screen):
         p_customer_id = []
         ascend_score = []
         emp_type = []
+        profile_list = []
 
         for i in profile:
             email_user.append(i['email_user'])
@@ -6288,6 +6317,7 @@ class LenderDashboard(Screen):
             p_customer_id.append(i['customer_id'])
             ascend_score.append(i['ascend_value'])
             emp_type.append(i['profession'])
+            profile_list.append(i['user_photo'])
 
         # Check if 'logged' is in the status list
         log_index = 0
@@ -6437,6 +6467,30 @@ class LenderDashboard(Screen):
             self.ids.return_amount.text = "Rs. "
             self.ids.commitment.text = "Rs. "
             self.ids.date.text = "Joined Date: "
+
+        if profile_list[log_index] != None:
+            image_data = profile_list[log_index].get_bytes()
+            if isinstance(image_data, bytes):
+                try:
+                    profile_texture_io = BytesIO(image_data)
+                    photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                    self.ids.image.texture = photo_texture
+                    self.ids.image1.texture = photo_texture
+                except Exception as e:
+                    print(f"Error processing image for customer {p_customer_id[log_index]}: {e}")
+            else:
+                try:
+                    image_data_binary = base64.b64decode(image_data)
+                    profile_texture_io = BytesIO(image_data_binary)
+                    photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                    self.ids.image.texture = photo_texture
+                    self.ids.image1.texture = photo_texture
+                except base64.binascii.Error as e:
+                    print(f"Base64 decoding error for customer {p_customer_id[log_index]}: {e}")
+                except Exception as e:
+                    print(f"Error processing image for customer {i['customer_id']}: {e}")
+        else:
+            print('photo is not there')
 
     def on_kv_post(self, base_widget):
         self.setup_menu()
@@ -6632,7 +6686,7 @@ class LenderDashboard(Screen):
         self.selected_item = None  # Track the selected item
         data = app_tables.fin_loan_details.search()
         email = anvil.server.call('another_method')
-        profile = app_tables.fin_user_profile.search(email_user=email)
+        profile = app_tables.fin_user_profile.search()
         customer_id = []
         loan_id = []
         borrower_name = []
@@ -6658,11 +6712,35 @@ class LenderDashboard(Screen):
 
         profile_customer_id = []
         profile_mobile_number = []
+        profile_phote_list = []
+        profile_photo = {}
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
             ascend_score.append(i['ascend_value'])
+            profile_phote_list.append(i['user_photo'])
+            print(i['user_photo'])
 
+            if i['user_photo']:
+                image_data = i['user_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                        profile_photo[i['customer_id']] = photo_texture
+                    except Exception as e:
+                        print(f"Error processing image for customer {i['customer_id']}: {e}")
+                else:
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        profile_texture_io = BytesIO(image_data_binary)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                        profile_photo[i['customer_id']] = photo_texture
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for customer {i['customer_id']}: {e}")
+                    except Exception as e:
+                        print(f"Error processing image for customer {i['customer_id']}: {e}")
+        print(profile_photo)
         if email in email1:
             index = email1.index(email)
 
@@ -6691,12 +6769,20 @@ class LenderDashboard(Screen):
                 elevation=3
             )
             horizontal_layout = BoxLayout(orientation='horizontal')
-            image = Image(
-                source='img.png',  # Update with the actual path to the image
-                size_hint_x=None,
-                height="60dp",
-                width="70dp"
-            )
+            if customer_id[i] in profile_photo:
+                image = Image(
+                    texture=profile_photo[customer_id[i]],  # Get the profile photo texture
+                    size_hint_x=None,
+                    height="30dp",
+                    width="60dp"
+                )
+            else:
+                image = Image(
+                    source='img.png',  # Update with the actual path to the image
+                    size_hint_x=None,
+                    height="60dp",
+                    width="70dp"
+                )
             horizontal_layout.add_widget(image)
 
             horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
@@ -9449,12 +9535,14 @@ class ViewEditScreen1(Screen):
     def on_back_button_press(self):
         self.manager.current = 'ViewPersonalScreen'
 
+
 class ReturnsScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.returns_screen = None
 
     def user_return_screeen(self):
+        self.returns_screen = 'user'
         self.ids.total_returns.md_bg_color = '#8f9691'
         self.ids.user_returns.md_bg_color = 0.043, 0.145, 0.278, 1
         data1 = app_tables.fin_loan_details.search()
@@ -9485,7 +9573,6 @@ class ReturnsScreen(Screen):
             borrower_name.append(i['borrower_full_name'])
             cos_id1.append(i['borrower_customer_id'])
             loan_amount.append(i['loan_amount'])
-            loan_amount_1.append(i['loan_amount'])
             loan_status.append(i['loan_updated_status'])
             tenure.append(i['tenure'])
             interest.append(i['interest_rate'])
@@ -9527,6 +9614,7 @@ class ReturnsScreen(Screen):
         a = 0
         for i in index_list:
             a += 1
+            print(loan_amount[i], loan_amount[i] / 1000000)
             investment1.append(loan_amount[i] / 1000000)
             products1.append(product_name[i] + f'{a}')
             if lender_returns[i] != None:
@@ -9547,20 +9635,27 @@ class ReturnsScreen(Screen):
         returns = returns1
         ax = fig.add_subplot(111)
         bar_width = 0.45
-        ax.bar(products, investment, bar_width, label='Investment', color='blue')
-        ax.bar(products, returns, bar_width, label='Returns', color='green')
-        #bars = ax.bar(products, returns, bar_width, label='Returns', color='green')
+        investment_bars = ax.bar(products, investment, bar_width, label='Investment', color='blue')
+        returns_bars = ax.bar(products, returns, bar_width, label='Returns', color='green')
 
         ax.set_xlabel('Product Details')
         ax.set_ylabel('Amount (0.1M = 100000)')
         ax.set_title('Investment and Returns by Product')
         ax.legend()
 
-        # for bar, inv, ret in zip(bars, investment, returns):
-        #     if inv > 0:  # Avoid division by zero
-        #         percentage = (ret / inv) * 100
-        #         ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height(), f'{percentage:.1f}%',
-        #                 ha='center', va='bottom', fontsize=10, color='black')
+        # Annotate the investment bar with the investment amount
+        for bar, inv in zip(investment_bars, investment):
+            if inv * 1000000 > 0:  # Avoid displaying text for zero investments
+                ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height(), f'RS .{inv * 1000000}',
+                        ha='center', va='bottom', fontsize=10, color='black')
+
+        # Annotate the returns bar with the percentage
+        for bar, inv, ret in zip(returns_bars, investment, returns):
+            if inv > 0:  # Avoid division by zero
+                percentage = (ret / inv) * 100
+                ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height(), f'{percentage:.1f}%',
+                        ha='center', va='bottom', fontsize=12, color='white')
+
         # Render the figure as an image
         buf = io.BytesIO()
         fig.savefig(buf, format='png')
@@ -9575,6 +9670,7 @@ class ReturnsScreen(Screen):
         self.ids.image.source = temp_file
 
     def total_return_screeen(self):
+        self.returns_screen = 'total'
         self.ids.user_returns.md_bg_color = '#a6ada8'
         self.ids.total_returns.md_bg_color = 0.043, 0.145, 0.278, 1
         data1 = app_tables.fin_loan_details.search()
@@ -9666,7 +9762,7 @@ class ReturnsScreen(Screen):
             returns = [0, lender_returns_on_lender[lender_index] / 1000000]  # Summarizing returns for 'Returns'
             bar_width = 0.7
             # Calculate percentage of returns
-            #returns_percentage = (lender_returns_on_lender[lender_index] / total_commitment[lender_index]) * 100
+            returns_percentage = (lender_returns_on_lender[lender_index] / total_commitment[lender_index]) * 100
         else:
             products = ['Total', 'Returns']
             investment = [0 / 1000000, 0]  # Summarizing investment for 'Total'
@@ -9674,12 +9770,17 @@ class ReturnsScreen(Screen):
             bar_width = 0.7
             returns_percentage = 0
 
-        ax.bar(products, investment, bar_width, label='Investment', color='blue')
-        ax.bar(products, returns, bar_width, label='Returns', color='green')
-
+        investment_bars = ax.bar(products, investment, bar_width, label='Investment', color='blue')
+        returns_bars = ax.bar(products, returns, bar_width, label='Returns', color='green')
         # Annotate the returns bar with the percentage
-        # if returns_percentage > 0:
-        #     ax.text(1, returns[1] + 0.05, f'{returns_percentage:.1f}%', ha='center', va='bottom')
+        if returns_percentage > 0:
+            ax.text(1, returns[1] + 0, f'{returns_percentage:.1f}%', ha='center', va='bottom', fontsize=12)
+
+        # Annotate the investment bar with the investment amount
+        for bar, inv in zip(investment_bars, investment * 1000000):
+            if inv * 1000000 > 0:  # Avoid displaying text for zero investments
+                ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height(), f'RS. {inv * 1000000}',
+                        ha='center', va='bottom', fontsize=10, color='black')
 
         ax.set_xlabel('Category')
         ax.set_ylabel('Amount (0.1M = 100000)')
@@ -9698,6 +9799,13 @@ class ReturnsScreen(Screen):
 
         # Add the image to the main layout
         self.ids.image.source = temp_file
+
+    def return_refresh(self):
+        if self.returns_screen == 'total':
+            self.total_return_screeen()
+        elif self.returns_screen == 'user':
+            self.user_return_screeen()
+
 
 class CommitmentScreen(Screen):
     def __init__(self, **kwargs):

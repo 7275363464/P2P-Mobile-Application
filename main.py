@@ -1,36 +1,34 @@
 import json
 import os
+import random
+import smtplib
 import sqlite3
+from email.message import EmailMessage
 
-from kivymd.uix.button import MDFlatButton, MDRectangleFlatButton
-from kivymd.uix.dialog import MDDialog
-
-from login import OTPScreen
-from anvil.tables import app_tables
 from kivy.app import App
+from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.metrics import dp
-from kivy.uix.spinner import SpinnerOption
-from kivymd.app import MDApp
+from kivy.properties import BooleanProperty
 from kivy.uix.screenmanager import ScreenManager, SlideTransition
 from kivy.uix.screenmanager import Screen
-from kivy.properties import BooleanProperty, Clock
-from kivy.uix.label import Label
-from kivy.uix.popup import Popup
+from kivymd.app import MDApp
+from kivymd.uix.button import MDFlatButton, MDRectangleFlatButton
+from kivymd.uix.dialog import MDDialog
 from twilio.rest import Client
-import random
-import smtplib
-from email.message import EmailMessage
+
+import anvil.server
+from anvil.tables import app_tables
+
 from borrower_dashboard import DashboardScreen
 from dashboard import DashScreen
 from homepage import MainScreen
-
-import anvil.server
-from login import OTPScreen
 from lender_dashboard import LenderDashboard
+from login import OTPScreen
+from signup import SignupScreen, EmailOTPScreen
 
-anvil.server.connect("server_SCQAA7522N262HFSYZ7GLPPK-DVKXHXN3FMGIYIJX")
+anvil.server.connect("server_X7NIDKXJPK7UT4XPLZZY75EU-C4RCUGZ5WVN7WE3B")
 
 
 class MyApp(MDApp):
@@ -46,36 +44,58 @@ class MyApp(MDApp):
         # Add all the screens to the ScreenManager
         main_screen = MainScreen(name='MainScreen')
         otp_screen = OTPScreen(name='otp')
+        signup_screen = SignupScreen(name='SignupScreen')
+        email_otp_screen = EmailOTPScreen(name='email_otp')
         self.sm.add_widget(main_screen)
         self.sm.add_widget(otp_screen)
+        self.sm.add_widget(signup_screen)
+        self.sm.add_widget(email_otp_screen)
 
         return self.sm
 
-    #### otp code starts from here  ###
     def resend_otp(self):
         login_otp_screen = self.root.get_screen('login')
         user_input = login_otp_screen.ids.user_input.text
         self.send_otp()
 
-    def verify_login(self):
-        login_screen = self.root.get_screen('login')
-        user_input = login_screen.ids.user_input.text
-
+    def verify_email(self):
+        signup_screen = self.root.get_screen('SignupScreen')
+        user_input = signup_screen.ids.user_input.text.strip()
         if user_input:
-            self.send_otp()
+            self.send_otp(signup=True)
         else:
             self.show_dialog("Please enter email ID or phone number")
 
-    def send_otp(self):
-        login_otp_screen = self.root.get_screen('login')
-        user_input = login_otp_screen.ids.user_input.text
+    def verify_login(self):
+        login_screen = self.root.get_screen('login')
+        user_input = login_screen.ids.user_input.text.strip()
+        print(f"User input: {user_input}")  # Debug print
+
+        if user_input:
+            self.send_otp(signup=False)
+        else:
+            self.show_dialog("Please enter email ID or phone number")
+
+    def send_otp(self, signup=True):
+        if signup:
+            signup_screen = self.root.get_screen('SignupScreen')
+            user_input = signup_screen.ids.user_input.text.strip()
+        else:
+            login_screen = self.root.get_screen('login')
+            user_input = login_screen.ids.user_input.text.strip()
+
+        print(f"Sending OTP to: {user_input}")  # Debug print
+
         if user_input:
             self.n = random.randint(100000, 999999)
             if "@" in user_input:
                 self.send_email_otp(user_input)
             else:
                 self.send_sms_otp(user_input)
-            self.show_otp_screen(user_input)
+            if signup:
+                self.show_email_otp_screen(user_input, signup=True)
+            else:
+                self.show_otp_screen(user_input)
         else:
             self.show_dialog("Please enter a phone number or email ID")
 
@@ -85,7 +105,7 @@ class MyApp(MDApp):
                 user_input = "+91" + user_input
             self.client.messages.create(
                 to=user_input,
-                from_="+12027299166",
+                from_="+15302874473",
                 body=f"Your OTP is: {self.n}"
             )
             self.show_dialog("OTP sent via SMS")
@@ -94,10 +114,10 @@ class MyApp(MDApp):
 
     def send_email_otp(self, email):
         try:
-            from_mail = "maniamarthi@gmail.com"
+            from_mail = "gtpltechnologies@gmail.com"
             server = smtplib.SMTP('smtp.gmail.com', 587)
             server.starttls()
-            server.login(from_mail, "kulb rdtv kdcq zstt")
+            server.login(from_mail, "uszy dzhb itss socd")
 
             msg = EmailMessage()
             msg['Subject'] = "OTP Verification"
@@ -114,7 +134,7 @@ class MyApp(MDApp):
         otp_screen = self.root.get_screen('otp')
         entered_otp = otp_screen.ids.otp_input.text
         login_screen = self.root.get_screen('login')
-        user_input = login_screen.ids.user_input.text  # Get user input from login screen
+        user_input = login_screen.ids.user_input.text
 
         if str(self.n) == entered_otp:
             self.show_dialog("OTP verified successfully")
@@ -122,7 +142,69 @@ class MyApp(MDApp):
         else:
             self.show_dialog("Invalid OTP. Please try again.")
 
+    def send_signup_success_email(self, email):
+        try:
+            from_mail = "gtpltechnologies@gmail.com"
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login(from_mail, "uszy dzhb itss socd")
+
+            msg = EmailMessage()
+            msg['Subject'] = "Welcome to P2P Lending Platform!"
+            msg['From'] = from_mail
+            msg['To'] = email
+            msg.set_content(f"""
+            Hello,
+
+            Welcome to P2P Lending Platform!
+
+            Thank you for joining. We're excited to have you join our community of lenders and borrowers.
+            Complete signup and registration process.
+            Get started by logging in and exploring the opportunities available to you.
+
+            Best regards,
+            The P2P Team
+            """)
+
+            server.send_message(msg)
+            server.quit()
+            print("Signup success email sent.")
+        except Exception as e:
+            print(f"Failed to send signup success email: {e}")
+    def check_otp_email(self, signup=True):
+        email_otp_screen = self.root.get_screen('email_otp')
+        entered_otp = email_otp_screen.ids.otp_input.text
+        if str(self.n) == entered_otp:
+            if signup:
+                signup_screen = self.root.get_screen('SignupScreen')
+                user_input = signup_screen.ids.user_input.text.strip()
+                self.update_email_verification_status(user_input)
+                self.show_dialog("Email verified successfully")
+                signup_screen.ids.verify_button.text = "verified"
+                signup_screen.ids.user_input.helper_text = "Email verified successfully. Click signup to continue"
+                signup_screen.ids.user_input.helper_text_color = (0, 1, 0, 1)
+                Clock.schedule_once(self.go_to_signup_screen, 0)
+                self.send_signup_success_email(user_input)
+            else:
+                self.show_dialog("OTP verified successfully")
+                # Handle other case if needed
+        else:
+            self.show_dialog("Invalid OTP. Please try again.")
+
+    def update_email_verification_status(self, email):
+        try:
+            # Connect to Anvil server
+            anvil.server.connect("server_X7NIDKXJPK7UT4XPLZZY75EU-C4RCUGZ5WVN7WE3B")
+
+            # Create or update the user profile directly
+            app_tables.users.add_row(email=email, email_verified=True)
+        except Exception as e:
+            print(f"Error updating email verification status: {e}")
+    def go_to_signup_screen(self, dt):
+        self.sm.current = 'SignupScreen'
+
     def perform_database_operations(self, entered_email):
+        print(entered_email)
         conn = sqlite3.connect("fin_user.db")
         cursor = conn.cursor()
 
@@ -132,40 +214,34 @@ class MyApp(MDApp):
         ''', (entered_email,))
 
         user_data = cursor.fetchone()
+
+        # Assuming app_tables.users and app_tables.fin_user_profile are valid references
         data = app_tables.users.search()
         profile = app_tables.fin_user_profile.search()
-        email_list = []
-        registration_approve = []
-        user_type = []
-        email_user = []
-
-        for i in data:
-            email_list.append(i['email'])
-        for i in profile:
-            registration_approve.append(i['registration_approve'])
-            user_type.append(i['usertype'])
-            email_user.append(i['email_user'])
+        email_list = [i['email'] for i in data]
+        registration_approve = [i['registration_approve'] for i in profile]
+        user_type = [i['usertype'] for i in profile]
+        email_user = [i['email_user'] for i in profile]
 
         if entered_email in email_list:
-            i = email_list.index(entered_email)
+            index = email_list.index(entered_email)
             if entered_email in email_user:
-                index = email_user.index(entered_email)
+                index_profile = email_user.index(entered_email)
             else:
                 self.show_dialog('No email found')
                 return
 
-            if (email_list[i] == entered_email) and (registration_approve[index] is True):
-                self.save_user_info(entered_email, user_type[index])  # Save user info to email.json
-
-                if user_type[index] == 'borrower':
+            if registration_approve[index_profile] is True:
+                self.save_user_info(entered_email, user_type[index_profile])
+                if user_type[index_profile] == 'borrower':
                     Clock.schedule_once(lambda dt: self.show_dashboard('DashboardScreen'), 0)
-                elif user_type[index] == 'lender':
+                elif user_type[index_profile] == 'lender':
                     Clock.schedule_once(lambda dt: self.show_dashboard('LenderDashboard'), 0)
                 else:
                     Clock.schedule_once(lambda dt: self.show_dashboard('DashScreen'), 0)
-
                 return
-            elif registration_approve[index] is None or user_type[index] == "":
+            elif registration_approve[index_profile] is None or user_type[index_profile] == "":
+                self.save_user_info(entered_email, 'default')  # Set user_type to 'default'
                 Clock.schedule_once(lambda dt: self.show_dashboard('DashScreen'), 0)
                 return
             else:
@@ -175,10 +251,10 @@ class MyApp(MDApp):
             self.show_dialog("Email not found")
 
     def save_user_info(self, email, user_type):
+        print(user_type, email)
         user_data = {
-            'email': email,
-            'logged_status': True,
-            'user_type': user_type
+            'user_type': user_type,
+            'logged_status': True
         }
 
         # Check if the emails.json file exists and load data, or initialize as an empty dict
@@ -191,6 +267,8 @@ class MyApp(MDApp):
         else:
             data = {}
 
+        # Update email_user and specific email entry with user_data
+        data['email_user'] = email
         data[email] = user_data
 
         # Write back the updated data to emails.json
@@ -208,9 +286,16 @@ class MyApp(MDApp):
 
     def show_otp_screen(self, user_input):
         otp_screen = self.root.get_screen('otp')
-        otp_screen.ids.user_contact.text = user_input  # Update user contact label
-        print(f"user_contact label text set to: {user_input}")  # Debug print
+        otp_screen.ids.user_contact.text = user_input
         self.sm.current = 'otp'
+
+    def show_email_otp_screen(self, user_input, signup=True):
+        email_otp_screen = self.root.get_screen('email_otp')
+        email_otp_screen.ids.user_contact.text = user_input
+        self.sm.current = 'email_otp'
+
+    def email_check_otp(self):  # Define the email_check_otp method
+        self.check_otp_email(signup=True)
 
     def edit_user_input(self):
         self.root.current = 'login'

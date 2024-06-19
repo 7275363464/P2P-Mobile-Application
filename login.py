@@ -726,7 +726,7 @@ class PreLoginScreen(Screen):
         self.manager.current = 'MainScreen'
 
 
-from kivymd.app import MDApp
+
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.properties import BooleanProperty

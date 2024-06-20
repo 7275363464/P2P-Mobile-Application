@@ -2,10 +2,12 @@ import anvil
 from anvil.tables import app_tables
 from kivy import properties
 from kivy.metrics import dp
+from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 from kivy.uix.widget import Widget
 from kivymd.uix.card import MDCard
+from kivymd.uix.datatables import MDDataTable
 from pytz import utc
 from kivy.core.window import Window
 from kivy.properties import ListProperty, Clock
@@ -69,195 +71,216 @@ user_helpers2 = """
 
         MDTopAppBar:
             title:"Today's Dues"
-            md_bg_color: 0.043, 0.145, 0.278, 1
+            md_bg_color:0.043, 0.145, 0.278, 1
             theme_text_color: 'Custom'
-            text_color: 1, 1, 1, 1 
-            size_hint: 1, None
+            text_color: 1,1,1,1 
+            size_hint:1,None
             elevation: 3
             left_action_items: [['arrow-left', lambda x: root.go_back()]]
             right_action_items: [['wallet']]
             pos_hint: {'top': 1} 
 
-        ScrollView:
-            do_scroll_x: False
-            do_scroll_y: True
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(50)
+            padding: dp(30)
+            size_hint_y: None
+            height: self.minimum_height
+            canvas.before:
+                Color:
+                    rgba: 230/255, 245/255, 255/255, 1 
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [1, 1, 1, 1]
+                    source: "background.jpg"
 
-            BoxLayout:
-                orientation: 'vertical'
-                spacing: dp(50)
-                padding: dp(30)
-                size_hint_y: None
-                height: self.minimum_height
-                canvas.before:
-                    Color:
-                        rgba: 230/255, 245/255, 255/255, 1 
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
-                        radius: [1, 1, 1, 1]
-                        source: "background.jpg"
-
-                MDGridLayout:
-                    cols: 2
-
-                    MDLabel:
-                        text: 'Loan Amount:'
-                        halign: 'left'
-                        theme_text_color: 'Custom'  
-                        text_color: 0, 0, 0, 1
-                        bold: True
-                MDGridLayout:
-                    cols: 2
-                    MDIconButton:
-                        icon: 'currency-inr'
-                        halign: 'left'
-                        size_hint_y: None
-                        height: dp(1)
-                        theme_text_color: 'Custom'  
-                        text_color: 0, 0, 0, 1
-                        bold: True
-
-                    MDLabel:
-                        id: loan_amount1
-                        halign: 'left'
-                        bold: True
-                        theme_text_color: 'Custom'  
-                        text_color: 0, 0, 0, 1
-                        bold: True
+            MDGridLayout:
+                cols: 2
 
                 MDLabel:
-                    text: ''
+                    text: 'Loan Amount:'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
+            MDGridLayout:
+                cols: 2
+                MDIconButton:
+                    icon: 'currency-inr'
                     halign: 'left'
                     size_hint_y: None
-                    height: dp(5)
-                MDGridLayout:
-                    cols: 2
-                    MDLabel:
-                        text: 'Borrower Name'
-                        halign: 'left'
-                        theme_text_color: 'Custom'  
-                        text_color: 0, 0, 0, 1
-                        bold: True
+                    height: dp(1)
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
 
-                    MDLabel:
-                        id: name
-                        halign: 'left'
-                        theme_text_color: 'Custom' 
-                        text_color: 140/255, 140/255, 140/255, 1
-                        bold: True   
+                MDLabel:
+                    id: loan_amount1
+                    halign: 'left'
+                    bold: True
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
 
-                MDGridLayout:
-                    cols: 2
-                    MDLabel:
-                        text: 'Tenure'
-                        halign: 'left'
-                        theme_text_color: 'Custom'  
-                        text_color: 0, 0, 0, 1
-                        bold: True
+            MDLabel:
+                text: ''
+                halign: 'left'
+                size_hint_y: None
+                height: dp(5)
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Borrower Name'
+                    halign: 'left'
+                    ttheme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
 
-                    MDLabel:
-                        id: tenure
-                        halign: 'left'
-                        theme_text_color: 'Custom' 
-                        text_color: 140/255, 140/255, 140/255, 1
-                        bold: True
+                MDLabel:
+                    id: name
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True   
 
-                MDGridLayout:
-                    cols: 2
-                    MDLabel:
-                        text: 'Interest Rate'
-                        halign: 'left'
-                        theme_text_color: 'Custom'  
-                        text_color: 0, 0, 0, 1
-                        bold: True
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Tenure'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
 
-                    MDLabel:
-                        id: interest_rate
-                        halign: 'left'
-                        theme_text_color: 'Custom' 
-                        text_color: 140/255, 140/255, 140/255, 1
-                        bold: True
+                MDLabel:
+                    id: tenure
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
+            
 
-                MDGridLayout:
-                    cols: 2
-                    MDLabel:
-                        text: 'Account Number'
-                        halign: 'left'
-                        theme_text_color: 'Custom'  
-                        text_color: 0, 0, 0, 1
-                        bold: True
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Interest Rate'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
 
-                    MDLabel:
-                        id: account_number
-                        halign: 'left'
-                        theme_text_color: 'Custom' 
-                        text_color: 140/255, 140/255, 140/255, 1
-                        bold: True
-                MDGridLayout:
-                    cols: 2
-                    MDLabel:
-                        text: 'Loan Status'
-                        halign: 'left'
-                        theme_text_color: 'Custom'  
-                        text_color: 0, 0, 0, 1
-                        bold: True
+                MDLabel:
+                    id: interest_rate
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
 
-                    MDLabel:
-                        id: status
-                        halign: 'left'
-                        theme_text_color: 'Custom' 
-                        text_color: 140/255, 140/255, 140/255, 1
-                        bold: True
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Account Number'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
 
-                MDGridLayout:
-                    cols: 2
-                    MDLabel:
-                        text: 'Emi Amount'
-                        halign: 'left'
-                        theme_text_color: 'Custom'  
-                        text_color: 0, 0, 0, 1
-                        bold: True
+                MDLabel:
+                    id: account_number
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Loan Status'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
 
-                    MDLabel:
-                        id: emi_amount
-                        halign: 'left'
-                        theme_text_color: 'Custom' 
-                        text_color: 140/255, 140/255, 140/255, 1
-                        bold: True
+                MDLabel:
+                    id: status
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
 
-                MDGridLayout:
-                    cols: 2
-                    MDLabel:
-                        id: extra
-                        text: 'Extra Payment'
-                        halign: 'left'
-                        theme_text_color: 'Custom'  
-                        text_color: 0, 0, 0, 1
-                        bold: True
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    text: 'Emi Amount'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
 
-                    MDLabel:
-                        id: extra_amount
-                        halign: 'left'
-                        theme_text_color: 'Custom' 
-                        text_color: 140/255, 140/255, 140/255, 1
-                        bold: True
+                MDLabel:
+                    id: emi_amount
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
 
-                MDGridLayout:
-                    cols: 2
-                    MDLabel:
-                        id: total
-                        text: 'Total Amount'
-                        halign: 'left'
-                        theme_text_color: 'Custom'  
-                        text_color: 0, 0, 0, 1
-                        bold: True
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    id: extra
+                    text: 'Extra Payment'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
 
-                    MDLabel:
-                        id: total_amount
-                        halign: 'left'
-                        theme_text_color: 'Custom' 
-                        text_color: 140/255, 140/255, 140/255, 1
-                        bold: True
+                MDLabel:
+                    id: extra_amount
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
+
+            MDGridLayout:
+                cols: 2
+                MDLabel:
+                    id: total
+                    text: 'Total Amount'
+                    halign: 'left'
+                    theme_text_color: 'Custom'  
+                    text_color: 0, 0, 0, 1
+                    bold: True
+
+                MDLabel:
+                    id: total_amount
+                    halign: 'left'
+                    theme_text_color: 'Custom' 
+                    text_color: 140/255, 140/255, 140/255, 1
+                    bold: True
+                    
+            MDGridLayout:
+                cols: 2
+    
+                MDLabel:
+                    text: "Payment Details"
+                    font_size:dp(16)
+                    bold:True
+                    halign:"left"
+    
+                Button:
+                    text:'View Payments                   '
+                    background_color: 0, 0, 0, 0
+                    color: 0, 0.5, 1, 1
+                    font_size: '15sp'
+                    halign:"left"
+                    size_hint: None, None
+                    size: self.texture_size
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.28}
+                    on_release: root.go_to_menu_screen()
+                    halign:"left"
+                    
+              
+
 
         MDLabel:
             text: ''
@@ -280,22 +303,22 @@ user_helpers2 = """
                     radius: [25, 25, 25, 25]
             MDRaisedButton:
                 text: "Part Payment"
-                md_bg_color: 0.043, 0.145, 0.278, 1
+                md_bg_color:0.043, 0.145, 0.278, 1
                 on_release: root.go_to_part_payment()
                 pos_hint: {'center_x': 0.5, 'center_y': 2}
                 size_hint: 0.4, None 
-                font_name: "Roboto-Bold"
-                font_size: dp(15) 
+                font_name:"Roboto-Bold"
+                font_size:dp(15) 
 
             MDRaisedButton:
                 id: pay
                 text: "Pay Now"
-                md_bg_color: 0.043, 0.145, 0.278, 1
+                md_bg_color:0.043, 0.145, 0.278, 1
                 on_release: root.go_to_paynow()
                 pos_hint: {'center_x': 0.5, 'center_y': 2}
                 size_hint: 0.4, None 
-                font_name: "Roboto-Bold"
-                font_size: dp(15) 
+                font_name:"Roboto-Bold"
+                font_size:dp(15) 
 
 <PartPayment>          
     GridLayout:
@@ -596,7 +619,23 @@ user_helpers2 = """
             pos_hint: {'center_x': 0.5}
             font_name: "Roboto-Bold"
         MDLabel:
-            text: " "             
+            text: " "    
+            
+<ViewPaymentDetails>:
+
+    MDGridLayout:
+        cols: 1
+        MDTopAppBar:
+            title: "Today Due Payment List"
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: root.go_back()]]
+            title_align: 'center'
+            md_bg_color: 0.043, 0.145, 0.278, 1
+            
+        MDBoxLayout:
+            orientation: 'vertical'
+            id: container1          
 
 """
 Builder.load_string(user_helpers2)
@@ -663,7 +702,7 @@ class BorrowerDuesScreen(Screen):
         total_repay = []
         shedule_payment = []
         loan_product = []
-        remaining_tenure = []
+        emi_amount = []
         for i in data1:
             loan_id.append(i['loan_id'])
             borrower_name.append(i['borrower_full_name'])
@@ -680,7 +719,7 @@ class BorrowerDuesScreen(Screen):
             total_repay.append(i['total_repayment_amount'])
             shedule_payment.append(i['first_emi_payment_due_date'])
             loan_product.append(i['product_id'])
-
+            emi_amount.append(i['monthly_emi'])
         index = 0
 
         if value in loan_id:
@@ -764,7 +803,6 @@ class BorrowerDuesScreen(Screen):
                     else:
                         days_left = 0
                     break
-
             if late_fee == 'lapsed fee':
                 product_index = product_id.index(loan_product[index])
                 lapsed_percentage = lapsed_fee[product_index] + days_left
@@ -821,10 +859,11 @@ class BorrowerDuesScreen(Screen):
                 self.ids.total_amount.text = str(round(total_amount, 2))
                 data1[index]['loan_state_status'] = 'npa'
             else:
-                total_amount = monthly_emi[index] + extra_amount
+                total_amount = round(monthly_emi[index] + extra_amount)
                 self.ids.extra_amount.text = str(round(extra_amount, 2))
-                self.ids.total_amount.text = str(round(total_amount))
+                self.ids.total_amount.text = str(round(total_amount, 2))
                 self.ids.extra.text = "Extra Payment "
+
             if value not in emi_loan_id:
                 if emi_pay_type[index].strip() == 'Three Months' and tenure[index] > 3 and tenure[index] < 6:
                     r = tenure[index] - 3
@@ -832,7 +871,7 @@ class BorrowerDuesScreen(Screen):
                     emi = i * r
                     print(monthly_emi[index], emi)
                     self.ids.total_amount.text = str(round(float(self.ids.total_amount.text), 2) + emi)
-            if value in emi_loan_id and part_payment_type[last_index] != "part payment":
+            if value in emi_loan_id:
                 if emi_pay_type[index].strip() == 'Three Months' and remaining_tenure[last_index] > 3 and \
                         remaining_tenure[last_index] < 6:
                     r = remaining_tenure[last_index] - 3
@@ -840,7 +879,6 @@ class BorrowerDuesScreen(Screen):
                     emi = i * r
                     print(monthly_emi[index], emi)
                     self.ids.total_amount.text = str(round(float(self.ids.total_amount.text), 2) + emi)
-
             if value not in emi_loan_id:
                 if emi_pay_type[index].strip() == 'Six Months' and tenure[index] > 6 and tenure[index] < 12:
                     r = tenure[index] - 6
@@ -1083,12 +1121,15 @@ class BorrowerDuesScreen(Screen):
         next_payment = []
         paid_amount = []
         remain_tenure = []
+        remain_amo = []
+
         for i in emi_data:
             emi_loan_id.append(i['loan_id'])
             emi_num.append(i['emi_number'])
             next_payment.append(i['next_payment'])
             paid_amount.append(i['amount_paid'])
             remain_tenure.append(i['remaining_tenure'])
+            remain_amo.append(i['total_remaining_amount'])
 
         value = self.loan_id
         data1 = app_tables.fin_loan_details.search()
@@ -1098,13 +1139,9 @@ class BorrowerDuesScreen(Screen):
         user_profile = app_tables.fin_user_profile.search()
         tenure = self.ids.tenure.text
 
-        emi_number = 0
-
-        if value not in emi_loan_id:
-            emi_number = 1
-        else:
-            last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
-            emi_number = emi_num[last_index] + 1
+        platform_fee = []
+        for i in ex_amount:
+            platform_fee.append(i['platform_returns'])
 
         schedule_date = []
         loan_id = []
@@ -1114,53 +1151,29 @@ class BorrowerDuesScreen(Screen):
         borrower_email = []
         lender_email = []
         total_repay_amount = []
-        loan_amount = []
-        tenure_months = []
-        interest_rate = []
+        emi_amount = []
+
         for i in data1:
             loan_id.append(i['loan_id'])
             cos_id1.append(i['borrower_customer_id'])
             schedule_date.append(i['first_emi_payment_due_date'])
+            emi_amount.append(i['monthly_emi'])
             emi_type_pay.append(i['emi_payment_type'])
             lender_customer_id.append(i['lender_customer_id'])
             borrower_email.append(i['borrower_email_id'])
             lender_email.append(i['lender_email_id'])
             total_repay_amount.append(i['total_repayment_amount'])
-            loan_amount.append(i['loan_amount'])
-            tenure_months.append(i['tenure'])
-            interest_rate.append(i['interest_rate'])
-
-        platform_fee = []
-        for i in ex_amount:
-            platform_fee.append(i['platform_returns'])
 
         cos_id = []
         account_num = []
-        email_user = []
+
         for i in user_profile:
             cos_id.append(i['customer_id'])
             account_num.append(i['account_number'])
-            email_user.append(i['email_user'])
         index = 0
         if cos_id1[index] in cos_id:
-            index2 = cos_id1.index(cos_id1[index])
+            index2 = cos_id.index(cos_id1[index])
             self.ids.account_number.text = str(account_num[index2])
-
-        email = anvil.server.call('another_method')
-        email_index = 0
-        if email in email_user:
-            email_index = email_user.index(email)
-
-        a = -1
-        id_list = []
-        print(cos_id, cos_id[email_index])
-        print(lender_customer_id)
-        for i in lender_customer_id:
-            a += 1
-            print(i, cos_id[email_index])
-            if i == cos_id[email_index]:
-                id_list.append(a)
-        print(id_list, len(id_list))
 
         wallet_customer_id = []
         wallet_amount = []
@@ -1174,36 +1187,26 @@ class BorrowerDuesScreen(Screen):
             loan_id_list.append(i['loan_id'])
             lender_customer_id.append(i['lender_customer_id'])
 
-        lender_data = app_tables.fin_lender.search()
-        lender_cus_id = []
-        create_date = []
-        for i in lender_data:
-            lender_cus_id.append(i['customer_id'])
-
         index = 0
-        lender_returns = 0
+        last_index = 0
         if value in loan_id:
             index = loan_id.index(value)
-            interest_amount = (loan_amount[index] * interest_rate[index]) / 100
-            total_interest_amount = loan_amount[index] + interest_amount
-            lender_returns = total_interest_amount - loan_amount[index]
+        if value not in emi_loan_id:
+            remain_amount_emi = total_repay_amount[index] - emi_amount[index]
         else:
-            print("loan id not found")
+            last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
+            remain_amount_emi = remain_amo[last_index] - emi_amount[index]
+        print(remain_amo[last_index])
+        print(emi_amount[index])
+        print(remain_amount_emi)
+        emi_number = 0
 
-        monthly_lender_returns = lender_returns / tenure_months[index]
+        if value not in emi_loan_id:
+            emi_number = 1
+        else:
+            last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
+            emi_number = emi_num[last_index] + 1
 
-        if emi_type_pay[index].strip() == 'Monthly':
-            monthly_lender_returns = lender_returns / tenure_months[index]
-        elif emi_type_pay[index].strip() == 'Three Months':
-            monthly_lender_returns = lender_returns / (tenure_months[index] / 3)
-        elif emi_type_pay[index].strip() == 'Six Months':
-            monthly_lender_returns = lender_returns / (tenure_months[index] / 6)
-        elif emi_type_pay[index].strip() == 'One Time':
-            if tenure:
-                monthly_lender_returns = lender_returns / (tenure_months[index] / tenure_months[index])
-
-        print(monthly_lender_returns)
-        print(lender_returns)
         next_payment_date = None
         b_index = 0
         l_index = 0
@@ -1305,29 +1308,15 @@ class BorrowerDuesScreen(Screen):
                 lender_customer_id=lender_customer_id[index],
                 lender_email=lender_email[index],
                 remaining_tenure=re_ten,
+                total_remaining_amount=float(remain_amount_emi),
                 payment_type="pay now"
 
             )
+
             if data1[index]['loan_updated_status'] == 'foreclosure':
                 data1[index]['loan_updated_status'] = 'closed'
             data1[index]['total_amount_paid'] = float(paid_amount1)
             data1[index]['remaining_amount'] = float(remain_amount)
-
-            if lender_customer_id[index] in lender_cus_id:
-                len_index = lender_cus_id.index(lender_customer_id[index])
-                if lender_data[len_index]['return_on_investment'] == None:
-                    lender_data[len_index]['return_on_investment'] = 0
-                    lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
-                else:
-                    lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
-            else:
-                print('customer id is not there')
-
-            if data1[index]['lender_returns'] == None:
-                data1[index]['lender_returns'] = 0
-                data1[index]['lender_returns'] += float(round(monthly_lender_returns, 2))
-            else:
-                data1[index]['lender_returns'] += float(round(monthly_lender_returns, 2))
             anvil.server.call('loan_text', None)
             sm = self.manager
             wallet_screen = LastScreenWallet(name='LastScreenWallet')
@@ -1345,6 +1334,19 @@ class BorrowerDuesScreen(Screen):
             sm.add_widget(wallet_screen)
             # Switch to the LenderWalletScreen
             sm.current = 'WalletScreen'
+
+    def go_to_menu_screen(self):
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        payment_details = ViewPaymentDetails(name='ViewPaymentDetails')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(payment_details)
+
+        # Switch to the LoginScreen
+        sm.current = 'ViewPaymentDetails'
+        self.manager.get_screen('ViewPaymentDetails').initialize_with_value(self.loan_id, self.shechule_date)
 
     def go_to_part_payment(self):
         sm = self.manager
@@ -1417,6 +1419,292 @@ class BorrowerDuesScreen(Screen):
 
     def current(self):
         self.manager.current = 'DuesScreen'
+class ViewPaymentDetails(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def initialize_with_value(self, value,shechule_date):
+        print(value)
+        self.shechule_date = shechule_date
+        loan = app_tables.fin_loan_details.search()
+        user_profile = app_tables.fin_user_profile.search()
+        product_details = app_tables.fin_product_details.search()
+        emi_data = app_tables.fin_emi_table.search()
+        extension = app_tables.fin_extends_loan.search()
+        foreclose = app_tables.fin_foreclosure.search()
+        customer_id = []
+        schedule_date = []
+        loan_id = []
+        emi_payment = []
+        loan_status =[]
+        tenure = []
+        interest = []
+        repayment_amount = []
+        loan_amount = []
+        emi_amount = []
+        product_id = []
+        total_repay_amount = []
+        s = 0
+        for i in loan:
+            s += 1
+            customer_id.append(i['borrower_customer_id'])
+            schedule_date.append(i['first_emi_payment_due_date'])
+            loan_id.append(i['loan_id'])
+            emi_payment.append(i['emi_payment_type'])
+            loan_status.append(i['loan_updated_status'])
+            tenure.append(i['tenure'])
+            interest.append(i['interest_rate'])
+            repayment_amount.append(i['total_repayment_amount'])
+            loan_amount.append(i['loan_amount'])
+            emi_amount.append(i['monthly_emi'])
+            product_id.append(i['product_id'])
+            total_repay_amount.append(i['total_repayment_amount'])
+        index = 0
+        if value in loan_id:
+            index = loan_id.index(value)
+
+        cos_id = []
+        account_num = []
+
+        for i in user_profile:
+            cos_id.append(i['customer_id'])
+            account_num.append(i['account_number'])
+        index2 = 0
+        if customer_id[index] in cos_id:
+            index2 = cos_id.index(customer_id[index])
+            print(account_num[index2])
+            print(customer_id[index])
+            print(cos_id[index2])
+
+        pro_id = []
+        process_fee = []
+        for i in product_details:
+            pro_id.append(i['product_id'])
+            process_fee.append(i['processing_fee'])
+        index3 = 0
+        if product_id[index] in pro_id:
+            index3 = pro_id.index(product_id[index])
+
+        extra_fee = []
+        loan_id3 = []
+        emi_num = []
+        schedule_payment = []
+        remain_tenure = []
+        remain_amount1 = []
+        for i in emi_data:
+            loan_id3.append(i['loan_id'])
+            extra_fee.append(i['extra_fee'])
+            emi_num.append(i['emi_number'])
+            schedule_payment.append((i['scheduled_payment_made']))
+            remain_tenure.append(i['remaining_tenure'])
+            remain_amount1.append(i['total_remaining_amount'])
+
+        emi_indices = [i for i, lid in enumerate(loan_id3) if lid == value]
+
+        index4 = 0
+        if value in loan_id3:
+            index4 = loan_id3.index(value)
+
+        loan_id4 = []
+        extend_loan_status =[]
+        extend_months = []
+        for i in extension:
+            loan_id4.append(i['loan_id'])
+            extend_loan_status.append(i['status'])
+            extend_months.append(i['total_extension_months'])
+        index5 = 0
+        if value in loan_id4:
+            index5 = loan_id4.index(value)
+
+        loan_id5 = []
+        foreclose_status = []
+        for i in foreclose:
+            loan_id5.append(i['loan_id'])
+            foreclose_status.append(i['status'])
+        index6 = 0
+        if value in loan_id5:
+            index6 = loan_id5.index(value)
+
+        monthly_tenure = 0
+        principal_amount = 0
+        interest_amount = 0
+        for i in range(s):
+            if loan_status[i] == "disbursed":
+
+                if emi_payment[index].strip() == "Monthly":
+
+                    monthly_tenure = tenure[index]
+                    loan_beginning = loan_amount[index]
+                    interest_amount = round(loan_beginning * (interest[index] / 100) / 12)
+                    principal_amount = emi_amount[index] - interest_amount
+
+
+                elif emi_payment[index].strip() == "Three Months":
+                    monthly_tenure = tenure[index]//3
+                    loan_beginning = loan_amount[index]
+                    interest_amount = round(loan_beginning * (interest[index] / 100) / 12)
+                    principal_amount = emi_amount[index] - interest_amount
+
+
+                elif emi_payment[index].strip() == "Six Months":
+                    monthly_tenure = tenure[index]//6
+                    loan_beginning = loan_amount[index]
+                    interest_amount = round(loan_beginning * (interest[index] / 100) / 12)
+                    principal_amount = emi_amount[index] - interest_amount
+
+                elif emi_payment[index].strip() == "One Time":
+                    monthly_tenure = tenure[index]//tenure[index]
+                    loan_beginning = loan_amount[index]
+                    interest_amount = loan_beginning * (interest[index] / 100) / 12
+                    principal_amount = emi_amount[index] - interest_amount
+
+            elif loan_status[i] == "extension" and extend_loan_status[index5] == "approved" or extend_loan_status[index6] == "rejected":
+                if emi_payment[index].strip() == "Monthly":
+
+                    monthly_tenure = tenure[index] + extend_months[index5]
+                    loan_beginning = loan_amount[index]
+                    interest_amount = round(loan_beginning * (interest[index] / 100) / 12)
+                    principal_amount = emi_amount[index] - interest_amount
+
+
+                elif emi_payment[index].strip() == "Three Months":
+                    monthly_tenure = (tenure[index] + extend_months[index5]) // 3
+                    loan_beginning = loan_amount[index]
+                    interest_amount = round(loan_beginning * (interest[index] / 100) / 12)
+                    principal_amount = emi_amount[index] - interest_amount
+
+
+                elif emi_payment[index].strip() == "Six Months":
+                    monthly_tenure = (tenure[index] + extend_months[index5])// 6
+                    loan_beginning = loan_amount[index]
+                    interest_amount = round(loan_beginning * (interest[index] / 100) / 12)
+                    principal_amount = emi_amount[index] - interest_amount
+
+                elif emi_payment[index].strip() == "One Time":
+                    monthly_tenure = (tenure[index] + extend_months[index5]) // tenure[index]
+                    loan_beginning = loan_amount[index]
+                    interest_amount = round(loan_beginning * (interest[index] / 100) / 12)
+                    principal_amount = emi_amount[index] - interest_amount
+
+
+            elif loan_status[i] == "foreclosure" and foreclose_status[index6] == "approved" or foreclose_status[index6] == "rejected":
+
+                if emi_payment[index].strip() == "Monthly":
+
+                    monthly_tenure = tenure[index]
+                    loan_beginning = loan_amount[index]
+                    interest_amount = round(loan_beginning * (interest[index]/100)/12)
+                    principal_amount = emi_amount[index] - interest_amount
+
+
+                elif emi_payment[index].strip() == "Three Months":
+                    monthly_tenure = tenure[index]//3
+                    loan_beginning = loan_amount[index]
+                    interest_amount = round(loan_beginning * (interest[index] / 100) / 12)
+                    principal_amount = emi_amount[index] - interest_amount
+
+
+                elif emi_payment[index].strip() == "Six Months":
+                    monthly_tenure = tenure[index]//6
+                    loan_beginning = loan_amount[index]
+                    interest_amount = round(loan_beginning * (interest[index] / 100) / 12)
+                    principal_amount = emi_amount[index] - interest_amount
+
+                elif emi_payment[index].strip() == "One Time":
+                    monthly_tenure = tenure[index]//tenure[index]
+                    loan_beginning = loan_amount[index]
+                    interest_amount = round(loan_beginning * (interest[index] / 100) / 12, 2)
+                    principal_amount = emi_amount[index] - interest_amount
+
+        width_id = 20
+        width_date = 15
+        width_amount = 20
+        row_data = []
+
+        if value not in emi_data:
+            re_ten = int(tenure[index])
+        else:
+            last_index = len(emi_data) - 1 - emi_data[::-1].index(value)
+            re_ten = remain_tenure[last_index]
+
+        self.amount = emi_amount[index]
+        amo = (emi_amount[index]/3) * (re_ten % 3)
+        amo1 = (emi_amount[index] / 6) * (re_ten % 6)
+        print(re_ten % 3)
+        print(amo)
+
+        for i in range(monthly_tenure):
+            extra_payment = extra_fee[emi_indices[i]] if i < len(emi_indices) else 0
+            scheduled = schedule_payment[emi_indices[i]] if i < len(emi_indices) else 0
+            total_amount = emi_amount[index] + extra_payment
+            next_payment_date = None
+            if emi_payment[index].strip() == 'Monthly':
+                next_payment_date = self.shechule_date[value] + timedelta(days=30 * i+1)
+            elif emi_payment[index].strip() == 'Three Months':
+                next_payment_date = self.shechule_date[value] + timedelta(days=90 * i+1)
+                if re_ten % 3 != 0 and i == (monthly_tenure - 1):
+                    self.amount = round(emi_amount[index] + amo, 2)
+
+            elif emi_payment[index].strip() == 'Six Months':
+                next_payment_date = self.shechule_date[value] + timedelta(days=180 * i+1)
+                if re_ten % 6 != 0 and i == (monthly_tenure - 1):
+                    self.amount = round(emi_amount[index] + amo1, 2)
+
+            elif emi_payment[index].strip() == 'One Time':
+                if tenure:
+                    next_payment_date = self.shechule_date[value] + timedelta(days=30 * int(tenure[index]))
+            next_pay = next_payment_date.strftime("%d/%m/%Y")
+            if isinstance(scheduled, datetime):
+                scheduled_date = scheduled.date()
+                scheduled_time = scheduled.strftime("%H:%M:%S")
+
+            else:
+                scheduled_date = "N/A"
+                scheduled_time = "N/A"
+            row_data.append((
+                f"{i + 1}".center(width_id),
+                f"{next_pay}".center(width_date),
+                f"{repayment_amount[index]}".center(width_amount),
+                f"{self.amount}".center(width_amount),
+                f"{extra_payment}".center(width_amount),
+                f"{total_amount}".center(width_amount),
+                f"{principal_amount}".center(width_amount),
+                f"{interest_amount}".center(width_amount),
+                f"{0}".center(width_id),
+                f"{scheduled_date}".center(width_date),
+                f"{scheduled_time}".center(width_date),
+                f"{account_num[index2]}".center(width_amount),
+                f"{process_fee[index3]}".center(width_amount)
+            ))
+
+        layout = AnchorLayout()
+        data_tables = MDDataTable(
+            size_hint=(1, 1),
+            use_pagination=True,
+            rows_num=12,
+            column_data=[
+                ("Payment No", dp(30)),
+                ("Next Payment Date", dp(30)),
+                ("Beginning Balance", dp(30)),
+                ("Payment Due", dp(30)),
+                ("Extra Payment", dp(30)),
+                ("Total Payment", dp(30)),
+                ("Principal Amount", dp(30)),
+                ("Interest Amount", dp(30)),
+                ("Ending Balance", dp(30)),
+                ("Payment Date", dp(30)),
+                ("Payment Time", dp(30)),
+                ("Account Number", dp(30)),
+                ("Processing Fee", dp(30)),
+            ],
+            row_data=row_data,
+        )
+        layout.add_widget(data_tables)
+        self.ids.container1.clear_widgets()
+        self.ids.container1.add_widget(layout)
+    def go_back(self):
+        self.manager.current = 'BorrowerDuesScreen'
+
 
 
 class LastScreenWallet(Screen):
@@ -1637,7 +1925,7 @@ class PartPayment(Screen):
 
                 self.ids.extra.text = "Extra Payment(NPA)"
                 self.ids.extra_amount.text = str(round(extra_amount + npa_amount + lapsed_amount + default_amount, 2))
-                self.ids.total_amount.text = str(round(total_amount + ex_free, 2))
+                self.ids.total_amount.text = str(round(total_amount +ex_free, 2))
                 self.ids.amount1.text = str(round(part_pay, 2))
 
                 data1[index]['loan_state_status'] = 'npa'
@@ -1859,8 +2147,7 @@ class PartPayment(Screen):
                         npa_amount = (monthly_emi[index] * npa_percentage) / 100
                     elif npa_type[product_index] == 'Non Performing Asset (₹)':
                         npa_amount = default_fee_amount[product_index]
-                    foreclose_amount1 += foreclosure_row[
-                                             'foreclose_amount'] + lapsed_amount + npa_amount + default_amount
+                    foreclose_amount1 += foreclosure_row['foreclose_amount'] + lapsed_amount + npa_amount + default_amount
                     part_pay = (total_amount + foreclose_amount1) / 2
                     self.ids.extra_amount.text = str(
                         round(foreclose_amount1 + npa_amount + default_amount + lapsed_amount, 2))
@@ -1885,7 +2172,6 @@ class PartPayment(Screen):
 
     def go_to_paynow1(self):
         emi_data = app_tables.fin_emi_table.search()
-        ex_amount = app_tables.fin_platform_fees.search()
         emi_loan_id = []
         emi_num = []
         next_payment = []
@@ -1894,6 +2180,7 @@ class PartPayment(Screen):
         part_payment_done = []
         payment_date = []
         part_payment_amount = []
+        remain_amo = []
         for i in emi_data:
             emi_loan_id.append(i['loan_id'])
             emi_num.append(i['emi_number'])
@@ -1903,6 +2190,7 @@ class PartPayment(Screen):
             part_payment_done.append(i['part_payment_done'])
             payment_date.append(i['part_payment_date'])
             part_payment_amount.append(i['part_payment_amount'])
+            remain_amo.append(i['total_remaining_amount'])
 
         value = self.loan_id
         data1 = app_tables.fin_loan_details.search()
@@ -1929,25 +2217,17 @@ class PartPayment(Screen):
         borrower_email = []
         lender_email = []
         total_repay_amount = []
-        loan_amount = []
-        tenure_months = []
-        interest_rate = []
+        emi_amount = []
         for i in data1:
             loan_id.append(i['loan_id'])
             cos_id1.append(i['borrower_customer_id'])
+            emi_amount.append(i['monthly_emi'])
             schedule_date.append(i['first_emi_payment_due_date'])
             emi_type_pay.append(i['emi_payment_type'])
             lender_customer_id.append(i['lender_customer_id'])
             borrower_email.append(i['borrower_email_id'])
             lender_email.append(i['lender_email_id'])
             total_repay_amount.append(i['total_repayment_amount'])
-            loan_amount.append(i['loan_amount'])
-            tenure_months.append(i['tenure'])
-            interest_rate.append(i['interest_rate'])
-
-        platform_fee = []
-        for i in ex_amount:
-            platform_fee.append(i['platform_returns'])
 
         cos_id = []
         account_num = []
@@ -1972,36 +2252,18 @@ class PartPayment(Screen):
             loan_id_list.append(i['loan_id'])
             lender_customer_id.append(i['lender_customer_id'])
 
-        lender_data = app_tables.fin_lender.search()
-        lender_cus_id = []
-        create_date = []
-        for i in lender_data:
-            lender_cus_id.append(i['customer_id'])
-
         index = 0
-        lender_returns = 0
         if value in loan_id:
             index = loan_id.index(value)
-            interest_amount = (loan_amount[index] * interest_rate[index]) / 100
-            total_interest_amount = loan_amount[index] + interest_amount
-            lender_returns = total_interest_amount - loan_amount[index]
+        if value not in emi_loan_id:
+            remain_amount_emi = total_repay_amount[index] - emi_amount[index]
         else:
-            print("loan id not found")
+            last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
+            remain_amount_emi = remain_amo[last_index] - emi_amount[index]
+        print(remain_amo[last_index])
+        print(emi_amount[index])
+        print(remain_amount_emi)
 
-        monthly_lender_returns = lender_returns / tenure_months[index]
-
-        if emi_type_pay[index].strip() == 'Monthly':
-            monthly_lender_returns = lender_returns / tenure_months[index]
-        elif emi_type_pay[index].strip() == 'Three Months':
-            monthly_lender_returns = lender_returns / (tenure_months[index] / 3)
-        elif emi_type_pay[index].strip() == 'Six Months':
-            monthly_lender_returns = lender_returns / (tenure_months[index] / 6)
-        elif emi_type_pay[index].strip() == 'One Time':
-            if tenure:
-                monthly_lender_returns = lender_returns / (tenure_months[index] / tenure_months[index])
-
-        print(monthly_lender_returns)
-        print(lender_returns)
         next_payment_date = None
         b_index = 0
         l_index = 0
@@ -2033,16 +2295,6 @@ class PartPayment(Screen):
                 elif emi_type_pay[index].strip() == 'One Time':
                     if tenure:
                         payment_date = schedule_date[index]
-
-                if len(platform_fee) < 1:
-                    app_tables.fin_platform_fees.add_row(
-                        platform_returns=float(extra_amount)
-                    )
-                else:
-                    if ex_amount[0]['platform_returns'] is None:
-                        ex_amount[0]['platform_returns'] = 0.0
-                    ex_amount[0]['platform_returns'] += float(extra_amount)
-
                 paid_amount1 = 0
                 for i in emi_loan_id:
                     if i == value:
@@ -2066,6 +2318,7 @@ class PartPayment(Screen):
                     borrower_customer_id=cos_id1[index],
                     lender_customer_id=lender_customer_id[index],
                     lender_email=lender_email[index],
+                    total_remaining_amount=float(remain_amount_emi),
                     payment_type="part payment",
                     part_payment_amount=float(pay),
                     part_payment_done=int(1),
@@ -2096,15 +2349,6 @@ class PartPayment(Screen):
                     if tenure:
                         payment_date = schedule_date[index] + timedelta(days=30 * int(tenure))
 
-                if len(platform_fee) < 1:
-                    app_tables.fin_platform_fees.add_row(
-                        platform_returns=float(extra_amount)
-                    )
-                else:
-                    if ex_amount[0]['platform_returns'] is None:
-                        ex_amount[0]['platform_returns'] = 0.0
-                    ex_amount[0]['platform_returns'] += float(extra_amount)
-
                 paid_amount1 = 0
                 for i in emi_loan_id:
                     if i == value:
@@ -2129,33 +2373,18 @@ class PartPayment(Screen):
                     lender_email=lender_email[index],
                     payment_type="part payment",
                     part_payment_amount=float(pay),
+                    total_remaining_amount=float(remain_amount_emi),
                     part_payment_done=int(1),
-                    next_payment=payment_date
+                    next_payment= payment_date
                 )
                 data1[index]['total_amount_paid'] = float(paid_amount1)
                 data1[index]['remaining_amount'] = float(remain_amount)
-                if lender_customer_id[index] in lender_cus_id:
-                    len_index = lender_cus_id.index(lender_customer_id[index])
-                    if lender_data[len_index]['return_on_investment'] == None:
-                        lender_data[len_index]['return_on_investment'] = 0
-                        lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
-                    else:
-                        lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
-                else:
-                    print('customer id is not there')
-
-                if data1[index]['lender_returns'] == None:
-                    data1[index]['lender_returns'] = 0
-                    data1[index]['lender_returns'] += float(round(monthly_lender_returns, 2))
-                else:
-                    data1[index]['lender_returns'] += float(round(monthly_lender_returns, 2))
                 anvil.server.call('loan_text', None)
                 sm = self.manager
                 wallet_screen = LastScreenWallet(name='LastScreenWallet')
                 sm.add_widget(wallet_screen)
                 sm.current = 'LastScreenWallet'
-            elif value in emi_loan_id and part_payment_done[last_index] == 1 and part_payment_type[
-                last_index] == 'part payment':
+            elif value in emi_loan_id and part_payment_done[last_index] == 1 and part_payment_type[last_index] == 'part payment':
 
                 if value not in emi_loan_id:
                     emi_number = 1
@@ -2192,23 +2421,9 @@ class PartPayment(Screen):
                 emi_data[last_index]['part_payment_done'] = int(2)
                 emi_data[last_index]['next_payment'] = payment_date
 
+
                 data1[index]['total_amount_paid'] = float(paid_amount1)
                 data1[index]['remaining_amount'] = float(remain_amount)
-                if lender_customer_id[index] in lender_cus_id:
-                    len_index = lender_cus_id.index(lender_customer_id[index])
-                    if lender_data[len_index]['return_on_investment'] == None:
-                        lender_data[len_index]['return_on_investment'] = 0
-                        lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
-                    else:
-                        lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
-                else:
-                    print('customer id is not there')
-
-                if data1[index]['lender_returns'] == None:
-                    data1[index]['lender_returns'] = 0
-                    data1[index]['lender_returns'] += float(round(monthly_lender_returns, 2))
-                else:
-                    data1[index]['lender_returns'] += float(round(monthly_lender_returns, 2))
                 anvil.server.call('loan_text', None)
                 sm = self.manager
                 wallet_screen = LastScreenWallet(name='LastScreenWallet')
@@ -2230,6 +2445,8 @@ class PartPayment(Screen):
     def on_back_button_press(self):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'BorrowerDuesScreen'
+
+
 
     def show_success_dialog2(self, text):
         dialog = MDDialog(
@@ -2550,7 +2767,3 @@ class DuesScreen(Screen):
 
     def go_back(self):
         self.manager.current = 'DashboardScreen'
-
-
-class MyScreenManager(ScreenManager):
-    pass

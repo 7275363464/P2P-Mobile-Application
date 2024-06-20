@@ -7914,24 +7914,7 @@ class EditScreen4(Screen):
         else:
             self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
-        self.upload_image(path)  # Upload the selected image
-        self.ids[image_id].source = path
-        self.file_manager.close()
-
-    def check_and_open_file_manager2(self):
-        self.check_and_open_file_manager2("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
-
-    def check_and_open_file_manager2(self, icon_id, label_id, file_label_id, image_id):
-        if platform == 'android':
-            if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open2(icon_id, label_id, file_label_id, image_id)
-            else:
-                self.request_media_images_permission()
-        else:
-            self.file_manager_open2(icon_id, label_id, file_label_id, image_id)
-
-    def file_manager_ope2(self, icon_id, label_id, file_label_id, image_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id),
@@ -7942,8 +7925,14 @@ class EditScreen4(Screen):
         else:
             self.file_manager.show('/')
 
-    def select_path2(self, path, icon_id, label_id, file_label_id, image_id):
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
         self.upload_image(path)  # Upload the selected image
+        self.ids[image_id].source = path
+        self.file_manager.close()
+
+
+    def select_path2(self, path, icon_id, label_id, file_label_id, image_id):
+        self.upload_image1(path)  # Upload the selected image
         self.ids[image_id].source = path
         self.file_manager.close()
 
@@ -7962,6 +7951,24 @@ class EditScreen4(Screen):
 
             # Update user_photo column with the media object
             user_data['emp_id_proof'] = user_photo_media
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image1(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
             user_data['last_six_month_bank_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
@@ -8605,6 +8612,316 @@ class ViewBusinessScreen(Screen):
         return False
 
 
+class ViewEditScreen5(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        gender_data = app_tables.fin_borrower_no_of_employees.search()
+        gender_list = []
+        for i in gender_data:
+            gender_list.append(i['borrower_no_of_employees'])
+        self.unique_gender = []
+        for i in gender_list:
+            if i not in self.unique_gender:
+                self.unique_gender.append(i)
+        print(self.unique_gender)
+        if len(self.unique_gender) >= 1:
+            self.ids.no_working.values = ['Select no of employees'] + self.unique_gender
+        else:
+            self.ids.no_working.values = ['Select no of employees']
+
+        present_address = app_tables.fin_borrower_business_type.search()
+        present = []
+        for i in present_address:
+            present.append(i['borrower_business_type'])
+        self.unique_present = []
+        for i in present:
+            if i not in self.unique_present:
+                self.unique_present.append(i)
+        print(self.unique_present)
+        if len(self.unique_present) >= 1:
+            self.ids.business_type.values = ['Select business type'] + self.unique_present
+        else:
+            self.ids.business_type.values = ['Select business type']
+
+        email = self.get_email()
+        data = app_tables.fin_user_profile.search(email_user=email)
+        business_name = []
+        email1 = []
+        business_address = []
+        business_type = []
+        employee_working = []
+        year_of_establish = []
+        industry_type = []
+        last_six_months = []
+        upload_last_six_months = []
+        din = []
+        cin = []
+        office_address = []
+        office_proof = []
+        for row in data:
+            if row['last_six_month_bank_proof']:
+                image_data = row['last_six_month_bank_proof'].get_bytes()
+                if isinstance(image_data, bytes):
+                    print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                    # Assuming image_data is already a binary image file
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        upload_last_six_months.append(profile_texture_obj)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        upload_last_six_months.append(None)
+                else:
+                    # If image_data is not bytes, assume it's base64 encoded and decode it
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        print(f"Decoded image data length: {len(image_data_binary)}")
+                        profile_texture_io = BytesIO(image_data_binary)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        upload_last_six_months.append(profile_texture_obj)
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                        upload_last_six_months.append(None)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        upload_last_six_months.append(None)
+            else:
+                upload_last_six_months.append(None)
+
+                if row['proof_verification']:
+                    image_data = row['proof_verification'].get_bytes()
+                    if isinstance(image_data, bytes):
+                        print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                        # Assuming image_data is already a binary image file
+                        try:
+                            profile_texture_io = BytesIO(image_data)
+                            profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                            office_proof.append(profile_texture_obj)
+                        except Exception as e:
+                            print(f"Error processing image for email {row['email_user']}: {e}")
+                            office_proof.append(None)
+                    else:
+                        # If image_data is not bytes, assume it's base64 encoded and decode it
+                        try:
+                            image_data_binary = base64.b64decode(image_data)
+                            print(f"Decoded image data length: {len(image_data_binary)}")
+                            profile_texture_io = BytesIO(image_data_binary)
+                            profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                            office_proof.append(profile_texture_obj)
+                        except base64.binascii.Error as e:
+                            print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                            office_proof.append(None)
+                        except Exception as e:
+                            print(f"Error processing image for email {row['email_user']}: {e}")
+                            office_proof.append(None)
+                else:
+                    office_proof.append(None)
+
+            email1.append(row['email_user'])
+            business_name.append(row['business_name'])
+            business_address.append(row['business_add'])
+            business_type.append(row['business_type'])
+            employee_working.append(row['employees_working'])
+            year_of_establish.append(row['year_estd'])
+            industry_type.append(row['industry_type'])
+            din.append(row['din'])
+            cin.append(row['cin'])
+            office_address.append(row['registered_off_add'])
+            last_six_months.append(row['six_month_turnover'])
+            upload_last_six_months.append(row['last_six_month_bank_proof'])
+            office_proof.append(row['proof_verification'])
+        if email in email1:
+            index = email1.index(email)
+            self.ids.din.text = str(din[index])
+            self.ids.cin.text = str(cin[index])
+            self.ids.last_six.text = str(last_six_months[index])
+            self.ids.industry_type.text = str(industry_type[index])
+            self.ids.business_name.text = str(business_name[index])
+            self.ids.business_address.text = str(business_address[index])
+            self.ids.business_type.text = str(business_type[index])
+            self.ids.year.text = str(year_of_establish[index])
+            self.ids.no_working.text = str(employee_working[index])
+            self.ids.office_address.text = str(office_address[index])
+            if upload_last_six_months[index]:
+                self.ids.six_bank.texture = upload_last_six_months[index]
+            else:
+                print("No profile photo found for email:", email)
+            if office_proof[index]:
+                self.ids.proof.texture = office_proof[index]
+            else:
+                print("No profile photo found for email:", email)
+        else:
+            print(f"Email {email} not found in data.")
+
+    def check_and_open_file_manager1(self):
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "six_bank")
+
+    def check_and_open_file_manager2(self):
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1",
+                                         "proof")
+
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id):
+        if platform == 'android':
+            if check_permission(Permission.READ_MEDIA_IMAGES):
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id)
+            else:
+                self.request_media_images_permission()
+        else:
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id)
+
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            self.file_manager.show('/')
+
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            self.file_manager.show('/')
+
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
+        self.upload_image(path)  # Upload the selected image
+        self.ids[image_id].source = path
+        self.file_manager.close()
+
+    def select_path2(self, path, icon_id, label_id, file_label_id, image_id):
+        self.upload_image1(path)  # Upload the selected image
+        self.ids[image_id].source = path
+        self.file_manager.close()
+
+    def upload_image(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['last_six_month_bank_proof'] = user_photo_media
+
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image1(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['last_six_month_bank_proof'] = user_photo_media
+            user_data['proof_verification'] = user_photo_media
+
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def on_business_save(self):
+        business_name = self.ids.business_name.text
+        business_address = self.ids.business_address.text
+        business_type = self.ids.business_type.text
+        employee_working = self.ids.no_working.text
+        year_of_establish = self.ids.year.text
+        industry_type = self.ids.industry_type.text
+        last_six_months = self.ids.last_six.text
+        upload_last_six_months = []
+        din = self.ids.din.text
+        cin = self.ids.cin.text
+        office_address = self.ids.office_address.text
+        office_proof = []
+        success = self.update_profile_data(business_name, business_address, business_type, employee_working,
+                                           year_of_establish, industry_type, last_six_months, din, cin, office_address)
+        if success:
+
+            # If the update was successful, navigate back to the dashboard screen
+            self.manager.add_widget(Factory.ViewAccountScreen(name='ViewAccountScreen'))
+            self.manager.current = 'ViewAccountScreen'
+
+        else:
+            # Handle the case where the update failed (e.g., display an error message)
+            self.on_back_button_press()
+
+    def update_profile_data(self, business_name, business_address, business_type, employee_working, year_of_establish,
+                            industry_type, last_six_months, din, cin, office_address):
+        email = self.get_email()
+        user_profiles = app_tables.fin_user_profile.search(email_user=email)
+        try:
+            year_of_establish = datetime.strptime(year_of_establish, '%Y-%m-%d').date()
+        except ValueError:
+            print(f"Invalid date format for borrower_since: {year_of_establish}. Expected format: YYYY-MM-DD")
+            return False
+        # Check if any user profile exists
+        if user_profiles:
+            # Assuming there should be only one row per unique email address,
+            # we retrieve the first matching row
+            user_profile = user_profiles[0]
+
+            # Update the user's profile data
+            user_profile.update(business_name=business_name,
+                                business_add=business_address,
+                                business_type=business_type,
+                                employees_working=employee_working,
+                                year_estd=year_of_establish,
+                                industry_type=industry_type,
+                                din=din,
+                                cin=cin,
+                                registered_off_add=office_address,
+                                six_month_turnover=last_six_months
+                                )
+            return True
+        else:
+            # Handle the case where the user's profile does not exist
+            return False
+
+    def refresh(self):
+        pass
+
+    def get_email(self):
+        # Make a call to the Anvil server function
+        # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
+        return anvil.server.call('another_method')
+
+    def on_back_button_press(self):
+        self.manager.current = 'ViewBusinessScreen'
+
+    def on_pre_enter(self):
+        Window.bind(on_keyboard=self.on_back_button)
+
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=self.on_back_button)
+
+    def on_back_button(self, instance, key, scancode, codepoint, modifier):
+        if key == 27:
+            self.on_back_button_press()
+            return True
+        return False
+
 class ViewEditScreen6(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -9224,7 +9541,7 @@ class ViewEditScreen1(Screen):
         else:
             print(f"Email {email} not found in data.")
 
-    def upload_image(self, file_path):
+    def upload_image1(self, file_path):
         try:
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
@@ -9239,7 +9556,42 @@ class ViewEditScreen1(Screen):
 
             # Update user_photo column with the media object
             user_data['user_photo'] = user_photo_media
+
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image2(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
             user_data['aadhaar_photo'] = user_photo_media
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image3(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
             user_data['pan_number'] = user_photo_media
 
             print("Image uploaded successfully.")
@@ -9303,12 +9655,10 @@ class ViewEditScreen1(Screen):
                             gov_id2, alternate_email, marrital_status, name, email1, mobile_no, dob, gender):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
-        # Check if any user profile exists
         if data:
             # Assuming there should be only one row per unique email address,
             # we retrieve the first matching row
             user_profile = data[0]
-            # Update the user's profile data
             user_profile.update(full_name=name,
                                 mail_id=alternate_email,
                                 email_user=email1,
@@ -9325,72 +9675,19 @@ class ViewEditScreen1(Screen):
                                 pincode=zip_code,
                                 state=state,
                                 city=country,
-                                qualification=qualification
+                                qualification=qualification,
 
                                 )
-            Walet_transations = app_tables.fin_wallet_transactions.search(user_email=email1)
-            if Walet_transations:
-                for loans in Walet_transations:
-                    loans['user_email'] = email1
-                    loans.update()
-
-            wallet_bank_account_table = app_tables.fin_wallet_bank_account_table.search(user_email=email1)
-            if wallet_bank_account_table:
-                wallet_bank_account_table['user_email'] = email1
-                wallet_bank_account_table.update()
-
-            wallet = app_tables.fin_wallet.search(user_email=email1)
-            if wallet:
-                wallet['user_email'] = email1
-                wallet['user_name'] = name
-                wallet.update()
-
-            emi_details = app_tables.fin_emi_table.search(lender_email=email1)
-            if emi_details:
-                for loans in emi_details:
-                    loans['lender_email'] = email1
-                    loans.update()
-
-            extends_table = app_tables.fin_extends_loan.search(lender_email_id=email1)
-            if Walet_transations:
-                for loans in extends_table:
-                    loans['lender_email_id'] = email1
-                    loans['lender_full_name'] = name
-                    loans.update()
-
-            foreclosure = app_tables.fin_foreclosure.search(lender_email_id=email1)
-            if foreclosure:
-                for loans in foreclosure:
-                    loans['lender_email_id'] = email1
-                    loans['lender_full_name'] = name
-                    loans.update()
-
-            fin_lender = app_tables.fin_borrower.search(email_id=email1)
-            if fin_lender:
-                fin_lender['email_id'] = email1
-                fin_lender['user_name'] = name
-                fin_lender.update()
-
-            loan_details = app_tables.fin_loan_details.search(lender_email_id=email1)
-            if loan_details:
-                for loans in loan_details:
-                    loans['lender_email_id'] = email1
-                    loans['lender_full_name'] = name
-                    loans.update()
-
-            report_problem = app_tables.fin_reported_problems.search(email=email1)
-            if report_problem:
-                for loans in report_problem:
-                    loans['email'] = email1
-                    loans['name'] = name
-                    loans['mobile_number'] = mobile_no
-                    loans.update()
-
-            user_table = app_tables.users.search(email=email1)
-            if user_table:
-                user_table['email'] = email1
-                user_table.update()
-
+            app_tables.users.update(email=email1)
+            app_tables.fin_wallet_transactions.update(user_email=email1)
+            app_tables.fin_wallet_bank_account_table.update(user_email=email1)
+            app_tables.fin_wallet.update(user_email=email1, user_name=name)
+            app_tables.fin_emi_table.update(lender_email=email1)
+            app_tables.fin_extends_loan.update(lender_email_id=email1, lender_full_name=name)
+            app_tables.fin_foreclosure.update(lender_email_id=email1, lender_full_name=name)
+            app_tables.fin_lender.update(email_id=email1, user_name=name)
+            app_tables.fin_loan_details.update(lender_email_id=email1, lender_full_name=name)
+            app_tables.fin_reported_problems.update(email=email1, name=name, mobile_number=mobile_no)
             return True
         else:
             # Handle the case where the user's profile does not exist
@@ -9432,24 +9729,7 @@ class ViewEditScreen1(Screen):
         else:
             self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
-        self.upload_image(path)  # Upload the selected image
-        self.ids[image_id].source = path
-        self.file_manager.close()
-
-    def check_and_open_file_manager2(self):
-        self.check_and_open_file_manager2("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
-
-    def check_and_open_file_manager2(self, icon_id, label_id, file_label_id, image_id):
-        if platform == 'android':
-            if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open2(icon_id, label_id, file_label_id, image_id)
-            else:
-                self.request_media_images_permission()
-        else:
-            self.file_manager_open2(icon_id, label_id, file_label_id, image_id)
-
-    def file_manager_ope2(self, icon_id, label_id, file_label_id, image_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id),
@@ -9460,24 +9740,7 @@ class ViewEditScreen1(Screen):
         else:
             self.file_manager.show('/')
 
-    def select_path2(self, path, icon_id, label_id, file_label_id, image_id):
-        self.upload_image(path)  # Upload the selected image
-        self.ids[image_id].source = path
-        self.file_manager.close()
-
-    def check_and_open_file_manager3(self):
-        self.check_and_open_file_manager3("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
-
-    def check_and_open_file_manager3(self, icon_id, label_id, file_label_id, image_id):
-        if platform == 'android':
-            if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open3(icon_id, label_id, file_label_id, image_id)
-            else:
-                self.request_media_images_permission()
-        else:
-            self.file_manager_open3(icon_id, label_id, file_label_id, image_id)
-
-    def file_manager_open3(self, icon_id, label_id, file_label_id, image_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path3(path, icon_id, label_id, file_label_id, image_id),
@@ -9488,8 +9751,18 @@ class ViewEditScreen1(Screen):
         else:
             self.file_manager.show('/')
 
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
+        self.upload_image1(path)  # Upload the selected image
+        self.ids[image_id].source = path
+        self.file_manager.close()
+
+    def select_path2(self, path, icon_id, label_id, file_label_id, image_id):
+        self.upload_image2(path)  # Upload the selected image
+        self.ids[image_id].source = path
+        self.file_manager.close()
+
     def select_path3(self, path, icon_id, label_id, file_label_id, image_id):
-        self.upload_image(path)  # Upload the selected image
+        self.upload_image3(path)  # Upload the selected image
         self.ids[image_id].source = path
         self.file_manager.close()
 

@@ -160,6 +160,15 @@ user_helpers = '''
                                                     size_hint_x: None
                                                     height: dp(60)
                                                     width: dp(70)
+                                                    id: selected_image1
+                                                    size_hint: None, None
+                                                    size: dp(80), dp(80)  # Make sure the size is a perfect square for a circular shape
+                                                    source: ""  # Set the path to your image source if needed
+                                                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                                    allow_stretch: True
+                                                    keep_ratio: True
+                            
+
                                     
                                                 Widget:
                                                     size_hint_x: None
@@ -723,23 +732,31 @@ user_helpers = '''
         
                         Image:
                             source: 'icon8.png'
-                            halign: 'center'
-                            valign: 'middle'
-                            size_hint_x: None
-                            width: dp(34)
-                            spacing: dp(30)
-                            padding: dp(30)
-                            theme_text_color: 'Custom'
-                            text_color: 0.043, 0.145, 0.278, 1
-                            size: dp(90), dp(90)
+                            id: selected_image1
+                            size_hint: None, None
+                            size: dp(80), dp(80)  # Make sure the size is a perfect square for a circular shape
+                            source: ""  # Set the path to your image source if needed
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                            on_touch_down:  root.go_to_profile() if self.collide_point(*args[1].pos) else None
+                            allow_stretch: True
+                            keep_ratio: True
                             canvas.before:
-                                Color:
-                                    rgba: 1, 1, 1, 1
+                                StencilPush
                                 Ellipse:
-                                    size: self.size
-                                    pos: self.pos
+                                    size: self.width - dp(10), self.height - dp(10)
+                                    pos: self.x + dp(5), self.y + dp(5)
+                                StencilUse
+                            canvas:
+                                Rectangle:
+                                    texture: self.texture
+                                    size: self.width - dp(10), self.height - dp(10)
+                                    pos: self.x + dp(5), self.y + dp(5)
+                            canvas.after:
+                                StencilUnUse
+                                Ellipse:
+                                    size: self.width - dp(10), self.height - dp(10)
+                                    pos: self.x + dp(5), self.y + dp(5)
+                                StencilPop
+
         
                         MDBoxLayout:
                             orientation: "vertical"
@@ -1003,37 +1020,28 @@ user_helpers = '''
                 
                 Image:
                     id: selected_image1
-                    halign: 'center'
-                    source: ''
-                    valign: 'middle'
+                    size_hint: None, None
+                    size: dp(80), dp(80)  # Make sure the size is a perfect square for a circular shape
+                    source: ""  # Set the path to your image source if needed
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     allow_stretch: True
                     keep_ratio: True
-                    width: dp(30)
-                    spacing: dp(20)
-                    padding: dp(10)
-                    size_hint: None, None
-                    theme_text_color: 'Custom'
-                    text_color: 0.043, 0.145, 0.278, 1
-                    size: dp(90), dp(90)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1
-                        Ellipse:
-                            size: self.size
-                            pos: self.pos
-                    canvas:
                         StencilPush
                         Ellipse:
-
-                            size: self.width + 15, self.height + 15
-                            pos: self.x -5, self.y -5
+                            size: self.width - dp(10), self.height - dp(10)
+                            pos: self.x + dp(5), self.y + dp(5)
                         StencilUse
+                    canvas:
                         Rectangle:
                             texture: self.texture
-                            size: self.width + 15, self.height + 15
-                            pos: self.x -5, self.y -5
+                            size: self.width - dp(10), self.height - dp(10)
+                            pos: self.x + dp(5), self.y + dp(5)
+                    canvas.after:
                         StencilUnUse
+                        Ellipse:
+                            size: self.width - dp(10), self.height - dp(10)
+                            pos: self.x + dp(5), self.y + dp(5)
                         StencilPop
 
                     
@@ -3031,7 +3039,7 @@ user_helpers = '''
                         size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
-                        pos_hint: {'center_y': 0.5}
+                        
 
                 BoxLayout:
                     orientation: "horizontal"
@@ -3130,16 +3138,17 @@ user_helpers = '''
                         pos_hint: {'center_y': 0.5}
                         bold: True
                         multiline: False
-                    MDIconButton:
-                        icon: 'upload'
-                        on_release:app.root.get_screen('EditScreen5').check_and_open_file_manager2()
+                    
                     Image:
                         id: proof
                         size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
-                        pos_hint: {'center_y': 0.5}
-
+                        
+                    MDIconButton:
+                        icon: 'upload'
+                        on_release:app.root.get_screen('EditScreen5').check_and_open_file_manager2()
+                    
                 MDLabel:
                     text: ' '
                 MDLabel:
@@ -4032,17 +4041,16 @@ user_helpers = '''
                         bold: True
                         multiline: False
 
-                    MDIconButton:
-                        icon: 'upload'
-                        on_release: app.root.get_screen('EditScreen4').check_and_open_file_manager1()
-
                     Image:
                         id: employee_id
                         size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
-                        pos_hint: {'center_y': 0.5}
-
+                        
+                        
+                    MDIconButton:
+                        icon: 'upload'
+                        on_release: app.root.get_screen('EditScreen4').check_and_open_file_manager1()
 
                 BoxLayout:
                     orientation: "horizontal"
@@ -4061,16 +4069,16 @@ user_helpers = '''
                         bold: True
                         multiline: False
 
-                    MDIconButton:
-                        icon: 'upload'
-                        on_release: app.root.get_screen('EditScreen4').check_and_open_file_manager2()
-
                     Image:
                         id: last_six_months_bank_statement
                         size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
                         pos_hint: {'center_y': 0.5}
+
+                    MDIconButton:
+                        icon: 'upload'
+                        on_release: app.root.get_screen('EditScreen4').check_and_open_file_manager2()
 
                 MDLabel:
                     text: ' '
@@ -4544,16 +4552,15 @@ user_helpers = '''
                         bold: True
                         multiline: False
 
-                    MDIconButton:
-                        icon: 'upload'
-                        on_release: app.root.get_screen('EditScreen3').check_and_open_file_manager()
-
                     Image:
                         id: college_proof
                         size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
-                        pos_hint: {'center_y': 0.5}
+                        
+                    MDIconButton:
+                        icon: 'upload'
+                        on_release: app.root.get_screen('EditScreen3').check_and_open_file_manager1()
 
                 BoxLayout:
                     orientation: "horizontal"
@@ -6169,7 +6176,7 @@ user_helpers = '''
                         bold: True
                         multiline: False
 
-                    MDLabel:
+                    MDTextField:
                         id: email
                         font_size: dp(13)
                         text:'Add email'
@@ -6250,16 +6257,16 @@ user_helpers = '''
                         bold: True
                         multiline: False
 
-                    MDIconButton:
-                        icon: 'upload'
-                        on_release: app.root.get_screen('EditScreen1').check_and_open_file_manager2()
-
                     Image:
                         id: upload_gov_id1_img
                         size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
-                        pos_hint: {'center_y': 0.5}
+                        
+                    MDIconButton:
+                        icon: 'upload'
+                        on_release: app.root.get_screen('EditScreen1').check_and_open_file_manager2()
+                
 
                 BoxLayout:
                     orientation: "horizontal"
@@ -6304,18 +6311,18 @@ user_helpers = '''
                         pos_hint: {'center_y': 0.5}
                         bold: True
                         multiline: False
-
-                    MDIconButton:
-                        icon: 'upload'
-                        on_release: app.root.get_screen('EditScreen1').check_and_open_file_manager3()
-
+                    
                     Image:
                         id: upload_gov_id2_img
                         size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
-                        pos_hint: {'center_y': 0.5}
-
+                        
+                    MDIconButton:
+                        icon: 'upload'
+                        on_release: app.root.get_screen('EditScreen1').check_and_open_file_manager3()
+                    
+                
                 BoxLayout:
                     orientation: "horizontal"
                     size_hint_y: None
@@ -8602,7 +8609,10 @@ class EditScreen4(Screen):
             print(f"Email {email} not found in data.")
 
     def check_and_open_file_manager1(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "employee_id")
+
+    def check_and_open_file_manager2(self):
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "last_six_months_bank_statement")
 
     def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id):
         if platform == 'android':
@@ -8624,24 +8634,7 @@ class EditScreen4(Screen):
         else:
             self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
-        self.upload_image(path)  # Upload the selected image
-        self.ids[image_id].source = path
-        self.file_manager.close()
-
-    def check_and_open_file_manager2(self):
-        self.check_and_open_file_manager2("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
-
-    def check_and_open_file_manager2(self, icon_id, label_id, file_label_id, image_id):
-        if platform == 'android':
-            if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open2(icon_id, label_id, file_label_id, image_id)
-            else:
-                self.request_media_images_permission()
-        else:
-            self.file_manager_open2(icon_id, label_id, file_label_id, image_id)
-
-    def file_manager_ope2(self, icon_id, label_id, file_label_id, image_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id),
@@ -8652,8 +8645,13 @@ class EditScreen4(Screen):
         else:
             self.file_manager.show('/')
 
-    def select_path2(self, path, icon_id, label_id, file_label_id, image_id):
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
         self.upload_image(path)  # Upload the selected image
+        self.ids[image_id].source = path
+        self.file_manager.close()
+
+    def select_path2(self, path, icon_id, label_id, file_label_id, image_id):
+        self.upload_image1(path)  # Upload the selected image
         self.ids[image_id].source = path
         self.file_manager.close()
 
@@ -8672,6 +8670,25 @@ class EditScreen4(Screen):
 
             # Update user_photo column with the media object
             user_data['emp_id_proof'] = user_photo_media
+
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image1(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
             user_data['last_six_month_bank_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
@@ -8952,6 +8969,34 @@ class EditScreen3(Screen):
 
     def refresh(self):
         pass
+
+    def check_and_open_file_manager1(self):
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "college_proof")
+
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id):
+        if platform == 'android':
+            if check_permission(Permission.READ_MEDIA_IMAGES):
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id)
+            else:
+                self.request_media_images_permission()
+        else:
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id)
+
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            self.file_manager.show('/')
+
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
+        self.upload_image(path)  # Upload the selected image
+        self.ids[image_id].source = path
+        self.file_manager.close()
 
     def upload_image(self, file_path):
         try:
@@ -9974,7 +10019,11 @@ class EditScreen5(Screen):
             print(f"Email {email} not found in data.")
 
     def check_and_open_file_manager1(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "six_bank")
+
+    def check_and_open_file_manager2(self):
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1",
+                                         "proof")
 
     def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id):
         if platform == 'android':
@@ -9996,24 +10045,7 @@ class EditScreen5(Screen):
         else:
             self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
-        self.upload_image(path)  # Upload the selected image
-        self.ids[image_id].source = path
-        self.file_manager.close()
-
-    def check_and_open_file_manager2(self):
-        self.check_and_open_file_manager2("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
-
-    def check_and_open_file_manager2(self, icon_id, label_id, file_label_id, image_id):
-        if platform == 'android':
-            if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open2(icon_id, label_id, file_label_id, image_id)
-            else:
-                self.request_media_images_permission()
-        else:
-            self.file_manager_open2(icon_id, label_id, file_label_id, image_id)
-
-    def file_manager_ope2(self, icon_id, label_id, file_label_id, image_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id),
@@ -10024,12 +10056,37 @@ class EditScreen5(Screen):
         else:
             self.file_manager.show('/')
 
-    def select_path2(self, path, icon_id, label_id, file_label_id, image_id):
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
         self.upload_image(path)  # Upload the selected image
         self.ids[image_id].source = path
         self.file_manager.close()
 
+    def select_path2(self, path, icon_id, label_id, file_label_id, image_id):
+        self.upload_image1(path)  # Upload the selected image
+        self.ids[image_id].source = path
+        self.file_manager.close()
+
     def upload_image(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['last_six_month_bank_proof'] = user_photo_media
+
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image1(self, file_path):
         try:
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
@@ -10107,39 +10164,6 @@ class EditScreen5(Screen):
             # Handle the case where the user's profile does not exist
             return False
 
-    def check_and_open_file_manager1(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1")
-
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id):
-        if platform == 'android':
-            if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
-            else:
-                self.request_media_images_permission()
-        else:
-            # For non-Android platforms, directly open the file manager
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
-
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
-
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.upload_image(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('EditScreen5').ids[image_label_id].text = file_name  # Update the label text
-        self.file_manager.close()
 
     def refresh(self):
         pass
@@ -10436,7 +10460,7 @@ class EditScreen1(Screen):
         else:
             print(f"Email {email} not found in data.")
 
-    def upload_image(self, file_path):
+    def upload_image1(self, file_path):
         try:
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
@@ -10451,7 +10475,42 @@ class EditScreen1(Screen):
 
             # Update user_photo column with the media object
             user_data['user_photo'] = user_photo_media
+
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image2(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
             user_data['aadhaar_photo'] = user_photo_media
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image3(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
             user_data['pan_number'] = user_photo_media
 
             print("Image uploaded successfully.")
@@ -10525,7 +10584,6 @@ class EditScreen1(Screen):
                             gov_id2, alternate_email, marrital_status, name, email1, mobile_no, dob, gender):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
-        # Check if any user profile exists
         if data:
             # Assuming there should be only one row per unique email address,
             # we retrieve the first matching row
@@ -10555,78 +10613,22 @@ class EditScreen1(Screen):
                                 vehicle_loan=vehicle_loans
 
                                 )
-            Walet_transations = app_tables.fin_wallet_transactions.search(user_email=email1)
-            if Walet_transations:
-                for loans in Walet_transations:
-                    loans['user_email'] = email1
-                    loans.update()
+            app_tables.users.update(email=email1)
+            app_tables.fin_wallet_transactions.update(user_email=email1)
+            app_tables.fin_wallet_bank_account_table.update(user_email=email1)
+            app_tables.fin_wallet.update(user_email=email1,user_name=name)
+            app_tables.fin_emi_table.update(borrower_email=email1)
+            app_tables.fin_extends_loan.update(borrower_email_id=email1,borrower_full_name=name)
+            app_tables.fin_foreclosure.update(borrower_email_id=email1,borrower_name=name)
+            app_tables.fin_borrower.update(email_id=email1,user_name=name)
+            app_tables.fin_loan_details.update(borrower_email_id=email1,borrower_full_name=name)
+            app_tables.fin_reported_problems.update(email=email1,name=name,mobile_number=mobile_no)
+            app_tables.fin_user_ascend_score.update(borrower_email_id=email1)
 
-            wallet_bank_account_table = app_tables.fin_wallet_bank_account_table.search(user_email=email1)
-            if wallet_bank_account_table:
-                wallet_bank_account_table['user_email'] = email1
-                wallet_bank_account_table.update()
-
-            wallet = app_tables.fin_wallet.search(user_email=email1)
-            if wallet:
-                wallet['user_email'] = email1
-                wallet['user_name'] = name
-                wallet.update()
-
-            emi_details = app_tables.fin_emi_table.search(borrower_email=email1)
-            if emi_details:
-                for loans in emi_details:
-                    loans['borrower_email'] = email1
-                    loans.update()
-
-            extends_table = app_tables.fin_extends_loan.search(borrower_email_id=email1)
-            if Walet_transations:
-                for loans in extends_table:
-                    loans['borrower_email_id'] = email1
-                    loans['borrower_full_name'] = name
-                    loans.update()
-
-            foreclosure = app_tables.fin_foreclosure.search(borrower_email_id=email1)
-            if foreclosure:
-                for loans in foreclosure:
-                    loans['borrower_email_id'] = email1
-                    loans['borrower_name'] = name
-                    loans.update()
-
-            fin_borrower = app_tables.fin_borrower.search(email_id=email1)
-            if fin_borrower:
-                fin_borrower['email_id'] = email1
-                fin_borrower['user_name'] = name
-                fin_borrower.update()
-
-            loan_details = app_tables.fin_loan_details.search(borrower_email_id=email1)
-            if loan_details:
-                for loans in loan_details:
-                    loans['borrower_email_id'] = email1
-                    loans['borrower_full_name'] = name
-                    loans.update()
-
-            report_problem = app_tables.fin_reported_problems.search(email=email1)
-            if report_problem:
-                for loans in report_problem:
-                    loans['email'] = email1
-                    loans['name'] = name
-                    loans['mobile_number'] = mobile_no
-                    loans.update()
-
-            ascend_score = app_tables.fin_user_ascend_score.search(borrower_email_id=email1)
-            if ascend_score:
-                ascend_score['borrower_email_id'] = email1
-                ascend_score.update()
-
-            user_table = app_tables.users.search(email=email1)
-            if user_table:
-                user_table['email'] = email1
-                user_table.update()
             return True
         else:
             # Handle the case where the user's profile does not exist
             return False
-
     def get_email(self):
         # Make a call to the Anvil server function
         # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
@@ -10642,6 +10644,12 @@ class EditScreen1(Screen):
 
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
+
+    def check_and_open_file_manager2(self):
+        self.check_and_open_file_manager( "upload_icon1", "upload_label1", "selected_file_label1", "upload_gov_id1_img")
+
+    def check_and_open_file_manager3(self):
+        self.check_and_open_file_manager( "upload_icon1", "upload_label1", "selected_file_label1", "upload_gov_id2_img")
 
     def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id):
         if platform == 'android':
@@ -10663,24 +10671,7 @@ class EditScreen1(Screen):
         else:
             self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
-        self.upload_image(path)  # Upload the selected image
-        self.ids[image_id].source = path
-        self.file_manager.close()
-
-    def check_and_open_file_manager2(self):
-        self.check_and_open_file_manager2("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
-
-    def check_and_open_file_manager2(self, icon_id, label_id, file_label_id, image_id):
-        if platform == 'android':
-            if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open2(icon_id, label_id, file_label_id, image_id)
-            else:
-                self.request_media_images_permission()
-        else:
-            self.file_manager_open2(icon_id, label_id, file_label_id, image_id)
-
-    def file_manager_ope2(self, icon_id, label_id, file_label_id, image_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id),
@@ -10691,24 +10682,7 @@ class EditScreen1(Screen):
         else:
             self.file_manager.show('/')
 
-    def select_path2(self, path, icon_id, label_id, file_label_id, image_id):
-        self.upload_image(path)  # Upload the selected image
-        self.ids[image_id].source = path
-        self.file_manager.close()
-
-    def check_and_open_file_manager3(self):
-        self.check_and_open_file_manager3("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
-
-    def check_and_open_file_manager3(self, icon_id, label_id, file_label_id, image_id):
-        if platform == 'android':
-            if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open3(icon_id, label_id, file_label_id, image_id)
-            else:
-                self.request_media_images_permission()
-        else:
-            self.file_manager_open3(icon_id, label_id, file_label_id, image_id)
-
-    def file_manager_open3(self, icon_id, label_id, file_label_id, image_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path3(path, icon_id, label_id, file_label_id, image_id),
@@ -10719,8 +10693,18 @@ class EditScreen1(Screen):
         else:
             self.file_manager.show('/')
 
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
+        self.upload_image1(path)  # Upload the selected image
+        self.ids[image_id].source = path
+        self.file_manager.close()
+
+    def select_path2(self, path, icon_id, label_id, file_label_id, image_id):
+        self.upload_image2(path)  # Upload the selected image
+        self.ids[image_id].source = path
+        self.file_manager.close()
+
     def select_path3(self, path, icon_id, label_id, file_label_id, image_id):
-        self.upload_image(path)  # Upload the selected image
+        self.upload_image3(path)  # Upload the selected image
         self.ids[image_id].source = path
         self.file_manager.close()
 

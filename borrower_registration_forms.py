@@ -2,6 +2,10 @@ import os
 import re
 from anvil import media
 import anvil.server
+import base64
+from anvil import media
+from io import BytesIO
+from kivy.core.image import Image as CoreImage
 from anvil.tables import app_tables
 from kivy.animation import Animation
 from kivy.core.window import Window
@@ -283,6 +287,7 @@ Borrower = '''
                         width: 0.4  # Border width
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
+                    
                 MDIconButton:
                     icon: 'upload'
                     id: upload_icon1
@@ -4471,15 +4476,62 @@ class BorrowerScreen1(Screen):
         data = app_tables.fin_user_profile.search()
 
         id_list = []
+        photo = []
         for i in data:
             id_list.append(i['email_user'])
 
         user_email = anvil.server.call('another_method')
         if user_email in id_list:
             index = id_list.index(user_email)
-            self.ids.mobile_number.text = data[index]['mobile']
+
+            # Ensure index is within the bounds of the data and photo lists
+            if index < len(data):
+                self.ids.mobile_number.text = data[index]['mobile']
+            else:
+                print(f"Index {index} out of range for data list of length {len(data)}")
+                return
+
+            if index < len(photo):
+                if photo[index]:
+                    self.ids.selected_image1.texture = photo[index]
+                else:
+                    print("No profile photo found for email:", user_email)
+            else:
+                print(f"Index {index} out of range for photo list of length {len(photo)}")
+                return
         else:
-            print('email not found')
+            print('Email not found:', user_email)
+
+        for row in data:
+            if row['user_photo']:
+                image_data = row['user_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                    # Assuming image_data is already a binary image file
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        photo.append(profile_texture_obj)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        photo.append(None)
+                else:
+                    # If image_data is not bytes, assume it's base64 encoded and decode it
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        print(f"Decoded image data length: {len(image_data_binary)}")
+                        profile_texture_io = BytesIO(image_data_binary)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        photo.append(profile_texture_obj)
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                        photo.append(None)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        photo.append(None)
+            else:
+                photo.append(None)
+
     def upload_image(self, file_path):
         try:
             user_photo_media = media.from_file(file_path, mime_type='image/png')
@@ -4738,6 +4790,19 @@ class BorrowerScreen2(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
+                                                       image_label_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            # For other platforms, show the file manager from the root directory
+            self.file_manager.show('/')
+
     def upload_image1(self, file_path):
         try:
             user_photo_media = media.from_file(file_path, mime_type='image/png')
@@ -4835,6 +4900,22 @@ class BorrowerScreen2(Screen):
         conn.commit()
 
         self.ids.upload_label1.text = 'Upload Successfully'
+
+    def update_data_with_file_2(self, file_path):
+        cursor.execute('select * from fin_users')
+        rows = cursor.fetchall()
+        row_id_list = []
+        status = []
+        for row in rows:
+            row_id_list.append(row[0])
+            status.append(row[-1])
+        log_index = status.index('logged')
+
+        cursor.execute("UPDATE fin_registration_table SET aadhar_file = ? WHERE customer_id = ?",
+                       (file_path, row_id_list[log_index]))
+        conn.commit()
+
+        self.ids.upload_label2.text = 'Upload Successfully'
 
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
@@ -5137,8 +5218,32 @@ class BorrowerScreen_Edu_10th(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def get_email(self):
+        return anvil.server.call('another_method')
 
+    def upload_image(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['tenth_class'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.upload_image(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen_Edu_10th').ids[image_label_id].text = file_name  # Update the label text
         self.file_manager.close()
@@ -5254,6 +5359,48 @@ class BorrowerScreen_Edu_10th(Screen):
 
 
 class BorrowerScreen_Edu_Intermediate(Screen):
+    def upload_image1(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['tenth_class'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def get_email(self):
+        return anvil.server.call('another_method')
+
+    def upload_image2(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['intermediate'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
 
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
@@ -5286,13 +5433,30 @@ class BorrowerScreen_Edu_Intermediate(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
+                                                       image_label_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            # For other platforms, show the file manager from the root directory
+            self.file_manager.show('/')
+
     def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.upload_image1(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen_Edu_Intermediate').ids[
             image_label_id].text = file_name  # Update the label text
         self.file_manager.close()
 
     def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.upload_image2(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen_Edu_Intermediate').ids[
             image_label_id].text = file_name  # Update the label text
@@ -5426,6 +5590,68 @@ class BorrowerScreen_Edu_Intermediate(Screen):
 
 
 class BorrowerScreen_Edu_Bachelors(Screen):
+    def upload_image1(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['tenth_class'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def get_email(self):
+        return anvil.server.call('another_method')
+
+    def upload_image2(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['intermediate'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image3(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['btech'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
 
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
@@ -5462,8 +5688,36 @@ class BorrowerScreen_Edu_Bachelors(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
+                                                       image_label_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            # For other platforms, show the file manager from the root directory
+            self.file_manager.show('/')
+
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path3(path, icon_id, label_id, file_label_id, image_id,
+                                                       image_label_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            # For other platforms, show the file manager from the root directory
+            self.file_manager.show('/')
+
     def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
         # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+        self.upload_image1(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen_Edu_Bachelors').ids[
             image_label_id].text = file_name  # Update the label text
@@ -5471,6 +5725,8 @@ class BorrowerScreen_Edu_Bachelors(Screen):
 
     def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
         # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+        self.upload_image2(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen_Edu_Bachelors').ids[
             image_label_id].text = file_name  # Update the label text
@@ -5478,6 +5734,8 @@ class BorrowerScreen_Edu_Bachelors(Screen):
 
     def select_path3(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
         # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+        self.upload_image3(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen_Edu_Bachelors').ids[
             image_label_id].text = file_name  # Update the label text
@@ -5630,6 +5888,88 @@ class BorrowerScreen_Edu_Bachelors(Screen):
 
 
 class BorrowerScreen_Edu_Masters(Screen):
+    def upload_image1(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['tenth_class'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def get_email(self):
+        return anvil.server.call('another_method')
+
+    def upload_image2(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['intermediate'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image3(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['btech'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image4(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['mtech'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
 
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
@@ -5670,8 +6010,49 @@ class BorrowerScreen_Edu_Masters(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
+                                                       image_label_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            # For other platforms, show the file manager from the root directory
+            self.file_manager.show('/')
+
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path3(path, icon_id, label_id, file_label_id, image_id,
+                                                       image_label_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            # For other platforms, show the file manager from the root directory
+            self.file_manager.show('/')
+
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path4(path, icon_id, label_id, file_label_id, image_id,
+                                                       image_label_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            # For other platforms, show the file manager from the root directory
+            self.file_manager.show('/')
+
     def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
         # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+        self.upload_image1(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen_Edu_Masters').ids[
             image_label_id].text = file_name  # Update the label text
@@ -5679,6 +6060,8 @@ class BorrowerScreen_Edu_Masters(Screen):
 
     def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
         # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+        self.upload_image2(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen_Edu_Masters').ids[
             image_label_id].text = file_name  # Update the label text
@@ -5686,6 +6069,8 @@ class BorrowerScreen_Edu_Masters(Screen):
 
     def select_path3(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
         # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+        self.upload_image3(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen_Edu_Masters').ids[
             image_label_id].text = file_name  # Update the label text
@@ -5693,6 +6078,8 @@ class BorrowerScreen_Edu_Masters(Screen):
 
     def select_path4(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
         # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+        self.upload_image4(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen_Edu_Masters').ids[
             image_label_id].text = file_name  # Update the label text
@@ -5903,35 +6290,200 @@ class BorrowerScreen_Edu_PHD(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
+                                                       image_label_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            # For other platforms, show the file manager from the root directory
+            self.file_manager.show('/')
+
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path3(path, icon_id, label_id, file_label_id, image_id,
+                                                       image_label_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            # For other platforms, show the file manager from the root directory
+            self.file_manager.show('/')
+
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path4(path, icon_id, label_id, file_label_id, image_id,
+                                                       image_label_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            # For other platforms, show the file manager from the root directory
+            self.file_manager.show('/')
+
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path5(path, icon_id, label_id, file_label_id, image_id,
+                                                       image_label_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            # For other platforms, show the file manager from the root directory
+            self.file_manager.show('/')
+
     def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
         # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+        self.upload_image1(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen_Edu_PHD').ids[image_label_id].text = file_name  # Update the label text
         self.file_manager.close()
+
+    def upload_image1(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['tenth_class'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
 
     def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
         # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+        self.upload_image2(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen_Edu_PHD').ids[image_label_id].text = file_name  # Update the label text
         self.file_manager.close()
+
+    def upload_image2(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['intermediate'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
 
     def select_path3(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
         # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+        self.upload_image3(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen_Edu_PHD').ids[image_label_id].text = file_name  # Update the label text
         self.file_manager.close()
+
+    def upload_image3(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['btech'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
 
     def select_path4(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
         # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+        self.upload_image4(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen_Edu_PHD').ids[image_label_id].text = file_name  # Update the label text
         self.file_manager.close()
 
+    def upload_image4(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['mtech'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
     def select_path5(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
         # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+        self.upload_image5(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen_Edu_PHD').ids[image_label_id].text = file_name  # Update the label text
         self.file_manager.close()
+
+    def upload_image5(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['phd'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def get_email(self):
+        return anvil.server.call('another_method')
 
     def exit_manager(self, *args):
         self.file_manager.close()
@@ -6748,13 +7300,37 @@ class BorrowerScreen8(Screen):
             self.file_manager.show('/')
 
     def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-
+        self.upload_image(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen8').ids[image_label_id].text = file_name  # Update the label text
         self.file_manager.close()
 
     def exit_manager(self, *args):
         self.file_manager.close()
+
+    def get_email(self):
+        return anvil.server.call('another_method')
+
+    def upload_image(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['college_proof'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
 
     def request_media_images_permission(self):
         request_permissions([Permission.READ_MEDIA_IMAGES], self.permission_callback)
@@ -7109,8 +7685,32 @@ class BorrowerScreen10(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def get_email(self):
+        return anvil.server.call('another_method')
 
+    def upload_image(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['last_six_month_bank_proof'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.upload_image(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen10').ids[
             image_label_id].text = file_name  # Update the label text
@@ -7320,8 +7920,32 @@ class BorrowerScreen11(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def get_email(self):
+        return anvil.server.call('another_method')
 
+    def upload_image(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['proof_verification'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.upload_image(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen11').ids[
             image_label_id].text = file_name  # Update the label text
@@ -7796,6 +8420,48 @@ class BorrowerScreen14(Screen):
 
 
 class BorrowerScreen13(Screen):
+    def get_email(self):
+        return anvil.server.call('another_method')
+
+    def upload_image(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['emp_id_proof'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image1(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['last_six_month_bank_proof'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
 
     def on_annual_salary_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
@@ -7832,12 +8498,29 @@ class BorrowerScreen13(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
+                                                       image_label_id),
+        )
+        if platform == 'android':
+            primary_external_storage = "/storage/emulated/0"
+            self.file_manager.show(primary_external_storage)
+        else:
+            # For other platforms, show the file manager from the root directory
+            self.file_manager.show('/')
+
     def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.upload_image(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen13').ids[image_label_id].text = file_name  # Update the label text
         self.file_manager.close()
 
     def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+        self.upload_image1(path)  # Upload the selected image
+        self.ids[image_label_id].source = path
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('BorrowerScreen13').ids[image_label_id].text = file_name  # Update the label text
         self.file_manager.close()
@@ -8693,9 +9376,34 @@ class BorrowerScreen19(Screen):
         id_list = [i['email_user'] for i in data]
         user_email = anvil.server.call('another_method')
         user_id_list = [i['customer_id'] for i in data]
-
+        credit_limit=app_tables.fin_manage_credit_limit.search()
+        account_number=""
+        email_id=""
+        user_name=""
+        customer_id=""
+        credit=""
+        borrower_since=""
+        score=""
         index = 0
         ascend = 0
+        today = datetime.now().date()
+        if credit_limit:
+            credit = credit_limit[0]['credit_limit']
+        if data:
+            account_number = data[0]['account_number']
+            email_id = data[0]['email_user']
+            user_name = data[0]['full_name']
+            customer_id = data[0]['customer_id']
+            score=data[index]['ascend_value']
+        if customer_id and email_id and score and user_name and credit and account_number and borrower_since:
+            app_tables.fin_borrower.add_row(bank_acc_details=account_number,
+                                            email_id=email_id,
+                                            user_name=user_name,
+                                            credit_limit=credit,
+                                            customer_id=customer_id,
+                                            ascend_score=score,
+                                            borrower_since=today
+                                            )
         if user_email in id_list:
             index = id_list.index(user_email)
             try:
@@ -8707,6 +9415,8 @@ class BorrowerScreen19(Screen):
             data[index]['usertype'] = b
             data[index]['registration_approve'] = True
             data[index]['last_confirm'] = True
+            data[index]['profile_status'] = True
+            data[index]['mobile_check'] = True
             data[index]['ascend_value'] = float(ascend)
 
         else:

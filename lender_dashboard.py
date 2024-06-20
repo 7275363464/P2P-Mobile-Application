@@ -6326,11 +6326,11 @@ class LenderDashboard(Screen):
             self.ids.details.text = "Welcome " + name_list[log_index]
             self.ids.details.font_style = 'H6'
             self.ids.name.text = name_list[log_index]
-            self.ids.username.text = "Welcome " + name_list[log_index]
+            self.ids.username.text = name_list[log_index]
         else:
             # Handle the case when 'logged' is not in the status list
             self.ids.details.text = "User welcome to P2P"
-            self.ids.username.text = "Welcome "
+            self.ids.username.text = ""
 
         data = app_tables.fin_loan_details.search()
 

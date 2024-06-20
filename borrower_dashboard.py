@@ -156,17 +156,30 @@ user_helpers = '''
                                                 spacing: dp(5)
                                     
                                                 Image:
+                                                    id: image
                                                     source: 'img.png'  # Update with the actual path to the image
                                                     size_hint_x: None
                                                     height: dp(60)
-                                                    width: dp(70)
-                                                    id: selected_image1
-                                                    size_hint: None, None
-                                                    size: dp(80), dp(80)  # Make sure the size is a perfect square for a circular shape
-                                                    source: ""  # Set the path to your image source if needed
-                                                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                                    width: dp(90)
                                                     allow_stretch: True
                                                     keep_ratio: True
+                                                    canvas.before:
+                                                        StencilPush
+                                                        Ellipse:
+                                                            size: self.width - dp(10), self.height - dp(10)
+                                                            pos: self.x + dp(5), self.y + dp(5)
+                                                        StencilUse
+                                                    canvas:
+                                                        Rectangle:
+                                                            texture: self.texture
+                                                            size: self.width - dp(10), self.height - dp(10)
+                                                            pos: self.x + dp(5), self.y + dp(5)
+                                                    canvas.after:
+                                                        StencilUnUse
+                                                        Ellipse:
+                                                            size: self.width - dp(10), self.height - dp(10)
+                                                            pos: self.x + dp(5), self.y + dp(5)
+                                                        StencilPop
                             
 
                                     
@@ -731,12 +744,11 @@ user_helpers = '''
                         text_size: self.width - dp(20), None
         
                         Image:
+                            id: image1
                             source: 'icon8.png'
-                            id: selected_image1
-                            size_hint: None, None
-                            size: dp(80), dp(80)  # Make sure the size is a perfect square for a circular shape
-                            source: ""  # Set the path to your image source if needed
-                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            size_hint_x: None
+                            height: dp(60)
+                            width: dp(90)
                             allow_stretch: True
                             keep_ratio: True
                             canvas.before:
@@ -6869,6 +6881,35 @@ class DashboardScreen(Screen):
 
     def loans(self):
         self.selected_item = None  # Track the selected item
+        data1 = app_tables.fin_loan_details.search()
+        email = anvil.server.call('another_method')
+        data = app_tables.fin_user_profile.search(email_user=email)
+
+        if not data:
+            print("No data found for email:", email)
+            return
+
+        for row in data:
+            if row['user_photo']:
+                image_data = row['user_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                else:
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        profile_texture_io = BytesIO(image_data_binary)
+                        photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+
+        self.selected_item = None  # Track the selected item
+
         data = app_tables.fin_loan_details.search()
         email = anvil.server.call('another_method')
         profile = app_tables.fin_user_profile.search(email_user=email)
@@ -6881,9 +6922,9 @@ class DashboardScreen(Screen):
         loan_amount = []
         tenure = []
         interest_rate = []
-        ascend_score = []
+        # ascend_value = []
         s = 0
-        for i in data:
+        for i in data1:
             s += 1
             customer_id.append(i['borrower_customer_id'])
             loan_id.append(i['loan_id'])
@@ -6894,20 +6935,19 @@ class DashboardScreen(Screen):
             loan_amount.append(i['loan_amount'])
             tenure.append(i['tenure'])
             interest_rate.append(i['interest_rate'])
-
+            # ascend_value.append(i['ascend_value'])
 
         profile_customer_id = []
         profile_mobile_number = []
+        ascend_value = []
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
-            ascend_score.append(i['ascend_value'])
+            ascend_value.append(i['ascend_value'])
         cos_id = None
         if email in email1:
             index = email1.index(email)
             cos_id = customer_id[index]
-
-        print(cos_id)
         if cos_id is not None:
 
             c = -1
@@ -6937,13 +6977,9 @@ class DashboardScreen(Screen):
                 )
                 # Horizontal layout to keep the text and image in to the card
                 horizontal_layout = BoxLayout(orientation='horizontal')
-                image = Image(
-                    source='icon8.png',  # Update with the actual path to the image
-                    size_hint_x=None,
-                    height="60dp",
-                    width="70dp"
-                )
-                horizontal_layout.add_widget(image)
+                if photo_texture:
+                    image = Image(texture=photo_texture, size_hint_x=None, height="30dp", width="60dp")
+                    horizontal_layout.add_widget(image)
 
                 # Text Layout to keep the text on card
                 horizontal_layout.add_widget(Widget(size_hint_x=None, width='25dp'))
@@ -6975,7 +7011,7 @@ class DashboardScreen(Screen):
                     # font_size='10sp'
                 ))
                 text_layout.add_widget(MDLabel(
-                    text=f" [b]Ascend Score :[/b]{ascend_score[number]}",
+                    text=f" [b]Ascend Score :[/b]{ascend_value[number]}",
                     theme_text_color='Custom',
                     text_color=(0, 0, 0, 1),
                     halign='left',
@@ -7557,7 +7593,7 @@ class DashboardScreen(Screen):
         p_customer_id = []
         ascend_score = []
         emp_type = []
-
+        profile_list = []
         for i in profile:
             email_user.append(i['email_user'])
             name_list.append(i['full_name'])
@@ -7566,6 +7602,7 @@ class DashboardScreen(Screen):
             p_customer_id.append(i['customer_id'])
             ascend_score.append(i['ascend_value'])
             emp_type.append(i['profession'])
+            profile_list.append(i['user_photo'])
 
         # Check if 'logged' is in the status list
         log_index = 0
@@ -7574,11 +7611,11 @@ class DashboardScreen(Screen):
             self.ids.details.text = "Welcome " + name_list[log_index]
             self.ids.details.font_style = 'H6'
             self.ids.my_name.text = name_list[log_index]
-            self.ids.username.text = "Welcome " + name_list[log_index]
+            self.ids.username.text = name_list[log_index]
         else:
             # Handle the case when 'logged' is not in the status list
             self.ids.details.text = "User welcome to P2P"
-            self.ids.username.text = "Welcome "
+            self.ids.username.text = ""
 
         data = app_tables.fin_loan_details.search()
 
@@ -7657,13 +7694,37 @@ class DashboardScreen(Screen):
 
         if p_customer_id[log_index] in borrower_cus_id:
             index1 = borrower_cus_id.index(p_customer_id[log_index])
-            self.ids.credit_limit.text  = "[b]Credit Limit[/b]: " + str(credit_limit[index1])
+            self.ids.credit_limit.text = "[b]Credit Limit[/b]: " + str(credit_limit[index1])
             self.ids.joined_date.text = "[b]Joined Date[/b]: " + str(create_date[index1])
             self.ids.date.text = "Joined Date: " + str(create_date[index1])
         else:
             self.ids.credit_limit.text = "[b]Credit Limit[/b]: None"
             self.ids.joined_date.text = "[b]Joined Date[/b]: None"
             self.ids.date.text = "[b]Joined Date[/b]: "
+
+        if profile_list[log_index] != None:
+            image_data = profile_list[log_index].get_bytes()
+            if isinstance(image_data, bytes):
+                try:
+                    profile_texture_io = BytesIO(image_data)
+                    photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                    self.ids.image.texture = photo_texture
+                    self.ids.image1.texture = photo_texture
+                except Exception as e:
+                    print(f"Error processing image for customer {p_customer_id[log_index]}: {e}")
+            else:
+                try:
+                    image_data_binary = base64.b64decode(image_data)
+                    profile_texture_io = BytesIO(image_data_binary)
+                    photo_texture = CoreImage(profile_texture_io, ext='png').texture
+                    self.ids.image.texture = photo_texture
+                    self.ids.image1.texture = photo_texture
+                except base64.binascii.Error as e:
+                    print(f"Base64 decoding error for customer {p_customer_id[log_index]}: {e}")
+                except Exception as e:
+                    print(f"Error processing image for customer {p_customer_id[log_index]}: {e}")
+        else:
+            print('photo is not there')
 
     def on_pre_leave(self):
         Window.unbind(on_keyboard=self.on_back_button)

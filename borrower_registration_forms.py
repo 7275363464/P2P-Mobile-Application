@@ -9376,36 +9376,39 @@ class BorrowerScreen19(Screen):
         id_list = [i['email_user'] for i in data]
         user_email = anvil.server.call('another_method')
         user_id_list = [i['customer_id'] for i in data]
-        credit_limit=app_tables.fin_manage_credit_limit.search()
-        account_number=""
-        email_id=""
-        user_name=""
-        customer_id=""
-        credit=""
-        borrower_since=""
-        score=""
+
+        manage_credit_limit = app_tables.fin_manage_credit_limit.search()
+        credit_limit = [i['credit_limit'] for i in manage_credit_limit]
+
+        users = app_tables.users.search()
+        users_email_list = [i['email'] for i in users]
+
+        wallet = app_tables.fin_wallet.search()
+        wallet_cus_id = [i['customer_id'] for i in wallet]
+
+        user_index = 0
+        if user_email in users_email_list:
+            user_index = users_email_list.index(user_email)
+        else:
+            print("email id not found")
+
+        print(len(credit_limit) >= 1)
+
+        if len(credit_limit) >= 1:
+            limit = credit_limit[0]
+        else:
+            limit = 0
+        print(credit_limit)
+
         index = 0
         ascend = 0
-        today = datetime.now().date()
-        if credit_limit:
-            credit = credit_limit[0]['credit_limit']
-        if data:
-            account_number = data[0]['account_number']
-            email_id = data[0]['email_user']
-            user_name = data[0]['full_name']
-            customer_id = data[0]['customer_id']
-            score=data[index]['ascend_value']
-        if customer_id and email_id and score and user_name and credit and account_number and borrower_since:
-            app_tables.fin_borrower.add_row(bank_acc_details=account_number,
-                                            email_id=email_id,
-                                            user_name=user_name,
-                                            credit_limit=credit,
-                                            customer_id=customer_id,
-                                            ascend_score=score,
-                                            borrower_since=today
-                                            )
+        wallet_index = 0
         if user_email in id_list:
             index = id_list.index(user_email)
+            if user_id_list[index] in wallet_cus_id:
+                wallet_index = wallet_cus_id.index(user_id_list[index])
+            else:
+                print("wallet id not found")
             try:
                 ascend = anvil.server.call('final_points_update_bessem_table', user_id_list[index])
             except Exception as e:

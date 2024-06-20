@@ -348,9 +348,9 @@ class ReportScreen(Screen):
                               user_type):
         # Get the current date and time
         current_date = datetime.now()
-        img_media = anvil.BlobMedia('image/png', b'') if self.selected_image_path is None else anvil.media.from_file(
-            self.selected_image_path)  # Use a blank image as placeholder if no file is selected
-
+        #img_media = anvil.BlobMedia('image/png', b'') if self.selected_image_path is None else anvil.media.from_file(
+        #    self.selected_image_path)  # Use a blank image as placeholder if no file is selected
+        img_media = None if self.selected_image_path is None else anvil.media.from_file(self.selected_image_path)
         app_tables.fin_reported_problems.add_row(
             name=name,
             email=email,

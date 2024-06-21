@@ -8356,6 +8356,9 @@ class ProfessionalScreen(Screen):
 class EmployeeScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.employee_screen()
+
+    def employee_screen(self):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
         company_name = []
@@ -8470,7 +8473,7 @@ class EmployeeScreen(Screen):
             print(f"Email {email} not found in data.")
 
     def refresh(self):
-        pass
+        self.employee_screen()
 
     def on_employee_edit(self):
         self.manager.add_widget(Factory.EditScreen4(name='EditScreen4'))
@@ -8485,6 +8488,7 @@ class EmployeeScreen(Screen):
         return anvil.server.call('another_method')
 
     def on_pre_enter(self):
+        self.employee_screen()
         Window.bind(on_keyboard=self.on_back_button)
 
     def on_pre_leave(self):
@@ -8889,6 +8893,9 @@ class EditScreen4(Screen):
 class StudentScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.student_screen()
+
+    def student_screen(self):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
         college_name = []
@@ -8944,7 +8951,7 @@ class StudentScreen(Screen):
             print(f"Email {email} not found in data.")
 
     def refresh(self):
-        pass
+        self.student_screen()
 
     def on_student_edit(self):
         self.manager.add_widget(Factory.EditScreen3(name='EditScreen3'))
@@ -8959,6 +8966,7 @@ class StudentScreen(Screen):
         return anvil.server.call('another_method')
 
     def on_pre_enter(self):
+        self.student_screen()
         Window.bind(on_keyboard=self.on_back_button)
 
     def on_pre_leave(self):
@@ -9293,7 +9301,6 @@ class PersonalScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.refresh_profile_data()  # Initial data retrieval
-
     def refresh_profile_data(self, dt=None):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
@@ -9507,7 +9514,7 @@ class PersonalScreen(Screen):
         return anvil.server.call('another_method')
 
     def refresh(self):
-        pass
+        self.refresh_profile_data()
 
     def get_table(self):
         # Make a call to the Anvil server function
@@ -9566,6 +9573,7 @@ class PersonalScreen(Screen):
         view.open()
 
     def on_pre_enter(self):
+        self.refresh_profile_data()
         Window.bind(on_keyboard=self.on_back_button)
 
     def on_pre_leave(self):
@@ -9633,6 +9641,8 @@ class ProfileScreen(Screen):
 class BankScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.bank_screen()
+    def bank_screen(self):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
         account_holder = []
@@ -9660,7 +9670,7 @@ class BankScreen(Screen):
             self.ids.account_number.text = str(account_number[index])
 
     def refresh(self):
-        pass
+        self.bank_screen()
 
     def on_back_button_press(self):
         self.manager.current = 'AccountScreen'
@@ -9675,6 +9685,7 @@ class BankScreen(Screen):
         self.manager.current = 'EditScreen6'
 
     def on_pre_enter(self):
+        self.bank_screen()
         Window.bind(on_keyboard=self.on_back_button)
 
     def on_pre_leave(self):
@@ -9799,6 +9810,10 @@ class EditScreen6(Screen):
 class BusinessScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+        self.business_screen()
+
+    def business_screen(self):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
         business_name = []
@@ -9911,7 +9926,7 @@ class BusinessScreen(Screen):
             print(f"Email {email} not found in data.")
 
     def refresh(self):
-        pass
+        self.business_screen()
 
     def on_business_edit(self):
         self.manager.add_widget(Factory.EditScreen5(name='EditScreen5'))
@@ -9926,6 +9941,7 @@ class BusinessScreen(Screen):
         self.manager.current = 'AccountScreen'
 
     def on_pre_enter(self):
+        self.business_screen()
         Window.bind(on_keyboard=self.on_back_button)
 
     def on_pre_leave(self):
@@ -10615,6 +10631,7 @@ class EditScreen1(Screen):
                                            email1, mobile_no, dob, gender)
 
         if success:
+            self.update_email_logic(email1,name)
             # self.show_validation_error("Database Update Sucessfully.")
             # If the update was successful, navigate back to the dashboard screen
             self.manager.add_widget(Factory.AccountScreen(name='AccountScreen'))
@@ -10759,6 +10776,9 @@ class EditScreen1(Screen):
 
         except Exception as e:
             print(f"An error occurred while updating related tables: {e}")
+
+    def update_email_logic(self, email1, name):
+        self.manager.current = 'MainScreen'
 
     def get_email(self):
         # Make a call to the Anvil server function

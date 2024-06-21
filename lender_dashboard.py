@@ -1097,13 +1097,12 @@ user_helpers1 = """
                                         md_bg_color: "#ffffff"  # Customize background color
                                         orientation: "vertical"
                                         padding:dp(9), dp(3)
-
+                                        on_release:root.personal()
                                         Image:
                                             source: "icon6.png"
                                             size_hint: (0.4, 1)
                                             pos_hint:{"center_x":0.5,"center_y":0.2}
                                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
 
                                         MDLabel:
                                             text: "Personal Info"
@@ -1127,13 +1126,13 @@ user_helpers1 = """
                                         md_bg_color: "#ffffff"  # Customize background color
                                         orientation: "vertical"
                                         padding:dp(9), dp(3)
-
+                                        on_release: root.navigate_based_on_touch1()
                                         Image:
                                             source: "icon12.png"
                                             size_hint: (0.4, 1)
                                             pos_hint:{"center_x":0.5,"center_y":0.2}
                                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
+                    
 
                                         MDLabel:
                                             text: "Professional Info"
@@ -1157,6 +1156,7 @@ user_helpers1 = """
                                         md_bg_color: "#ffffff"  # Customize background color
                                         orientation: "vertical"
                                         padding:dp(9), dp(3)
+                                        on_release:root.go_to_business1()
 
                                         Image:
                                             source: "icon9.png"
@@ -1272,37 +1272,33 @@ user_helpers1 = """
 
                 Image:
                     id: selected_image1
-                    source: ''
-                    halign: 'center'
-                    valign: 'middle'
+                    source: 'icon8.png'
                     size_hint_x: None
+                    height: dp(60)
+                    width: dp(90)
+                    size_hint: None, None
+                    size: dp(80), dp(80)  # Make sure the size is a perfect square for a circular shape
+                    source: ""  # Set the path to your image source if needed
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     allow_stretch: True
                     keep_ratio: True
-                    width: dp(34)
-                    spacing: dp(30)
-                    padding: dp(30)
-                    theme_text_color: 'Custom'
-                    text_color: 0.043, 0.145, 0.278, 1
-                    size: dp(90), dp(90)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
                     canvas.before:
-                        Color:
-                            rgba: 1, 1, 1, 1
-
-                    canvas:
                         StencilPush
                         Ellipse:
-                            size: self.width + 15, self.height + 15
-                            pos: self.x -5, self.y -5
+                            size: self.width - dp(10), self.height - dp(10)
+                            pos: self.x + dp(5), self.y + dp(5)
                         StencilUse
+                    canvas:
                         Rectangle:
                             texture: self.texture
-                            size: self.width + 15, self.height + 15
-                            pos: self.x -5, self.y -5
+                            size: self.width - dp(10), self.height - dp(10)
+                            pos: self.x + dp(5), self.y + dp(5)
+                    canvas.after:
                         StencilUnUse
+                        Ellipse:
+                            size: self.width - dp(10), self.height - dp(10)
+                            pos: self.x + dp(5), self.y + dp(5)
                         StencilPop
-
 
                 MDBoxLayout:
                     orientation: "vertical"
@@ -1418,7 +1414,7 @@ user_helpers1 = """
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
-                                on_release: root.professional()
+                                on_release: root.navigate_based_on_touch1()
                                 Image:
                                     source: "icon12.png"
                                     size_hint: (0.4, 1)
@@ -4660,7 +4656,6 @@ user_helpers1 = """
                         Line:
                             points: self.x, self.y, self.x + self.width, self.y
 
-
                 MDLabel:
                     text: ' '
 
@@ -4727,6 +4722,10 @@ user_helpers1 = """
                                 pos: self.pos
                         Image:
                             id: selected_image1
+                            source: 'icon8.png'
+                            size_hint_x: None
+                            height: dp(60)
+                            width: dp(90)
                             size_hint: None, None
                             size: dp(80), dp(80)  # Make sure the size is a perfect square for a circular shape
                             source: ""  # Set the path to your image source if needed
@@ -4909,7 +4908,7 @@ user_helpers1 = """
                         bold: True
                         multiline: False
 
-                    MDLabel:
+                    MDTextField:
                         id: email
                         font_size: dp(13)
                         text:'Add email'
@@ -6013,42 +6012,7 @@ class LenderDashboard(Screen):
     def refresh2(self):
         self.__init__()
 
-    def profile(self):
-        modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
-        # Create MDLabel with white text color, increased font size, and bold text
-        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
-                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
-                                font_size=dp(50), bold=True)
-
-        # Set initial y-position off-screen
-        loading_label.y = -loading_label.height
-
-        modal_view.add_widget(loading_label)
-        modal_view.open()
-
-        # Perform the animation
-        self.animate_loading_text(loading_label, modal_view.height)
-
-        # Perform the actual action (e.g., fetching transaction history)
-        # You can replace the sleep with your actual logic
-        Clock.schedule_once(lambda dt: self.profile_action(modal_view), 2)
-
-    def profile_action(self, modal_view):
-        # Dismiss the modal view
-        modal_view.dismiss()
-
-        # Get the ScreenManager
-        sm = self.manager
-
-        # Create a new instance of the TransactionBH screen
-        transaction_bh_screen = ViewPersonalScreen(name='ViewPersonalScreen')
-
-        # Add the TransactionBH screen to the existing ScreenManager
-        sm.add_widget(transaction_bh_screen)
-
-        # Switch to the TransactionBH screen
-        sm.current = 'ViewPersonalScreen'
 
     def wallet(self):
         self.type = None
@@ -7001,8 +6965,8 @@ class LenderDashboard(Screen):
             self.file_manager_open(icon_id, label_id, file_label_id, image_id)
 
     def on_edit(self):
-        self.manager.add_widget(Factory.EditScreen(name='ViewEditScreen'))
-        self.manager.current = 'ViewEditScreen'
+        self.manager.add_widget(Factory.EditScreen1(name='ViewEditScreen1'))
+        self.manager.current = 'ViewEditScreen1'
 
     def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
         self.file_manager = MDFileManager(
@@ -7337,6 +7301,79 @@ class LenderDashboard(Screen):
         self.manager.current = 'LenderWalletScreen'
         # Get the existing ScreenManager
 
+    def bank(self):
+        self.manager.add_widget(Factory.ViewBankScreen(name='ViewBankScreen'))
+        self.manager.current = 'ViewBankScreen'
+
+    def profile(self):
+        self.manager.add_widget(Factory.ViewProfileScreen(name='ViewProfileScreen'))
+        self.manager.current = 'ViewProfileScreen'
+
+    def personal(self):
+        self.manager.add_widget(Factory.ViewPersonalScreen(name='ViewPersonalScreen'))
+        self.manager.current = 'ViewPersonalScreen'
+
+    def go_to_business1(self):
+        employee = self.get_business1()
+        if employee is None:
+            if not self.manager.has_screen('None'):
+                self.manager.add_widget(Factory.ViewBusinessScreen1(name='ViewBusinessScreen1'))
+            self.manager.current = 'ViewBusinessScreen1'
+
+            print("Business is not available for the user.")
+            # Handle this case as per your application's logic
+        elif employee == 'Individual' or employee == 'individual':
+            if not self.manager.has_screen('Individual'):
+                self.manager.add_widget(Factory.ViewBusinessScreen(name='ViewBusinessScreen'))
+            self.manager.current = 'ViewBusinessScreen'
+        else:
+            if not self.manager.has_screen('None'):
+                self.manager.add_widget(Factory.ViewBusinessScreen1(name='ViewBusinessScreen1'))
+            self.manager.current = 'ViewBusinessScreen1'
+
+    def get_business1(self):
+        email = self.get_email()
+        profession_records = app_tables.fin_user_profile.search(email_user=email)
+
+        if profession_records:
+            # Assuming the profession is stored in the first record if found
+            employee = profession_records[0]['lendor_lending_type']
+            return employee
+        else:
+            # Handle case where profession is not found
+            return None
+
+    def navigate_based_on_touch1(self):
+        profession = self.get_profession()
+        if profession is None:
+            if not self.manager.has_screen('None'):
+                self.manager.add_widget(Factory.ViewProfessionalScreen(name='ViewProfessionalScreen'))
+            self.manager.current = 'ViewProfessionalScreen'
+
+            print("Professional is not available for the user.")
+            # Handle this case as per your application's logic
+        elif profession == 'institutional' or profession == 'Institutional':
+            if not self.manager.has_screen('institutional'):
+                self.manager.add_widget(Factory.ViewEmployeeScreen(name='ViewEmployeeScreen'))
+            self.manager.current = 'ViewEmployeeScreen'
+        else:
+            if not self.manager.has_screen('None'):
+                self.manager.add_widget(Factory.ViewProfessionalScreen(name='ViewProfessionalScreen'))
+            self.manager.current = 'ViewProfessionalScreen'
+
+    def get_profession(self):
+        email = self.get_email()
+        profession_records = app_tables.fin_user_profile.search(email_user=email)
+
+        if profession_records:
+            # Assuming the profession is stored in the first record if found
+            profession_emp = profession_records[0]['lendor_lending_type']
+            return profession_emp
+        else:
+            # Handle case where profession is not found
+            return None
+
+
     def help_module(self):
         from help_module import HelpScreen
         self.manager.add_widget(Factory.HelpScreen(name='HelpScreen'))
@@ -7465,10 +7502,13 @@ class ViewAccountScreen(Screen):
     def go_to_business1(self):
         employee = self.get_business1()
         if employee is None:
-            self.show_no_business_screen1()
+            if not self.manager.has_screen('None'):
+                self.manager.add_widget(Factory.ViewBusinessScreen1(name='ViewBusinessScreen1'))
+            self.manager.current = 'ViewBusinessScreen1'
+
             print("Business is not available for the user.")
             # Handle this case as per your application's logic
-        elif employee == 'Individual':
+        elif employee == 'Individual' or employee == 'individual':
             if not self.manager.has_screen('Individual'):
                 self.manager.add_widget(Factory.ViewBusinessScreen(name='ViewBusinessScreen'))
             self.manager.current = 'ViewBusinessScreen'
@@ -7479,28 +7519,26 @@ class ViewAccountScreen(Screen):
 
     def get_business1(self):
         email = self.get_email()
-        profession_records = app_tables.fin_lender.search(email_id=email)
+        profession_records = app_tables.fin_user_profile.search(email_user=email)
 
         if profession_records:
             # Assuming the profession is stored in the first record if found
-            employee = profession_records[0]['lending_type']
+            employee = profession_records[0]['lendor_lending_type']
             return employee
         else:
             # Handle case where profession is not found
             return None
 
-    def show_no_business_screen1(self):
-        if not self.manager.has_screen('None'):
-            self.manager.add_widget(Factory.ViewBusinessScreen1(name='ViewBusinessScreen1'))
-        self.manager.current = 'ViewBusinessScreen1'
+    def navigate_based_on_touch1(self):
+        profession = self.get_profession()
+        if profession is None:
+            if not self.manager.has_screen('None'):
+                self.manager.add_widget(Factory.ViewProfessionalScreen(name='ViewProfessionalScreen'))
+            self.manager.current = 'ViewProfessionalScreen'
 
-    def professional(self):
-        employee = self.get_profession()
-        if employee is None:
-            self.show_no_business_screen1()
             print("Professional is not available for the user.")
             # Handle this case as per your application's logic
-        elif employee == 'institutional':
+        elif profession == 'institutional' or profession == 'Institutional':
             if not self.manager.has_screen('institutional'):
                 self.manager.add_widget(Factory.ViewEmployeeScreen(name='ViewEmployeeScreen'))
             self.manager.current = 'ViewEmployeeScreen'
@@ -7511,21 +7549,15 @@ class ViewAccountScreen(Screen):
 
     def get_profession(self):
         email = self.get_email()
-        profession_records = app_tables.fin_lender.search(email_id=email)
+        profession_records = app_tables.fin_user_profile.search(email_user=email)
 
         if profession_records:
             # Assuming the profession is stored in the first record if found
-            employee = profession_records[0]['lending_type']
-            return employee
+            profession_emp = profession_records[0]['lendor_lending_type']
+            return profession_emp
         else:
             # Handle case where profession is not found
             return None
-
-    def show_no_business_screen1(self):
-        if not self.manager.has_screen('None'):
-            self.manager.add_widget(Factory.ViewBusinessScreen1(name='ViewBusinessScreen1'))
-        self.manager.current = 'ViewBusinessScreen1'
-
 
 class ViewProfileScreen(Screen):
     def __init__(self, **kwargs):
@@ -7578,6 +7610,9 @@ class ViewProfileScreen(Screen):
 class ViewEmployeeScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.employee_screen()
+
+    def employee_screen(self):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
         company_name = []
@@ -7692,7 +7727,7 @@ class ViewEmployeeScreen(Screen):
             print(f"Email {email} not found in data.")
 
     def refresh(self):
-        pass
+        self.employee_screen()
 
     def on_employee_edit(self):
         self.manager.add_widget(Factory.ViewEditScreen4(name='ViewEditScreen4'))
@@ -7707,6 +7742,7 @@ class ViewEmployeeScreen(Screen):
         return anvil.server.call('another_method')
 
     def on_pre_enter(self):
+        self.employee_screen()
         Window.bind(on_keyboard=self.on_back_button)
 
     def on_pre_leave(self):
@@ -8473,6 +8509,9 @@ class EditScreen5(Screen):
 class ViewBusinessScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.business_screen()
+
+    def business_screen(self):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
         business_name = []
@@ -8585,7 +8624,7 @@ class ViewBusinessScreen(Screen):
             print(f"Email {email} not found in data.")
 
     def refresh(self):
-        pass
+        self.business_screen()
 
     def on_business_edit(self):
         self.manager.add_widget(Factory.ViewEditScreen5(name='ViewEditScreen5'))
@@ -8600,6 +8639,7 @@ class ViewBusinessScreen(Screen):
         self.manager.current = 'ViewAccountScreen'
 
     def on_pre_enter(self):
+        self.business_screen()
         Window.bind(on_keyboard=self.on_back_button)
 
     def on_pre_leave(self):
@@ -9034,6 +9074,9 @@ class ViewEditScreen6(Screen):
 class ViewBankScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.bank_screen()
+
+    def bank_screen(self):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
         account_holder = []
@@ -9061,7 +9104,7 @@ class ViewBankScreen(Screen):
             self.ids.account_number.text = str(account_number[index])
 
     def refresh(self):
-        pass
+        self.bank_screen()
 
     def on_back_button_press(self):
         self.manager.current = 'ViewAccountScreen'
@@ -9076,6 +9119,7 @@ class ViewBankScreen(Screen):
         self.manager.current = 'ViewEditScreen6'
 
     def on_pre_enter(self):
+        self.bank_screen()
         Window.bind(on_keyboard=self.on_back_button)
 
     def on_pre_leave(self):
@@ -9089,6 +9133,9 @@ class ViewBankScreen(Screen):
 
 
 class ViewPersonalScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.refresh_profile_data()
     def refresh_profile_data(self, dt=None):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
@@ -9101,7 +9148,6 @@ class ViewPersonalScreen(Screen):
         email1 = []
         mobile_no = []
         dob = []
-        city = []
         gender = []
         marrital_status = []
         alternate_email = []
@@ -9115,7 +9161,8 @@ class ViewPersonalScreen(Screen):
         state = []
         country = []
         qualification = []
-        profession = []
+        upload_gov_id1 = []
+        upload_gov_id2 = []
         photo = []
 
         for row in data:
@@ -9148,12 +9195,69 @@ class ViewPersonalScreen(Screen):
             else:
                 photo.append(None)
 
+            if row['aadhaar_photo']:
+                image_data = row['aadhaar_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                    # Assuming image_data is already a binary image file
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        upload_gov_id1.append(profile_texture_obj)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        upload_gov_id1.append(None)
+                else:
+                    # If image_data is not bytes, assume it's base64 encoded and decode it
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        print(f"Decoded image data length: {len(image_data_binary)}")
+                        profile_texture_io = BytesIO(image_data_binary)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        upload_gov_id1.append(profile_texture_obj)
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                        upload_gov_id1.append(None)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        upload_gov_id1.append(None)
+            else:
+                upload_gov_id1.append(None)
+
+            if row['pan_photo']:
+                image_data = row['pan_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                    # Assuming image_data is already a binary image file
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        upload_gov_id2.append(profile_texture_obj)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        upload_gov_id2.append(None)
+                else:
+                    # If image_data is not bytes, assume it's base64 encoded and decode it
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        print(f"Decoded image data length: {len(image_data_binary)}")
+                        profile_texture_io = BytesIO(image_data_binary)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        upload_gov_id2.append(profile_texture_obj)
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                        upload_gov_id2.append(None)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        upload_gov_id2.append(None)
+            else:
+                upload_gov_id2.append(None)
+
             name.append(row['full_name'])
             alternate_email.append(row['mail_id'])
             email1.append(row['email_user'])
             mobile_no.append(row['mobile'])
             dob.append(row['date_of_birth'])
-            city.append(row['city'])
             staying_address.append(row['duration_at_address'])
             gov_id1.append(row['aadhaar_no'])
             gov_id2.append(row['pan_number'])
@@ -9166,7 +9270,8 @@ class ViewPersonalScreen(Screen):
             state.append(row['state'])
             country.append(row['city'])
             qualification.append(row['qualification'])
-            profession.append(row['profession'])
+            upload_gov_id1.append(row['aadhaar_photo'])
+            upload_gov_id2.append(row['pan_photo'])
 
         if email in email1:
             index = email1.index(email)
@@ -9180,12 +9285,10 @@ class ViewPersonalScreen(Screen):
             self.ids.type.text = str(type_of_address[index])
             self.ids.gov_id1.text = str(gov_id1[index])
             self.ids.gov_id2.text = str(gov_id2[index])
-            self.ids.city.text = str(city[index])
             self.ids.zip_code.text = str(zip_code[index])
             self.ids.state.text = str(state[index])
-            self.ids.country.text = str(city[index])
+            self.ids.country.text = str(country[index])
             self.ids.qualification.text = str(qualification[index])
-            self.ids.profession.text = str(profession[index])
             self.ids.stay.text = str(staying_address[index])
             self.ids.gender.text = str(gender[index])
             self.ids.marrital_status.text = str(marrital_status[index])
@@ -9194,10 +9297,18 @@ class ViewPersonalScreen(Screen):
                 self.ids.selected_image1.texture = photo[index]
             else:
                 print("No profile photo found for email:", email)
+            if upload_gov_id1[index]:
+                self.ids.upload_gov_id1_img.texture = upload_gov_id1[index]
+            else:
+                print("No profile photo found for email:", email)
+            if upload_gov_id2[index]:
+                self.ids.upload_gov_id2_img.texture = upload_gov_id2[index]
+            else:
+                print("No profile photo found for email:", email)
         else:
             print(f"Email {email} not found in data.")
 
-    def upload_image(self, file_path):
+    def upload_image1(self, file_path):
         try:
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
@@ -9217,13 +9328,14 @@ class ViewPersonalScreen(Screen):
         except Exception as e:
             print(f"Error uploading image: {e}")
 
+
     def get_email(self):
         # Make a call to the Anvil server function
         # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
         return anvil.server.call('another_method')
 
     def refresh(self):
-        pass
+        self.refresh_profile_data()
 
     def get_table(self):
         # Make a call to the Anvil server function
@@ -9254,7 +9366,7 @@ class ViewPersonalScreen(Screen):
             self.file_manager.show('/')
 
     def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
-        self.upload_image(path)  # Upload the selected image
+        self.upload_image1(path)  # Upload the selected image
         self.ids[image_id].source = path
         self.file_manager.close()
 
@@ -9282,6 +9394,7 @@ class ViewPersonalScreen(Screen):
         view.open()
 
     def on_pre_enter(self):
+        self.refresh_profile_data()
         Window.bind(on_keyboard=self.on_back_button)
 
     def on_pre_leave(self):

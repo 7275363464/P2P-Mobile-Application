@@ -10646,50 +10646,120 @@ class EditScreen1(Screen):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
         if data:
-            # Assuming there should be only one row per unique email address,
-            # we retrieve the first matching row
             user_profile = data[0]
-            # Update the user's profile data
-            user_profile.update(full_name=name,
-                                mail_id=alternate_email,
-                                email_user=email1,
-                                mobile=mobile_no,
-                                gender=gender,
-                                duration_at_address=staying_address,
-                                aadhaar_no=gov_id1,
-                                pan_number=gov_id2,
-                                street_adress_1=address1,
-                                street_address_2=address2,
-                                present_address=type_of_address,
-                                marital_status=marrital_status,
-                                date_of_birth=dob,
-                                pincode=zip_code,
-                                state=state,
-                                city=country,
-                                qualification=qualification,
-                                profession=profession,
-                                other_loan=other_loan,
-                                home_loan=home_loan,
-                                credit_card_loans=personal_credit,
-                                vehicle_loan=vehicle_loans
+            try:
+                # Update the user's profile data
+                user_profile.update(full_name=name,
+                                    mail_id=alternate_email,
+                                    email_user=email1,
+                                    mobile=mobile_no,
+                                    gender=gender,
+                                    duration_at_address=staying_address,
+                                    aadhaar_no=gov_id1,
+                                    pan_number=gov_id2,
+                                    street_adress_1=address1,
+                                    street_address_2=address2,
+                                    present_address=type_of_address,
+                                    marital_status=marrital_status,
+                                    date_of_birth=dob,
+                                    pincode=zip_code,
+                                    state=state,
+                                    city=country,
+                                    qualification=qualification,
+                                    profession=profession,
+                                    other_loan=other_loan,
+                                    home_loan=home_loan,
+                                    credit_card_loans=personal_credit,
+                                    vehicle_loan=vehicle_loans)
 
-                                )
-            app_tables.users.update(email=email1)
-            app_tables.fin_wallet_transactions.update(user_email=email1)
-            app_tables.fin_wallet_bank_account_table.update(user_email=email1)
-            app_tables.fin_wallet.update(user_email=email1,user_name=name)
-            app_tables.fin_emi_table.update(borrower_email=email1)
-            app_tables.fin_extends_loan.update(borrower_email_id=email1,borrower_full_name=name)
-            app_tables.fin_foreclosure.update(borrower_email_id=email1,borrower_name=name)
-            app_tables.fin_borrower.update(email_id=email1,user_name=name)
-            app_tables.fin_loan_details.update(borrower_email_id=email1,borrower_full_name=name)
-            app_tables.fin_reported_problems.update(email=email1,name=name,mobile_number=mobile_no)
-            app_tables.fin_user_ascend_score.update(borrower_email_id=email1)
-
-            return True
+                # Update all related tables
+                self.update_all_related_tables(email, email1, name, mobile_no)
+                return True
+            except Exception as e:
+                print(f"An error occurred while updating profile: {e}")
+                return False
         else:
-            # Handle the case where the user's profile does not exist
+            print("No data found for email:", email)
             return False
+
+    def update_all_related_tables(self, old_email, new_email, name, mobile_no):
+        try:
+            # Users
+            user_table = app_tables.users.search(email=old_email)
+            for user in user_table:
+                user['email'] = new_email
+                user.update()
+
+            # Wallet Transactions
+            wallet_transactions = app_tables.fin_wallet_transactions.search(user_email=old_email)
+            for loans in wallet_transactions:
+                loans['user_email'] = new_email
+                loans.update()
+
+            # Wallet Bank Account
+            wallet_bank_account_table = app_tables.fin_wallet_bank_account_table.search(user_email=old_email)
+            for account in wallet_bank_account_table:
+                account['user_email'] = new_email
+                account.update()
+
+            # Wallet
+            wallet = app_tables.fin_wallet.search(user_email=old_email)
+            for account in wallet:
+                account['user_email'] = new_email
+                account['user_name'] = name
+                account.update()
+
+            # EMI Details
+            emi_details = app_tables.fin_emi_table.search(borrower_email=old_email)
+            for loans in emi_details:
+                loans['borrower_email'] = new_email
+                loans.update()
+
+            # Extends Table
+            extends_table = app_tables.fin_extends_loan.search(borrower_email_id=old_email)
+            for loans in extends_table:
+                loans['borrower_email_id'] = new_email
+                loans['borrower_full_name'] = name
+                loans.update()
+
+            # Foreclosure
+            foreclosure = app_tables.fin_foreclosure.search(borrower_email_id=old_email)
+            for loans in foreclosure:
+                loans['borrower_email_id'] = new_email
+                loans['borrower_name'] = name
+                loans.update()
+
+            # Borrower
+            fin_borrower = app_tables.fin_borrower.search(email_id=old_email)
+            for borrower in fin_borrower:
+                borrower['email_id'] = new_email
+                borrower['user_name'] = name
+                borrower.update()
+
+            # Loan Details
+            loan_details = app_tables.fin_loan_details.search(borrower_email_id=old_email)
+            for loans in loan_details:
+                loans['borrower_email_id'] = new_email
+                loans['borrower_full_name'] = name
+                loans.update()
+
+            # Report Problem
+            report_problem = app_tables.fin_reported_problems.search(email=old_email)
+            for problem in report_problem:
+                problem['email'] = new_email
+                problem['name'] = name
+                problem['mobile_number'] = mobile_no
+                problem.update()
+
+            # Ascend Score
+            ascend_score = app_tables.fin_user_ascend_score.search(borrower_email_id=old_email)
+            for score in ascend_score:
+                score['borrower_email_id'] = new_email
+                score.update()
+
+        except Exception as e:
+            print(f"An error occurred while updating related tables: {e}")
+
     def get_email(self):
         # Make a call to the Anvil server function
         # Replace 'YourAnvilFunction' with the actual name of your Anvil server function

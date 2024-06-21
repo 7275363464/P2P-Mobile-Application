@@ -872,7 +872,7 @@ class BorrowerDuesScreen(Screen):
                     print(monthly_emi[index], emi)
                     self.ids.total_amount.text = str(round(float(self.ids.total_amount.text), 2) + emi)
             if value in emi_loan_id:
-                if emi_pay_type[index].strip() == 'Three Months' and remaining_tenure[last_index] > 3 and \
+                if emi_pay_type[index].strip() == 'Three Months' and remaining_tenure[last_index] != None and remaining_tenure[last_index] > 3 and \
                         remaining_tenure[last_index] < 6:
                     r = remaining_tenure[last_index] - 3
                     i = monthly_emi[index] / 3
@@ -897,7 +897,7 @@ class BorrowerDuesScreen(Screen):
 
 
         elif loan_status[index] == "extension":
-            emi_num = 0
+            emi_number = 0
             emi_data = app_tables.fin_emi_table.search(loan_id=str(value))
             if emi_data:
                 emi = emi_data[0]
@@ -1151,18 +1151,23 @@ class BorrowerDuesScreen(Screen):
         borrower_email = []
         lender_email = []
         total_repay_amount = []
+        loan_amount = []
+        tenure_months = []
+        interest_rate = []
         emi_amount = []
-
         for i in data1:
             loan_id.append(i['loan_id'])
             cos_id1.append(i['borrower_customer_id'])
             schedule_date.append(i['first_emi_payment_due_date'])
-            emi_amount.append(i['monthly_emi'])
             emi_type_pay.append(i['emi_payment_type'])
             lender_customer_id.append(i['lender_customer_id'])
             borrower_email.append(i['borrower_email_id'])
             lender_email.append(i['lender_email_id'])
             total_repay_amount.append(i['total_repayment_amount'])
+            loan_amount.append(i['loan_amount'])
+            tenure_months.append(i['tenure'])
+            interest_rate.append(i['interest_rate'])
+            emi_amount.append(i['monthly_emi'])
 
         cos_id = []
         account_num = []
@@ -1196,16 +1201,65 @@ class BorrowerDuesScreen(Screen):
         else:
             last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
             remain_amount_emi = remain_amo[last_index] - emi_amount[index]
-        print(remain_amo[last_index])
-        print(emi_amount[index])
-        print(remain_amount_emi)
         emi_number = 0
+
+        wallet = app_tables.fin_wallet.search()
+        wallet_customer_id = []
+        wallet_amount = []
+        wallet_email = []
+        wallet_id = []
+        for i in wallet:
+            wallet_customer_id.append(i['customer_id'])
+            wallet_amount.append(i['wallet_amount'])
+            wallet_email.append(i['user_email'])
+            wallet_id.append(i['wallet_id'])
+
+        lender_data = app_tables.fin_lender.search()
+        lender_cus_id = []
+        create_date = []
+        for i in lender_data:
+            lender_cus_id.append(i['customer_id'])
+
+        transaction = app_tables.fin_wallet_transactions.search()
+        t_id = []
+        for i in transaction:
+            t_id.append(i['transaction_id'])
+
+        if len(t_id) >= 1:
+            transaction_id = 'TA' + str(int(t_id[-1][2:]) + 1).zfill(4)
+        else:
+            transaction_id = 'TA0001'
+        transaction_date_time = datetime.today()
 
         if value not in emi_loan_id:
             emi_number = 1
         else:
             last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
             emi_number = emi_num[last_index] + 1
+
+        lender_returns = 0
+        if value in loan_id:
+            index = loan_id.index(value)
+            interest_amount = (loan_amount[index] * interest_rate[index]) / 100
+            total_interest_amount = loan_amount[index] + interest_amount
+            lender_returns = total_interest_amount - loan_amount[index]
+        else:
+            print("loan id not found")
+
+        monthly_lender_returns = lender_returns / tenure_months[index]
+
+        if emi_type_pay[index].strip() == 'Monthly':
+            monthly_lender_returns = lender_returns / tenure_months[index]
+        elif emi_type_pay[index].strip() == 'Three Months':
+            monthly_lender_returns = lender_returns / (tenure_months[index] / 3)
+        elif emi_type_pay[index].strip() == 'Six Months':
+            monthly_lender_returns = lender_returns / (tenure_months[index] / 6)
+        elif emi_type_pay[index].strip() == 'One Time':
+            if tenure:
+                monthly_lender_returns = lender_returns / (tenure_months[index] / tenure_months[index])
+
+        print(monthly_lender_returns)
+        print(lender_returns)
 
         next_payment_date = None
         b_index = 0
@@ -1248,7 +1302,7 @@ class BorrowerDuesScreen(Screen):
             for i in emi_loan_id:
                 if i == value:
                     index3 = emi_loan_id.index(value)
-                    paid_amount1 += paid_amount[index3] * emi_number
+                    paid_amount1 += paid_amount[index3]
                 else:
                     paid_amount1 = 0
             remain_amount = total_repay_amount[index] - paid_amount1
@@ -1271,9 +1325,11 @@ class BorrowerDuesScreen(Screen):
                 if re_ten > 3 and re_ten < 6:
                     re_ten = 0
                     data1[index]['loan_updated_status'] = 'closed'
+                    remain_amount_emi = 0
                 elif re_ten == 3:
                     re_ten = 0
                     data1[index]['loan_updated_status'] = 'closed'
+                    remain_amount_emi = 0
                 else:
                     re_ten -= 3
                 print(re_ten)
@@ -1312,6 +1368,41 @@ class BorrowerDuesScreen(Screen):
                 payment_type="pay now"
 
             )
+
+            app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                       customer_id=wallet_customer_id[b_index],
+                                                       user_email=wallet_email[b_index],
+                                                       transaction_type="amount transferred",
+                                                       amount=float(total),
+                                                       status='success', wallet_id=wallet_id[b_index],
+                                                       transaction_time_stamp=transaction_date_time,
+                                                       receiver_customer_id=wallet_customer_id[l_index],
+                                                       receiver_email=wallet_email[l_index])
+            app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                       customer_id=wallet_customer_id[l_index],
+                                                       user_email=wallet_email[l_index],
+                                                       transaction_type="amount received",
+                                                       amount=float(total),
+                                                       status='success', wallet_id=wallet_id[l_index],
+                                                       transaction_time_stamp=transaction_date_time,
+                                                       receiver_customer_id=wallet_customer_id[b_index],
+                                                       receiver_email=wallet_email[b_index])
+
+            if lender_customer_id[index] in lender_cus_id:
+                len_index = lender_cus_id.index(lender_customer_id[index])
+                if lender_data[len_index]['return_on_investment'] == None:
+                    lender_data[len_index]['return_on_investment'] = 0
+                    lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
+                else:
+                    lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns, 2))
+            else:
+                print('customer id is not there')
+
+            if data1[index]['lender_returns'] == None:
+                data1[index]['lender_returns'] = 0
+                data1[index]['lender_returns'] += float(round(monthly_lender_returns, 2))
+            else:
+                data1[index]['lender_returns'] += float(round(monthly_lender_returns, 2))
 
             if data1[index]['loan_updated_status'] == 'foreclosure':
                 data1[index]['loan_updated_status'] = 'closed'
@@ -1703,7 +1794,7 @@ class ViewPaymentDetails(Screen):
         self.ids.container1.clear_widgets()
         self.ids.container1.add_widget(layout)
     def go_back(self):
-        self.manager.current = 'BorrowerDuesScreen'
+        self.manager.current = 'DuesScreen'
 
 
 
@@ -1941,7 +2032,7 @@ class PartPayment(Screen):
 
 
         elif loan_status[index] == "extension":
-            emi_num = 0
+            emi_number = 0
             emi_data = app_tables.fin_emi_table.search(loan_id=str(value))
             if emi_data:
                 emi = emi_data[0]
@@ -2218,6 +2309,10 @@ class PartPayment(Screen):
         lender_email = []
         total_repay_amount = []
         emi_amount = []
+        loan_amount = []
+        tenure_months = []
+        interest_rate = []
+        emi_amount = []
         for i in data1:
             loan_id.append(i['loan_id'])
             cos_id1.append(i['borrower_customer_id'])
@@ -2228,6 +2323,10 @@ class PartPayment(Screen):
             borrower_email.append(i['borrower_email_id'])
             lender_email.append(i['lender_email_id'])
             total_repay_amount.append(i['total_repayment_amount'])
+            loan_amount.append(i['loan_amount'])
+            tenure_months.append(i['tenure'])
+            interest_rate.append(i['interest_rate'])
+            emi_amount.append(i['monthly_emi'])
 
         cos_id = []
         account_num = []
@@ -2260,9 +2359,58 @@ class PartPayment(Screen):
         else:
             last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
             remain_amount_emi = remain_amo[last_index] - emi_amount[index]
-        print(remain_amo[last_index])
-        print(emi_amount[index])
-        print(remain_amount_emi)
+
+        lender_data = app_tables.fin_lender.search()
+        lender_cus_id = []
+        create_date = []
+        for i in lender_data:
+            lender_cus_id.append(i['customer_id'])
+
+        lender_returns = 0
+        if value in loan_id:
+            index = loan_id.index(value)
+            interest_amount = (loan_amount[index] * interest_rate[index]) / 100
+            total_interest_amount = loan_amount[index] + interest_amount
+            lender_returns = total_interest_amount - loan_amount[index]
+        else:
+            print("loan id not found")
+
+        monthly_lender_returns = lender_returns / tenure_months[index]
+
+        if emi_type_pay[index].strip() == 'Monthly':
+            monthly_lender_returns = lender_returns / tenure_months[index]
+        elif emi_type_pay[index].strip() == 'Three Months':
+            monthly_lender_returns = lender_returns / (tenure_months[index] / 3)
+        elif emi_type_pay[index].strip() == 'Six Months':
+            monthly_lender_returns = lender_returns / (tenure_months[index] / 6)
+        elif emi_type_pay[index].strip() == 'One Time':
+            if tenure:
+                monthly_lender_returns = lender_returns / (tenure_months[index] / tenure_months[index])
+
+        print(monthly_lender_returns)
+        print(lender_returns)
+
+        wallet = app_tables.fin_wallet.search()
+        wallet_customer_id = []
+        wallet_amount = []
+        wallet_email = []
+        wallet_id = []
+        for i in wallet:
+            wallet_customer_id.append(i['customer_id'])
+            wallet_amount.append(i['wallet_amount'])
+            wallet_email.append(i['user_email'])
+            wallet_id.append(i['wallet_id'])
+
+        transaction = app_tables.fin_wallet_transactions.search()
+        t_id = []
+        for i in transaction:
+            t_id.append(i['transaction_id'])
+
+        if len(t_id) >= 1:
+            transaction_id = 'TA' + str(int(t_id[-1][2:]) + 1).zfill(4)
+        else:
+            transaction_id = 'TA0001'
+        transaction_date_time = datetime.today()
 
         next_payment_date = None
         b_index = 0
@@ -2324,6 +2472,41 @@ class PartPayment(Screen):
                     part_payment_done=int(1),
                     next_payment=payment_date
                 )
+                app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                           customer_id=wallet_customer_id[b_index],
+                                                           user_email=wallet_email[b_index],
+                                                           transaction_type="amount transferred",
+                                                           amount=float(pay),
+                                                           status='success', wallet_id=wallet_id[b_index],
+                                                           transaction_time_stamp=transaction_date_time,
+                                                           receiver_customer_id=wallet_customer_id[l_index],
+                                                           receiver_email=wallet_email[l_index])
+                app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                           customer_id=wallet_customer_id[l_index],
+                                                           user_email=wallet_email[l_index],
+                                                           transaction_type="amount received",
+                                                           amount=float(pay),
+                                                           status='success', wallet_id=wallet_id[l_index],
+                                                           transaction_time_stamp=transaction_date_time,
+                                                           receiver_customer_id=wallet_customer_id[b_index],
+                                                           receiver_email=wallet_email[b_index])
+
+                if lender_customer_id[index] in lender_cus_id:
+                    len_index = lender_cus_id.index(lender_customer_id[index])
+                    if lender_data[len_index]['return_on_investment'] == None:
+                        lender_data[len_index]['return_on_investment'] = 0
+                        lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns/2, 2))
+                    else:
+                        lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns/2, 2))
+                else:
+                    print('customer id is not there')
+
+                if data1[index]['lender_returns'] == None:
+                    data1[index]['lender_returns'] = 0
+                    data1[index]['lender_returns'] += float(round(monthly_lender_returns/2, 2))
+                else:
+                    data1[index]['lender_returns'] += float(round(monthly_lender_returns/2, 2))
+
                 data1[index]['total_amount_paid'] = float(paid_amount1)
                 data1[index]['remaining_amount'] = float(remain_amount)
                 anvil.server.call('loan_text', None)
@@ -2377,6 +2560,40 @@ class PartPayment(Screen):
                     part_payment_done=int(1),
                     next_payment= payment_date
                 )
+                app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                           customer_id=wallet_customer_id[b_index],
+                                                           user_email=wallet_email[b_index],
+                                                           transaction_type="amount transferred",
+                                                           amount=float(pay),
+                                                           status='success', wallet_id=wallet_id[b_index],
+                                                           transaction_time_stamp=transaction_date_time,
+                                                           receiver_customer_id=wallet_customer_id[l_index],
+                                                           receiver_email=wallet_email[l_index])
+                app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                           customer_id=wallet_customer_id[l_index],
+                                                           user_email=wallet_email[l_index],
+                                                           transaction_type="amount received",
+                                                           amount=float(pay),
+                                                           status='success', wallet_id=wallet_id[l_index],
+                                                           transaction_time_stamp=transaction_date_time,
+                                                           receiver_customer_id=wallet_customer_id[b_index],
+                                                           receiver_email=wallet_email[b_index])
+
+                if lender_customer_id[index] in lender_cus_id:
+                    len_index = lender_cus_id.index(lender_customer_id[index])
+                    if lender_data[len_index]['return_on_investment'] == None:
+                        lender_data[len_index]['return_on_investment'] = 0
+                        lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns/2, 2))
+                    else:
+                        lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns/2, 2))
+                else:
+                    print('customer id is not there')
+
+                if data1[index]['lender_returns'] == None:
+                    data1[index]['lender_returns'] = 0
+                    data1[index]['lender_returns'] += float(round(monthly_lender_returns/2, 2))
+                else:
+                    data1[index]['lender_returns'] += float(round(monthly_lender_returns/2, 2))
                 data1[index]['total_amount_paid'] = float(paid_amount1)
                 data1[index]['remaining_amount'] = float(remain_amount)
                 anvil.server.call('loan_text', None)
@@ -2414,6 +2631,41 @@ class PartPayment(Screen):
                 print(paid_amount1)
                 remain_amount = total_repay_amount[index] - paid_amount1
                 print(remain_amount)
+
+                app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                           customer_id=wallet_customer_id[b_index],
+                                                           user_email=wallet_email[b_index],
+                                                           transaction_type="amount transferred",
+                                                           amount=float(pay),
+                                                           status='success', wallet_id=wallet_id[b_index],
+                                                           transaction_time_stamp=transaction_date_time,
+                                                           receiver_customer_id=wallet_customer_id[l_index],
+                                                           receiver_email=wallet_email[l_index])
+                app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                           customer_id=wallet_customer_id[l_index],
+                                                           user_email=wallet_email[l_index],
+                                                           transaction_type="amount received",
+                                                           amount=float(pay),
+                                                           status='success', wallet_id=wallet_id[l_index],
+                                                           transaction_time_stamp=transaction_date_time,
+                                                           receiver_customer_id=wallet_customer_id[b_index],
+                                                           receiver_email=wallet_email[b_index])
+
+                if lender_customer_id[index] in lender_cus_id:
+                    len_index = lender_cus_id.index(lender_customer_id[index])
+                    if lender_data[len_index]['return_on_investment'] == None:
+                        lender_data[len_index]['return_on_investment'] = 0
+                        lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns/2, 2))
+                    else:
+                        lender_data[len_index]['return_on_investment'] += float(round(monthly_lender_returns/2, 2))
+                else:
+                    print('customer id is not there')
+
+                if data1[index]['lender_returns'] == None:
+                    data1[index]['lender_returns'] = 0
+                    data1[index]['lender_returns'] += float(round(monthly_lender_returns/2, 2))
+                else:
+                    data1[index]['lender_returns'] += float(round(monthly_lender_returns/2, 2))
 
                 emi_data[last_index]['part_payment_date'] = datetime.today().date()
                 emi_data[last_index]['payment_type'] = "pay now"
@@ -2696,13 +2948,13 @@ class DuesScreen(Screen):
                 on_release=lambda x, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id, shedule_date)
             )
             button1 = MDFillRoundFlatButton(
-                text="  Loan Details  ",
+                text="  Payment Details  ",
                 size_hint=(None, None),
                 height="40dp",
                 width="250dp",
                 pos_hint={"center_x": 1},
                 md_bg_color=(0.043, 0.145, 0.278, 1),
-
+                on_release=lambda x, loan_id=loan_id[i]: self.go_to_menu_screen(instance, loan_id, shedule_date)
             )
             button_layout.add_widget(button1)
             button_layout.add_widget(button2)
@@ -2734,6 +2986,8 @@ class DuesScreen(Screen):
         return anvil.server.call('another_method')
 
     def icon_button_clicked(self, instance, loan_id, shedule_date):
+        self.loan_id = loan_id
+        self.shechule_date = shedule_date
         sm = self.manager
 
         # Create a new instance of the LoginScreen
@@ -2745,6 +2999,19 @@ class DuesScreen(Screen):
         # Switch to the LoginScreen
         sm.current = 'BorrowerDuesScreen'
         self.manager.get_screen('BorrowerDuesScreen').initialize_with_value(loan_id, shedule_date)
+
+    def go_to_menu_screen(self, instance, loan_id, shedule_date):
+        sm = self.manager
+
+        # Create a new instance of the LoginScreen
+        payment_details = ViewPaymentDetails(name='ViewPaymentDetails')
+
+        # Add the LoginScreen to the existing ScreenManager
+        sm.add_widget(payment_details)
+
+        # Switch to the LoginScreen
+        sm.current = 'ViewPaymentDetails'
+        self.manager.get_screen('ViewPaymentDetails').initialize_with_value(loan_id, shedule_date)
 
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method

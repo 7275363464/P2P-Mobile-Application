@@ -9422,6 +9422,17 @@ class BorrowerScreen19(Screen):
             data[index]['mobile_check'] = True
             data[index]['ascend_value'] = float(ascend)
 
+            app_tables.fin_borrower.add_row(
+                email_id=user_email,
+                user_name=data[index]['full_name'],
+                beseem_score=float(ascend),
+                customer_id=user_id_list[index],
+                bank_acc_details=data[index]['account_number'],
+                credit_limit=limit,
+                borrower_since=users[user_index]['signed_up'].date(),
+                wallet_id=wallet[wallet_index]['wallet_id']
+            )
+
         else:
             print('email not valid')
         print(user_id_list[index])

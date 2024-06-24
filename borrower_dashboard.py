@@ -75,6 +75,7 @@ user_helpers = '''
     EditScreen4:
     EditScreen5:
     EditScreen6:
+    EditScreen7:
     
 <DashboardScreen>:
     MDBottomNavigation:
@@ -1269,6 +1270,7 @@ user_helpers = '''
                                 md_bg_color: "#ffffff"  # Customize background color
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
+                                on_release:root.Edit_email()
                                 
 
                                 Image:
@@ -1279,7 +1281,7 @@ user_helpers = '''
 
 
                                 MDLabel:
-                                    text: "Change Password"
+                                    text: "Change User Email"
                                     font_size:dp(12)
                                     bold: True
                                     theme_text_color: "Custom"
@@ -6082,7 +6084,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(40)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6120,7 +6122,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(20)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6147,7 +6149,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(20)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6175,7 +6177,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(20)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6188,7 +6190,7 @@ user_helpers = '''
                         bold: True
                         multiline: False
 
-                    MDTextField:
+                    MDLabel:
                         id: email
                         font_size: dp(13)
                         text:'Add email'
@@ -6202,7 +6204,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(20)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6229,7 +6231,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(20)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6284,7 +6286,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(20)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6339,7 +6341,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(40)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6377,7 +6379,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(20)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6405,7 +6407,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(20)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6434,7 +6436,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(40)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6472,7 +6474,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(20)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6499,7 +6501,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(20)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6526,7 +6528,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(20)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6553,7 +6555,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(40)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6591,7 +6593,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(40)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6629,7 +6631,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(40)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6668,7 +6670,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(20)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6695,7 +6697,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(20)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6722,7 +6724,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(20)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6749,7 +6751,7 @@ user_helpers = '''
                     orientation: "horizontal"
                     size_hint_y: None
                     height: dp(20)
-                    spacing: dp(5)
+                    spacing: dp(10)
                     padding:dp(7)
 
                     MDLabel:
@@ -6793,6 +6795,136 @@ user_helpers = '''
                         font_size:dp(15)
                 MDLabel:
                     text: '  '
+                MDLabel:
+                    text: '  '
+<EditScreen7>                            
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: 1, 1
+        pos_hint: {'center_x':0.5, 'center_y':0.5}
+        MDTopAppBar:
+            title: "User Email Info"
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+            right_action_items: [['refresh', lambda x: root.refresh()]]
+            title_align: 'center'
+            md_bg_color: 0.043, 0.145, 0.278, 1
+
+        ScrollView:
+            do_scroll_x: False
+            BoxLayout:
+                orientation: "vertical"
+                padding: dp(10)
+                spacing: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+
+                MDFloatLayout:
+                    size_hint_y: None
+                    height: dp(120)
+                    padding: dp(20)
+                    spacing: dp(10)
+
+                    MDFloatLayout:
+                        size_hint: None, None
+                        size: dp(80), dp(80)
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        radius: 70
+                        canvas.before:
+                            Color:
+                                rgba: 1, 1, 1, 1
+                            Ellipse:
+                                size: self.size
+                                pos: self.pos
+                        Image:
+                            id: selected_image1
+                            source: 'icon8.png'
+                            size_hint_x: None
+                            height: dp(60)
+                            width: dp(90)
+                            size_hint: None, None
+                            size: dp(80), dp(80)
+                            source: ""
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            allow_stretch: True
+                            keep_ratio: True
+                            canvas.before:
+                                StencilPush
+                                Ellipse:
+                                    size: self.width - dp(10), self.height - dp(10)
+                                    pos: self.x + dp(5), self.y + dp(5)
+                                StencilUse
+                            canvas:
+                                Rectangle:
+                                    texture: self.texture
+                                    size: self.width - dp(10), self.height - dp(10)
+                                    pos: self.x + dp(5), self.y + dp(5)
+                            canvas.after:
+                                StencilUnUse
+                                Ellipse:
+                                    size: self.width - dp(10), self.height - dp(10)
+                                    pos: self.x + dp(5), self.y + dp(5)
+                                StencilPop
+
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: dp(0)
+                    spacing: dp(10)
+
+                    BoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: None
+                        height: dp(20)
+                        spacing: dp(10)
+                        padding: dp(7)
+
+                        MDLabel:
+                            text: ' Email '
+                            color: 0, 0, 0, 1
+                            halign: 'left'
+                            font_size: dp(13)
+                            size_hint_x: 0.4
+                            pos_hint: {'center_y': 0.5}
+                            bold: True
+                            multiline: False
+
+                        MDTextField:
+                            id: email
+                            font_size: dp(13)
+                            text: 'Add email'
+                            size_hint: None, None
+                            size_hint_x: 0.6
+                            multiline: False
+                            halign: 'left'
+                            pos_hint: {'center_y': 0.5}
+
+                MDLabel:
+                    text: ' '
+
+                MDLabel:
+                    text: ' '
+
+                MDLabel:
+                    text: ' '
+
+                MDFloatLayout:
+                    MDRaisedButton:
+                        text: "Save"
+                        md_bg_color: 0.043, 0.145, 0.278, 1
+                        font_name: "Roboto-Bold"
+                        size_hint: 0.4, None
+                        height: dp(50)
+                        on_release: root.save_edited_data1()
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        font_size: dp(15)
+
+                MDLabel:
+                    text: '  '
+
                 MDLabel:
                     text: '  '
 '''
@@ -8312,6 +8444,9 @@ class AccountScreen(Screen):
             # Handle case where profession is not found
             return None, None
 
+    def Edit_email(self):
+        self.manager.add_widget(Factory.EditScreen7(name='EditScreen7'))
+        self.manager.current = 'EditScreen7'
 
 class BusinessScreen1(Screen):
     def on_back_button_press(self):
@@ -9596,7 +9731,249 @@ class PersonalScreen(Screen):
     def on_back_button_press(self):
         self.manager.current = 'AccountScreen'
 
+class EditScreen7(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
+        email = self.get_email()
+        data = app_tables.fin_user_profile.search()
+        email1 = []
+        photo = []
+
+        for row in data:
+            if row['user_photo']:
+                image_data = row['user_photo'].get_bytes()
+                if isinstance(image_data, bytes):
+                    print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        photo.append(profile_texture_obj)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        photo.append(None)
+                else:
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        print(f"Decoded image data length: {len(image_data_binary)}")
+                        profile_texture_io = BytesIO(image_data_binary)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        photo.append(profile_texture_obj)
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                        photo.append(None)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        photo.append(None)
+            else:
+                photo.append(None)
+
+            email1.append(row['email_user'])
+
+        if email in email1:
+            index = email1.index(email)
+            self.ids.email.text = str(email1[index])
+
+            if photo[index]:
+                self.ids.selected_image1.texture = photo[index]
+            else:
+                print("No profile photo found for email:", email)
+        else:
+            print(f"Email {email} not found in data.")
+
+    def upload_image(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            user_data['user_photo'] = user_photo_media
+
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def save_edited_data1(self):
+        email1 = self.ids.email.text
+
+        success = self.update_profile_data(email1)
+
+        if success:
+            # Show a success message and wait for user confirmation to log out
+            self.show_success_message(self.logout_and_go_to_main_screen)
+        else:
+            # Handle the case where the update failed (e.g., display an error message)
+            self.on_back_button_press()
+
+    def show_success_message(self, on_ok_press):
+        dialog = MDDialog(
+            title="Success",
+            text="Email updated successfully. Press OK to Re-Login",
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: self._on_ok_press(dialog, on_ok_press)
+                )
+            ]
+        )
+        dialog.open()
+
+    def _on_ok_press(self, dialog, on_ok_press):
+        dialog.dismiss()
+        on_ok_press()
+
+    def logout_and_go_to_main_screen(self):
+        # Update user status in 'emails.json'
+        with open("emails.json", "r+") as file:
+            try:
+                user_data = json.load(file)
+            except json.JSONDecodeError:
+                user_data = {}  # Initialize as empty dictionary if file is empty or invalid JSON
+
+            if isinstance(user_data, dict):
+                for email, data in user_data.items():
+                        if isinstance(data, dict) and data.get("logged_status", False):
+                            # Update user's logged_status and user_type
+                            data["logged_status"] = False
+                            data["user_type"] = ""
+                            break
+                # Move the cursor to the beginning of the file
+                file.seek(0)
+                # Write the updated data back to the file
+                json.dump(user_data, file, indent=4)
+                # Truncate any remaining data in the file
+                file.truncate()
+        self.manager.current = 'MainScreen'
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+    def update_profile_data(self,email1):
+        email = self.get_email()
+        data = app_tables.fin_user_profile.search(email_user=email)
+        if data:
+            # Assuming there should be only one row per unique email address,
+            # we retrieve the first matching row
+            user_profile = data[0]
+            user_profile.update(
+                                email_user=email1,
+                                )
+
+            # Update all related tables
+            self.update_all_related_tables(email, email1)
+            return True
+        else:
+            print("No data found for email:", email)
+            return False
+    def update_all_related_tables(self, old_email, new_email):
+        try:
+            # Users
+            user_table = app_tables.users.search(email=old_email)
+            for user in user_table:
+                user['email'] = new_email
+                user.update()
+
+            # Wallet Transactions
+            wallet_transactions = app_tables.fin_wallet_transactions.search(user_email=old_email)
+            for loans in wallet_transactions:
+                loans['user_email'] = new_email
+                loans.update()
+
+            # Wallet Bank Account
+            wallet_bank_account_table = app_tables.fin_wallet_bank_account_table.search(user_email=old_email)
+            for account in wallet_bank_account_table:
+                account['user_email'] = new_email
+                account.update()
+
+            # Wallet
+            wallet = app_tables.fin_wallet.search(user_email=old_email)
+            for account in wallet:
+                account['user_email'] = new_email
+                account.update()
+
+            # EMI Details
+            emi_details = app_tables.fin_emi_table.search(lender_email=old_email)
+            for loans in emi_details:
+                loans['lender_email'] = new_email
+                loans.update()
+
+            # Extends Table
+            extends_table = app_tables.fin_extends_loan.search(lender_email_id=old_email)
+            for loans in extends_table:
+                loans['lender_email_id'] = new_email
+                loans.update()
+
+            # Foreclosure
+            foreclosure = app_tables.fin_foreclosure.search(lender_email_id=old_email)
+            for loans in foreclosure:
+                loans['lender_email_id'] = new_email
+                loans.update()
+
+            # Lender
+            fin_lender = app_tables.fin_lender.search(email_id=old_email)
+            for lender in fin_lender:
+                lender['email_id'] = new_email
+                lender.update()
+
+            # Loan Details
+            loan_details = app_tables.fin_loan_details.search(lender_email_id=old_email)
+            for loans in loan_details:
+                loans['lender_email_id'] = new_email
+                loans.update()
+
+            # Report Problem
+            report_problem = app_tables.fin_reported_problems.search(email=old_email)
+            for problem in report_problem:
+                problem['email'] = new_email
+                problem.update()
+
+        except Exception as e:
+            print(f"An error occurred while updating related tables: {e}")
+    def get_email(self):
+        return anvil.server.call('another_method')
+
+    def on_pre_enter(self):
+        Window.bind(on_keyboard=self.on_back_button)
+
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=self.on_back_button)
+
+    def on_back_button(self, instance, key, scancode, codepoint, modifier):
+        if key == 27:
+            self.on_back_button_press()
+            return True
+        return False
+
+    def go_back(self):
+        self.manager.transition = SlideTransition(direction='right')
+        self.manager.current = 'ViewAccountScreen'
+
+    def on_back_button_press(self):
+        self.manager.current = 'ViewAccountScreen'
+
+    def refresh(self):
+        self.__init__()
 class ProfileScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -9711,9 +10088,9 @@ class EditScreen6(Screen):
                 self.unique_gender.append(i)
         print(self.unique_gender)
         if len(self.unique_gender) >= 1:
-            self.ids.land.values = ['Select account type'] + self.unique_gender
+            self.ids.account_type.values = ['Select account type'] + self.unique_gender
         else:
-            self.ids.land.values = ['Select account type']
+            self.ids.account_type.values = ['Select account type']
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
         account_holder = []
@@ -9744,7 +10121,7 @@ class EditScreen6(Screen):
         pass
 
     def on_bank_save(self):
-        account_holder = self.ids.branch_name.text
+        account_holder = self.ids.holder.text
         account_type = self.ids.account_type.text
         account_number = self.ids.account_number.text
         bank_name = self.ids.bank_name.text

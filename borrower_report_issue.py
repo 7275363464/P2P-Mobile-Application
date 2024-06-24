@@ -195,6 +195,8 @@ class ReportScreen(Screen):
 
         user_email_log = app_tables.fin_user_profile.get(email_user=log_email)
         if user_email_log:
+            self.user_photo = user_email_log['user_photo']
+            self.customer_id = user_email_log['customer_id']
             self.ids.name.text = user_email_log['full_name']
             self.ids.email.text = user_email_log['email_user']
             self.ids.mobile_no.text = user_email_log['mobile']
@@ -229,7 +231,7 @@ class ReportScreen(Screen):
     # this method is to load the subcategory details based on selected category item
     def update_subcategories(self):
         selected_category = self.ids.Category.text
-        if selected_category == "Lone Issue":
+        if selected_category == "Loan Issue":
             self.subcategory_list = self.subcategory_loan_list
         elif selected_category == "Technical Issue":
             self.subcategory_list = self.subcategory_Technical_list
@@ -289,6 +291,8 @@ class ReportScreen(Screen):
     # this methos for retrieve data from UI
     def save_edited_data(self):
         # Retrieve the edited data from the UI
+        User_photo = self.user_photo
+        customer_id = self.customer_id
         name = self.ids.name.text
         email = self.ids.email.text
         mobile_number = self.ids.mobile_no.text
@@ -339,19 +343,21 @@ class ReportScreen(Screen):
             self.show_dialog("Something Went Wrong!", "Enter Same Email ID As Registered")
             return
 
-        print(name, email, mobile_number, Category, SubCategory, issue_description, it_is_urgent, user_type)
-        self.fin_reported_problems(name, email, mobile_number, Category, SubCategory, issue_description, it_is_urgent,
+        print(customer_id,name, email,User_photo, mobile_number, Category, SubCategory, issue_description, it_is_urgent, user_type)
+        self.fin_reported_problems(customer_id,name,User_photo, email, mobile_number, Category, SubCategory, issue_description, it_is_urgent,
                                    user_type)
 
     # this method for adding the data in to the tables
-    def fin_reported_problems(self, name, email, mobile_number, Category, SubCategory, issue_description, it_is_urgent,
+    def fin_reported_problems(self, customer_id,name,User_photo, email, mobile_number, Category, SubCategory, issue_description, it_is_urgent,
                               user_type):
         # Get the current date and time
-        current_date = datetime.now()
+        current_date = datetime.now().replace(tzinfo=None, microsecond=0, fold=0)
         #img_media = anvil.BlobMedia('image/png', b'') if self.selected_image_path is None else anvil.media.from_file(
         #    self.selected_image_path)  # Use a blank image as placeholder if no file is selected
         img_media = None if self.selected_image_path is None else anvil.media.from_file(self.selected_image_path)
         app_tables.fin_reported_problems.add_row(
+            user_photo=User_photo,
+            customer_id=customer_id,
             name=name,
             email=email,
             mobile_number=int(mobile_number),
@@ -361,7 +367,8 @@ class ReportScreen(Screen):
             report_date=current_date,  # Add the current date
             issue_photo=img_media,
             it_is_urgent=it_is_urgent,
-            usertype=user_type
+            usertype=user_type,
+            status=False
         )
         print("Success")
         self.show_dialog("Success", "Issue reported successfully")

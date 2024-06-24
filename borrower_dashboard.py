@@ -857,6 +857,7 @@ user_helpers = '''
                                         md_bg_color: "#ffffff"  # Customize background color
                                         orientation: "vertical"
                                         padding:dp(9), dp(3)
+                                        on_release: root.go_to_personal()
         
                                         Image:
                                             source: "icon6.png"
@@ -979,6 +980,7 @@ user_helpers = '''
                                         md_bg_color: "#ffffff"  # Customize background color
                                         orientation: "vertical"
                                         padding:dp(9), dp(3)
+                                        on_release:root.Edit_email()
         
                                         Image:
                                             source: "icon11.png"
@@ -988,7 +990,7 @@ user_helpers = '''
         
         
                                         MDLabel:
-                                            text: "Change Password"
+                                            text: "Change User Email"
                                             font_size:dp(12)
                                             bold: True
                                             theme_text_color: "Custom"
@@ -1628,7 +1630,7 @@ user_helpers = '''
 
                     MDLabel:
                         id: gov_id1
-                        text:'Add mobile no'
+                        text:'Add gov id1'
                         size_hint: None, None
                         size_hint_x: 0.6
                         multiline: False
@@ -1664,10 +1666,8 @@ user_helpers = '''
 
                     Image:
                         id: upload_gov_id1_img
-                        size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
-                        pos_hint: {'center_y': 0.5}
 
 
                 Widget:
@@ -1734,10 +1734,8 @@ user_helpers = '''
 
                     Image:
                         id: upload_gov_id2_img
-                        size_hint: None, None
-                        size: dp(50), dp(60)
+                        size: dp(50), dp(50)
                         source: ''
-                        pos_hint: {'center_y': 0.5}
 
                 Widget:
                     size_hint_y: None
@@ -2587,10 +2585,8 @@ user_helpers = '''
 
                     Image:
                         id: six_bank
-                        size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
-                        pos_hint: {'center_y': 0.5}
 
                 Widget:
                     size_hint_y: None
@@ -2728,10 +2724,8 @@ user_helpers = '''
 
                     Image:
                         id: proof
-                        size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
-                        pos_hint: {'center_y': 0.5}
 
                 Widget:
                     size_hint_y: None
@@ -3044,15 +3038,15 @@ user_helpers = '''
                         pos_hint: {'center_y': 0.5}
                         bold: True
                         multiline: False
+                    
+                    Image:
+                        id: six_bank
+                        size: dp(50), dp(50)
+                        source: ''
+                        
                     MDIconButton:
                         icon: 'upload'
                         on_release: app.root.get_screen('EditScreen5').check_and_open_file_manager1()
-
-                    Image:
-                        id: six_bank
-                        size_hint: None, None
-                        size: dp(50), dp(50)
-                        source: ''
                         
 
                 BoxLayout:
@@ -3155,7 +3149,6 @@ user_helpers = '''
                     
                     Image:
                         id: proof
-                        size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
                         
@@ -3605,10 +3598,8 @@ user_helpers = '''
 
                     Image:
                         id: employee_id
-                        size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
-                        pos_hint: {'center_y': 0.5}
 
 
                 Widget:
@@ -3639,10 +3630,8 @@ user_helpers = '''
 
                     Image:
                         id: last_six_months_bank_statement
-                        size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
-                        pos_hint: {'center_y': 0.5}
 
                 Widget:
                     size_hint_y: None
@@ -4057,10 +4046,8 @@ user_helpers = '''
 
                     Image:
                         id: employee_id
-                        size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
-                        
                         
                     MDIconButton:
                         icon: 'upload'
@@ -4085,11 +4072,8 @@ user_helpers = '''
 
                     Image:
                         id: last_six_months_bank_statement
-                        size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
-                        pos_hint: {'center_y': 0.5}
-
                     MDIconButton:
                         icon: 'upload'
                         on_release: app.root.get_screen('EditScreen4').check_and_open_file_manager2()
@@ -4321,11 +4305,8 @@ user_helpers = '''
 
                     Image:
                         id: college_proof
-                        size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
-                        pos_hint: {'center_y': 0.5}
-
                 Widget:
                     size_hint_y: None
                     height: dp(1)
@@ -4428,18 +4409,7 @@ user_helpers = '''
                     text: ' '
                 MDLabel:
                     text: ' '
-                MDLabel:
-                    text: ' '
-                MDLabel:
-                    text: ' '
-                MDLabel:
-                    text: ' '
-                MDLabel:
-                    text: ' '
-                MDLabel:
-                    text: ' '
-                MDLabel:
-                    text: ' '
+                
                 MDFloatLayout:
                     MDRaisedButton:
                         text: "Edit Profile"
@@ -4568,7 +4538,6 @@ user_helpers = '''
 
                     Image:
                         id: college_proof
-                        size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
                         
@@ -5757,15 +5726,26 @@ user_helpers = '''
                             bold: True
                             multiline: False
 
-                        MDTextField:
+                        Spinner:
                             id: account_type
-                            font_size: dp(13)
                             text:'Add account type'
                             size_hint: None, None
                             size_hint_x: 0.6
                             multiline: False
-                            halign: 'left'
+                            width: dp(200)
+                            text_size: self.width - dp(20), None
+                            height:"30dp"
+                            font_size: dp(13)
                             pos_hint: {'center_y': 0.5}
+                            halign: "center"
+                            background_color: 1, 1, 1, 0
+                            color: 0, 0, 0, 1
+                            canvas.before:
+                                Color:
+                                    rgba: 0, 0, 0, 1  
+                                Line:
+                                    width: 0.7
+                                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
                 BoxLayout:
                     orientation: "vertical"
@@ -6072,8 +6052,8 @@ user_helpers = '''
 
                         MDTextField:
                             id: name
-                            font_size: dp(13)
                             text:'Add full name'
+                            font_size: dp(13)
                             size_hint: None, None
                             size_hint_x: 0.6
                             multiline: False
@@ -6246,7 +6226,7 @@ user_helpers = '''
 
                     MDLabel:
                         id: gov_id1
-                        text:'Add mobile no'
+                        text:'Add gov id1'
                         size_hint: None, None
                         size_hint_x: 0.6
                         multiline: False
@@ -6273,7 +6253,6 @@ user_helpers = '''
 
                     Image:
                         id: upload_gov_id1_img
-                        size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
                         
@@ -6281,7 +6260,6 @@ user_helpers = '''
                         icon: 'upload'
                         on_release: app.root.get_screen('EditScreen1').check_and_open_file_manager2()
                 
-
                 BoxLayout:
                     orientation: "horizontal"
                     size_hint_y: None
@@ -6302,7 +6280,7 @@ user_helpers = '''
                     MDLabel:
                         id: gov_id2
                         font_size: dp(13)
-                        text:'Add email'
+                        text:'Add gov id2'
                         size_hint: None, None
                         size_hint_x: 0.6
                         multiline: False
@@ -6328,7 +6306,6 @@ user_helpers = '''
                     
                     Image:
                         id: upload_gov_id2_img
-                        size_hint: None, None
                         size: dp(50), dp(50)
                         source: ''
                         
@@ -6356,7 +6333,7 @@ user_helpers = '''
 
                     Spinner:
                         id: type
-                        text:'Add dob'
+                        text:'Add type of address'
                         size_hint: None, None
                         size_hint_x: 0.6
                         multiline: False
@@ -6395,7 +6372,7 @@ user_helpers = '''
                     MDTextField:
                         id: address1
                         font_size: dp(13)
-                        text:'Add email'
+                        text:'Add address1'
                         size_hint: None, None
                         size_hint_x: 0.6
                         multiline: False
@@ -6422,7 +6399,7 @@ user_helpers = '''
 
                     MDTextField:
                         id: address2
-                        text:'Add mobile no'
+                        text:'Add address2'
                         size_hint: None, None
                         size_hint_x: 0.6
                         multiline: False
@@ -6489,7 +6466,7 @@ user_helpers = '''
 
                     MDTextField:
                         id: zip_code
-                        text:'Add gender'
+                        text:'Add pincode'
                         size_hint: None, None
                         size_hint_x: 0.6
                         multiline: False
@@ -6516,7 +6493,7 @@ user_helpers = '''
 
                     MDTextField:
                         id: state
-                        text:'Add gender'
+                        text:'Add state'
                         size_hint: None, None
                         size_hint_x: 0.6
                         multiline: False
@@ -6543,7 +6520,7 @@ user_helpers = '''
 
                     MDTextField:
                         id: country
-                        text:'Add gender'
+                        text:'Add country'
                         size_hint: None, None
                         size_hint_x: 0.6
                         multiline: False
@@ -6570,7 +6547,7 @@ user_helpers = '''
 
                     Spinner:
                         id: qualification
-                        text:'Add gender'
+                        text:'Add qualification'
                         size_hint: None, None
                         size_hint_x: 0.6
                         multiline: False
@@ -6866,8 +6843,7 @@ user_helpers = '''
                                     size: self.width - dp(10), self.height - dp(10)
                                     pos: self.x + dp(5), self.y + dp(5)
                                 StencilPop
-
-
+                
                 BoxLayout:
                     orientation: "vertical"
                     size_hint_y: None
@@ -6880,7 +6856,7 @@ user_helpers = '''
                         size_hint_y: None
                         height: dp(20)
                         spacing: dp(10)
-                        padding: dp(7)
+                        padding:dp(7)
 
                         MDLabel:
                             text: ' Email '
@@ -6894,8 +6870,8 @@ user_helpers = '''
 
                         MDTextField:
                             id: email
-                            font_size: dp(13)
                             text: 'Add email'
+                            font_size: dp(13)
                             size_hint: None, None
                             size_hint_x: 0.6
                             multiline: False
@@ -7329,13 +7305,16 @@ class DashboardScreen(Screen):
         # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
         return anvil.server.call('profile')
 
-    def refresh5(self):
-        self.ids.container.clear_widgets()
-        self.loans()
-
     def go_to_personal(self):
         self.manager.add_widget(Factory.PersonalScreen(name='PersonalScreen'))
         self.manager.current = 'PersonalScreen'
+
+    def on_back_button_press(self):
+        self.manager.transition = SlideTransition(direction='right')
+        self.manager.current = 'DashboardScreen'
+
+    def refresh(self):
+        pass
 
     def go_to_profile(self):
         self.manager.add_widget(Factory.ProfileScreen(name='ProfileScreen'))
@@ -7347,7 +7326,7 @@ class DashboardScreen(Screen):
             self.show_no_business_screen()
             print("Business is not available for the user.")
             # Handle this case as per your application's logic
-        elif employee == 'business':
+        elif employee == 'business' or employee == 'Business':
             if not self.manager.has_screen('business'):
                 self.manager.add_widget(Factory.BusinessScreen(name='BusinessScreen'))
             self.manager.current = 'BusinessScreen'
@@ -7386,15 +7365,15 @@ class DashboardScreen(Screen):
             self.manager.current = 'ProfessionalScreen'
             print("Profession is not available for the user.")
             # Handle this case as per your application's logic
-        elif profession == 'student':
+        elif profession == 'student' or profession == 'Student':
             if not self.manager.has_screen('StudentScreen'):
                 self.manager.add_widget(Factory.StudentScreen(name='StudentScreen'))
             self.manager.current = 'StudentScreen'
-        elif profession == 'employee':
+        elif profession == 'employee' or profession == 'Employee':
             if not self.manager.has_screen('EmployeeScreen'):
                 self.manager.add_widget(Factory.EmployeeScreen(name='EmployeeScreen'))
             self.manager.current = 'EmployeeScreen'
-        elif employee == 'farmer':
+        elif employee == 'farmer' or employee == 'Farmer':
             if not self.manager.has_screen('FarmerScreen'):
                 self.manager.add_widget(Factory.FarmerScreen(name='FarmerScreen'))
             self.manager.current = 'FarmerScreen'
@@ -7416,6 +7395,16 @@ class DashboardScreen(Screen):
         else:
             # Handle case where profession is not found
             return None, None
+
+    def Edit_email(self):
+        self.manager.add_widget(Factory.EditScreen7(name='EditScreen7'))
+        self.manager.current = 'EditScreen7'
+
+    def refresh5(self):
+        self.ids.container.clear_widgets()
+        self.loans()
+
+
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
 
@@ -7475,6 +7464,7 @@ class DashboardScreen(Screen):
         view.open()
     def on_back_button_press(self):
         self.manager.current = 'DashboardScreen'
+
     def wallet(self):
         self.type = None
         data = app_tables.fin_wallet.search()
@@ -8374,7 +8364,7 @@ class AccountScreen(Screen):
             self.show_no_business_screen()
             print("Business is not available for the user.")
             # Handle this case as per your application's logic
-        elif employee == 'business':
+        elif employee == 'business' or employee == 'Business':
             if not self.manager.has_screen('business'):
                 self.manager.add_widget(Factory.BusinessScreen(name='BusinessScreen'))
             self.manager.current = 'BusinessScreen'
@@ -8413,15 +8403,15 @@ class AccountScreen(Screen):
             self.manager.current = 'ProfessionalScreen'
             print("Profession is not available for the user.")
             # Handle this case as per your application's logic
-        elif profession == 'student':
+        elif profession == 'student' or profession == 'Student':
             if not self.manager.has_screen('StudentScreen'):
                 self.manager.add_widget(Factory.StudentScreen(name='StudentScreen'))
             self.manager.current = 'StudentScreen'
-        elif profession == 'employee':
+        elif profession == 'employee' or profession == 'Employee':
             if not self.manager.has_screen('EmployeeScreen'):
                 self.manager.add_widget(Factory.EmployeeScreen(name='EmployeeScreen'))
             self.manager.current = 'EmployeeScreen'
-        elif employee == 'farmer':
+        elif employee == 'farmer' or employee == 'Farmer':
             if not self.manager.has_screen('FarmerScreen'):
                 self.manager.add_widget(Factory.FarmerScreen(name='FarmerScreen'))
             self.manager.current = 'FarmerScreen'
@@ -8952,34 +8942,6 @@ class EditScreen4(Screen):
         else:
             # Handle the case where the user's profile does not exist
             return False
-
-    def check_and_open_file_manager1(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
-
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id):
-        if platform == 'android':
-            if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id)
-            else:
-                self.request_media_images_permission()
-        else:
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id)
-
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            self.file_manager.show('/')
-
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
-        self.upload_image(path)  # Upload the selected image
-        self.ids[image_id].source = path
-        self.file_manager.close()
 
     def exit_manager(self, *args):
         self.file_manager.close()
@@ -10236,34 +10198,34 @@ class BusinessScreen(Screen):
             else:
                 upload_last_six_months.append(None)
 
-                if row['registered_off_add']:
-                    image_data = row['registered_off_add'].get_bytes()
-                    if isinstance(image_data, bytes):
-                        print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
-                        # Assuming image_data is already a binary image file
-                        try:
-                            profile_texture_io = BytesIO(image_data)
-                            profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
-                            office_proof.append(profile_texture_obj)
-                        except Exception as e:
-                            print(f"Error processing image for email {row['email_user']}: {e}")
-                            office_proof.append(None)
-                    else:
-                        # If image_data is not bytes, assume it's base64 encoded and decode it
-                        try:
-                            image_data_binary = base64.b64decode(image_data)
-                            print(f"Decoded image data length: {len(image_data_binary)}")
-                            profile_texture_io = BytesIO(image_data_binary)
-                            profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
-                            office_proof.append(profile_texture_obj)
-                        except base64.binascii.Error as e:
-                            print(f"Base64 decoding error for email {row['email_user']}: {e}")
-                            office_proof.append(None)
-                        except Exception as e:
-                            print(f"Error processing image for email {row['email_user']}: {e}")
-                            office_proof.append(None)
+            if row['proof_verification']:
+                image_data = row['proof_verification'].get_bytes()
+                if isinstance(image_data, bytes):
+                    print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                    # Assuming image_data is already a binary image file
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        office_proof.append(profile_texture_obj)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        office_proof.append(None)
                 else:
-                    office_proof.append(None)
+                    # If image_data is not bytes, assume it's base64 encoded and decode it
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        print(f"Decoded image data length: {len(image_data_binary)}")
+                        profile_texture_io = BytesIO(image_data_binary)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        office_proof.append(profile_texture_obj)
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                        office_proof.append(None)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        office_proof.append(None)
+            else:
+                office_proof.append(None)
 
             email1.append(row['email_user'])
             business_name.append(row['business_name'])
@@ -10407,34 +10369,34 @@ class EditScreen5(Screen):
             else:
                 upload_last_six_months.append(None)
 
-                if row['proof_verification']:
-                    image_data = row['proof_verification'].get_bytes()
-                    if isinstance(image_data, bytes):
-                        print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
-                        # Assuming image_data is already a binary image file
-                        try:
-                            profile_texture_io = BytesIO(image_data)
-                            profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
-                            office_proof.append(profile_texture_obj)
-                        except Exception as e:
-                            print(f"Error processing image for email {row['email_user']}: {e}")
-                            office_proof.append(None)
-                    else:
-                        # If image_data is not bytes, assume it's base64 encoded and decode it
-                        try:
-                            image_data_binary = base64.b64decode(image_data)
-                            print(f"Decoded image data length: {len(image_data_binary)}")
-                            profile_texture_io = BytesIO(image_data_binary)
-                            profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
-                            office_proof.append(profile_texture_obj)
-                        except base64.binascii.Error as e:
-                            print(f"Base64 decoding error for email {row['email_user']}: {e}")
-                            office_proof.append(None)
-                        except Exception as e:
-                            print(f"Error processing image for email {row['email_user']}: {e}")
-                            office_proof.append(None)
+            if row['proof_verification']:
+                image_data = row['proof_verification'].get_bytes()
+                if isinstance(image_data, bytes):
+                    print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                    # Assuming image_data is already a binary image file
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        office_proof.append(profile_texture_obj)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        office_proof.append(None)
                 else:
-                    office_proof.append(None)
+                    # If image_data is not bytes, assume it's base64 encoded and decode it
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        print(f"Decoded image data length: {len(image_data_binary)}")
+                        profile_texture_io = BytesIO(image_data_binary)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        office_proof.append(profile_texture_obj)
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                        office_proof.append(None)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        office_proof.append(None)
+            else:
+                office_proof.append(None)
 
             email1.append(row['email_user'])
             business_name.append(row['business_name'])
@@ -10509,6 +10471,29 @@ class EditScreen5(Screen):
             self.file_manager.show(primary_external_storage)
         else:
             self.file_manager.show('/')
+
+    def exit_manager(self, *args):
+        self.file_manager.close()
+
+    def request_media_images_permission(self):
+        request_permissions([Permission.READ_MEDIA_IMAGES], self.permission_callback)
+
+    def permission_callback(self, permissions, grants):
+        if all(grants.values()):
+            self.file_manager_open()
+        else:
+            self.show_permission_denied()
+
+    def show_permission_denied(self):
+        view = ModalView()
+        view.add_widget(Button(
+            text='Permission NOT granted.\n\n' +
+                 'Tap to quit app.\n\n\n' +
+                 'If you selected "Don\'t Allow",\n' +
+                 'enable permission with App Settings.',
+            on_press=self.bye)
+        )
+        view.open()
 
     def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
         self.upload_image(path)  # Upload the selected image

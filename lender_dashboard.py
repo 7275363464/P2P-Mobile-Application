@@ -1,9 +1,12 @@
 import io
 import json
 import base64
+import os
+
 from anvil import media
 from io import BytesIO
 from kivy.core.image import Image as CoreImage
+from kivy.core.text import Label
 from kivy.uix.widget import Widget
 from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
@@ -218,7 +221,7 @@ user_helpers1 = """
                                                         markup: True
 
                                                     MDLabel:
-                                                        id: memmber_type
+                                                        id: member_type
                                                         text: "[b]Membership Type[/b] : Elite"
                                                         theme_text_color: 'Custom'
                                                         text_color: 0, 0, 0, 1
@@ -959,7 +962,7 @@ user_helpers1 = """
                     title: "Account Profile"
                     elevation: 2
                     pos_hint: {'top': 1}
-                    left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+                    left_action_items: [['arrow-left', lambda x: root.on_back_button()]]
                     right_action_items: [['refresh', lambda x: root.refresh6()]]
                     title_align: 'center'
                     md_bg_color: 0.043, 0.145, 0.278, 1
@@ -3185,7 +3188,7 @@ user_helpers1 = """
                             multiline: False
 
                         MDLabel:
-                            id: lending period
+                            id: lending_period
                             font_size: dp(13)
                             text:'Add lending period'
                             size_hint: None, None
@@ -3634,7 +3637,8 @@ user_helpers1 = """
                             multiline: False
                             halign: 'left'
                             pos_hint: {'center_y': 0.5}
-
+                MDLabel:
+                    text: ' '
                 BoxLayout:
                     orientation: "vertical"
                     size_hint_y: None
@@ -4252,12 +4256,12 @@ user_helpers1 = """
 
                     Image:
                         id: upload_gov_id1_img
-                        
+                        halign: 'left'
                         size: dp(50), dp(50)
                         source: ''
-                        
-
-
+                    MDIconButton:
+                        icon: ''
+                        halign: 'left'
                 Widget:
                     size_hint_y: None
                     height: dp(1)
@@ -4324,7 +4328,9 @@ user_helpers1 = """
                         id: upload_gov_id2_img
                         size: dp(50), dp(50)
                         source: ''
-
+                    MDIconButton:
+                        icon: ''
+                        halign: 'left'
                 Widget:
                     size_hint_y: None
                     height: dp(1)
@@ -4996,6 +5002,7 @@ user_helpers1 = """
                         id: upload_gov_id1_img
                         size: dp(50), dp(50)
                         source: ''
+                       
 
                     MDIconButton:
                         icon: 'upload'
@@ -5504,7 +5511,8 @@ user_helpers1 = """
                             multiline: False
                             halign: 'left'
                             pos_hint: {'center_y': 0.5}
-
+                MDLabel:
+                    text: ' '
                 BoxLayout:
                     orientation: "horizontal"
                     size_hint_y: None
@@ -6523,35 +6531,39 @@ class LenderDashboard(Screen):
                 investment_value = float(investment[log_index])
                 for i in range(a):
                     if min_amount[i] <= investment_value < max_amount[i]:
-                        self.ids.memmber_type.text = f"Membership Type: {membership_type[i]}"
+                        self.ids.member_type.text = f"Membership Type: {membership_type[i]}"
                     break
             except ValueError:
-                self.ids.memmber_type.text = f"Membership Type: None"
+                self.ids.member_type.text = f"Membership Type: None"
 
         else:
-            self.ids.memmber_type.text = f"Membership Type: None"
+            self.ids.member_type.text = f"Membership Type: None"
             print("Investment Amount Not There or Invalid")
 
         lender_data = app_tables.fin_lender.search()
         lender_cus_id = []
         create_date = []
         returns = []
+        membership_type=[]
         present_commitment = []
         for i in lender_data:
             lender_cus_id.append(i['customer_id'])
             create_date.append(i['member_since'])
             returns.append(i['return_on_investment'])
+            membership_type.append(i['membership_type'])
             present_commitment.append(i['present_commitments'])
         #
         if p_customer_id[log_index] in lender_cus_id:
             index1 = lender_cus_id.index(p_customer_id[log_index])
             self.ids.joined_date.text = "[b]Joined Date[/b]: " + str(create_date[index1])
             self.ids.return_amount.text = "Rs. " + str(returns[index1])
+            self.ids.member_type.text = "[b]Membership Type[/b]: " + str(membership_type[index1])
             self.ids.commitment.text = "Rs. " + str(present_commitment[index1])
             self.ids.date.text = "Joined Date: " + str(create_date[index1])
         else:
             self.ids.joined_date.text = "[b]Joined Date[/b]: "
             self.ids.return_amount.text = "Rs. "
+            self.ids.member_type.text = "[b]Membership Type[/b]: "
             self.ids.commitment.text = "Rs. "
             self.ids.date.text = "Joined Date: "
 
@@ -7522,26 +7534,27 @@ class ViewAccountScreen(Screen):
         log_index = 0
         if log_email in email_user:
             log_index = email_user.index(log_email)
-            self.ids.username.text = "Welcome " + name_list[log_index]
+            self.ids.username.text = name_list[log_index]
             self.ids.username.font_style = 'H6'
 
         else:
             # Handle the case when 'logged' is not in the status list
             self.ids.username.text = "User welcome to P2P"
 
-        users = app_tables.users.search()
-
-        user_email = []
+        lender_data = app_tables.fin_lender.search()
+        lender_cus_id = []
         create_date = []
-        for i in users:
-            user_email.append(i['email'])
-            create_date.append(i['signed_up'])
-
-        if log_email in user_email:
-            user_index = user_email.index(log_email)
-            self.ids.date.text = "Joined Date: " + str(create_date[user_index].date())
+        for i in lender_data:
+            lender_cus_id.append(i['customer_id'])
+            create_date.append(i['member_since'])
+        #
+        if p_customer_id[log_index] in lender_cus_id:
+            index1 = lender_cus_id.index(p_customer_id[log_index])
+            self.ids.date.text = "[b]Joined Date[/b]: " + str(create_date[index1])
+            self.ids.date.text = "Joined Date: " + str(create_date[index1])
         else:
-            print("no email found")
+            self.ids.date.text = "[b]Joined Date[/b]: "
+            self.ids.date.text = "Joined Date: "
 
         data = app_tables.fin_wallet.search()
         w_email = []
@@ -7621,7 +7634,8 @@ class ViewAccountScreen(Screen):
     def profile(self):
         self.manager.add_widget(Factory.ViewProfileScreen(name='ViewProfileScreen'))
         self.manager.current = 'ViewProfileScreen'
-
+    def refresh(self):
+        pass
     def personal(self):
         self.manager.add_widget(Factory.ViewPersonalScreen(name='ViewPersonalScreen'))
         self.manager.current = 'ViewPersonalScreen'
@@ -7703,7 +7717,7 @@ class ViewProfileScreen(Screen):
         for row in data:
             email1.append(row['email_id'])
             investment.append(row['investment'])
-            membership.append(row['membership'])
+            membership.append(row['membership_type'])
             returns.append(row['return_on_investment'])
             lending.append(row['lending_period'])
 
@@ -7715,7 +7729,7 @@ class ViewProfileScreen(Screen):
             self.ids.lending_period.text = str(lending[index])
 
     def refresh(self):
-        pass
+        self.__init__()
 
     def on_back_button_press(self):
         self.manager.current = 'ViewAccountScreen'
@@ -7887,6 +7901,7 @@ class ViewEmployeeScreen(Screen):
 
 
 class ViewEditScreen4(Screen):
+    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         gender_data = app_tables.fin_occupation_type.search()
@@ -8059,7 +8074,11 @@ class ViewEditScreen4(Screen):
             print(f"Email {email} not found in data.")
 
     def check_and_open_file_manager1(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "employee_id")
+
+    def check_and_open_file_manager2(self):
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1",
+                                         "last_six_months_bank_statement")
 
     def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id):
         if platform == 'android':
@@ -8105,6 +8124,9 @@ class ViewEditScreen4(Screen):
 
     def upload_image(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -8119,11 +8141,15 @@ class ViewEditScreen4(Screen):
             # Update user_photo column with the media object
             user_data['emp_id_proof'] = user_photo_media
             print("Image uploaded successfully.")
+            self.ids['employee_id'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image1(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -8139,6 +8165,7 @@ class ViewEditScreen4(Screen):
             user_data['last_six_month_bank_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['last_six_months_bank_statement'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -8425,12 +8452,13 @@ class ViewBusinessScreen(Screen):
 
 
 class ViewEditScreen5(Screen):
+    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        gender_data = app_tables.fin_borrower_no_of_employees.search()
+        gender_data = app_tables.fin_lendor_no_of_employees.search()
         gender_list = []
         for i in gender_data:
-            gender_list.append(i['borrower_no_of_employees'])
+            gender_list.append(i['lendor_no_of_employees'])
         self.unique_gender = []
         for i in gender_list:
             if i not in self.unique_gender:
@@ -8441,10 +8469,10 @@ class ViewEditScreen5(Screen):
         else:
             self.ids.no_working.values = ['Select no of employees']
 
-        present_address = app_tables.fin_borrower_business_type.search()
+        present_address = app_tables.fin_lendor_business_type.search()
         present = []
         for i in present_address:
-            present.append(i['borrower_business_type'])
+            present.append(i['lendor_business_type'])
         self.unique_present = []
         for i in present:
             if i not in self.unique_present:
@@ -8638,6 +8666,9 @@ class ViewEditScreen5(Screen):
 
     def upload_image(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -8653,11 +8684,15 @@ class ViewEditScreen5(Screen):
             user_data['last_six_month_bank_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['upload_gov_id2_img'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image1(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -8674,6 +8709,7 @@ class ViewEditScreen5(Screen):
             user_data['proof_verification'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['upload_gov_id2_img'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -8810,8 +8846,13 @@ class ViewEditScreen6(Screen):
         bank_name = self.ids.bank_name.text
         bank_id = self.ids.bank_id.text
         branch_name = self.ids.branch_name.text
-        success = self.update_profile_data(account_holder, account_type, account_number, branch_name, bank_name,
-                                           bank_id)
+
+        if not account_holder or account_holder.isdigit() or not account_holder[0].isupper():
+            self.show_validation_errors('Please Enter Valid Full Name')
+            return
+
+
+        success = self.update_profile_data(account_holder, account_type, account_number, branch_name, bank_name,bank_id)
 
         if success:
             # self.show_validation_error("Database Update Sucessfully.")
@@ -8823,6 +8864,21 @@ class ViewEditScreen6(Screen):
             # Handle the case where the update failed (e.g., display an error message)
             self.on_back_button_press()
 
+    def show_validation_errors(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
     def update_profile_data(self, account_holder, account_type, account_number, branch_name, bank_name, bank_id):
         email = self.get_email()
         user_profiles = app_tables.fin_user_profile.search(email_user=email)
@@ -9263,25 +9319,6 @@ class ViewEditScreen7(Screen):
         else:
             print(f"Email {email} not found in data.")
 
-    def upload_image(self, file_path):
-        try:
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
-
-            email = self.get_email()
-            data = app_tables.fin_user_profile.search(email_user=email)
-
-            if not data:
-                print("No data found for email:", email)
-                return
-
-            user_data = data[0]
-
-            user_data['user_photo'] = user_photo_media
-
-            print("Image uploaded successfully.")
-        except Exception as e:
-            print(f"Error uploading image: {e}")
-
     def save_edited_data1(self):
         email1 = self.ids.email.text
 
@@ -9458,10 +9495,12 @@ class ViewEditScreen7(Screen):
         self.__init__()
 
 class ViewEditScreen1(Screen):
+    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         gender_data = app_tables.fin_gender.search()
         gender_list = []
+
         for i in gender_data:
             gender_list.append(i['gender'])
         self.unique_gender = []
@@ -9708,13 +9747,16 @@ class ViewEditScreen1(Screen):
 
             # Update user_photo column with the media object
             user_data['user_photo'] = user_photo_media
-
             print("Image uploaded successfully.")
+            self.ids['selected_image1'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image2(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -9727,11 +9769,16 @@ class ViewEditScreen1(Screen):
             user_data = data[0]
             user_data['aadhaar_photo'] = user_photo_media
             print("Image uploaded successfully.")
+            self.ids['upload_gov_id1_img'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
+
     def upload_image3(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -9744,9 +9791,9 @@ class ViewEditScreen1(Screen):
             user_data = data[0]
 
             # Update user_photo column with the media object
-            user_data['pan_number'] = user_photo_media
-
+            user_data['pan_photo'] = user_photo_media
             print("Image uploaded successfully.")
+            self.ids['upload_gov_id2_img'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -9770,6 +9817,9 @@ class ViewEditScreen1(Screen):
         country = self.ids.country.text
         qualification = self.ids.qualification.text
 
+        if not name or len(name.split()) < 2 or name.isdigit() or not name[0].isupper():
+            self.show_validation_error('Please Enter Full Name and First letter as capital ')
+            return
         # Update the database with the edited data
         # Replace 'update_profile_data' with your actual database update function
         success = self.update_profile_data(qualification, country, state, zip_code, staying_address, type_of_address,
@@ -9924,6 +9974,11 @@ class ViewEditScreen1(Screen):
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
 
+    def check_and_open_file_manager2(self):
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "upload_gov_id1_img")
+
+    def check_and_open_file_manager3(self):
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "upload_gov_id2_img")
     def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):

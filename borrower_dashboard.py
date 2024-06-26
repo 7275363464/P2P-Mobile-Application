@@ -8,6 +8,7 @@ from io import BytesIO
 from kivy.core.image import Image as CoreImage
 from kivy.graphics import Color,Ellipse
 import anvil
+import os
 from anvil.tables import app_tables
 from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -2859,7 +2860,8 @@ user_helpers = '''
                         font_size: dp(13)
                         pos_hint: {'center_y': 0.5}
 
-
+                MDLabel:
+                    text: ' '
                 BoxLayout:
                     orientation: "horizontal"
                     size_hint_y: None
@@ -3739,7 +3741,9 @@ user_helpers = '''
                             multiline: False
                             halign: 'left'
                             pos_hint: {'center_y': 0.5}
-
+                
+                MDLabel:
+                    text: ' '
                 BoxLayout:
                     orientation: "horizontal"
                     size_hint_y: None
@@ -5701,7 +5705,9 @@ user_helpers = '''
                             multiline: False
                             halign: 'left'
                             pos_hint: {'center_y': 0.5}
-
+                
+                MDLabel:
+                    text: ' '
                 BoxLayout:
                     orientation: "vertical"
                     size_hint_y: None
@@ -8255,24 +8261,24 @@ class AccountScreen(Screen):
         log_index = 0
         if log_email in email_user:
             log_index = email_user.index(log_email)
-            self.ids.username.text = "Welcome " + name_list[log_index]
+            self.ids.username.text = name_list[log_index]
             self.ids.username.font_style = 'H6'
-            self.ids.username.text = "Welcome " + name_list[log_index]
+            self.ids.username.text =  name_list[log_index]
         else:
             # Handle the case when 'logged' is not in the status list
             self.ids.username.text = "User welcome to P2P"
 
-        users = app_tables.users.search()
+        users = app_tables.fin_borrower.search()
 
         user_email = []
         create_date = []
         for i in users:
-            user_email.append(i['email'])
-            create_date.append(i['signed_up'])
+            user_email.append(i['email_id'])
+            create_date.append(i['borrower_since'])
 
         if log_email in user_email:
             user_index = user_email.index(log_email)
-            self.ids.date.text = "Joined Date: " + str(create_date[user_index].date())
+            self.ids.date.text = "Joined Date: " + str(create_date[user_index])
         else:
             print("no email found")
 
@@ -8530,34 +8536,34 @@ class EmployeeScreen(Screen):
             else:
                 employee_id.append(None)
 
-                if row['last_six_month_bank_proof']:
-                    image_data = row['last_six_month_bank_proof'].get_bytes()
-                    if isinstance(image_data, bytes):
-                        print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
-                        # Assuming image_data is already a binary image file
-                        try:
-                            profile_texture_io = BytesIO(image_data)
-                            profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
-                            last_six_months.append(profile_texture_obj)
-                        except Exception as e:
-                            print(f"Error processing image for email {row['email_user']}: {e}")
-                            last_six_months.append(None)
-                    else:
-                        # If image_data is not bytes, assume it's base64 encoded and decode it
-                        try:
-                            image_data_binary = base64.b64decode(image_data)
-                            print(f"Decoded image data length: {len(image_data_binary)}")
-                            profile_texture_io = BytesIO(image_data_binary)
-                            profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
-                            last_six_months.append(profile_texture_obj)
-                        except base64.binascii.Error as e:
-                            print(f"Base64 decoding error for email {row['email_user']}: {e}")
-                            last_six_months.append(None)
-                        except Exception as e:
-                            print(f"Error processing image for email {row['email_user']}: {e}")
-                            last_six_months.append(None)
+            if row['last_six_month_bank_proof']:
+                image_data = row['last_six_month_bank_proof'].get_bytes()
+                if isinstance(image_data, bytes):
+                    print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                    # Assuming image_data is already a binary image file
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        last_six_months.append(profile_texture_obj)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        last_six_months.append(None)
                 else:
-                    last_six_months.append(None)
+                    # If image_data is not bytes, assume it's base64 encoded and decode it
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        print(f"Decoded image data length: {len(image_data_binary)}")
+                        profile_texture_io = BytesIO(image_data_binary)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        last_six_months.append(profile_texture_obj)
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                        last_six_months.append(None)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        last_six_months.append(None)
+            else:
+                last_six_months.append(None)
 
             email1.append(row['email_user'])
             company_name.append(row['company_name'])
@@ -8627,6 +8633,7 @@ class EmployeeScreen(Screen):
 
 
 class EditScreen4(Screen):
+    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         gender_data = app_tables.fin_occupation_type.search()
@@ -8731,34 +8738,34 @@ class EditScreen4(Screen):
             else:
                 employee_id.append(None)
 
-                if row['last_six_month_bank_proof']:
-                    image_data = row['last_six_month_bank_proof'].get_bytes()
-                    if isinstance(image_data, bytes):
-                        print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
-                        # Assuming image_data is already a binary image file
-                        try:
-                            profile_texture_io = BytesIO(image_data)
-                            profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
-                            last_six_months.append(profile_texture_obj)
-                        except Exception as e:
-                            print(f"Error processing image for email {row['email_user']}: {e}")
-                            last_six_months.append(None)
-                    else:
-                        # If image_data is not bytes, assume it's base64 encoded and decode it
-                        try:
-                            image_data_binary = base64.b64decode(image_data)
-                            print(f"Decoded image data length: {len(image_data_binary)}")
-                            profile_texture_io = BytesIO(image_data_binary)
-                            profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
-                            last_six_months.append(profile_texture_obj)
-                        except base64.binascii.Error as e:
-                            print(f"Base64 decoding error for email {row['email_user']}: {e}")
-                            last_six_months.append(None)
-                        except Exception as e:
-                            print(f"Error processing image for email {row['email_user']}: {e}")
-                            last_six_months.append(None)
+            if row['last_six_month_bank_proof']:
+                image_data = row['last_six_month_bank_proof'].get_bytes()
+                if isinstance(image_data, bytes):
+                    print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                    # Assuming image_data is already a binary image file
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        last_six_months.append(profile_texture_obj)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        last_six_months.append(None)
                 else:
-                    last_six_months.append(None)
+                    # If image_data is not bytes, assume it's base64 encoded and decode it
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        print(f"Decoded image data length: {len(image_data_binary)}")
+                        profile_texture_io = BytesIO(image_data_binary)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        last_six_months.append(profile_texture_obj)
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                        last_six_months.append(None)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        last_six_months.append(None)
+            else:
+                last_six_months.append(None)
 
             email1.append(row['email_user'])
             company_name.append(row['company_name'])
@@ -8847,6 +8854,9 @@ class EditScreen4(Screen):
 
     def upload_image(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -8862,11 +8872,15 @@ class EditScreen4(Screen):
             user_data['emp_id_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['employee_id'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image1(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -8882,6 +8896,7 @@ class EditScreen4(Screen):
             user_data['last_six_month_bank_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['last_six_months_bank_statement'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -9077,6 +9092,7 @@ class StudentScreen(Screen):
 
 
 class EditScreen3(Screen):
+    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         email = self.get_email()
@@ -9166,6 +9182,9 @@ class EditScreen3(Screen):
 
     def upload_image(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -9181,6 +9200,7 @@ class EditScreen3(Screen):
             user_data['college_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['college_proof'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -9395,9 +9415,11 @@ class EditScreen2(Screen):
 
 
 class PersonalScreen(Screen):
+    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.refresh_profile_data()  # Initial data retrieval
+
     def refresh_profile_data(self, dt=None):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
@@ -9587,6 +9609,9 @@ class PersonalScreen(Screen):
 
     def upload_image(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -9694,6 +9719,7 @@ class PersonalScreen(Screen):
         self.manager.current = 'AccountScreen'
 
 class EditScreen7(Screen):
+    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -9743,24 +9769,6 @@ class EditScreen7(Screen):
         else:
             print(f"Email {email} not found in data.")
 
-    def upload_image(self, file_path):
-        try:
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
-
-            email = self.get_email()
-            data = app_tables.fin_user_profile.search(email_user=email)
-
-            if not data:
-                print("No data found for email:", email)
-                return
-
-            user_data = data[0]
-
-            user_data['user_photo'] = user_photo_media
-
-            print("Image uploaded successfully.")
-        except Exception as e:
-            print(f"Error uploading image: {e}")
 
     def save_edited_data1(self):
         email1 = self.ids.email.text
@@ -9875,33 +9883,33 @@ class EditScreen7(Screen):
                 account.update()
 
             # EMI Details
-            emi_details = app_tables.fin_emi_table.search(lender_email=old_email)
+            emi_details = app_tables.fin_emi_table.search(borrower_email=old_email)
             for loans in emi_details:
-                loans['lender_email'] = new_email
+                loans['borrower_email'] = new_email
                 loans.update()
 
             # Extends Table
-            extends_table = app_tables.fin_extends_loan.search(lender_email_id=old_email)
+            extends_table = app_tables.fin_extends_loan.search(borrower_email_id=old_email)
             for loans in extends_table:
-                loans['lender_email_id'] = new_email
+                loans['borrower_email_id'] = new_email
                 loans.update()
 
             # Foreclosure
-            foreclosure = app_tables.fin_foreclosure.search(lender_email_id=old_email)
+            foreclosure = app_tables.fin_foreclosure.search(borrower_email_id=old_email)
             for loans in foreclosure:
-                loans['lender_email_id'] = new_email
+                loans['borrower_email_id'] = new_email
                 loans.update()
 
-            # Lender
-            fin_lender = app_tables.fin_lender.search(email_id=old_email)
-            for lender in fin_lender:
-                lender['email_id'] = new_email
-                lender.update()
+            # Borrower
+            fin_borrower = app_tables.fin_borrower.search(email_id=old_email)
+            for borrower in fin_borrower:
+                borrower['email_id'] = new_email
+                borrower.update()
 
             # Loan Details
-            loan_details = app_tables.fin_loan_details.search(lender_email_id=old_email)
+            loan_details = app_tables.fin_loan_details.search(borrower_email_id=old_email)
             for loans in loan_details:
-                loans['lender_email_id'] = new_email
+                loans['borrower_email_id'] = new_email
                 loans.update()
 
             # Report Problem
@@ -9909,6 +9917,12 @@ class EditScreen7(Screen):
             for problem in report_problem:
                 problem['email'] = new_email
                 problem.update()
+
+            # Ascend Score
+            ascend_score = app_tables.fin_user_ascend_score.search(borrower_email_id=old_email)
+            for score in ascend_score:
+                score['borrower_email_id'] = new_email
+                score.update()
 
         except Exception as e:
             print(f"An error occurred while updating related tables: {e}")
@@ -9929,13 +9943,14 @@ class EditScreen7(Screen):
 
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'ViewAccountScreen'
+        self.manager.current = 'AccountScreen'
 
     def on_back_button_press(self):
-        self.manager.current = 'ViewAccountScreen'
+        self.manager.current = 'AccountScreen'
 
     def refresh(self):
         self.__init__()
+
 class ProfileScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -10082,6 +10097,22 @@ class EditScreen6(Screen):
     def refresh(self):
         pass
 
+    def show_validation_errors(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
     def on_bank_save(self):
         account_holder = self.ids.holder.text
         account_type = self.ids.account_type.text
@@ -10089,6 +10120,10 @@ class EditScreen6(Screen):
         bank_name = self.ids.bank_name.text
         bank_id = self.ids.bank_id.text
         branch_name = self.ids.branch_name.text
+        if not account_holder or account_holder.isdigit() or not account_holder[0].isupper() :
+            self.show_validation_errors('Please Enter Valid Full Name')
+            return
+
         success = self.update_profile_data(account_holder, account_type, account_number, branch_name, bank_name,
                                            bank_id)
 
@@ -10294,6 +10329,7 @@ class BusinessScreen(Screen):
 
 
 class EditScreen5(Screen):
+    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         gender_data = app_tables.fin_borrower_no_of_employees.search()
@@ -10507,6 +10543,9 @@ class EditScreen5(Screen):
 
     def upload_image(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -10522,11 +10561,15 @@ class EditScreen5(Screen):
             user_data['last_six_month_bank_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['six_bank'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image1(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -10539,10 +10582,10 @@ class EditScreen5(Screen):
             user_data = data[0]
 
             # Update user_photo column with the media object
-            user_data['last_six_month_bank_proof'] = user_photo_media
             user_data['proof_verification'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['proof'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -10629,6 +10672,7 @@ class EditScreen5(Screen):
 
 
 class EditScreen1(Screen):
+    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         gender_data = app_tables.fin_gender.search()
@@ -10901,6 +10945,9 @@ class EditScreen1(Screen):
 
     def upload_image1(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -10916,11 +10963,16 @@ class EditScreen1(Screen):
             user_data['user_photo'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['selected_image1'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image2(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -10933,11 +10985,16 @@ class EditScreen1(Screen):
             user_data = data[0]
             user_data['aadhaar_photo'] = user_photo_media
             print("Image uploaded successfully.")
+            self.ids['upload_gov_id1_img'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image3(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -10950,9 +11007,10 @@ class EditScreen1(Screen):
             user_data = data[0]
 
             # Update user_photo column with the media object
-            user_data['pan_number'] = user_photo_media
+            user_data['pan_photo'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['upload_gov_id2_img'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -10985,6 +11043,10 @@ class EditScreen1(Screen):
         home_loan = self.ids.home.text
         personal_credit = self.ids.personal.text
         vehicle_loans = self.ids.two.text
+        if not name or len(name.split()) < 2 or name.isdigit() or not name[0].isupper() :
+            self.show_validation_errors('Please Enter Full Name and first letter should be capital')
+            return
+
         # Update the database with the edited data
         # Replace 'update_profile_data' with your actual database update function
         success = self.update_profile_data(vehicle_loans, personal_credit, home_loan, other_loan, profession,
@@ -11019,6 +11081,22 @@ class EditScreen1(Screen):
         )
         dialog.open()
 
+    def show_validation_errors(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
     def update_profile_data(self, vehicle_loans, personal_credit, home_loan, other_loan, profession, qualification,
                             country, state, zip_code, staying_address, type_of_address, address1, address2, gov_id1,
                             gov_id2, alternate_email, marrital_status, name, email1, mobile_no, dob, gender):
@@ -11035,7 +11113,7 @@ class EditScreen1(Screen):
                                     gender=gender,
                                     duration_at_address=staying_address,
                                     aadhaar_no=gov_id1,
-                                    pan_number=gov_id2,
+                                    pan_number=str(gov_id2),
                                     street_adress_1=address1,
                                     street_address_2=address2,
                                     present_address=type_of_address,
@@ -11159,17 +11237,17 @@ class EditScreen1(Screen):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
 
     def check_and_open_file_manager2(self):
-        self.check_and_open_file_manager( "upload_icon1", "upload_label1", "selected_file_label1", "upload_gov_id1_img")
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "upload_gov_id1_img")
 
     def check_and_open_file_manager3(self):
-        self.check_and_open_file_manager( "upload_icon1", "upload_label1", "selected_file_label1", "upload_gov_id2_img")
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "upload_gov_id2_img")
 
     def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):
                 self.file_manager_open(icon_id, label_id, file_label_id, image_id)
             else:
-                self.request_media_images_permission()
+                self.request_media_images_permission(icon_id, label_id, file_label_id, image_id)
         else:
             self.file_manager_open(icon_id, label_id, file_label_id, image_id)
 

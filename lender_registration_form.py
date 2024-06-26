@@ -3958,8 +3958,8 @@ class LenderScreen(Screen):
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if there are missing fields
 
-        if not name or len(name.split()) < 2 or not re.match(r'^[a-zA-Z\s]+$', name):
-            self.show_validation_error("Please enter a valid full name with at least a first name and last name.")
+        if not name or len(name.split()) < 2 or not name[0].isupper() or not name[0].isupper() or name.isdigit():
+            self.show_validation_errors('Please Enter Full Name and first letter should be capital')
             return
 
         if not gender or gender == 'Select Gender':
@@ -4224,6 +4224,7 @@ class LenderScreen1(Screen):
     def perform_data_addition_action(self, mobile_number, alternate_email, modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
+        user_email = anvil.server.call('another_method')
         if not all([mobile_number, alternate_email]):
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if there are missing fields
@@ -4234,7 +4235,7 @@ class LenderScreen1(Screen):
             return
 
         # Check if alternate email is provided and is valid
-        if alternate_email and not re.match(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', alternate_email):
+        if alternate_email and not re.match(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', alternate_email) or user_email == alternate_email:
             self.show_validation_error("Please enter a valid email address for alternate email.")
             return
         cursor.execute('select * from fin_users')
@@ -9123,8 +9124,8 @@ class LenderScreenIndividualBankForm1(Screen):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
-        if not re.match(r'^[a-zA-Z]{3,}$', account_holder_name):
-            self.show_validation_error('Enter a valid account name')
+        if not re.match(r'^[a-zA-Z]{3,}$', account_holder_name) or not account_holder_name[0].isupper():
+            self.show_validation_error('Enter a valid account name and first letter should be capital')
             return
         if account_type not in account_type == 'Select Account Type':
             self.show_validation_error('Enter a valid account type')

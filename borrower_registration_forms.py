@@ -4307,6 +4307,8 @@ class BorrowerScreen(Screen):
         if user_email in id_list:
             index = id_list.index(user_email)
             self.ids.username.text = data[index]['full_name']
+            self.ids.gender_id.text=data[index]['gender']
+            self.ids.date_textfield.text=data[index]['date_of_birth']
         else:
             print('email not found')
 
@@ -4368,8 +4370,8 @@ class BorrowerScreen(Screen):
             for error in validation_errors:
                 self.show_validation_error(error)
             return
-        if not name or len(name.split()) < 2 or name.isdigit():
-            self.show_validation_errors('Please Enter  Valid Full Name')
+        if not name or len(name.split()) < 2 or not name[0].isupper() or not name[0].isupper() or name.isdigit():
+            self.show_validation_errors('Please Enter Full Name and first letter should be capital')
             return
 
         if gender not in self.unique_gender:
@@ -4487,6 +4489,7 @@ class BorrowerScreen1(Screen):
             # Ensure index is within the bounds of the data and photo lists
             if index < len(data):
                 self.ids.mobile_number.text = data[index]['mobile']
+                self.ids.alternate_email.text = data[index]['mail_id']
             else:
                 print(f"Index {index} out of range for data list of length {len(data)}")
                 return
@@ -9210,8 +9213,8 @@ class BorrowerScreen18(Screen):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
-        if len(account_holder_name) < 3 or account_holder_name.isdigit():
-            self.show_validation_error('Enter a valid account name')
+        if len(account_holder_name) < 3 or not account_holder_name[0].isupper() or account_holder_name.isdigit():
+            self.show_validation_error('Enter a valid account name first letter should be capital')
             return
         if account_type not in self.unique_list:
             self.show_validation_error('Enter a valid account type')

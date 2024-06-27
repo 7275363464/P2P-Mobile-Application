@@ -805,7 +805,7 @@ class ALlLoansScreen(Screen):
             card = MDCard(
                 orientation='vertical',
                 size_hint=(None, None),
-                size=("310dp", "200dp"),
+                size=("350dp", "200dp"),
                 padding="8dp",
                 spacing="5dp",
                 elevation=3
@@ -822,12 +822,12 @@ class ALlLoansScreen(Screen):
                 image = Image(
                     source='img.png',  # Update with the actual path to the image
                     size_hint_x=None,
-                    height="60dp",
-                    width="70dp"
+                    height="70dp",
+                    width="80dp"
                 )
             horizontal_layout.add_widget(image)
 
-            horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
+            horizontal_layout.add_widget(Widget(size_hint_x=None, width='20dp'))
             text_layout = BoxLayout(orientation='vertical')
             text_layout.add_widget(MDLabel(
                 text=f"[b]{borrower_name[i]}[/b],\n[b]{profile_mobile_number[number]}[/b]",
@@ -907,7 +907,7 @@ class ALlLoansScreen(Screen):
                 # on_release=lambda x, i=i: self.close_loan(i)
             )
             button2 = MDFillRoundFlatButton(
-                text=" View Details ",
+                text="     View Details    ",
                 size_hint=(None, None),
                 height="40dp",
                 width="250dp",

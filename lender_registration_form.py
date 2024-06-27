@@ -266,10 +266,10 @@ KV = '''
                 height:dp(5)
             BoxLayout:
                 orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
+                padding: "7dp"
+                spacing: "7dp"
                 size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
+                size: dp(200), dp(60)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
                 canvas:
@@ -299,20 +299,22 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            MDLabel:
+            Image:
                 id: image_label1
-                text:""
-                halign: 'center'
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
+                source: ''
+                allow_stretch: True
+                keep_ratio: True
                 size_hint_y: None
-                height:dp(5)
+                size: dp(50), dp(50)
 
-            MDLabel:
-                text:""
-                size_hint_y: None
-                height:dp(20)
+            # MDLabel:
+            #     id: image_label1
+            #     text:""
+            #     halign: 'center'
+            #     font_size: "15dp"
+            #     font_name: "Roboto-Bold"
+            #     size_hint_y: None
+            #     height:dp(5)
 
             GridLayout:
                 cols: 1
@@ -382,14 +384,14 @@ KV = '''
                 text: "Upload Government ID1"
                 bold: True
                 size_hint_y:None
-                height:dp(50)
+                height:dp(30)
                 halign: "left"
             BoxLayout:
                 orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
+                padding: "5dp"
+                spacing: "5dp"
                 size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
+                size: dp(300), dp(80)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
                 canvas:
@@ -419,15 +421,25 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label1
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            # MDLabel:
+            #     id: image_label1
+            #     text: ''
+            #     halign: 'center'
+            #     theme_text_color: "Custom"
+            #     text_color: 0, 0, 0, 1  # Black text color
+            #     valign: 'middle'  # Align the label text vertically in the center
+            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
-            MDLabel:
-                id: image_label1
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
 
             MDTextField:
@@ -449,15 +461,15 @@ KV = '''
                 text: "Upload Government ID2"
                 bold: True
                 size_hint_y:None
-                height:dp(50)
+                height:dp(30)
                 halign: "left"
 
             BoxLayout:
                 orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
+                padding: "5dp"
+                spacing: "5dp"
                 size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
+                size: dp(300), dp(80)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
                 canvas:
@@ -489,14 +501,24 @@ KV = '''
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
-            MDLabel:
-                id: image_label2
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            # MDLabel:
+            #     id: image_label2
+            #     text: ''
+            #     halign: 'center'
+            #     theme_text_color: "Custom"
+            #     text_color: 0, 0, 0, 1  # Black text color
+            #     valign: 'middle'  # Align the label text vertically in the center
+            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label2
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
             MDRectangleFlatButton:
                 text: "Next"
@@ -933,14 +955,21 @@ KV = '''
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
-            MDLabel:
+            # MDLabel:
+            #     id: image_label1
+            #     text: ''
+            #     halign: 'center'
+            #     theme_text_color: "Custom"
+            #     text_color: 0, 0, 0, 1  # Black text color
+            #     valign: 'middle'  # Align the label text vertically in the center
+            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            Image:
                 id: image_label1
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                source: ''
+                allow_stretch: True
+                keep_ratio: True
+                size_hint_y: None
+                size: dp(50), dp(50)
 
             MDRectangleFlatButton:
                 text: "Next"
@@ -1029,14 +1058,25 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDLabel:
-                id: image_label1
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            # MDLabel:
+            #     id: image_label1
+            #     text: ''
+            #     halign: 'center'
+            #     theme_text_color: "Custom"
+            #     text_color: 0, 0, 0, 1  # Black text color
+            #     valign: 'middle'  # Align the label text vertically in the center
+            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+                Image:
+                    id: image_label1
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             MDLabel:
                 text: "Upload Intermediate/PUC"
                 halign: 'left'
@@ -1077,15 +1117,24 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDLabel:
-                id: image_label2
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
+            # MDLabel:
+            #     id: image_label2
+            #     text: ''
+            #     halign: 'center'
+            #     theme_text_color: "Custom"
+            #     text_color: 0, 0, 0, 1  # Black text color
+            #     valign: 'middle'  # Align the label text vertically in the center
+            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label2
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             MDRectangleFlatButton:
                 text: "Next"
                 on_release: root.go_to_lender_screen4()
@@ -1126,7 +1175,10 @@ KV = '''
                 Line:
                     width: 0.7  # Border width
                     rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
+            MDLabel:
+                text: 'Education Details'
+                halign: 'center'
+                bold: True
             MDLabel:
                 text: "Upload 10th standard Certificate"
                 halign: 'left'
@@ -1137,9 +1189,9 @@ KV = '''
             BoxLayout:
                 orientation: 'horizontal'
                 padding: "10dp"
-                spacing: "10dp"
+                spacing: "5dp"
                 size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
+                size: dp(270), dp(60)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 canvas:
                     Color:
@@ -1168,15 +1220,24 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            MDLabel:
-                id: image_label1
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label1
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            # MDLabel:
+            #     id: image_label1
+            #     text: ''
+            #     halign: 'center'
+            #     theme_text_color: "Custom"
+            #     text_color: 0, 0, 0, 1  # Black text color
+            #     valign: 'middle'  # Align the label text vertically in the center
+            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             MDLabel:
                 text: "Upload Intermediate/PUC Certificate"
                 halign: 'left'
@@ -1189,7 +1250,7 @@ KV = '''
                 padding: "10dp"
                 spacing: "10dp"
                 size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
+                size: dp(270), dp(60)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 canvas:
                     Color:
@@ -1218,15 +1279,24 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            MDLabel:
-                id: image_label2
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label2
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            # MDLabel:
+            #     id: image_label2
+            #     text: ''
+            #     halign: 'center'
+            #     theme_text_color: "Custom"
+            #     text_color: 0, 0, 0, 1  # Black text color
+            #     valign: 'middle'  # Align the label text vertically in the center
+            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             MDLabel:
                 text: "Upload Bachelors certificate"
                 halign: 'left'
@@ -1239,7 +1309,7 @@ KV = '''
                 padding: "10dp"
                 spacing: "10dp"
                 size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
+                size: dp(270), dp(60)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 canvas:
                     Color:
@@ -1268,14 +1338,24 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDLabel:
-                id: image_label3
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label3
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            # MDLabel:
+            #     id: image_label3
+            #     text: ''
+            #     halign: 'center'
+            #     theme_text_color: "Custom"
+            #     text_color: 0, 0, 0, 1  # Black text color
+            #     valign: 'middle'  # Align the label text vertically in the center
+            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
             MDRectangleFlatButton:
                 text: "Next"
@@ -1333,7 +1413,7 @@ KV = '''
                 padding: "10dp"
                 spacing: "10dp"
                 size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
+                size: dp(270), dp(60)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 canvas:
                     Color:
@@ -1362,15 +1442,24 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            MDLabel:
-                id: image_label1
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label1
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            # MDLabel:
+            #     id: image_label1
+            #     text: ''
+            #     halign: 'center'
+            #     theme_text_color: "Custom"
+            #     text_color: 0, 0, 0, 1  # Black text color
+            #     valign: 'middle'  # Align the label text vertically in the center
+            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             MDLabel:
                 text: "Upload Intermediate/PUC Certificate"
                 halign: 'left'
@@ -1383,7 +1472,7 @@ KV = '''
                 padding: "10dp"
                 spacing: "10dp"
                 size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
+                size: dp(270), dp(60)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 canvas:
                     Color:
@@ -1412,15 +1501,24 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            MDLabel:
-                id: image_label2
-                text: ''
-                halign: 'left'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label2
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            # MDLabel:
+            #     id: image_label2
+            #     text: ''
+            #     halign: 'left'
+            #     theme_text_color: "Custom"
+            #     text_color: 0, 0, 0, 1  # Black text color
+            #     valign: 'middle'  # Align the label text vertically in the center
+            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             MDLabel:
                 text: "Upload Bachelors certificate"
                 halign: 'left'
@@ -1433,7 +1531,7 @@ KV = '''
                 padding: "10dp"
                 spacing: "10dp"
                 size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
+                size: dp(270), dp(60)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 canvas:
                     Color:
@@ -1462,15 +1560,24 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            MDLabel:
-                id: image_label3
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label3
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            # MDLabel:
+            #     id: image_label3
+            #     text: ''
+            #     halign: 'center'
+            #     theme_text_color: "Custom"
+            #     text_color: 0, 0, 0, 1  # Black text color
+            #     valign: 'middle'  # Align the label text vertically in the center
+            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
             MDLabel:
                 text: "Upload Masters Certificate"
@@ -1484,7 +1591,7 @@ KV = '''
                 padding: "10dp"
                 spacing: "10dp"
                 size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
+                size: dp(270), dp(60)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 canvas:
                     Color:
@@ -1512,14 +1619,24 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDLabel:
-                id: image_label4
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label4
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            # MDLabel:
+            #     id: image_label4
+            #     text: ''
+            #     halign: 'center'
+            #     theme_text_color: "Custom"
+            #     text_color: 0, 0, 0, 1  # Black text color
+            #     valign: 'middle'  # Align the label text vertically in the center
+            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
             MDRectangleFlatButton:
                 text: "Next"
@@ -2187,7 +2304,7 @@ KV = '''
                 padding: "10dp"
                 spacing: "10dp"
                 size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
+                size: dp(270), dp(60)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
                 canvas:
@@ -2216,15 +2333,24 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            MDLabel:
-                id: image_label1
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label1
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            # MDLabel:
+            #     id: image_label1
+            #     text: ''
+            #     halign: 'center'
+            #     theme_text_color: "Custom"
+            #     text_color: 0, 0, 0, 1  # Black text color
+            #     valign: 'middle'  # Align the label text vertically in the center
+            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
             MDRectangleFlatButton:
                 text: "Next"
@@ -2330,7 +2456,7 @@ KV = '''
                 padding: "10dp"
                 spacing: "10dp"
                 size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
+                size: dp(270), dp(60)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
                 canvas:
@@ -2359,15 +2485,24 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            MDLabel:
-                id: image_label1
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label1
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            # MDLabel:
+            #     id: image_label1
+            #     text: ''
+            #     halign: 'center'
+            #     theme_text_color: "Custom"
+            #     text_color: 0, 0, 0, 1  # Black text color
+            #     valign: 'middle'  # Align the label text vertically in the center
+            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
             MDRectangleFlatButton:
                 text: "Next"
@@ -2548,7 +2683,7 @@ KV = '''
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(10)
+            spacing: dp(5)
             padding: dp(30) 
             md_bg_color:253/255, 254/255, 254/255, 1
             canvas:
@@ -2613,7 +2748,7 @@ KV = '''
                 padding: "10dp"
                 spacing: "10dp"
                 size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
+                size: dp(270), dp(60)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 canvas:
                     Color:
@@ -2637,17 +2772,26 @@ KV = '''
                     text: 'Upload Document'
                     halign: 'left'
                     theme_text_color: "Custom"
-
-            MDLabel:
-                id: image_label1
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                height:dp(15)
-                size_hint_y: None
+                Image:
+                    id: image_label1
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            # MDLabel:
+            #     id: image_label1
+            #     text: ''
+            #     halign: 'center'
+            #     theme_text_color: "Custom"
+            #     text_color: 0, 0, 0, 1  # Black text color
+            #     valign: 'middle'  # Align the label text vertically in the center
+            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            #     height:dp(15)
+            #     size_hint_y: None
 
             MDLabel:
                 text: 'Select Upload last 6 months bank statements:'
@@ -2662,7 +2806,7 @@ KV = '''
                 padding: "10dp"
                 spacing: "10dp"
                 size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
+                size: dp(270), dp(60)  # Adjust size as needed
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 canvas:
                     Color:
@@ -2687,16 +2831,16 @@ KV = '''
                     halign: 'left'
                     theme_text_color: "Custom"
 
-            MDLabel:
-                id: image_label2
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                size_hint_y: None
-                height:dp(15)
+                Image:
+                    id: image_label2
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
             MDRectangleFlatButton:
                 text: "Next"
@@ -3959,7 +4103,7 @@ class LenderScreen(Screen):
             return  # Prevent further execution if there are missing fields
 
         if not name or len(name.split()) < 2 or not name[0].isupper() or not name[0].isupper() or name.isdigit():
-            self.show_validation_errors('Please Enter Full Name and first letter should be capital')
+            self.show_validation_error('Please Enter Full Name and first letter should be capital')
             return
 
         if not gender or gender == 'Select Gender':
@@ -4074,6 +4218,8 @@ class LenderScreen(Screen):
 
 
 class LenderScreen1(Screen):
+    MAX_IMAGE_SIZE_MB = 2
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         user_email = anvil.server.call('another_method')
@@ -4092,6 +4238,10 @@ class LenderScreen1(Screen):
 
     def upload_image(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+
             user_photo_media = media.from_file(file_path, mime_type='image/png')
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
@@ -4106,29 +4256,48 @@ class LenderScreen1(Screen):
             user_data['user_photo'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids.image_label1.source = file_path
+            print(f"Set image source to: {file_path}")
+
 
         except Exception as e:
             print(f"Error uploading image: {e}")
 
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1")
+                                         "image_label1", self.upload_image)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
             else:
                 self.request_media_images_permission()
         else:
             # For non-Android platforms, directly open the file manager
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
+                                                       image_label_id, upload_function),
         )
         if platform == 'android':
             primary_external_storage = "/storage/emulated/0"
@@ -4137,12 +4306,12 @@ class LenderScreen1(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.upload_image(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen1').ids[image_label_id].text = file_name  # Update the label text
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+        upload_function(path)  # Upload the selected image using the provided function
+        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
         self.file_manager.close()
+        # self.manager.get_screen('LenderScreen1').ids[image_label_id].text = file_name  # Update the label text
+        # self.file_manager.close()
 
     def exit_manager(self, *args):
         self.file_manager.close()
@@ -4235,7 +4404,8 @@ class LenderScreen1(Screen):
             return
 
         # Check if alternate email is provided and is valid
-        if alternate_email and not re.match(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', alternate_email) or user_email == alternate_email:
+        if alternate_email and not re.match(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$',
+                                            alternate_email) or user_email == alternate_email:
             self.show_validation_error("Please enter a valid email address for alternate email.")
             return
         cursor.execute('select * from fin_users')
@@ -4321,8 +4491,14 @@ class LenderScreen1(Screen):
 
 
 class LenderScreen2(Screen):
+    MAX_IMAGE_SIZE_MB = 2
+
     def upload_image1(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -4338,11 +4514,16 @@ class LenderScreen2(Screen):
             user_data['aadhaar_photo'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['image_label1'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image2(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -4356,10 +4537,42 @@ class LenderScreen2(Screen):
 
             # Update user_photo column with the media object
             user_data['pan_photo'] = user_photo_media
-
             print("Image uploaded successfully.")
+            self.ids['image_label2'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
+
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
 
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
@@ -4374,27 +4587,27 @@ class LenderScreen2(Screen):
 
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1")
+                                         "image_label1", self.upload_image1)
 
     def check_and_open_file_manager2(self):
         self.check_and_open_file_manager("upload_icon2", "upload_label2", "selected_file_label2", "selected_image2",
-                                         "image_label2")
+                                         "image_label2", self.upload_image2)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
             else:
                 self.request_media_images_permission()
         else:
             # For non-Android platforms, directly open the file manager
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
+                                                       image_label_id, upload_function),
         )
         if platform == 'android':
             primary_external_storage = "/storage/emulated/0"
@@ -4403,32 +4616,32 @@ class LenderScreen2(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
+    # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     self.file_manager = MDFileManager(
+    #         exit_manager=self.exit_manager,
+    #         select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
+    #                                                    image_label_id),
+    #     )
+    #     if platform == 'android':
+    #         primary_external_storage = "/storage/emulated/0"
+    #         self.file_manager.show(primary_external_storage)
+    #     else:
+    #         # For other platforms, show the file manager from the root directory
+    #         self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.upload_image1(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen2').ids[image_label_id].text = file_name  # Update the label text
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+        upload_function(path)  # Upload the selected image using the provided function
+        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
         self.file_manager.close()
+        # self.manager.get_screen('LenderScreen2').ids[image_label_id].text = file_name  # Update the label text
+        # self.file_manager.close()
 
-    def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.upload_image2(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen2').ids[image_label_id].text = file_name  # Update the label text
-        self.file_manager.close()
+    # def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     self.upload_image2(path)  # Upload the selected image
+    #     self.ids[image_label_id].source = path
+    #     file_name = os.path.basename(path)  # Extract file name from the path
+    #     self.manager.get_screen('LenderScreen2').ids[image_label_id].text = file_name  # Update the label text
+    #     self.file_manager.close()
 
     def exit_manager(self, *args):
         self.file_manager.close()
@@ -4573,6 +4786,9 @@ class LenderScreen2(Screen):
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'LenderScreen1'
+
+    def get_email(self):
+        return anvil.server.call('another_method')
 
 
 class LenderScreen3(Screen):
@@ -5030,6 +5246,8 @@ class LenderScreen5(Screen):
 
 
 class LenderScreen_Edu_10th(Screen):
+    MAX_IMAGE_SIZE_MB = 2
+
     def refresh(self):
         pass
 
@@ -5046,23 +5264,23 @@ class LenderScreen_Edu_10th(Screen):
 
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1")
+                                         "image_label1", self.upload_image)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
             else:
                 self.request_media_images_permission()
         else:
             # For non-Android platforms, directly open the file manager
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
+                                                       image_label_id, upload_function),
         )
         if platform == 'android':
             primary_external_storage = "/storage/emulated/0"
@@ -5071,18 +5289,23 @@ class LenderScreen_Edu_10th(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.upload_image(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen_Edu_10th').ids[image_label_id].text = file_name  # Update the label text
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+        upload_function(path)  # Upload the selected image using the provided function
+        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
         self.file_manager.close()
+
+    # self.manager.get_screen('LenderScreen_Edu_10th').ids[image_label_id].text = file_name  # Update the label text
+    # self.file_manager.close()
 
     def get_email(self):
         return anvil.server.call('another_method')
 
     def upload_image(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+
             user_photo_media = media.from_file(file_path, mime_type='image/png')
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
@@ -5095,11 +5318,27 @@ class LenderScreen_Edu_10th(Screen):
 
             # Update user_photo column with the media object
             user_data['tenth_class'] = user_photo_media
-
             print("Image uploaded successfully.")
+            self.ids['image_label1'].source = ''
 
         except Exception as e:
             print(f"Error uploading image: {e}")
+
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
 
     def exit_manager(self, *args):
         self.file_manager.close()
@@ -5202,6 +5441,8 @@ class LenderScreen_Edu_10th(Screen):
 
 
 class LenderScreen_Edu_Intermediate(Screen):
+    MAX_IMAGE_SIZE_MB = 2
+
     def refresh(self):
         pass
 
@@ -5218,27 +5459,27 @@ class LenderScreen_Edu_Intermediate(Screen):
 
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1")
+                                         "image_label1", self.upload_image1)
 
     def check_and_open_file_manager2(self):
         self.check_and_open_file_manager("upload_icon2", "upload_label2", "selected_file_label2", "selected_image2",
-                                         "image_label2")
+                                         "image_label2", self.upload_image2)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
             else:
                 self.request_media_images_permission()
         else:
             # For non-Android platforms, directly open the file manager
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
+                                                       image_label_id, upload_function),
         )
         if platform == 'android':
             primary_external_storage = "/storage/emulated/0"
@@ -5247,18 +5488,18 @@ class LenderScreen_Edu_Intermediate(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
+    # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     self.file_manager = MDFileManager(
+    #         exit_manager=self.exit_manager,
+    #         select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
+    #                                                    image_label_id),
+    #     )
+    #     if platform == 'android':
+    #         primary_external_storage = "/storage/emulated/0"
+    #         self.file_manager.show(primary_external_storage)
+    #     else:
+    #         # For other platforms, show the file manager from the root directory
+    #         self.file_manager.show('/')
 
     def upload_image1(self, file_path):
         try:
@@ -5276,6 +5517,7 @@ class LenderScreen_Edu_Intermediate(Screen):
             user_data['tenth_class'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['image_label1'].source = ''
 
         except Exception as e:
             print(f"Error uploading image: {e}")
@@ -5299,25 +5541,41 @@ class LenderScreen_Edu_Intermediate(Screen):
             user_data['intermediate'] = user_photo_media
 
             print("Image uploaded successfully.")
-
+            self.ids['image_label2'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.upload_image1(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen_Edu_Intermediate').ids[
-            image_label_id].text = file_name  # Update the label text
-        self.file_manager.close()
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
 
-    def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.upload_image2(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen_Edu_Intermediate').ids[
-            image_label_id].text = file_name  # Update the label text
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+        upload_function(path)  # Upload the selected image using the provided function
+        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
         self.file_manager.close()
+        # self.manager.get_screen('LenderScreen_Edu_Intermediate').ids[
+        #     image_label_id].text = file_name  # Update the label text
+        # self.file_manager.close()
+
+    # def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     self.upload_image2(path)  # Upload the selected image
+    #     self.ids[image_label_id].source = path
+    #     file_name = os.path.basename(path)  # Extract file name from the path
+    #     self.manager.get_screen('LenderScreen_Edu_Intermediate').ids[
+    #         image_label_id].text = file_name  # Update the label text
+    #     self.file_manager.close()
 
     def exit_manager(self, *args):
         self.file_manager.close()
@@ -5437,8 +5695,13 @@ class LenderScreen_Edu_Intermediate(Screen):
 
 
 class LenderScreen_Edu_Bachelors(Screen):
+    MAX_IMAGE_SIZE_MB = 2
+
     def upload_image1(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
@@ -5453,7 +5716,7 @@ class LenderScreen_Edu_Bachelors(Screen):
             user_data['tenth_class'] = user_photo_media
 
             print("Image uploaded successfully.")
-
+            self.ids['image_label1'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -5462,6 +5725,10 @@ class LenderScreen_Edu_Bachelors(Screen):
 
     def upload_image2(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+
             user_photo_media = media.from_file(file_path, mime_type='image/png')
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
@@ -5476,12 +5743,16 @@ class LenderScreen_Edu_Bachelors(Screen):
             user_data['intermediate'] = user_photo_media
 
             print("Image uploaded successfully.")
-
+            self.ids['image_label2'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image3(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+
             user_photo_media = media.from_file(file_path, mime_type='image/png')
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
@@ -5496,7 +5767,7 @@ class LenderScreen_Edu_Bachelors(Screen):
             user_data['btech'] = user_photo_media
 
             print("Image uploaded successfully.")
-
+            self.ids['image_label3'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -5516,31 +5787,31 @@ class LenderScreen_Edu_Bachelors(Screen):
 
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1")
+                                         "image_label1", self.upload_image1)
 
     def check_and_open_file_manager2(self):
         self.check_and_open_file_manager("upload_icon2", "upload_label2", "selected_file_label2", "selected_image2",
-                                         "image_label2")
+                                         "image_label2", self.upload_image2)
 
     def check_and_open_file_manager3(self):
         self.check_and_open_file_manager("upload_icon3", "upload_label3", "selected_file_label3", "selected_image3",
-                                         "image_label3")
+                                         "image_label3", self.upload_image3)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
             else:
                 self.request_media_images_permission()
         else:
             # For non-Android platforms, directly open the file manager
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
+                                                       image_label_id, upload_function),
         )
         if platform == 'android':
             primary_external_storage = "/storage/emulated/0"
@@ -5549,58 +5820,59 @@ class LenderScreen_Edu_Bachelors(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
+    # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     self.file_manager = MDFileManager(
+    #         exit_manager=self.exit_manager,
+    #         select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
+    #                                                    image_label_id),
+    #     )
+    #     if platform == 'android':
+    #         primary_external_storage = "/storage/emulated/0"
+    #         self.file_manager.show(primary_external_storage)
+    #     else:
+    #         # For other platforms, show the file manager from the root directory
+    #         self.file_manager.show('/')
+    #
+    # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     self.file_manager = MDFileManager(
+    #         exit_manager=self.exit_manager,
+    #         select_path=lambda path: self.select_path3(path, icon_id, label_id, file_label_id, image_id,
+    #                                                    image_label_id),
+    #     )
+    #     if platform == 'android':
+    #         primary_external_storage = "/storage/emulated/0"
+    #         self.file_manager.show(primary_external_storage)
+    #     else:
+    #         # For other platforms, show the file manager from the root directory
+    #         self.file_manager.show('/')
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path3(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
-
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
-        self.upload_image1(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen_Edu_Bachelors').ids[
-            image_label_id].text = file_name  # Update the label text
+        upload_function(path)  # Upload the selected image using the provided function
+        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
         self.file_manager.close()
 
-    def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
-        self.upload_image2(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen_Edu_Bachelors').ids[
-            image_label_id].text = file_name  # Update the label text
-        self.file_manager.close()
+        # self.manager.get_screen('LenderScreen_Edu_Bachelors').ids[
+        # image_label_id].text = file_name  # Update the label text
+        # self.file_manager.close()
 
-    def select_path3(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
-        self.upload_image3(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen_Edu_Bachelors').ids[
-            image_label_id].text = file_name  # Update the label text
-        self.file_manager.close()
+    # def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+    #     self.upload_image2(path)  # Upload the selected image
+    #     self.ids[image_label_id].source = path
+    #     file_name = os.path.basename(path)  # Extract file name from the path
+    #     self.manager.get_screen('LenderScreen_Edu_Bachelors').ids[
+    #         image_label_id].text = file_name  # Update the label text
+    #     self.file_manager.close()
+    #
+    # def select_path3(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+    #     self.upload_image3(path)  # Upload the selected image
+    #     self.ids[image_label_id].source = path
+    #     file_name = os.path.basename(path)  # Extract file name from the path
+    #     self.manager.get_screen('LenderScreen_Edu_Bachelors').ids[
+    #         image_label_id].text = file_name  # Update the label text
+    #     self.file_manager.close()
 
     def exit_manager(self, *args):
         self.file_manager.close()
@@ -5680,6 +5952,22 @@ class LenderScreen_Edu_Bachelors(Screen):
         except ValueError:
             print('User is not logged in.')
 
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
     def go_to_dashboard(self):
         self.manager.current = 'DashScreen'
 
@@ -5738,6 +6026,8 @@ class LenderScreen_Edu_Bachelors(Screen):
 
 
 class LenderScreen_Edu_Masters(Screen):
+    MAX_IMAGE_SIZE_MB = 2
+
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
         anim = Animation(y=modal_height - loading_label.height, duration=1) + \
@@ -5751,35 +6041,35 @@ class LenderScreen_Edu_Masters(Screen):
 
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1")
+                                         "image_label1", self.upload_image1)
 
     def check_and_open_file_manager2(self):
         self.check_and_open_file_manager("upload_icon2", "upload_label2", "selected_file_label2", "selected_image2",
-                                         "image_label2")
+                                         "image_label2", self.upload_image2)
 
     def check_and_open_file_manager3(self):
         self.check_and_open_file_manager("upload_icon3", "upload_label3", "selected_file_label3", "selected_image3",
-                                         "image_label3")
+                                         "image_label3", self.upload_image3)
 
     def check_and_open_file_manager4(self):
         self.check_and_open_file_manager("upload_icon4", "upload_label4", "selected_file_label4", "selected_image4",
-                                         "image_label4")
+                                         "image_label4", self.upload_image4)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
             else:
                 self.request_media_images_permission()
         else:
             # For non-Android platforms, directly open the file manager
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
+                                                       image_label_id, upload_function),
         )
         if platform == 'android':
             primary_external_storage = "/storage/emulated/0"
@@ -5788,31 +6078,31 @@ class LenderScreen_Edu_Masters(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
-
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path3(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
+    # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     self.file_manager = MDFileManager(
+    #         exit_manager=self.exit_manager,
+    #         select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
+    #                                                    image_label_id),
+    #     )
+    #     if platform == 'android':
+    #         primary_external_storage = "/storage/emulated/0"
+    #         self.file_manager.show(primary_external_storage)
+    #     else:
+    #         # For other platforms, show the file manager from the root directory
+    #         self.file_manager.show('/')
+    #
+    # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     self.file_manager = MDFileManager(
+    #         exit_manager=self.exit_manager,
+    #         select_path=lambda path: self.select_path3(path, icon_id, label_id, file_label_id, image_id,
+    #                                                    image_label_id),
+    #     )
+    #     if platform == 'android':
+    #         primary_external_storage = "/storage/emulated/0"
+    #         self.file_manager.show(primary_external_storage)
+    #     else:
+    #         # For other platforms, show the file manager from the root directory
+    #         self.file_manager.show('/')
 
     def upload_image1(self, file_path):
         try:
@@ -5830,7 +6120,7 @@ class LenderScreen_Edu_Masters(Screen):
             user_data['tenth_class'] = user_photo_media
 
             print("Image uploaded successfully.")
-
+            self.ids['image_label1'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -5853,7 +6143,7 @@ class LenderScreen_Edu_Masters(Screen):
             user_data['intermediate'] = user_photo_media
 
             print("Image uploaded successfully.")
-
+            self.ids['image_label2'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -5873,7 +6163,7 @@ class LenderScreen_Edu_Masters(Screen):
             user_data['btech'] = user_photo_media
 
             print("Image uploaded successfully.")
-
+            self.ids['image_label3'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -5893,58 +6183,75 @@ class LenderScreen_Edu_Masters(Screen):
             user_data['mtech'] = user_photo_media
 
             print("Image uploaded successfully.")
-
+            self.ids['image_label4'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path4(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
         )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
+        dialog.open()
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     self.file_manager = MDFileManager(
+    #         exit_manager=self.exit_manager,
+    #         select_path=lambda path: self.select_path4(path, icon_id, label_id, file_label_id, image_id,
+    #                                                    image_label_id),
+    #     )
+    #     if platform == 'android':
+    #         primary_external_storage = "/storage/emulated/0"
+    #         self.file_manager.show(primary_external_storage)
+    #     else:
+    #         # For other platforms, show the file manager from the root directory
+    #         self.file_manager.show('/')
+
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
-        self.upload_image1(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen_Edu_Masters').ids[
-            image_label_id].text = file_name  # Update the label text
+        upload_function(path)  # Upload the selected image using the provided function
+        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
         self.file_manager.close()
 
-    def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
-        self.upload_image2(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen_Edu_Masters').ids[
-            image_label_id].text = file_name  # Update the label text
-        self.file_manager.close()
+    # self.manager.get_screen('LenderScreen_Edu_Masters').ids[
+    #     image_label_id].text = file_name  # Update the label text
+    # self.file_manager.close()
 
-    def select_path3(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
-        self.upload_image3(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen_Edu_Masters').ids[
-            image_label_id].text = file_name  # Update the label text
-        self.file_manager.close()
-
-    def select_path4(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
-        self.upload_image4(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen_Edu_Masters').ids[
-            image_label_id].text = file_name  # Update the label text
-        self.file_manager.close()
+    # def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+    #     self.upload_image2(path)  # Upload the selected image
+    #     self.ids[image_label_id].source = path
+    #     file_name = os.path.basename(path)  # Extract file name from the path
+    #     self.manager.get_screen('LenderScreen_Edu_Masters').ids[
+    #         image_label_id].text = file_name  # Update the label text
+    #     self.file_manager.close()
+    #
+    # def select_path3(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+    #     self.upload_image3(path)  # Upload the selected image
+    #     self.ids[image_label_id].source = path
+    #     file_name = os.path.basename(path)  # Extract file name from the path
+    #     self.manager.get_screen('LenderScreen_Edu_Masters').ids[
+    #         image_label_id].text = file_name  # Update the label text
+    #     self.file_manager.close()
+    #
+    # def select_path4(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+    #     self.upload_image4(path)  # Upload the selected image
+    #     self.ids[image_label_id].source = path
+    #     file_name = os.path.basename(path)  # Extract file name from the path
+    #     self.manager.get_screen('LenderScreen_Edu_Masters').ids[
+    #         image_label_id].text = file_name  # Update the label text
+    #     self.file_manager.close()
 
     def exit_manager(self, *args):
         self.file_manager.close()
@@ -6102,6 +6409,8 @@ class LenderScreen_Edu_Masters(Screen):
 
 
 class LenderScreen_Edu_PHD(Screen):
+    MAX_IMAGE_SIZE_MB = 2
+
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
         anim = Animation(y=modal_height - loading_label.height, duration=1) + \
@@ -6755,6 +7064,7 @@ class LenderScreenInstitutionalForm1(Screen):
 
 
 class LenderScreenInstitutionalForm2(Screen):
+    MAX_IMAGE_SIZE_MB = 2
 
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
@@ -6792,13 +7102,16 @@ class LenderScreenInstitutionalForm2(Screen):
 
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1")
+                                         "image_label1", self.upload_image)
 
     def get_email(self):
         return anvil.server.call('another_method')
 
     def upload_image(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
@@ -6813,25 +7126,42 @@ class LenderScreenInstitutionalForm2(Screen):
             user_data['last_six_month_bank_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['image_label1'].source = ''
 
         except Exception as e:
             print(f"Error uploading image: {e}")
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
             else:
                 self.request_media_images_permission()
         else:
             # For non-Android platforms, directly open the file manager
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
+                                                       image_label_id, upload_function),
         )
         if platform == 'android':
             primary_external_storage = "/storage/emulated/0"
@@ -6840,13 +7170,13 @@ class LenderScreenInstitutionalForm2(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.upload_image(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreenInstitutionalForm2').ids[
-            image_label_id].text = file_name  # Update the label text
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+        upload_function(path)  # Upload the selected image using the provided function
+        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
         self.file_manager.close()
+        # self.manager.get_screen('LenderScreenInstitutionalForm2').ids[
+        #     image_label_id].text = file_name  # Update the label text
+        # self.file_manager.close()
 
     def exit_manager(self, *args):
         self.file_manager.close()
@@ -6991,28 +7321,30 @@ class LenderScreenInstitutionalForm2(Screen):
 
 
 class LenderScreenInstitutionalForm3(Screen):
+    MAX_IMAGE_SIZE_MB = 2
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1")
+                                         "image_label1", self.upload_image)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
             else:
                 self.request_media_images_permission()
         else:
             # For non-Android platforms, directly open the file manager
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
+                                                       image_label_id, upload_function),
         )
         if platform == 'android':
             primary_external_storage = "/storage/emulated/0"
@@ -7021,19 +7353,22 @@ class LenderScreenInstitutionalForm3(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.upload_image(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreenInstitutionalForm3').ids[
-            image_label_id].text = file_name  # Update the label text
-        self.file_manager.close()
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+        upload_function(path)  # Upload the selected image using the provided function
+        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
+        self.file_manager.close()  # Extract file name from the path
+        # self.manager.get_screen('LenderScreenInstitutionalForm3').ids[
+        #     image_label_id].text = file_name  # Update the label text
+        # self.file_manager.close()
 
     def get_email(self):
         return anvil.server.call('another_method')
 
     def upload_image(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
@@ -7048,9 +7383,26 @@ class LenderScreenInstitutionalForm3(Screen):
             user_data['proof_verification'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['image_label1'].source = ''
 
         except Exception as e:
             print(f"Error uploading image: {e}")
+
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
 
     def exit_manager(self, *args):
         self.file_manager.close()
@@ -7392,11 +7744,16 @@ class LenderScreenIndividualForm1(Screen):
 
 
 class LenderScreenIndividualForm2(Screen):
+    MAX_IMAGE_SIZE_MB = 2
+
     def get_email(self):
         return anvil.server.call('another_method')
 
     def upload_image(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
@@ -7411,12 +7768,15 @@ class LenderScreenIndividualForm2(Screen):
             user_data['emp_id_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
-
+            self.ids['image_label1'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image1(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
@@ -7431,9 +7791,27 @@ class LenderScreenIndividualForm2(Screen):
             user_data['last_six_month_bank_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['image_label2'].source = ''
 
         except Exception as e:
             print(f"Error uploading image: {e}")
+
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
         anim = Animation(y=modal_height - loading_label.height, duration=1) + \
@@ -7447,27 +7825,27 @@ class LenderScreenIndividualForm2(Screen):
 
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1")
+                                         "image_label1", self.upload_image)
 
     def check_and_open_file_manager2(self):
         self.check_and_open_file_manager("upload_icon2", "upload_label2", "selected_file_label2", "selected_image2",
-                                         "image_label2")
+                                         "image_label2", self.upload_image1)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
             else:
                 self.request_media_images_permission()
         else:
             # For non-Android platforms, directly open the file manager
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
+                                                       image_label_id, upload_function),
         )
         if platform == 'android':
             primary_external_storage = "/storage/emulated/0"
@@ -7476,34 +7854,34 @@ class LenderScreenIndividualForm2(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
+    # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     self.file_manager = MDFileManager(
+    #         exit_manager=self.exit_manager,
+    #         select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
+    #                                                    image_label_id),
+    #     )
+    #     if platform == 'android':
+    #         primary_external_storage = "/storage/emulated/0"
+    #         self.file_manager.show(primary_external_storage)
+    #     else:
+    #         # For other platforms, show the file manager from the root directory
+    #         self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.upload_image(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreenIndividualForm2').ids[
-            image_label_id].text = file_name  # Update the label text
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+        upload_function(path)  # Upload the selected image using the provided function
+        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
         self.file_manager.close()
+        # self.manager.get_screen('LenderScreenIndividualForm2').ids[
+        #     image_label_id].text = file_name  # Update the label text
+        # self.file_manager.close()
 
-    def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.upload_image1(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreenIndividualForm2').ids[
-            image_label_id].text = file_name  # Update the label text
-        self.file_manager.close()
+    # def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     self.upload_image1(path)  # Upload the selected image
+    #     self.ids[image_label_id].source = path
+    #     file_name = os.path.basename(path)  # Extract file name from the path
+    #     self.manager.get_screen('LenderScreenIndividualForm2').ids[
+    #         image_label_id].text = file_name  # Update the label text
+    #     self.file_manager.close()
 
     def exit_manager(self, *args):
         self.file_manager.close()
@@ -9297,15 +9675,15 @@ class LenderScreenIndividualBankForm2(Screen):
             print("User is not logged in.")
 
         data = app_tables.fin_user_profile.search()
-        member=app_tables.fin_membership.search()
+        member = app_tables.fin_membership.search()
         id_list = []
         email_id = ""
         user_name = ""
         customer_id = ""
-        investment=""
-        membership=""
-        lending_period=""
-        lending_type=""
+        investment = ""
+        membership = ""
+        lending_period = ""
+        lending_type = ""
 
         today = datetime.now().date()
         if data:
@@ -9316,7 +9694,7 @@ class LenderScreenIndividualBankForm2(Screen):
             lending_period = data[0]['lending_period']
             lending_type = data[0]['loan_type']
         if member:
-            membership=member[0]['membership_type']
+            membership = member[0]['membership_type']
         if email_id and lending_type and lending_period and user_name and customer_id and investment and membership:
             app_tables.fin_lender.add_row(user_name=user_name,
                                           email_id=email_id,

@@ -934,7 +934,7 @@ class ViewAllLoansLF(Screen):
                 card = MDCard(
                     orientation='vertical',
                     size_hint=(None, None),
-                    size=("310dp", "200dp"),
+                    size=("340dp", "200dp"),
                     padding="8dp",
                     spacing="5dp",
                     elevation=3
@@ -1039,7 +1039,7 @@ class ViewAllLoansLF(Screen):
                     # on_release=lambda x, i=i: self.close_loan(i)
                 )
                 button2 = MDFillRoundFlatButton(
-                    text="  View Details  ",
+                    text="    View Details    ",
                     size_hint=(None, None),
                     height="40dp",
                     width="250dp",

@@ -1,16 +1,14 @@
 import io
 import json
 import base64
-import os
-
 from anvil import media
 from io import BytesIO
 from kivy.core.image import Image as CoreImage
-from kivy.core.text import Label
 from kivy.uix.widget import Widget
 from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
 
+from chatbot import ChatBotScreen
 from lender_portfolio import Lend_Portfolio
 from anvil.tables import app_tables
 import base64
@@ -115,6 +113,7 @@ user_helpers1 = """
                                     elevation: 2
                                     pos_hint: {'top': 1}
                                     left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+                                    padding:dp(20)
                                     title_align: 'center'
                                     md_bg_color: 0.043, 0.145, 0.278, 1
 
@@ -122,9 +121,10 @@ user_helpers1 = """
 
                                     BoxLayout:
                                         size_hint_x: None
-                                        width: dp(20)
-                                        pos_hint: {"center_x": 0.9, "center_y": 1.5}
+                                        width: dp(10)
+                                        pos_hint: {"center_x": 0.8, "center_y": 1.5}
                                         spacing: dp(-16)
+
 
                                         MDIconButton:
                                             icon: "bell"
@@ -147,7 +147,18 @@ user_helpers1 = """
                                             text_color: 1, 0, 0, 1 
                                             font_name: "Roboto-Bold"
                                             pos_hint: {"center_y": 1.5}
+                                    BoxLayout:
+                                        size_hint_x: None
+                                        width: dp(20)
+                                        pos_hint: {"center_x": 0.93, "center_y": 1.5}
+                                        spacing: dp(-16)
 
+                                        MDIconButton:
+                                            icon: "help-circle-outline"
+                                            on_press: root.go_to_chatbot_screen() 
+                                            pos_hint: {"center_y": 2.3}
+                                            theme_text_color: 'Custom'
+                                            text_color: 1, 1, 1, 1
                                 ScrollView:
                                     MDBoxLayout:
                                         orientation: 'vertical'
@@ -221,7 +232,7 @@ user_helpers1 = """
                                                         markup: True
 
                                                     MDLabel:
-                                                        id: member_type
+                                                        id: memmber_type
                                                         text: "[b]Membership Type[/b] : Elite"
                                                         theme_text_color: 'Custom'
                                                         text_color: 0, 0, 0, 1
@@ -962,7 +973,7 @@ user_helpers1 = """
                     title: "Account Profile"
                     elevation: 2
                     pos_hint: {'top': 1}
-                    left_action_items: [['arrow-left', lambda x: root.on_back_button()]]
+                    left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
                     right_action_items: [['refresh', lambda x: root.refresh6()]]
                     title_align: 'center'
                     md_bg_color: 0.043, 0.145, 0.278, 1
@@ -1136,7 +1147,7 @@ user_helpers1 = """
                                             size_hint: (0.4, 1)
                                             pos_hint:{"center_x":0.5,"center_y":0.2}
                                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    
+
 
                                         MDLabel:
                                             text: "Professional Info"
@@ -2860,7 +2871,7 @@ user_helpers1 = """
                         pos_hint: {'center_y': 0.5}
                         bold: True
                         multiline: False
-                    
+
                     Image:
                         id: six_bank
                         size: dp(50), dp(50)
@@ -2967,12 +2978,12 @@ user_helpers1 = """
                         pos_hint: {'center_y': 0.5}
                         bold: True
                         multiline: False
-                    
+
                     Image:
                         id: proof
                         size: dp(50), dp(50)
                         source: ''
-                        
+
                     MDIconButton:
                         icon: 'upload'
                         on_release:app.root.get_screen('ViewEditScreen5').check_and_open_file_manager2()
@@ -3188,7 +3199,7 @@ user_helpers1 = """
                             multiline: False
 
                         MDLabel:
-                            id: lending_period
+                            id: lending period
                             font_size: dp(13)
                             text:'Add lending period'
                             size_hint: None, None
@@ -3637,8 +3648,7 @@ user_helpers1 = """
                             multiline: False
                             halign: 'left'
                             pos_hint: {'center_y': 0.5}
-                MDLabel:
-                    text: ' '
+
                 BoxLayout:
                     orientation: "vertical"
                     size_hint_y: None
@@ -4256,12 +4266,12 @@ user_helpers1 = """
 
                     Image:
                         id: upload_gov_id1_img
-                        halign: 'left'
+
                         size: dp(50), dp(50)
                         source: ''
-                    MDIconButton:
-                        icon: ''
-                        halign: 'left'
+
+
+
                 Widget:
                     size_hint_y: None
                     height: dp(1)
@@ -4328,9 +4338,7 @@ user_helpers1 = """
                         id: upload_gov_id2_img
                         size: dp(50), dp(50)
                         source: ''
-                    MDIconButton:
-                        icon: ''
-                        halign: 'left'
+
                 Widget:
                     size_hint_y: None
                     height: dp(1)
@@ -5002,7 +5010,6 @@ user_helpers1 = """
                         id: upload_gov_id1_img
                         size: dp(50), dp(50)
                         source: ''
-                       
 
                     MDIconButton:
                         icon: 'upload'
@@ -5056,7 +5063,7 @@ user_helpers1 = """
                         id: upload_gov_id2_img
                         size: dp(50), dp(50)
                         source: ''
-                        
+
                     MDIconButton:
                         icon: 'upload'
                         on_release: app.root.get_screen('ViewEditScreen1').check_and_open_file_manager3()
@@ -5511,8 +5518,7 @@ user_helpers1 = """
                             multiline: False
                             halign: 'left'
                             pos_hint: {'center_y': 0.5}
-                MDLabel:
-                    text: ' '
+
                 BoxLayout:
                     orientation: "horizontal"
                     size_hint_y: None
@@ -5847,7 +5853,7 @@ user_helpers1 = """
                         id: last_six_months_bank_statement
                         size: dp(50), dp(50)
                         source: ''
-                        
+
                     MDIconButton:
                         icon: 'upload'
                         on_release: app.root.get_screen('ViewEditScreen4').check_and_open_file_manager2()
@@ -5960,7 +5966,7 @@ user_helpers1 = """
                         height: dp(20)
                         spacing: dp(10)
                         padding:dp(7)
-                        
+
                         MDLabel:
                             text: ' Email '
                             color: 0, 0, 0, 1
@@ -6080,6 +6086,42 @@ class LenderDashboard(Screen):
         self.manager.add_widget(notification_screen)
         self.manager.current = 'Lend_NotificationScreen'
 
+    def go_to_chatbot_screen(self):
+        # Create a modal view for the loading animation
+        modal_view = ModalView(size_hint=(None, None), size=(300, 150), background_color=[0, 0, 0, 0])
+
+        # Create a BoxLayout to hold the loading text
+        box_layout = BoxLayout(orientation='vertical')
+
+        # Create a label for the loading text
+        loading_label = MDLabel(
+            text="Loading...",
+            halign="center",
+            valign="center",
+            theme_text_color="Custom",
+            text_color=[1, 1, 1, 1],
+            font_size="20sp",
+            bold=True
+        )
+
+        # Add the label to the box layout
+        box_layout.add_widget(loading_label)
+
+        # Add the box layout to the modal view
+        modal_view.add_widget(box_layout)
+
+        # Open the modal view
+        modal_view.open()
+
+        # Perform the actual action (e.g., checking account details and navigating)
+        Clock.schedule_once(lambda dt: self.show_chatbot_screen(modal_view), 1)
+
+    def show_chatbot_screen(self, modal_view):
+        # Close the modal view after performing the action
+        modal_view.dismiss()
+        self.manager.add_widget(Factory.ChatBotScreen(name='ChatBotScreen'))
+        self.manager.current = 'ChatBotScreen'
+
     def view_Borr_Portfolio(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])
 
@@ -6142,8 +6184,6 @@ class LenderDashboard(Screen):
 
     def refresh2(self):
         self.__init__()
-
-
 
     def wallet(self):
         self.type = None
@@ -6531,39 +6571,35 @@ class LenderDashboard(Screen):
                 investment_value = float(investment[log_index])
                 for i in range(a):
                     if min_amount[i] <= investment_value < max_amount[i]:
-                        self.ids.member_type.text = f"Membership Type: {membership_type[i]}"
+                        self.ids.memmber_type.text = f"Membership Type: {membership_type[i]}"
                     break
             except ValueError:
-                self.ids.member_type.text = f"Membership Type: None"
+                self.ids.memmber_type.text = f"Membership Type: None"
 
         else:
-            self.ids.member_type.text = f"Membership Type: None"
+            self.ids.memmber_type.text = f"Membership Type: None"
             print("Investment Amount Not There or Invalid")
 
         lender_data = app_tables.fin_lender.search()
         lender_cus_id = []
         create_date = []
         returns = []
-        membership_type=[]
         present_commitment = []
         for i in lender_data:
             lender_cus_id.append(i['customer_id'])
             create_date.append(i['member_since'])
             returns.append(i['return_on_investment'])
-            membership_type.append(i['membership_type'])
             present_commitment.append(i['present_commitments'])
         #
         if p_customer_id[log_index] in lender_cus_id:
             index1 = lender_cus_id.index(p_customer_id[log_index])
             self.ids.joined_date.text = "[b]Joined Date[/b]: " + str(create_date[index1])
             self.ids.return_amount.text = "Rs. " + str(returns[index1])
-            self.ids.member_type.text = "[b]Membership Type[/b]: " + str(membership_type[index1])
             self.ids.commitment.text = "Rs. " + str(present_commitment[index1])
             self.ids.date.text = "Joined Date: " + str(create_date[index1])
         else:
             self.ids.joined_date.text = "[b]Joined Date[/b]: "
             self.ids.return_amount.text = "Rs. "
-            self.ids.member_type.text = "[b]Membership Type[/b]: "
             self.ids.commitment.text = "Rs. "
             self.ids.date.text = "Joined Date: "
 
@@ -7436,7 +7472,6 @@ class LenderDashboard(Screen):
         self.manager.current = 'LenderWalletScreen'
         # Get the existing ScreenManager
 
-
     def bank(self):
         self.manager.add_widget(Factory.ViewBankScreen(name='ViewBankScreen'))
         self.manager.current = 'ViewBankScreen'
@@ -7534,27 +7569,26 @@ class ViewAccountScreen(Screen):
         log_index = 0
         if log_email in email_user:
             log_index = email_user.index(log_email)
-            self.ids.username.text = name_list[log_index]
+            self.ids.username.text = "Welcome " + name_list[log_index]
             self.ids.username.font_style = 'H6'
 
         else:
             # Handle the case when 'logged' is not in the status list
             self.ids.username.text = "User welcome to P2P"
 
-        lender_data = app_tables.fin_lender.search()
-        lender_cus_id = []
+        users = app_tables.users.search()
+
+        user_email = []
         create_date = []
-        for i in lender_data:
-            lender_cus_id.append(i['customer_id'])
-            create_date.append(i['member_since'])
-        #
-        if p_customer_id[log_index] in lender_cus_id:
-            index1 = lender_cus_id.index(p_customer_id[log_index])
-            self.ids.date.text = "[b]Joined Date[/b]: " + str(create_date[index1])
-            self.ids.date.text = "Joined Date: " + str(create_date[index1])
+        for i in users:
+            user_email.append(i['email'])
+            create_date.append(i['signed_up'])
+
+        if log_email in user_email:
+            user_index = user_email.index(log_email)
+            self.ids.date.text = "Joined Date: " + str(create_date[user_index].date())
         else:
-            self.ids.date.text = "[b]Joined Date[/b]: "
-            self.ids.date.text = "Joined Date: "
+            print("no email found")
 
         data = app_tables.fin_wallet.search()
         w_email = []
@@ -7634,8 +7668,7 @@ class ViewAccountScreen(Screen):
     def profile(self):
         self.manager.add_widget(Factory.ViewProfileScreen(name='ViewProfileScreen'))
         self.manager.current = 'ViewProfileScreen'
-    def refresh(self):
-        pass
+
     def personal(self):
         self.manager.add_widget(Factory.ViewPersonalScreen(name='ViewPersonalScreen'))
         self.manager.current = 'ViewPersonalScreen'
@@ -7704,6 +7737,7 @@ class ViewAccountScreen(Screen):
         self.manager.add_widget(Factory.ViewEditScreen7(name='ViewEditScreen7'))
         self.manager.current = 'ViewEditScreen7'
 
+
 class ViewProfileScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -7717,7 +7751,7 @@ class ViewProfileScreen(Screen):
         for row in data:
             email1.append(row['email_id'])
             investment.append(row['investment'])
-            membership.append(row['membership_type'])
+            membership.append(row['membership'])
             returns.append(row['return_on_investment'])
             lending.append(row['lending_period'])
 
@@ -7729,7 +7763,7 @@ class ViewProfileScreen(Screen):
             self.ids.lending_period.text = str(lending[index])
 
     def refresh(self):
-        self.__init__()
+        pass
 
     def on_back_button_press(self):
         self.manager.current = 'ViewAccountScreen'
@@ -7901,7 +7935,6 @@ class ViewEmployeeScreen(Screen):
 
 
 class ViewEditScreen4(Screen):
-    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         gender_data = app_tables.fin_occupation_type.search()
@@ -8074,11 +8107,7 @@ class ViewEditScreen4(Screen):
             print(f"Email {email} not found in data.")
 
     def check_and_open_file_manager1(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "employee_id")
-
-    def check_and_open_file_manager2(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1",
-                                         "last_six_months_bank_statement")
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
 
     def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id):
         if platform == 'android':
@@ -8116,7 +8145,6 @@ class ViewEditScreen4(Screen):
         self.ids[image_id].source = path
         self.file_manager.close()
 
-
     def select_path2(self, path, icon_id, label_id, file_label_id, image_id):
         self.upload_image1(path)  # Upload the selected image
         self.ids[image_id].source = path
@@ -8124,9 +8152,6 @@ class ViewEditScreen4(Screen):
 
     def upload_image(self, file_path):
         try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -8141,15 +8166,11 @@ class ViewEditScreen4(Screen):
             # Update user_photo column with the media object
             user_data['emp_id_proof'] = user_photo_media
             print("Image uploaded successfully.")
-            self.ids['employee_id'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image1(self, file_path):
         try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -8165,7 +8186,6 @@ class ViewEditScreen4(Screen):
             user_data['last_six_month_bank_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
-            self.ids['last_six_months_bank_statement'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -8452,13 +8472,12 @@ class ViewBusinessScreen(Screen):
 
 
 class ViewEditScreen5(Screen):
-    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        gender_data = app_tables.fin_lendor_no_of_employees.search()
+        gender_data = app_tables.fin_borrower_no_of_employees.search()
         gender_list = []
         for i in gender_data:
-            gender_list.append(i['lendor_no_of_employees'])
+            gender_list.append(i['borrower_no_of_employees'])
         self.unique_gender = []
         for i in gender_list:
             if i not in self.unique_gender:
@@ -8469,10 +8488,10 @@ class ViewEditScreen5(Screen):
         else:
             self.ids.no_working.values = ['Select no of employees']
 
-        present_address = app_tables.fin_lendor_business_type.search()
+        present_address = app_tables.fin_borrower_business_type.search()
         present = []
         for i in present_address:
-            present.append(i['lendor_business_type'])
+            present.append(i['borrower_business_type'])
         self.unique_present = []
         for i in present:
             if i not in self.unique_present:
@@ -8666,9 +8685,6 @@ class ViewEditScreen5(Screen):
 
     def upload_image(self, file_path):
         try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -8684,15 +8700,11 @@ class ViewEditScreen5(Screen):
             user_data['last_six_month_bank_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
-            self.ids['upload_gov_id2_img'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image1(self, file_path):
         try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -8709,10 +8721,8 @@ class ViewEditScreen5(Screen):
             user_data['proof_verification'] = user_photo_media
 
             print("Image uploaded successfully.")
-            self.ids['upload_gov_id2_img'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
-
 
     def on_business_save(self):
         business_name = self.ids.business_name.text
@@ -8794,6 +8804,7 @@ class ViewEditScreen5(Screen):
             return True
         return False
 
+
 class ViewEditScreen6(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -8846,13 +8857,8 @@ class ViewEditScreen6(Screen):
         bank_name = self.ids.bank_name.text
         bank_id = self.ids.bank_id.text
         branch_name = self.ids.branch_name.text
-
-        if not account_holder or account_holder.isdigit() or not account_holder[0].isupper():
-            self.show_validation_errors('Please Enter Valid Full Name')
-            return
-
-
-        success = self.update_profile_data(account_holder, account_type, account_number, branch_name, bank_name,bank_id)
+        success = self.update_profile_data(account_holder, account_type, account_number, branch_name, bank_name,
+                                           bank_id)
 
         if success:
             # self.show_validation_error("Database Update Sucessfully.")
@@ -8864,21 +8870,6 @@ class ViewEditScreen6(Screen):
             # Handle the case where the update failed (e.g., display an error message)
             self.on_back_button_press()
 
-    def show_validation_errors(self, error_message):
-        dialog = MDDialog(
-            title="Validation Error",
-            text=error_message,
-            size_hint=(0.8, None),
-            height=dp(200),
-            buttons=[
-                MDRectangleFlatButton(
-                    text="OK",
-                    text_color=(0.043, 0.145, 0.278, 1),
-                    on_release=lambda x: dialog.dismiss()
-                )
-            ]
-        )
-        dialog.open()
     def update_profile_data(self, account_holder, account_type, account_number, branch_name, bank_name, bank_id):
         email = self.get_email()
         user_profiles = app_tables.fin_user_profile.search(email_user=email)
@@ -8988,6 +8979,7 @@ class ViewPersonalScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.refresh_profile_data()
+
     def refresh_profile_data(self, dt=None):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
@@ -9180,7 +9172,6 @@ class ViewPersonalScreen(Screen):
         except Exception as e:
             print(f"Error uploading image: {e}")
 
-
     def get_email(self):
         # Make a call to the Anvil server function
         # Replace 'YourAnvilFunction' with the actual name of your Anvil server function
@@ -9269,6 +9260,7 @@ class ViewPersonalScreen(Screen):
     def on_back_button_press(self):
         self.manager.current = 'ViewAccountScreen'
 
+
 class ViewEditScreen7(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -9319,6 +9311,25 @@ class ViewEditScreen7(Screen):
         else:
             print(f"Email {email} not found in data.")
 
+    def upload_image(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            user_data['user_photo'] = user_photo_media
+
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
     def save_edited_data1(self):
         email1 = self.ids.email.text
 
@@ -9361,11 +9372,11 @@ class ViewEditScreen7(Screen):
 
             if isinstance(user_data, dict):
                 for email, data in user_data.items():
-                        if isinstance(data, dict) and data.get("logged_status", False):
-                            # Update user's logged_status and user_type
-                            data["logged_status"] = False
-                            data["user_type"] = ""
-                            break
+                    if isinstance(data, dict) and data.get("logged_status", False):
+                        # Update user's logged_status and user_type
+                        data["logged_status"] = False
+                        data["user_type"] = ""
+                        break
                 # Move the cursor to the beginning of the file
                 file.seek(0)
                 # Write the updated data back to the file
@@ -9373,6 +9384,7 @@ class ViewEditScreen7(Screen):
                 # Truncate any remaining data in the file
                 file.truncate()
         self.manager.current = 'MainScreen'
+
     def show_validation_error(self, error_message):
         dialog = MDDialog(
             title="Validation Error",
@@ -9388,7 +9400,8 @@ class ViewEditScreen7(Screen):
             ]
         )
         dialog.open()
-    def update_profile_data(self,email1):
+
+    def update_profile_data(self, email1):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
         if data:
@@ -9396,8 +9409,8 @@ class ViewEditScreen7(Screen):
             # we retrieve the first matching row
             user_profile = data[0]
             user_profile.update(
-                                email_user=email1,
-                                )
+                email_user=email1,
+            )
 
             # Update all related tables
             self.update_all_related_tables(email, email1)
@@ -9405,6 +9418,7 @@ class ViewEditScreen7(Screen):
         else:
             print("No data found for email:", email)
             return False
+
     def update_all_related_tables(self, old_email, new_email):
         try:
             # Users
@@ -9469,6 +9483,7 @@ class ViewEditScreen7(Screen):
 
         except Exception as e:
             print(f"An error occurred while updating related tables: {e}")
+
     def get_email(self):
         return anvil.server.call('another_method')
 
@@ -9494,13 +9509,12 @@ class ViewEditScreen7(Screen):
     def refresh(self):
         self.__init__()
 
+
 class ViewEditScreen1(Screen):
-    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         gender_data = app_tables.fin_gender.search()
         gender_list = []
-
         for i in gender_data:
             gender_list.append(i['gender'])
         self.unique_gender = []
@@ -9747,16 +9761,13 @@ class ViewEditScreen1(Screen):
 
             # Update user_photo column with the media object
             user_data['user_photo'] = user_photo_media
+
             print("Image uploaded successfully.")
-            self.ids['selected_image1'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image2(self, file_path):
         try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -9769,16 +9780,11 @@ class ViewEditScreen1(Screen):
             user_data = data[0]
             user_data['aadhaar_photo'] = user_photo_media
             print("Image uploaded successfully.")
-            self.ids['upload_gov_id1_img'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
-
     def upload_image3(self, file_path):
         try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -9791,9 +9797,9 @@ class ViewEditScreen1(Screen):
             user_data = data[0]
 
             # Update user_photo column with the media object
-            user_data['pan_photo'] = user_photo_media
+            user_data['pan_number'] = user_photo_media
+
             print("Image uploaded successfully.")
-            self.ids['upload_gov_id2_img'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -9817,9 +9823,6 @@ class ViewEditScreen1(Screen):
         country = self.ids.country.text
         qualification = self.ids.qualification.text
 
-        if not name or len(name.split()) < 2 or name.isdigit() or not name[0].isupper():
-            self.show_validation_error('Please Enter Full Name and First letter as capital ')
-            return
         # Update the database with the edited data
         # Replace 'update_profile_data' with your actual database update function
         success = self.update_profile_data(qualification, country, state, zip_code, staying_address, type_of_address,
@@ -9974,11 +9977,6 @@ class ViewEditScreen1(Screen):
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
 
-    def check_and_open_file_manager2(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "upload_gov_id1_img")
-
-    def check_and_open_file_manager3(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "upload_gov_id2_img")
     def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):

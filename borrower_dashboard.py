@@ -6,9 +6,8 @@ import base64
 from anvil import media
 from io import BytesIO
 from kivy.core.image import Image as CoreImage
-from kivy.graphics import Color,Ellipse
+from kivy.graphics import Color, Ellipse
 import anvil
-import os
 from anvil.tables import app_tables
 from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -47,8 +46,6 @@ from kivymd.uix.button import MDFillRoundFlatButton
 from borrower_portfolio import LenderDetails
 from borrower_report_issue import ReportScreen
 
-
-
 if platform == 'android':
     from kivy.uix.button import Button
     from kivy.uix.modalview import ModalView
@@ -77,7 +74,7 @@ user_helpers = '''
     EditScreen5:
     EditScreen6:
     EditScreen7:
-    
+
 <DashboardScreen>:
     MDBottomNavigation:
         panel_color: '#F5F5F5'
@@ -98,43 +95,57 @@ user_helpers = '''
                         MDScreen:
                             MDBoxLayout:
                                 orientation: 'vertical'
-        
+
                                 MDTopAppBar:
                                     elevation: 2
                                     pos_hint: {'top': 1}
                                     left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+                                    padding:dp(20)
                                     title_align: 'center'
                                     md_bg_color: 0.043, 0.145, 0.278, 1
-        
-        
-        
+
+
+
                                     BoxLayout:
                                         size_hint_x: None
-                                        width: dp(20)
-                                        pos_hint: {"center_x": 0.9, "center_y": 1.5}
+                                        width: dp(10)
+                                        pos_hint: {"center_x": 0.8, "center_y": 1.5}
                                         spacing: dp(-16)
-        
+
+
                                         MDIconButton:
                                             icon: "bell"
-                                            on_touch_down: root.notification() if self.collide_point(*args[1].pos) else None    
+                                            on_touch_down: root.go_to_lender_notification() if self.collide_point(*args[1].pos) else None    
                                             pos_hint: {"center_y": 1.3}
                                             theme_text_color: 'Custom'
                                             text_color: 1, 1, 1, 1 
-        
-        
+
+
                                         MDLabel:
                                             id: notification_label
-                                            text: root.false_count_text
+                                            text: "3"
                                             size_hint_x: None
                                             width: self.texture_size[0]
                                             halign: "center"
                                             size_hint_x: None
-                                            width: dp(20)
+                                            width: dp(19)
                                             valign: "center"
                                             theme_text_color: 'Custom'
                                             text_color: 1, 0, 0, 1 
                                             font_name: "Roboto-Bold"
                                             pos_hint: {"center_y": 1.5}
+                                    BoxLayout:
+                                        size_hint_x: None
+                                        width: dp(20)
+                                        pos_hint: {"center_x": 0.93, "center_y": 1.5}
+                                        spacing: dp(-16)
+
+                                        MDIconButton:
+                                            icon: "help-circle-outline"
+                                            on_press: root.go_to_chatbot_screen() 
+                                            pos_hint: {"center_y": 2.3}
+                                            theme_text_color: 'Custom'
+                                            text_color: 1, 1, 1, 1
 
                                 ScrollView:
                                     MDBoxLayout:
@@ -152,11 +163,11 @@ user_helpers = '''
                                             spacing: dp(3)
                                             elevation: 1
                                             on_release: root.go_to_account()
-                                    
+
                                             BoxLayout:
                                                 orientation: 'horizontal'
                                                 spacing: dp(5)
-                                    
+
                                                 Image:
                                                     id: image
                                                     source: 'img.png'  # Update with the actual path to the image
@@ -182,17 +193,17 @@ user_helpers = '''
                                                             size: self.width - dp(10), self.height - dp(10)
                                                             pos: self.x + dp(5), self.y + dp(5)
                                                         StencilPop
-                            
 
-                                    
+
+
                                                 Widget:
                                                     size_hint_x: None
                                                     width: dp(10)
-                                    
+
                                                 BoxLayout:
                                                     orientation: 'vertical'
-                                                    
-                                    
+
+
                                                     MDLabel:
                                                         id: details
                                                         text: "[b]Name[/b] : John Doe"
@@ -200,7 +211,7 @@ user_helpers = '''
                                                         text_color: 0, 0, 0, 1
                                                         halign: 'left'
                                                         markup: True
-                                    
+
                                                     MDLabel:
                                                         id: joined_date
                                                         text: "[b]Joined Date id[/b] : '12-12-2012'"
@@ -208,7 +219,7 @@ user_helpers = '''
                                                         text_color: 0, 0, 0, 1
                                                         halign: 'left'
                                                         markup: True
-                                    
+
                                                     MDLabel:
                                                         id: credit_limit
                                                         text: "[b]Credit Limit[/b] : 10000000"
@@ -216,7 +227,7 @@ user_helpers = '''
                                                         text_color: 0, 0, 0, 1
                                                         halign: 'left'
                                                         markup: True
-                                            
+
                                         GridLayout:
                                             cols: 2
                                             padding: dp(10)
@@ -288,7 +299,7 @@ user_helpers = '''
                                             spacing: dp(10)
                                             size_hint_y: None
                                             height: dp(20)
-                                            
+
                                             MDLabel:
                                                 id: product_name
                                                 text: "Product Name:"
@@ -306,9 +317,9 @@ user_helpers = '''
                                                 font_family: "Arial"
                                                 bold: True
                                                 halign: "left"
-                                        
-                                        
-                                                
+
+
+
                                         GridLayout:
                                             cols: 2
                                             padding: dp(10)
@@ -423,7 +434,7 @@ user_helpers = '''
                                                     Line:
                                                         width: 2
                                                         rectangle: (self.x, self.y, self.width, self.height)
-                                                        
+
                                                 GridLayout:
                                                     cols: 2
                                                     spacing: dp(10)
@@ -444,7 +455,7 @@ user_helpers = '''
                                                             font_size:dp(15)
                                         MDLabel:
                                             text: ""
-                                        
+
                                         GridLayout:
                                             cols: 1
                                             spacing: dp(20)
@@ -469,7 +480,7 @@ user_helpers = '''
                                                     rgba: 0, 0, 0, 1  # Change color if needed
                                                 Line:
                                                     points: self.x, self.y, self.x + self.width, self.y
-                                        
+
                                         MDLabel:
                                             text: ""
                                         MDLabel:
@@ -477,9 +488,9 @@ user_helpers = '''
                                             size_hint_y: None
                                             height: dp(30)
 
-                                            
-            
-                    
+
+
+
                 MDNavigationDrawer:
                     id: nav_drawer
                     radius: (0, 16, 16, 0)
@@ -560,7 +571,7 @@ user_helpers = '''
                             icon_color: "#23639e"
                             on_release: root.logout()
                         MDNavigationDrawerDivider:
-                    
+
         MDBottomNavigationItem:
             name: 'screen 2'
             text: 'Wallet'
@@ -683,14 +694,14 @@ user_helpers = '''
             on_tab_press: root.refresh5()
             BoxLayout:
                 orientation: 'vertical'
-                
+
                 MDTopAppBar:
                     title: "View All Loans"
                     elevation: 3
                     left_action_items: [['arrow-left', lambda x: root.go_back()]]
                     right_action_items: [['refresh', lambda x: root.refresh5()]]
                     md_bg_color: 0.043, 0.145, 0.278, 1
-                    
+
                 MDScrollView:
                     MDBoxLayout:
                         id: container
@@ -702,7 +713,7 @@ user_helpers = '''
                         width: self.minimum_width
                         adaptive_size: True
                         pos_hint: {"center_x": 0, "center_y":  0}
-                        
+
                     # MDList:
                     #     
                     #     id: container
@@ -723,13 +734,13 @@ user_helpers = '''
                     right_action_items: [['refresh', lambda x: root.refresh6()]]
                     title_align: 'center'  # Center-align the title
                     md_bg_color: 0.043, 0.145, 0.278, 1
-        
+
                 MDBoxLayout:
                     size_hint: 1, 1
                     orientation: "vertical"
                     spacing: dp(5)
                     padding: dp(5)
-        
+
                     MDBoxLayout:
                         orientation: "horizontal"
                         pos_hint: {"top": 1}
@@ -741,10 +752,10 @@ user_helpers = '''
                             Line:
                                 width: 0.25
                                 rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-        
-        
+
+
                         text_size: self.width - dp(20), None
-        
+
                         Image:
                             id: image1
                             source: 'icon8.png'
@@ -771,14 +782,14 @@ user_helpers = '''
                                     pos: self.x + dp(5), self.y + dp(5)
                                 StencilPop
 
-        
+
                         MDBoxLayout:
                             orientation: "vertical"
                             size_hint_y: None
                             height: self.minimum_height
                             pos_hint: {"center_y": 0.5}
                             padding: dp(5)
-        
+
                             MDLabel:
                                 id: username
                                 text: "Welcome"
@@ -786,28 +797,28 @@ user_helpers = '''
                                 font_size: dp(20)
                                 size_hint_y: None
                                 height: self.texture_size[1]
-        
+
                             MDLabel:
                                 id: date
                                 text: "Joined Date:"
                                 font_size: dp(15)
                                 size_hint_y: None
                                 height: self.texture_size[1]
-        
+
                             MDLabel:
                                 id: balance
                                 text: "Available Balance:"
                                 font_size: dp(15)
                                 size_hint_y: None
                                 height: self.texture_size[1]
-        
+
                     MDBoxLayout:
                         orientation: "vertical"
                         size_hint_y:0.47
-        
+
                         MDCard:
                             pos_hint:{"top": 1}
-        
+
                             MDGridLayout:
                                 cols: 2
                                 spacing: dp(20)  # Equal gap between cards
@@ -829,13 +840,13 @@ user_helpers = '''
                                         orientation: "vertical"
                                         padding:dp(9), dp(3)
                                         on_release: root.go_to_profile()
-        
+
                                         Image:
                                             source: "icon7.png"
                                             size_hint: (0.4, 1)
                                             pos_hint:{"center_x":0.5,"center_y":0.2}
                                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        
+
                                         MDLabel:
                                             text: "Profile Info"
                                             font_size:dp(12)
@@ -859,14 +870,14 @@ user_helpers = '''
                                         orientation: "vertical"
                                         padding:dp(9), dp(3)
                                         on_release: root.go_to_personal()
-        
+
                                         Image:
                                             source: "icon6.png"
                                             size_hint: (0.4, 1)
                                             pos_hint:{"center_x":0.5,"center_y":0.2}
                                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        
-        
+
+
                                         MDLabel:
                                             text: "Personal Info"
                                             font_size:dp(12)
@@ -895,8 +906,8 @@ user_helpers = '''
                                             size_hint: (0.4, 1)
                                             pos_hint:{"center_x":0.5,"center_y":0.2}
                                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        
-        
+
+
                                         MDLabel:
                                             text: "Professional Info"
                                             font_size:dp(12)
@@ -925,8 +936,8 @@ user_helpers = '''
                                             size_hint: (0.4, 1)
                                             pos_hint:{"center_x":0.5,"center_y":0.2}
                                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        
-        
+
+
                                         MDLabel:
                                             text: "Business Info"
                                             font_size:dp(12)
@@ -934,7 +945,7 @@ user_helpers = '''
                                             theme_text_color: "Custom"
                                             text_color: 0, 0, 0, 1
                                             halign: "center"
-        
+
                                 MDBoxLayout:
                                     orientation: 'vertical'
                                     size_hint_y: None
@@ -956,8 +967,8 @@ user_helpers = '''
                                             size_hint: (0.4, 1)
                                             pos_hint:{"center_x":0.5,"center_y":0.2}
                                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        
-        
+
+
                                         MDLabel:
                                             text: "Bank Details"
                                             font_size:dp(12)
@@ -965,7 +976,7 @@ user_helpers = '''
                                             theme_text_color: "Custom"
                                             text_color: 0, 0, 0, 1
                                             halign: "center"
-        
+
                                 MDBoxLayout:
                                     orientation: 'vertical'
                                     size_hint_y: None
@@ -982,14 +993,14 @@ user_helpers = '''
                                         orientation: "vertical"
                                         padding:dp(9), dp(3)
                                         on_release:root.Edit_email()
-        
+
                                         Image:
                                             source: "icon11.png"
                                             size_hint: (0.4, 1)
                                             pos_hint:{"center_x":0.5,"center_y":0.2}
                                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        
-        
+
+
                                         MDLabel:
                                             text: "Change User Email"
                                             font_size:dp(12)
@@ -997,8 +1008,8 @@ user_helpers = '''
                                             theme_text_color: "Custom"
                                             text_color: 0, 0, 0, 1
                                             halign: "center"   
-                   
-                  
+
+
 <AccountScreen>
     MDBoxLayout:
         orientation: 'vertical'
@@ -1030,10 +1041,10 @@ user_helpers = '''
                     Line:
                         width: 0.25
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-                    
-                
+
+
                 text_size: self.width - dp(20), None
-                
+
                 Image:
                     id: selected_image1
                     size_hint: None, None
@@ -1060,7 +1071,7 @@ user_helpers = '''
                             pos: self.x + dp(5), self.y + dp(5)
                         StencilPop
 
-                    
+
 
                 MDBoxLayout:
                     orientation: "vertical"
@@ -1194,7 +1205,7 @@ user_helpers = '''
                                     theme_text_color: "Custom"
                                     text_color: 0, 0, 0, 1
                                     halign: "center"
-                            
+
                         MDBoxLayout:
                             orientation: 'vertical'
                             size_hint_y: None
@@ -1274,7 +1285,7 @@ user_helpers = '''
                                 orientation: "vertical"
                                 padding:dp(9), dp(3)
                                 on_release:root.Edit_email()
-                                
+
 
                                 Image:
                                     source: "icon11.png"
@@ -1290,7 +1301,7 @@ user_helpers = '''
                                     theme_text_color: "Custom"
                                     text_color: 0, 0, 0, 1
                                     halign: "center"
-                                    
+
 <PersonalScreen>
     canvas.before:
         Color:
@@ -2860,8 +2871,7 @@ user_helpers = '''
                         font_size: dp(13)
                         pos_hint: {'center_y': 0.5}
 
-                MDLabel:
-                    text: ' '
+
                 BoxLayout:
                     orientation: "horizontal"
                     size_hint_y: None
@@ -3040,16 +3050,16 @@ user_helpers = '''
                         pos_hint: {'center_y': 0.5}
                         bold: True
                         multiline: False
-                    
+
                     Image:
                         id: six_bank
                         size: dp(50), dp(50)
                         source: ''
-                        
+
                     MDIconButton:
                         icon: 'upload'
                         on_release: app.root.get_screen('EditScreen5').check_and_open_file_manager1()
-                        
+
 
                 BoxLayout:
                     orientation: "horizontal"
@@ -3148,16 +3158,16 @@ user_helpers = '''
                         pos_hint: {'center_y': 0.5}
                         bold: True
                         multiline: False
-                    
+
                     Image:
                         id: proof
                         size: dp(50), dp(50)
                         source: ''
-                        
+
                     MDIconButton:
                         icon: 'upload'
                         on_release:app.root.get_screen('EditScreen5').check_and_open_file_manager2()
-                    
+
                 MDLabel:
                     text: ' '
                 MDLabel:
@@ -3741,9 +3751,7 @@ user_helpers = '''
                             multiline: False
                             halign: 'left'
                             pos_hint: {'center_y': 0.5}
-                
-                MDLabel:
-                    text: ' '
+
                 BoxLayout:
                     orientation: "horizontal"
                     size_hint_y: None
@@ -4052,7 +4060,7 @@ user_helpers = '''
                         id: employee_id
                         size: dp(50), dp(50)
                         source: ''
-                        
+
                     MDIconButton:
                         icon: 'upload'
                         on_release: app.root.get_screen('EditScreen4').check_and_open_file_manager1()
@@ -4413,7 +4421,7 @@ user_helpers = '''
                     text: ' '
                 MDLabel:
                     text: ' '
-                
+
                 MDFloatLayout:
                     MDRaisedButton:
                         text: "Edit Profile"
@@ -4544,7 +4552,7 @@ user_helpers = '''
                         id: college_proof
                         size: dp(50), dp(50)
                         source: ''
-                        
+
                     MDIconButton:
                         icon: 'upload'
                         on_release: app.root.get_screen('EditScreen3').check_and_open_file_manager1()
@@ -5705,9 +5713,7 @@ user_helpers = '''
                             multiline: False
                             halign: 'left'
                             pos_hint: {'center_y': 0.5}
-                
-                MDLabel:
-                    text: ' '
+
                 BoxLayout:
                     orientation: "vertical"
                     size_hint_y: None
@@ -6261,11 +6267,11 @@ user_helpers = '''
                         id: upload_gov_id1_img
                         size: dp(50), dp(50)
                         source: ''
-                        
+
                     MDIconButton:
                         icon: 'upload'
                         on_release: app.root.get_screen('EditScreen1').check_and_open_file_manager2()
-                
+
                 BoxLayout:
                     orientation: "horizontal"
                     size_hint_y: None
@@ -6309,17 +6315,17 @@ user_helpers = '''
                         pos_hint: {'center_y': 0.5}
                         bold: True
                         multiline: False
-                    
+
                     Image:
                         id: upload_gov_id2_img
                         size: dp(50), dp(50)
                         source: ''
-                        
+
                     MDIconButton:
                         icon: 'upload'
                         on_release: app.root.get_screen('EditScreen1').check_and_open_file_manager3()
-                    
-                
+
+
                 BoxLayout:
                     orientation: "horizontal"
                     size_hint_y: None
@@ -6849,7 +6855,7 @@ user_helpers = '''
                                     size: self.width - dp(10), self.height - dp(10)
                                     pos: self.x + dp(5), self.y + dp(5)
                                 StencilPop
-                
+
                 BoxLayout:
                     orientation: "vertical"
                     size_hint_y: None
@@ -6922,12 +6928,14 @@ class DashboardScreen(Screen):
         if type is not None:
             self.dashboard = type
             return self.dashboard
+
     def type(self):
         if self.dashboard is not None:
             return self.dashboard
 
     def refresh6(self):
         self.on_pre_enter()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.load_false_count()
@@ -6983,7 +6991,41 @@ class DashboardScreen(Screen):
         self.manager.add_widget(Factory.NotificationScreen(name='NotificationScreen'))
         self.manager.current = 'NotificationScreen'
 
+    def go_to_chatbot_screen(self):
+        # Create a modal view for the loading animation
+        modal_view = ModalView(size_hint=(None, None), size=(300, 150), background_color=[0, 0, 0, 0])
 
+        # Create a BoxLayout to hold the loading text
+        box_layout = BoxLayout(orientation='vertical')
+
+        # Create a label for the loading text
+        loading_label = MDLabel(
+            text="Loading...",
+            halign="center",
+            valign="center",
+            theme_text_color="Custom",
+            text_color=[1, 1, 1, 1],
+            font_size="20sp",
+            bold=True
+        )
+
+        # Add the label to the box layout
+        box_layout.add_widget(loading_label)
+
+        # Add the box layout to the modal view
+        modal_view.add_widget(box_layout)
+
+        # Open the modal view
+        modal_view.open()
+
+        # Perform the actual action (e.g., checking account details and navigating)
+        Clock.schedule_once(lambda dt: self.show_chatbot_screen(modal_view), 1)
+
+    def show_chatbot_screen(self, modal_view):
+        # Close the modal view after performing the action
+        modal_view.dismiss()
+        self.manager.add_widget(Factory.ChatBotScreen(name='ChatBotScreen'))
+        self.manager.current = 'ChatBotScreen'
 
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
@@ -7217,7 +7259,6 @@ class DashboardScreen(Screen):
         instance.bg_color = (0.5, 0.5, 0.5, 1)  # Change color as desired
         self.selected_item = instance
 
-
         sm = self.manager
 
         # Create a new instance of the LoginScreen
@@ -7410,7 +7451,6 @@ class DashboardScreen(Screen):
         self.ids.container.clear_widgets()
         self.loans()
 
-
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1")
 
@@ -7468,6 +7508,7 @@ class DashboardScreen(Screen):
             on_press=self.bye)
         )
         view.open()
+
     def on_back_button_press(self):
         self.manager.current = 'DashboardScreen'
 
@@ -8006,6 +8047,7 @@ class DashboardScreen(Screen):
 
         # Switch to the TransactionBH screen
         sm.current = 'LenderDetails'
+
     def go_to_app_tracker(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
@@ -8261,24 +8303,24 @@ class AccountScreen(Screen):
         log_index = 0
         if log_email in email_user:
             log_index = email_user.index(log_email)
-            self.ids.username.text = name_list[log_index]
+            self.ids.username.text = "Welcome " + name_list[log_index]
             self.ids.username.font_style = 'H6'
-            self.ids.username.text =  name_list[log_index]
+            self.ids.username.text = "Welcome " + name_list[log_index]
         else:
             # Handle the case when 'logged' is not in the status list
             self.ids.username.text = "User welcome to P2P"
 
-        users = app_tables.fin_borrower.search()
+        users = app_tables.users.search()
 
         user_email = []
         create_date = []
         for i in users:
-            user_email.append(i['email_id'])
-            create_date.append(i['borrower_since'])
+            user_email.append(i['email'])
+            create_date.append(i['signed_up'])
 
         if log_email in user_email:
             user_index = user_email.index(log_email)
-            self.ids.date.text = "Joined Date: " + str(create_date[user_index])
+            self.ids.date.text = "Joined Date: " + str(create_date[user_index].date())
         else:
             print("no email found")
 
@@ -8444,6 +8486,7 @@ class AccountScreen(Screen):
         self.manager.add_widget(Factory.EditScreen7(name='EditScreen7'))
         self.manager.current = 'EditScreen7'
 
+
 class BusinessScreen1(Screen):
     def on_back_button_press(self):
         self.manager.current = 'AccountScreen'
@@ -8536,34 +8579,34 @@ class EmployeeScreen(Screen):
             else:
                 employee_id.append(None)
 
-            if row['last_six_month_bank_proof']:
-                image_data = row['last_six_month_bank_proof'].get_bytes()
-                if isinstance(image_data, bytes):
-                    print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
-                    # Assuming image_data is already a binary image file
-                    try:
-                        profile_texture_io = BytesIO(image_data)
-                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
-                        last_six_months.append(profile_texture_obj)
-                    except Exception as e:
-                        print(f"Error processing image for email {row['email_user']}: {e}")
-                        last_six_months.append(None)
+                if row['last_six_month_bank_proof']:
+                    image_data = row['last_six_month_bank_proof'].get_bytes()
+                    if isinstance(image_data, bytes):
+                        print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                        # Assuming image_data is already a binary image file
+                        try:
+                            profile_texture_io = BytesIO(image_data)
+                            profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                            last_six_months.append(profile_texture_obj)
+                        except Exception as e:
+                            print(f"Error processing image for email {row['email_user']}: {e}")
+                            last_six_months.append(None)
+                    else:
+                        # If image_data is not bytes, assume it's base64 encoded and decode it
+                        try:
+                            image_data_binary = base64.b64decode(image_data)
+                            print(f"Decoded image data length: {len(image_data_binary)}")
+                            profile_texture_io = BytesIO(image_data_binary)
+                            profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                            last_six_months.append(profile_texture_obj)
+                        except base64.binascii.Error as e:
+                            print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                            last_six_months.append(None)
+                        except Exception as e:
+                            print(f"Error processing image for email {row['email_user']}: {e}")
+                            last_six_months.append(None)
                 else:
-                    # If image_data is not bytes, assume it's base64 encoded and decode it
-                    try:
-                        image_data_binary = base64.b64decode(image_data)
-                        print(f"Decoded image data length: {len(image_data_binary)}")
-                        profile_texture_io = BytesIO(image_data_binary)
-                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
-                        last_six_months.append(profile_texture_obj)
-                    except base64.binascii.Error as e:
-                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
-                        last_six_months.append(None)
-                    except Exception as e:
-                        print(f"Error processing image for email {row['email_user']}: {e}")
-                        last_six_months.append(None)
-            else:
-                last_six_months.append(None)
+                    last_six_months.append(None)
 
             email1.append(row['email_user'])
             company_name.append(row['company_name'])
@@ -8633,7 +8676,6 @@ class EmployeeScreen(Screen):
 
 
 class EditScreen4(Screen):
-    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         gender_data = app_tables.fin_occupation_type.search()
@@ -8738,34 +8780,34 @@ class EditScreen4(Screen):
             else:
                 employee_id.append(None)
 
-            if row['last_six_month_bank_proof']:
-                image_data = row['last_six_month_bank_proof'].get_bytes()
-                if isinstance(image_data, bytes):
-                    print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
-                    # Assuming image_data is already a binary image file
-                    try:
-                        profile_texture_io = BytesIO(image_data)
-                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
-                        last_six_months.append(profile_texture_obj)
-                    except Exception as e:
-                        print(f"Error processing image for email {row['email_user']}: {e}")
-                        last_six_months.append(None)
+                if row['last_six_month_bank_proof']:
+                    image_data = row['last_six_month_bank_proof'].get_bytes()
+                    if isinstance(image_data, bytes):
+                        print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                        # Assuming image_data is already a binary image file
+                        try:
+                            profile_texture_io = BytesIO(image_data)
+                            profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                            last_six_months.append(profile_texture_obj)
+                        except Exception as e:
+                            print(f"Error processing image for email {row['email_user']}: {e}")
+                            last_six_months.append(None)
+                    else:
+                        # If image_data is not bytes, assume it's base64 encoded and decode it
+                        try:
+                            image_data_binary = base64.b64decode(image_data)
+                            print(f"Decoded image data length: {len(image_data_binary)}")
+                            profile_texture_io = BytesIO(image_data_binary)
+                            profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                            last_six_months.append(profile_texture_obj)
+                        except base64.binascii.Error as e:
+                            print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                            last_six_months.append(None)
+                        except Exception as e:
+                            print(f"Error processing image for email {row['email_user']}: {e}")
+                            last_six_months.append(None)
                 else:
-                    # If image_data is not bytes, assume it's base64 encoded and decode it
-                    try:
-                        image_data_binary = base64.b64decode(image_data)
-                        print(f"Decoded image data length: {len(image_data_binary)}")
-                        profile_texture_io = BytesIO(image_data_binary)
-                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
-                        last_six_months.append(profile_texture_obj)
-                    except base64.binascii.Error as e:
-                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
-                        last_six_months.append(None)
-                    except Exception as e:
-                        print(f"Error processing image for email {row['email_user']}: {e}")
-                        last_six_months.append(None)
-            else:
-                last_six_months.append(None)
+                    last_six_months.append(None)
 
             email1.append(row['email_user'])
             company_name.append(row['company_name'])
@@ -8809,7 +8851,8 @@ class EditScreen4(Screen):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "employee_id")
 
     def check_and_open_file_manager2(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "last_six_months_bank_statement")
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1",
+                                         "last_six_months_bank_statement")
 
     def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id):
         if platform == 'android':
@@ -8854,9 +8897,6 @@ class EditScreen4(Screen):
 
     def upload_image(self, file_path):
         try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -8872,15 +8912,11 @@ class EditScreen4(Screen):
             user_data['emp_id_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
-            self.ids['employee_id'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image1(self, file_path):
         try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -8896,7 +8932,6 @@ class EditScreen4(Screen):
             user_data['last_six_month_bank_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
-            self.ids['last_six_months_bank_statement'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -9092,7 +9127,6 @@ class StudentScreen(Screen):
 
 
 class EditScreen3(Screen):
-    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         email = self.get_email()
@@ -9182,9 +9216,6 @@ class EditScreen3(Screen):
 
     def upload_image(self, file_path):
         try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -9200,7 +9231,6 @@ class EditScreen3(Screen):
             user_data['college_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
-            self.ids['college_proof'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -9415,7 +9445,6 @@ class EditScreen2(Screen):
 
 
 class PersonalScreen(Screen):
-    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.refresh_profile_data()  # Initial data retrieval
@@ -9609,9 +9638,6 @@ class PersonalScreen(Screen):
 
     def upload_image(self, file_path):
         try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -9718,8 +9744,8 @@ class PersonalScreen(Screen):
     def on_back_button_press(self):
         self.manager.current = 'AccountScreen'
 
+
 class EditScreen7(Screen):
-    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -9769,6 +9795,24 @@ class EditScreen7(Screen):
         else:
             print(f"Email {email} not found in data.")
 
+    def upload_image(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            user_data['user_photo'] = user_photo_media
+
+            print("Image uploaded successfully.")
+        except Exception as e:
+            print(f"Error uploading image: {e}")
 
     def save_edited_data1(self):
         email1 = self.ids.email.text
@@ -9812,11 +9856,11 @@ class EditScreen7(Screen):
 
             if isinstance(user_data, dict):
                 for email, data in user_data.items():
-                        if isinstance(data, dict) and data.get("logged_status", False):
-                            # Update user's logged_status and user_type
-                            data["logged_status"] = False
-                            data["user_type"] = ""
-                            break
+                    if isinstance(data, dict) and data.get("logged_status", False):
+                        # Update user's logged_status and user_type
+                        data["logged_status"] = False
+                        data["user_type"] = ""
+                        break
                 # Move the cursor to the beginning of the file
                 file.seek(0)
                 # Write the updated data back to the file
@@ -9824,6 +9868,7 @@ class EditScreen7(Screen):
                 # Truncate any remaining data in the file
                 file.truncate()
         self.manager.current = 'MainScreen'
+
     def show_validation_error(self, error_message):
         dialog = MDDialog(
             title="Validation Error",
@@ -9839,7 +9884,8 @@ class EditScreen7(Screen):
             ]
         )
         dialog.open()
-    def update_profile_data(self,email1):
+
+    def update_profile_data(self, email1):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
         if data:
@@ -9847,8 +9893,8 @@ class EditScreen7(Screen):
             # we retrieve the first matching row
             user_profile = data[0]
             user_profile.update(
-                                email_user=email1,
-                                )
+                email_user=email1,
+            )
 
             # Update all related tables
             self.update_all_related_tables(email, email1)
@@ -9856,6 +9902,7 @@ class EditScreen7(Screen):
         else:
             print("No data found for email:", email)
             return False
+
     def update_all_related_tables(self, old_email, new_email):
         try:
             # Users
@@ -9883,33 +9930,33 @@ class EditScreen7(Screen):
                 account.update()
 
             # EMI Details
-            emi_details = app_tables.fin_emi_table.search(borrower_email=old_email)
+            emi_details = app_tables.fin_emi_table.search(lender_email=old_email)
             for loans in emi_details:
-                loans['borrower_email'] = new_email
+                loans['lender_email'] = new_email
                 loans.update()
 
             # Extends Table
-            extends_table = app_tables.fin_extends_loan.search(borrower_email_id=old_email)
+            extends_table = app_tables.fin_extends_loan.search(lender_email_id=old_email)
             for loans in extends_table:
-                loans['borrower_email_id'] = new_email
+                loans['lender_email_id'] = new_email
                 loans.update()
 
             # Foreclosure
-            foreclosure = app_tables.fin_foreclosure.search(borrower_email_id=old_email)
+            foreclosure = app_tables.fin_foreclosure.search(lender_email_id=old_email)
             for loans in foreclosure:
-                loans['borrower_email_id'] = new_email
+                loans['lender_email_id'] = new_email
                 loans.update()
 
-            # Borrower
-            fin_borrower = app_tables.fin_borrower.search(email_id=old_email)
-            for borrower in fin_borrower:
-                borrower['email_id'] = new_email
-                borrower.update()
+            # Lender
+            fin_lender = app_tables.fin_lender.search(email_id=old_email)
+            for lender in fin_lender:
+                lender['email_id'] = new_email
+                lender.update()
 
             # Loan Details
-            loan_details = app_tables.fin_loan_details.search(borrower_email_id=old_email)
+            loan_details = app_tables.fin_loan_details.search(lender_email_id=old_email)
             for loans in loan_details:
-                loans['borrower_email_id'] = new_email
+                loans['lender_email_id'] = new_email
                 loans.update()
 
             # Report Problem
@@ -9918,14 +9965,9 @@ class EditScreen7(Screen):
                 problem['email'] = new_email
                 problem.update()
 
-            # Ascend Score
-            ascend_score = app_tables.fin_user_ascend_score.search(borrower_email_id=old_email)
-            for score in ascend_score:
-                score['borrower_email_id'] = new_email
-                score.update()
-
         except Exception as e:
             print(f"An error occurred while updating related tables: {e}")
+
     def get_email(self):
         return anvil.server.call('another_method')
 
@@ -9943,13 +9985,14 @@ class EditScreen7(Screen):
 
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'AccountScreen'
+        self.manager.current = 'ViewAccountScreen'
 
     def on_back_button_press(self):
-        self.manager.current = 'AccountScreen'
+        self.manager.current = 'ViewAccountScreen'
 
     def refresh(self):
         self.__init__()
+
 
 class ProfileScreen(Screen):
     def __init__(self, **kwargs):
@@ -9996,6 +10039,7 @@ class BankScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.bank_screen()
+
     def bank_screen(self):
         email = self.get_email()
         data = app_tables.fin_user_profile.search(email_user=email)
@@ -10097,22 +10141,6 @@ class EditScreen6(Screen):
     def refresh(self):
         pass
 
-    def show_validation_errors(self, error_message):
-        dialog = MDDialog(
-            title="Validation Error",
-            text=error_message,
-            size_hint=(0.8, None),
-            height=dp(200),
-            buttons=[
-                MDRectangleFlatButton(
-                    text="OK",
-                    text_color=(0.043, 0.145, 0.278, 1),
-                    on_release=lambda x: dialog.dismiss()
-                )
-            ]
-        )
-        dialog.open()
-
     def on_bank_save(self):
         account_holder = self.ids.holder.text
         account_type = self.ids.account_type.text
@@ -10120,10 +10148,6 @@ class EditScreen6(Screen):
         bank_name = self.ids.bank_name.text
         bank_id = self.ids.bank_id.text
         branch_name = self.ids.branch_name.text
-        if not account_holder or account_holder.isdigit() or not account_holder[0].isupper() :
-            self.show_validation_errors('Please Enter Valid Full Name')
-            return
-
         success = self.update_profile_data(account_holder, account_type, account_number, branch_name, bank_name,
                                            bank_id)
 
@@ -10329,7 +10353,6 @@ class BusinessScreen(Screen):
 
 
 class EditScreen5(Screen):
-    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         gender_data = app_tables.fin_borrower_no_of_employees.search()
@@ -10543,9 +10566,6 @@ class EditScreen5(Screen):
 
     def upload_image(self, file_path):
         try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -10561,15 +10581,11 @@ class EditScreen5(Screen):
             user_data['last_six_month_bank_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
-            self.ids['six_bank'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image1(self, file_path):
         try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -10582,10 +10598,10 @@ class EditScreen5(Screen):
             user_data = data[0]
 
             # Update user_photo column with the media object
+            user_data['last_six_month_bank_proof'] = user_photo_media
             user_data['proof_verification'] = user_photo_media
 
             print("Image uploaded successfully.")
-            self.ids['proof'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -10646,7 +10662,6 @@ class EditScreen5(Screen):
             # Handle the case where the user's profile does not exist
             return False
 
-
     def refresh(self):
         pass
 
@@ -10672,7 +10687,6 @@ class EditScreen5(Screen):
 
 
 class EditScreen1(Screen):
-    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         gender_data = app_tables.fin_gender.search()
@@ -10945,9 +10959,6 @@ class EditScreen1(Screen):
 
     def upload_image1(self, file_path):
         try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -10963,16 +10974,11 @@ class EditScreen1(Screen):
             user_data['user_photo'] = user_photo_media
 
             print("Image uploaded successfully.")
-            self.ids['selected_image1'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image2(self, file_path):
         try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
-
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -10985,16 +10991,11 @@ class EditScreen1(Screen):
             user_data = data[0]
             user_data['aadhaar_photo'] = user_photo_media
             print("Image uploaded successfully.")
-            self.ids['upload_gov_id1_img'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image3(self, file_path):
         try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
-
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -11007,10 +11008,9 @@ class EditScreen1(Screen):
             user_data = data[0]
 
             # Update user_photo column with the media object
-            user_data['pan_photo'] = user_photo_media
+            user_data['pan_number'] = user_photo_media
 
             print("Image uploaded successfully.")
-            self.ids['upload_gov_id2_img'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -11043,10 +11043,6 @@ class EditScreen1(Screen):
         home_loan = self.ids.home.text
         personal_credit = self.ids.personal.text
         vehicle_loans = self.ids.two.text
-        if not name or len(name.split()) < 2 or name.isdigit() or not name[0].isupper() :
-            self.show_validation_errors('Please Enter Full Name and first letter should be capital')
-            return
-
         # Update the database with the edited data
         # Replace 'update_profile_data' with your actual database update function
         success = self.update_profile_data(vehicle_loans, personal_credit, home_loan, other_loan, profession,
@@ -11055,7 +11051,7 @@ class EditScreen1(Screen):
                                            email1, mobile_no, dob, gender)
 
         if success:
-            self.update_email_logic(email1,name)
+            self.update_email_logic(email1, name)
             # self.show_validation_error("Database Update Sucessfully.")
             # If the update was successful, navigate back to the dashboard screen
             self.manager.add_widget(Factory.AccountScreen(name='AccountScreen'))
@@ -11066,22 +11062,6 @@ class EditScreen1(Screen):
             self.on_back_button_press()
 
     def show_validation_error(self, error_message):
-        dialog = MDDialog(
-            title="Validation Error",
-            text=error_message,
-            size_hint=(0.8, None),
-            height=dp(200),
-            buttons=[
-                MDRectangleFlatButton(
-                    text="OK",
-                    text_color=(0.043, 0.145, 0.278, 1),
-                    on_release=lambda x: dialog.dismiss()
-                )
-            ]
-        )
-        dialog.open()
-
-    def show_validation_errors(self, error_message):
         dialog = MDDialog(
             title="Validation Error",
             text=error_message,
@@ -11113,7 +11093,7 @@ class EditScreen1(Screen):
                                     gender=gender,
                                     duration_at_address=staying_address,
                                     aadhaar_no=gov_id1,
-                                    pan_number=str(gov_id2),
+                                    pan_number=gov_id2,
                                     street_adress_1=address1,
                                     street_address_2=address2,
                                     present_address=type_of_address,
@@ -11247,7 +11227,7 @@ class EditScreen1(Screen):
             if check_permission(Permission.READ_MEDIA_IMAGES):
                 self.file_manager_open(icon_id, label_id, file_label_id, image_id)
             else:
-                self.request_media_images_permission(icon_id, label_id, file_label_id, image_id)
+                self.request_media_images_permission()
         else:
             self.file_manager_open(icon_id, label_id, file_label_id, image_id)
 
@@ -11343,6 +11323,7 @@ class EditScreen1(Screen):
         wallet_screen = PersonalScreen(name='PersonalScreen')
         sm.add_widget(wallet_screen)
         sm.current = 'PersonalScreen'
+
 
 class MyScreenManager(ScreenManager):
     pass

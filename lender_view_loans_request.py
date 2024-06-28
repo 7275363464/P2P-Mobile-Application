@@ -755,8 +755,34 @@ Builder.load_string(view_loan_request)
 class ViewLoansRequest(Screen):
     def __init__(self, instance=None, **kwargs):
         super().__init__(**kwargs)
+        email = anvil.server.call('another_method')
+        print(f"Fetching lender information for email: {email}")
+
+        # Fetch lender_row from Anvil tables
+        lender_rows = app_tables.fin_lender.search(email_id=email)
+
+        if not lender_rows or len(lender_rows) == 0:
+            print(f"Error: Lender not found for email {email}")
+            return
+
+        lender_row = lender_rows[0]  # Assuming there's only one lender with this email
+
+        # Fetch membership_type from lender_row
+        lender_membership = lender_row['membership']
+        print(f"Lender membership type: {lender_membership}")
+
+        # Define membership levels and their hierarchy
+        membership_hierarchy = {
+            'silver': 1,
+            'gold': 2,
+            'platinum': 3
+        }
+
+        lender_membership_level = membership_hierarchy.get(lender_membership.lower(), 0)
+
+        # Fetch relevant data
         data = app_tables.fin_loan_details.search()
-        profile = app_tables.fin_user_profile.search()
+
         customer_id = []
         loan_id = []
         borrower_name = []
@@ -764,63 +790,67 @@ class ViewLoansRequest(Screen):
         product_name = []
         interest_rate = []
         loan_amount = []
-        s = 0
-        for i in data:
-            s += 1
-            customer_id.append(i['borrower_customer_id'])
-            loan_id.append(i['loan_id'])
-            borrower_name.append(i['borrower_full_name'])
-            loan_status.append(i['loan_updated_status'])
-            product_name.append(i['product_name'])
-            interest_rate.append(i['interest_rate'])
-            loan_amount.append(i['loan_amount'])
-
         profile_customer_id = []
         profile_mobile_number = []
         ascend_value = []
         profile_photo = {}
-        for i in profile:
-            profile_customer_id.append(i['customer_id'])
-            profile_mobile_number.append(i['mobile'])
-            ascend_value.append(i['ascend_value'])
+
+        for loan in data:
+            if loan['loan_id'] == 'LA1000004' or loan['loan_id'] == 'LA1000005':
+                product_id = loan['product_id']
+                print(f"Loan {loan['loan_id']} Product ID: {product_id}")
+
+                # Fetch product details using product_id from loan details
+                product_details = app_tables.fin_product_details.get(product_id=product_id)
+
+                if product_details:
+                    product_membership_type = product_details['membership_type']
+                    print(f"Product ID {product_id}: Membership Type: {product_membership_type}")
+
+                    if loan['loan_updated_status'] == 'under process':
+                        product_membership_level = membership_hierarchy.get(product_membership_type.lower(), 0)
+                        if product_membership_level <= lender_membership_level:
+                            customer_id.append(loan['borrower_customer_id'])
+                            loan_id.append(loan['loan_id'])
+                            borrower_name.append(loan['borrower_full_name'])
+                            loan_status.append(loan['loan_updated_status'])
+                            product_name.append(product_details['product_name'])
+                            interest_rate.append(loan['interest_rate'])
+                            loan_amount.append(loan['loan_amount'])
+                        else:
+                            print(f"Lender membership level {lender_membership_level} is not sufficient for product level {product_membership_level}")
+                else:
+                    print(f"Product details not found for product ID {product_id}")
+
+        profile = app_tables.fin_user_profile.search()
+
+        for profile_entry in profile:
+            profile_customer_id.append(profile_entry['customer_id'])
+            profile_mobile_number.append(profile_entry['mobile'])
+            ascend_value.append(profile_entry['ascend_value'])
 
             # Load profile photo if available
-            if i['user_photo']:
-                image_data = i['user_photo'].get_bytes()
+            if profile_entry['user_photo']:
+                image_data = profile_entry['user_photo'].get_bytes()
                 if isinstance(image_data, bytes):
                     try:
                         profile_texture_io = BytesIO(image_data)
                         photo_texture = CoreImage(profile_texture_io, ext='png').texture
-                        profile_photo[i['customer_id']] = photo_texture
+                        profile_photo[profile_entry['customer_id']] = photo_texture
                     except Exception as e:
-                        print(f"Error processing image for customer {i['customer_id']}: {e}")
+                        print(f"Error processing image for customer {profile_entry['customer_id']}: {e}")
                 else:
                     try:
                         image_data_binary = base64.b64decode(image_data)
                         profile_texture_io = BytesIO(image_data_binary)
                         photo_texture = CoreImage(profile_texture_io, ext='png').texture
-                        profile_photo[i['customer_id']] = photo_texture
+                        profile_photo[profile_entry['customer_id']] = photo_texture
                     except base64.binascii.Error as e:
-                        print(f"Base64 decoding error for customer {i['customer_id']}: {e}")
+                        print(f"Base64 decoding error for customer {profile_entry['customer_id']}: {e}")
                     except Exception as e:
-                        print(f"Error processing image for customer {i['customer_id']}: {e}")
+                        print(f"Error processing image for customer {profile_entry['customer_id']}: {e}")
 
-        c = -1
-        index_list = []
-        for i in range(s):
-            c += 1
-            if loan_status[c] == 'under process' or loan_status[c] == 'approved':
-                index_list.append(c)
-
-        b = 1
-        k = -1
-        for i in reversed(index_list):
-            b += 1
-            k += 1
-            if customer_id[i] in profile_customer_id:
-                number = profile_customer_id.index(customer_id[i])
-            else:
-                number = 0
+        for i in range(len(customer_id)):
             card = MDCard(
                 orientation='vertical',
                 size_hint=(None, None),
@@ -849,7 +879,7 @@ class ViewLoansRequest(Screen):
             horizontal_layout.add_widget(Widget(size_hint_x=None, width='10dp'))
             text_layout = BoxLayout(orientation='vertical')
             text_layout.add_widget(MDLabel(
-                text=f"[b]{borrower_name[i]}[/b],  \n[b]{profile_mobile_number[number]}[/b]",
+                text=f"[b]{borrower_name[i]}[/b],  \n[b]{profile_mobile_number[i]}[/b]",
                 theme_text_color='Custom',
                 text_color=(0, 0, 0, 1),
                 halign='left',
@@ -866,7 +896,7 @@ class ViewLoansRequest(Screen):
                 markup=True,
             ))
             text_layout.add_widget(MDLabel(
-                text=f"[b]Ascend Score:[/b] {ascend_value[number]}",
+                text=f"[b]Ascend Score:[/b] {ascend_value[i]}",
                 theme_text_color='Custom',
                 text_color=(0, 0, 0, 1),
                 halign='left',
@@ -890,45 +920,22 @@ class ViewLoansRequest(Screen):
                 spacing="20dp"
             )
             status_color = (0.545, 0.765, 0.290, 1)  # default color
-            if loan_status[i] in ["under process"]:
+            if loan_status[i] == "under process":
                 status_color = (253 / 255, 218 / 255, 13 / 255, 1)  # yellow
-            elif loan_status[i] in ["disbursed"]:
-                status_color = (255 / 255, 88 / 255, 93 / 255, 1)  # pink
-            elif loan_status[i] in ["closed"]:
-                status_color = (0 / 255, 100 / 255, 0 / 255, 1)  # bottle-green
-            elif loan_status[i] in ["extension"]:
-                status_color = (255 / 255, 165 / 255, 0 / 255, 1)  # orange
-            elif loan_status[i] in ["foreclosure"]:
-                status_color = (0.424, 0.663, 0.859, 1.0)  # sky blue
-            elif loan_status[i] in ["rejected"]:
-                status_color = (210 / 255, 4 / 255, 45 / 255, 1)  # cherry
-            elif loan_status[i] in ["approved"]:
+            elif loan_status[i] == "approved":
                 status_color = (0 / 255, 128 / 255, 0 / 255, 1)  # light green
-            elif loan_status[i] == "lost opportunities":
-                status_color = (0.902, 0.141, 0.141, 1)
 
-            status_text = {
-                "under process": "  Under Process ",
-                "disbursed": "  Disburse Loan ",
-                "closed": "    Closed Loan   ",
-                "extension": " Extension Loan ",
-                "foreclosure": "  Foreclosure  ",
-                "accepted": " Accepted Loan ",
-                "rejected": "  Rejected Loan ",
-                "approved": "  Approved Loan ",
-                "lost opportunities": "lost opportunities"
-            }
             button1 = MDFillRoundFlatButton(
-                text=status_text.get(loan_status[i], loan_status[i]),
+                text=loan_status[i],
                 size_hint=(None, None),
                 height="40dp",
                 width="250dp",
                 pos_hint={"center_x": 0},
                 md_bg_color=status_color,
-                # on_release=lambda x, i=i: self.close_loan(i)
             )
+
             button2 = MDFillRoundFlatButton(
-                text="  View Details  ",
+                text="View Details",
                 size_hint=(None, None),
                 height="40dp",
                 width="250dp",
@@ -941,8 +948,8 @@ class ViewLoansRequest(Screen):
             button_layout.add_widget(button2)
             card.add_widget(button_layout)
 
-            # card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
             self.ids.container2.add_widget(card)
+
 
     def icon_button_clicked(self, instance, loan_id):
         # Handle the on_release event here

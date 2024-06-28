@@ -698,7 +698,7 @@ user_helpers = '''
                 MDTopAppBar:
                     title: "View All Loans"
                     elevation: 3
-                    left_action_items: [['arrow-left', lambda x: root.go_back()]]
+                    # left_action_items: [['arrow-left', lambda x: root.go_back()]]
                     right_action_items: [['refresh', lambda x: root.refresh5()]]
                     md_bg_color: 0.043, 0.145, 0.278, 1
 
@@ -730,7 +730,7 @@ user_helpers = '''
                     title: "Account Info"
                     elevation: 2
                     pos_hint: {'top': 1}
-                    left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
+                    # left_action_items: [['arrow-left', lambda x: root.on_back_button_press()]]
                     right_action_items: [['refresh', lambda x: root.refresh6()]]
                     title_align: 'center'  # Center-align the title
                     md_bg_color: 0.043, 0.145, 0.278, 1
@@ -7353,8 +7353,8 @@ class DashboardScreen(Screen):
         return anvil.server.call('profile')
 
     def go_to_personal(self):
-        self.manager.add_widget(Factory.PersonalScreen(name='PersonalScreen'))
-        self.manager.current = 'PersonalScreen'
+        self.manager.add_widget(Factory.PersonalScreen(name='PersonalScreen1'))
+        self.manager.current = 'PersonalScreen1'
 
     def on_back_button_press(self):
         self.manager.transition = SlideTransition(direction='right')
@@ -7364,8 +7364,8 @@ class DashboardScreen(Screen):
         pass
 
     def go_to_profile(self):
-        self.manager.add_widget(Factory.ProfileScreen(name='ProfileScreen'))
-        self.manager.current = 'ProfileScreen'
+        self.manager.add_widget(Factory.ProfileScreen(name='ProfileScreen1'))
+        self.manager.current = 'ProfileScreen1'
 
     def go_to_business(self):
         employee = self.get_profession1()
@@ -7400,8 +7400,8 @@ class DashboardScreen(Screen):
             return None
 
     def go_to_bank(self):
-        self.manager.add_widget(Factory.BankScreen(name='BankScreen'))
-        self.manager.current = 'BankScreen'
+        self.manager.add_widget(Factory.BankScreen(name='BankScreen1'))
+        self.manager.current = 'BankScreen1'
 
     def navigate_based_on_touch(self):
         # Define the areas for each profession
@@ -8392,8 +8392,8 @@ class AccountScreen(Screen):
         return anvil.server.call('another_method')
 
     def go_to_personal(self):
-        self.manager.add_widget(Factory.PersonalScreen(name='PersonalScreen'))
-        self.manager.current = 'PersonalScreen'
+        self.manager.add_widget(Factory.PersonalScreen(name='PersonalScreen1'))
+        self.manager.current = 'PersonalScreen1'
 
     def on_back_button_press(self):
         self.manager.transition = SlideTransition(direction='right')
@@ -8403,8 +8403,8 @@ class AccountScreen(Screen):
         pass
 
     def go_to_profile(self):
-        self.manager.add_widget(Factory.ProfileScreen(name='ProfileScreen'))
-        self.manager.current = 'ProfileScreen'
+        self.manager.add_widget(Factory.ProfileScreen(name='ProfileScreen1'))
+        self.manager.current = 'ProfileScreen1'
 
     def go_to_business(self):
         employee = self.get_profession1()
@@ -8439,8 +8439,8 @@ class AccountScreen(Screen):
             return None
 
     def go_to_bank(self):
-        self.manager.add_widget(Factory.BankScreen(name='BankScreen'))
-        self.manager.current = 'BankScreen'
+        self.manager.add_widget(Factory.BankScreen(name='BankScreen1'))
+        self.manager.current = 'BankScreen1'
 
     def navigate_based_on_touch(self):
         # Define the areas for each profession

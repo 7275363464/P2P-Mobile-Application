@@ -821,7 +821,7 @@ user_helpers1 = """
                 title: "Ascends P2P Wallet"
                 elevation: 2
                 pos_hint: {'top': 1}
-                left_action_items: [['arrow-left',lambda x: root.on_back_button()]]
+                # left_action_items: [['arrow-left',lambda x: root.on_back_button()]]
                 right_action_items: [['refresh', lambda x: root.refresh1()]]
                 title_align: 'center'
                 md_bg_color: 0.043, 0.145, 0.278, 1
@@ -941,7 +941,7 @@ user_helpers1 = """
                 MDTopAppBar:
                     title: "View All Loans"
                     elevation: 3
-                    left_action_items: [['arrow-left', lambda x: root.on_back_button()]]
+                    # left_action_items: [['arrow-left', lambda x: root.on_back_button()]]
                     right_action_items: [['refresh', lambda x: root.refresh5()]]
                     md_bg_color: 0.043, 0.145, 0.278, 1
 
@@ -975,7 +975,7 @@ user_helpers1 = """
                     title: "Account Profile"
                     elevation: 2
                     pos_hint: {'top': 1}
-                    left_action_items: [['arrow-left', lambda x: root.on_back_button()]]
+                    # left_action_items: [['arrow-left', lambda x: root.on_back_button()]]
                     right_action_items: [['refresh', lambda x: root.refresh6()]]
                     title_align: 'center'
                     md_bg_color: 0.043, 0.145, 0.278, 1
@@ -6599,7 +6599,7 @@ class LenderDashboard(Screen):
             lender_cus_id.append(i['customer_id'])
             create_date.append(i['member_since'])
             returns.append(i['return_on_investment'])
-            membership_type.append(i['membership'])
+            membership_type.append(i['membership_type'])
             present_commitment.append(i['present_commitments'])
         #
         if p_customer_id[log_index] in lender_cus_id:
@@ -7487,16 +7487,16 @@ class LenderDashboard(Screen):
         # Get the existing ScreenManager
 
     def bank(self):
-        self.manager.add_widget(Factory.ViewBankScreen(name='ViewBankScreen'))
-        self.manager.current = 'ViewBankScreen'
+        self.manager.add_widget(Factory.ViewBankScreen(name='ViewBankScreen1'))
+        self.manager.current = 'ViewBankScreen1'
 
     def profile(self):
-        self.manager.add_widget(Factory.ViewProfileScreen(name='ViewProfileScreen'))
-        self.manager.current = 'ViewProfileScreen'
+        self.manager.add_widget(Factory.ViewProfileScreen(name='ViewProfileScreen1'))
+        self.manager.current = 'ViewProfileScreen1'
 
     def personal(self):
-        self.manager.add_widget(Factory.ViewPersonalScreen(name='ViewPersonalScreen'))
-        self.manager.current = 'ViewPersonalScreen'
+        self.manager.add_widget(Factory.ViewPersonalScreen(name='ViewPersonalScreen1'))
+        self.manager.current = 'ViewPersonalScreen1'
 
     def go_to_business1(self):
         employee = self.get_business1()
@@ -7677,16 +7677,16 @@ class ViewAccountScreen(Screen):
         self.manager.current = 'LenderDashboard'
 
     def bank(self):
-        self.manager.add_widget(Factory.ViewBankScreen(name='ViewBankScreen'))
-        self.manager.current = 'ViewBankScreen'
+        self.manager.add_widget(Factory.ViewBankScreen(name='ViewBankScreen1'))
+        self.manager.current = 'ViewBankScreen1'
 
     def profile(self):
-        self.manager.add_widget(Factory.ViewProfileScreen(name='ViewProfileScreen'))
-        self.manager.current = 'ViewProfileScreen'
+        self.manager.add_widget(Factory.ViewProfileScreen(name='ViewProfileScreen1'))
+        self.manager.current = 'ViewProfileScreen1'
 
     def personal(self):
-        self.manager.add_widget(Factory.ViewPersonalScreen(name='ViewPersonalScreen'))
-        self.manager.current = 'ViewPersonalScreen'
+        self.manager.add_widget(Factory.ViewPersonalScreen(name='ViewPersonalScreen1'))
+        self.manager.current = 'ViewPersonalScreen1'
 
     def go_to_business1(self):
         employee = self.get_business1()

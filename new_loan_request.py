@@ -761,7 +761,6 @@ user_helpers2 = """
         MDLabel:
             text: " "             
 <MenuScreen>:
-    on_pre_enter: root.calculate_schedule()  # Calculate when entering the screen
 
     MDBoxLayout:
         orientation: 'vertical'
@@ -1312,7 +1311,7 @@ class NewloanScreen2(Screen):
             self.ids.total_interest_amount.text = "₹" + " " + str(round(interest_amount, 2))
             processing_fee_amount = (processing_fee / 100) * p
             self.ids.total_processing_fee_amount.text = "₹" + " " + str(round(processing_fee_amount, 2))
-            total_repayment_amount = Monthly_EMI * t + interest_amount + processing_fee_amount
+            total_repayment_amount = loan_amount + interest_amount + processing_fee_amount
             self.ids.total.text = "₹" + " " + str(round(total_repayment_amount, 2))
 
     def on_pre_leave(self):
@@ -1430,6 +1429,7 @@ class NewloanScreen2(Screen):
                     interest_rate=float(roi),
                     product_name=str(product_name),
                     total_repayment_amount=float(total_repayment),
+                    remaining_amount=float(total_repayment),
                     product_description=str(product_description),
                     credit_limit=int(credit_limit),
                     total_processing_fee_amount=float(total_processing_fee_amount),
@@ -1502,6 +1502,7 @@ class MenuScreen(Screen):
         self.interest_rate = float(interest_rate)
         self.processing_fee = float(processing_fee)
         self.emi_type = emi_type  # Assign selected EMI type
+        self.update_calculation()
 
         if self.emi_type == 'Monthly':
             self.calculate_schedule()
@@ -1523,7 +1524,7 @@ class MenuScreen(Screen):
         self.interest_rate = float(interest_rate)
         self.processing_fee = float(processing_fee)
         self.emi_type = emi_type
-
+        self.update_calculation()
         if self.emi_type == 'Monthly':
             self.calculate_schedule()
         elif self.emi_type == 'One Time':
@@ -1533,6 +1534,17 @@ class MenuScreen(Screen):
         elif self.emi_type == 'Six Months':
             self.calculate_six_months_payment()
 
+    def update_calculation(self):
+        if self.emi_type == 'Monthly':
+            self.calculate_schedule()
+        elif self.emi_type == 'One Time':
+            self.calculate_one_time_payment()
+        elif self.emi_type == 'Three Months':
+            self.calculate_three_months_payment()
+        elif self.emi_type == 'Six Months':
+            self.calculate_six_months_payment()
+        else:
+            print("Invalid EMI type")
     def calculate_schedule(self):
         container = self.ids.container
         container.clear_widgets()
@@ -1567,7 +1579,7 @@ class MenuScreen(Screen):
             loan_amount_ending_balance = max(0, loan_amount_beginning_balance - principal)
 
             row_data = [
-                f"Month {month}",
+                f"Payment {month}",
                 f"Rs. {beginning_balance:.2f}",
                 f"Rs. {monthly_emi:.2f}",
                 f"Rs. {monthly_interest:.2f}",
@@ -1584,10 +1596,19 @@ class MenuScreen(Screen):
             beginning_balance = ending_balance
             loan_amount_beginning_balance = loan_amount_ending_balance
 
+
     def calculate_one_time_payment(self):
         container = self.ids.container
         container.clear_widgets()
+        header_texts = [
+            "Payment Schedule", "Beginning Balance", "EMI", "Interest Amount",
+            "Processing Fee", "Total Payment", "Principal", "Ending Balance"
+        ]
 
+        # Add header labels
+        for text in header_texts:
+            label = MDLabel(text=text, font_size=dp(14), halign="center", bold=True)
+            container.add_widget(label)
         monthly_interest_rate = (self.interest_rate / 100) / 12
         total_processing_fee = (self.processing_fee / 100) * self.loan_amount
 
@@ -1604,7 +1625,7 @@ class MenuScreen(Screen):
         beginning_balance = monthly_emi * self.loan_tenure + total_interest + total_processing_fee
 
         row_data = [
-            "One Time",
+            "Payment 1",
             f"Rs. {beginning_balance:.2f}",
             f"Rs. {monthly_emi:.2f}",
             f"Rs. {total_interest:.2f}",
@@ -1622,6 +1643,16 @@ class MenuScreen(Screen):
         container = self.ids.container
         container.clear_widgets()
 
+        header_texts = [
+            "Payment Schedule", "Beginning Balance", "EMI", "Interest Amount",
+            "Processing Fee", "Total Payment", "Principal", "Ending Balance"
+        ]
+
+        # Add header labels
+        for text in header_texts:
+            label = MDLabel(text=text, font_size=dp(14), halign="center", bold=True)
+            container.add_widget(label)
+
         monthly_interest_rate = (self.interest_rate / 100) / 12
         total_processing_fee = (self.processing_fee / 100) * self.loan_amount
 
@@ -1636,7 +1667,8 @@ class MenuScreen(Screen):
 
         beginning_balance = monthly_emi * self.loan_tenure + total_interest + total_processing_fee
 
-        num_periods = int(self.loan_tenure / 3)
+        num_periods = int(self.loan_tenure // 3)
+        remaining_months = int(self.loan_tenure % 3)
         loan_amount_beginning_balance = self.loan_amount
 
         for period in range(1, num_periods + 1):
@@ -1658,7 +1690,7 @@ class MenuScreen(Screen):
             loan_amount_ending_balance = max(0, loan_amount_beginning_balance - principal_sum)
 
             row_data = [
-                f"Period {period}",
+                f"Payment {period}",
                 f"Rs. {beginning_balance:.2f}",
                 f"Rs. {monthly_emi * 3:.2f}",
                 f"Rs. {interest_sum:.2f}",
@@ -1675,9 +1707,57 @@ class MenuScreen(Screen):
             beginning_balance = ending_balance
             loan_amount_beginning_balance = loan_amount_ending_balance
 
+        # Handle the remaining months
+        if remaining_months > 0:
+            principal_sum = 0
+            interest_sum = 0
+            processing_fee_sum = 0
+
+            for month in range(remaining_months):
+                monthly_interest = loan_amount_beginning_balance * monthly_interest_rate
+                principal = monthly_emi - monthly_interest
+
+                principal_sum += principal
+                interest_sum += monthly_interest
+                processing_fee_sum += total_processing_fee / self.loan_tenure
+
+            total_payment = (monthly_emi * remaining_months) + processing_fee_sum + interest_sum
+
+            ending_balance = max(0, beginning_balance - total_payment)
+            loan_amount_ending_balance = max(0, loan_amount_beginning_balance - principal_sum)
+
+            row_data = [
+                f"Payment {num_periods + 1}",
+                f"Rs. {beginning_balance:.2f}",
+                f"Rs. {monthly_emi * remaining_months:.2f}",
+                f"Rs. {interest_sum:.2f}",
+                f"Rs. {processing_fee_sum:.2f}",
+                f"Rs. {total_payment:.2f}",
+                f"Rs. {principal_sum:.2f}",
+                f"Rs. {ending_balance:.2f}",
+            ]
+
+            for text in row_data:
+                label = MDLabel(text=text, font_size=dp(12), halign="center")
+                container.add_widget(label)
+
+            beginning_balance = ending_balance
+            loan_amount_beginning_balance = loan_amount_ending_balance
+
+
     def calculate_six_months_payment(self):
         container = self.ids.container
         container.clear_widgets()
+
+        header_texts = [
+            "Payment Schedule", "Beginning Balance", "EMI", "Interest Amount",
+            "Processing Fee", "Total Payment", "Principal", "Ending Balance"
+        ]
+
+        # Add header labels
+        for text in header_texts:
+            label = MDLabel(text=text, font_size=dp(14), halign="center", bold=True)
+            container.add_widget(label)
 
         monthly_interest_rate = (self.interest_rate / 100) / 12
         total_processing_fee = (self.processing_fee / 100) * self.loan_amount
@@ -1695,7 +1775,8 @@ class MenuScreen(Screen):
         beginning_balance = monthly_emi * self.loan_tenure + total_processing_fee + total_interest
 
         # Calculate the number of six-month periods
-        num_periods = int(self.loan_tenure / 6)
+        num_periods = int(self.loan_tenure // 6)
+        remaining_months = int(self.loan_tenure % 6)
         loan_amount_beginning_balance = self.loan_amount
 
         # Loop over each six-month period to calculate payments
@@ -1720,7 +1801,7 @@ class MenuScreen(Screen):
 
             # Prepare the row data for this period
             row_data = [
-                f"Period {period}",
+                f"Payment {period}",
                 f"Rs. {beginning_balance:.2f}",
                 f"Rs. {monthly_emi * 6:.2f}",
                 f"Rs. {interest_sum:.2f}",
@@ -1737,6 +1818,47 @@ class MenuScreen(Screen):
 
             beginning_balance = ending_balance
             loan_amount_beginning_balance = loan_amount_ending_balance
+
+        # Handle the remaining months
+        if remaining_months > 0:
+            principal_sum = 0
+            interest_sum = 0
+            processing_fee_sum = 0
+
+            for month in range(remaining_months):
+                monthly_interest = loan_amount_beginning_balance * monthly_interest_rate
+                principal = monthly_emi - monthly_interest
+
+                principal_sum += principal
+                interest_sum += monthly_interest
+                processing_fee_sum += total_processing_fee / self.loan_tenure
+
+            total_payment = (monthly_emi * remaining_months) + processing_fee_sum + interest_sum
+
+            # Calculate ending balance for the remaining months
+            ending_balance = max(0, beginning_balance - total_payment)
+            loan_amount_ending_balance = max(0, loan_amount_beginning_balance - principal_sum)
+
+            # Prepare the row data for the remaining months
+            row_data = [
+                f"Payment {num_periods + 1}",
+                f"Rs. {beginning_balance:.2f}",
+                f"Rs. {monthly_emi * remaining_months:.2f}",
+                f"Rs. {interest_sum:.2f}",
+                f"Rs. {processing_fee_sum:.2f}",
+                f"Rs. {total_payment:.2f}",
+                f"Rs. {principal_sum:.2f}",
+                f"Rs. {ending_balance:.2f}",
+            ]
+
+            # Add row data for the remaining months to the container
+            for text in row_data:
+                label = MDLabel(text=text, font_size=dp(12), halign="center")
+                container.add_widget(label)
+
+            beginning_balance = ending_balance
+            loan_amount_beginning_balance = loan_amount_ending_balance
+
 
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')

@@ -658,7 +658,7 @@ class LoansDetailsB(Screen):
             c += 1
             print(customer_id[i], i)
 
-            if customer_id[i] == cos_id and loan_status[i] == 'disbursed' or loan_status[i] == 'foreclosure':
+            if customer_id[i] == cos_id and loan_status[i] == 'disbursed' or customer_id[i] == cos_id and loan_status[i] == 'foreclosure':
                 index_list.append(c)
         print(index_list)
         b = 1
@@ -1355,35 +1355,6 @@ class ForecloseDetails(Screen):
         self.show_success_dialog(
             f"Your foreclosure request has been successfully submitted. You will receive a notification once it is approved.")
 
-        data = app_tables.fin_foreclosure.search()
-        loan = app_tables.fin_loan_details.search()
-        today_date = datetime.now(timezone.utc).date()
-        loan_id = []
-        request_time = []
-        loan_status = []
-        a = 0
-        for i in data:
-            a += 1  # how much data was available in data it will print all data
-            loan_id.append(i['loan_id'])
-            request_time.append(i['requested_on'])
-            loan_status.append(i['status'])
-
-        loan_id1 = []
-        loan_status1 = []
-        s = 0
-        for i in loan:
-            s += 1
-            loan_id1.append(i['loan_id'])
-            loan_status1.append(i['loan_updated_status'])
-
-        for i in range(a):
-            day_left = (today_date - request_time[i].date()).days
-            if day_left >= 2 and loan_status[i] == "under process":
-                data[i]["status"] = "approved"
-                if loan_id[i] in loan_id1:
-                    index = loan_id1.index(loan_id[i])
-                    loan[i]["loan_updated_status"] = "foreclosure"
-            print(day_left)
 
     def show_success_dialog(self, text):
         dialog = MDDialog(

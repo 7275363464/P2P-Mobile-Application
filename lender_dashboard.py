@@ -6599,7 +6599,7 @@ class LenderDashboard(Screen):
             lender_cus_id.append(i['customer_id'])
             create_date.append(i['member_since'])
             returns.append(i['return_on_investment'])
-            membership_type.append(i['membership_type'])
+            membership_type.append(i['membership'])
             present_commitment.append(i['present_commitments'])
         #
         if p_customer_id[log_index] in lender_cus_id:

@@ -1057,7 +1057,6 @@ class ViewAllLoansLF(Screen):
 
         data = app_tables.fin_foreclosure.search()
         loan = app_tables.fin_loan_details.search()
-        today_date = datetime.now(timezone.utc).date()
         profile = app_tables.fin_user_profile.search()
         loan_id = []
         request_time = []
@@ -1088,15 +1087,6 @@ class ViewAllLoansLF(Screen):
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
             profile_email.append(i['email_user'])
-
-        for i in range(a):
-            day_left = (today_date - request_time[i].date()).days
-            if day_left >= 2 and loan_status[i] == "under process":
-                data[i]["status"] = "approved"
-                if loan_id[i] in loan_id1:
-                    index = loan_id1.index(loan_id[i])
-                    loan[i]["loan_updated_status"] = "foreclosure"
-            print(day_left)
 
         lender_data = app_tables.fin_lender.search()
         lender_cus_id = []

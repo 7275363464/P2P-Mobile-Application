@@ -3,8 +3,10 @@ import os
 import random
 import smtplib
 import sqlite3
+from datetime import datetime
 from email.message import EmailMessage
 
+from bson import utc
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.core.window import Window
@@ -489,8 +491,60 @@ class MyApp(MDApp):
     def clear_label(self, label_id):
         self.root.get_screen('NewloanScreen').ids[label_id].text = ""
 
+    def extension_on(self):
+        extend = app_tables.fin_extends_loan.search()
+        approval_date = app_tables.fin_approval_days.search()
+        today_date = datetime.now(tz=utc).date()
+        foreclose = app_tables.fin_foreclosure.search()
+
+        requested_on = []
+        extend_status = []
+
+        s = 0
+        for i in extend:
+            s += 1
+            requested_on.append(i['extension_request_date'])
+            extend_status.append(i['status'])
+
+        for_request_time = []
+        foreclose_status = []
+
+        w = 0
+        for i in foreclose:
+            w += 1
+            for_request_time.append(i['requested_on'])
+            foreclose_status.append(i['status'])
+
+        status_type = []
+        app_date = []
+        for i in approval_date:
+            status_type.append(i['loans'])
+            app_date.append(i['days_for_approval'])
+
+        index = 0
+        if "Extension" in status_type:
+            index = status_type.index("Extension")
+        index1 = 0
+        if "Foreclosure" in status_type:
+            index = status_type.index("Foreclosure")
+
+        a = -1
+        for i in range(s):
+            a += 1
+            if extend_status[i] == "under process" and requested_on != None :
+                if ((today_date - requested_on[i].date()).days) >= app_date[index]:
+                    extend[i]["status"] = "approved"
+
+        y = -1
+        for i in range(w):
+            y += 1
+            if foreclose_status[i] == "under process" and for_request_time != None:
+                if ((today_date - for_request_time[i].date()).days) >= app_date[index1]:
+                    foreclose[i]["status"] = "approved"
+
     def on_start(self):
         Window.softinput_mode = "below_target"
+        self.extension_on()
 
 
 class MyScreenManager(ScreenManager):

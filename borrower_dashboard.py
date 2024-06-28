@@ -28,7 +28,7 @@ from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.list import ThreeLineAvatarIconListItem
 from kivymd.uix.spinner import MDSpinner
 from borrower_notification import NotificationScreen
-from borrower_extend_loan import ExtensionLoansRequest
+from borrower_extend_loan import ExtendLoan
 from borrower_view_transaction_history import TransactionBH
 from borrower_application_tracker import ALLLoansAPT
 from borrower_dues import BorrowerDuesScreen
@@ -8102,8 +8102,8 @@ class DashboardScreen(Screen):
         # Close the modal view after performing the action
         modal_view.dismiss()
 
-        self.manager.add_widget(Factory.ExtensionLoansRequest(name='ExtensionLoansRequest'))
-        self.manager.current = 'ExtensionLoansRequest'
+        self.manager.add_widget(Factory.ExtendLoan(name='ExtendLoan'))
+        self.manager.current = 'ExtendLoan'
 
     def go_to_fore_closer_details(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])

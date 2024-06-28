@@ -99,14 +99,27 @@ application_tracker = """
                             width: 2
                             points: self.x + dp(24), self.y + dp(12) , self.x + dp(24), self.y - dp(34)
 
-                MDLabel:
-                    id: label1
-                    text: "Application for #product_name Product Loan sent"
-                    theme_text_color: "Custom"
-                    text_color: 86/255, 94/255, 97/255, 1
+                BoxLayout:
+                    orientation: 'vertical'
                     size_hint_y: None
                     height: 50
 
+                    MDLabel:
+                        id: label1
+                        text: "Application for #product_name Product Loan sent"
+                        theme_text_color: "Custom"
+                        text_color: 86/255, 94/255, 97/255, 1
+                        size_hint_y: None
+                        height: 50
+
+                    MDLabel:
+                        id: sub_label1
+                        text: "Pending..."
+                        theme_text_color: "Custom"
+                        text_color: 0, 0, 1, 1
+                        size_hint_y: None
+                        height: 15  # Adjust height as needed
+                        font_style: "Caption"
 
                 MDIconButton:
                     id: icon3
@@ -122,13 +135,26 @@ application_tracker = """
                             width: 2
                             points: self.x + dp(24), self.y + dp(12) , self.x + dp(24), self.y - dp(34)
 
-                MDLabel:
-                    id: label3
-                    text: "Loan is approved "
-                    theme_text_color: "Custom"
-                    text_color: 86/255, 94/255, 97/255, 1
+                BoxLayout:
+                    orientation: 'vertical'
                     size_hint_y: None
                     height: 50
+                    MDLabel:
+                        id: label3
+                        text: "Loan is approved "
+                        theme_text_color: "Custom"
+                        text_color: 86/255, 94/255, 97/255, 1
+                        size_hint_y: None
+                        height: 50
+
+                    MDLabel:
+                        id: sub_label2
+                        text: "Pending..."
+                        theme_text_color: "Custom"
+                        text_color: 0, 0, 1, 1
+                        size_hint_y: None
+                        height: 15  # Adjust height as needed
+                        font_style: "Caption"
 
                 MDIconButton:
                     id: icon4
@@ -144,13 +170,26 @@ application_tracker = """
                             width: 2
                             points: self.x + dp(24), self.y + dp(12) , self.x + dp(24), self.y - dp(34)
 
-                MDLabel:
-                    id: label4
-                    text: "Loan has been disbursed"
-                    theme_text_color: "Custom"
-                    text_color: 86/255, 94/255, 97/255, 1
+                BoxLayout:
+                    orientation: 'vertical'
                     size_hint_y: None
                     height: 50
+                    MDLabel:
+                        id: label4
+                        text: "Loan has been disbursed"
+                        theme_text_color: "Custom"
+                        text_color: 86/255, 94/255, 97/255, 1
+                        size_hint_y: None
+                        height: 50
+
+                    MDLabel:
+                        id: sub_label3
+                        text: "Pending..."
+                        theme_text_color: "Custom"
+                        text_color: 0, 0, 1, 1
+                        size_hint_y: None
+                        height: 15  # Adjust height as needed
+                        font_style: "Caption"
 
                 MDIconButton:
                     id: icon5
@@ -160,13 +199,26 @@ application_tracker = """
                     size_hint_y: None
                     height: 50
 
-                MDLabel:
-                    id: label5
-                    text: "Loan is credited to a/c: xxxxxxxxxxx"
-                    theme_text_color: "Custom"
-                    text_color: 86/255, 94/255, 97/255, 1
+                BoxLayout:
+                    orientation: 'vertical'
                     size_hint_y: None
-                    height:dp(50)
+                    height: 50
+                    MDLabel:
+                        id: label5
+                        text: "Loan is credited to a/c: xxxxxxxxxxx"
+                        theme_text_color: "Custom"
+                        text_color: 86/255, 94/255, 97/255, 1
+                        size_hint_y: None
+                        height:50
+
+                    MDLabel:
+                        id: sub_label4
+                        text: "Pending..."
+                        theme_text_color: "Custom"
+                        text_color: 0, 0, 1, 1
+                        size_hint_y: None
+                        height: 15  # Adjust height as needed
+                        font_style: "Caption"
 
 
 """
@@ -182,12 +234,18 @@ class ApplicationTrackerScreen(Screen):
         loan_amount = []
         loan_status = []
         product_name = []
+        sub_date = []
+        lender_accepted_date = []
+        lender_disbursed_date = []
 
         for i in data:
             loan_id.append(i['loan_id'])
             loan_amount.append(i['loan_amount'])
             loan_status.append(i['loan_updated_status'])
             product_name.append(i['product_name'])
+            sub_date.append(i['borrower_loan_created_timestamp'])
+            lender_accepted_date.append(i['lender_accepted_timestamp'])
+            lender_disbursed_date.append(i['loan_disbursed_timestamp'])
         profile_email_id = []
         profile_account_number = []
 
@@ -204,85 +262,174 @@ class ApplicationTrackerScreen(Screen):
             index = loan_id.index(value)
             print(f"Loan Status: {loan_status[index]}")
             print(f"Processing loan with ID {value}")
-            if loan_status[index] == 'under process':
+            if loan_status[index] == 'under process':  # label1
                 print('under process')
                 self.ids.icon1.icon = 'circle-slice-8'
+                self.ids.icon1.theme_text_color = "Custom"
+                self.ids.icon1.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label1.text = f"Application for {product_name[index]} product loan sent"
                 self.ids.label1.theme_text_color = "Custom"
                 self.ids.label1.text_color = 0, 0, 0, 1
                 self.ids.label1.bold = True
+                self.ids.sub_label1.text = f"{sub_date[index].strftime('%Y-%m-%d')}"
+                self.ids.sub_label1.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label1.bold = True
                 self.ids.icon3.icon = 'checkbox-blank-circle-outline'
+                self.ids.icon3.theme_text_color = "Custom"
+                self.ids.icon3.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label3.text = f"Loan Approval status"
                 self.ids.label3.theme_text_color = "Custom"
-                self.ids.label3.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label3.text_color = 0, 0, 0, 1
                 self.ids.label3.bold = False
+                self.ids.sub_label2.text = f"Pending..."
+                self.ids.sub_label2.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label2.bold = False
                 self.ids.icon4.icon = 'checkbox-blank-circle-outline'
+                self.ids.icon4.theme_text_color = "Custom"
+                self.ids.icon4.text_color = 0.043, 0.145, 0.278, 1
                 self.ids.label4.theme_text_color = "Custom"
                 self.ids.label4.text_color = 0.043, 0.145, 0.278, 1
                 self.ids.label4.bold = False
+                self.ids.sub_label3.text = f"Pending..."
+                self.ids.sub_label3.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label3.bold = False
                 self.ids.icon5.icon = 'checkbox-blank-circle-outline'
+                self.ids.icon5.theme_text_color = "Custom"
+                self.ids.icon5.text_color = 0.043, 0.145, 0.278, 1
+                masked_account_number = 'xxxxxx' + profile_account_number[index1][-4:]
+                self.ids.label5.text = f"Loan credited to a/c {masked_account_number}"
                 self.ids.label5.theme_text_color = "Custom"
                 self.ids.label5.text_color = 0.043, 0.145, 0.278, 1
                 self.ids.label5.bold = False
-                self.ids.label1.text = f"Application for {product_name[index]} product loan sent"
+                self.ids.sub_label4.text = f"Pending..."
+                self.ids.sub_label4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label4.bold = False
 
-            elif loan_status[index] == 'approved':
+            elif loan_status[index] == 'approved':  # label2
                 self.ids.icon1.icon = 'circle-slice-8'
+                self.ids.icon1.theme_text_color = "Custom"
+                self.ids.icon1.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label1.text = f"Application for {product_name[index]} product loan sent"
                 self.ids.label1.theme_text_color = "Custom"
                 self.ids.label1.text_color = 0, 0, 0, 1
                 self.ids.label1.bold = True
-                self.ids.label1.text = f"Application for {product_name[index]} product loan sent"
+                self.ids.sub_label1.text = f"{sub_date[index].strftime('%Y-%m-%d')}"
+                self.ids.sub_label1.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label1.bold = True
                 self.ids.icon3.icon = 'circle-slice-8'
+                self.ids.icon3.theme_text_color = "Custom"
+                self.ids.icon3.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label3.text = f'Loan is approved for ₹{loan_amount[index]:.2f}'
                 self.ids.label3.theme_text_color = "Custom"
                 self.ids.label3.text_color = 0, 0, 0, 1
-                self.ids.label3.text = f'Loan is approved for ₹{loan_amount[index]:.2f}'
                 self.ids.label3.bold = True
+                self.ids.sub_label2.text = f"{lender_accepted_date[index].strftime('%Y-%m-%d %H:%M:%S')}"
+                self.ids.sub_label2.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label2.bold = True
                 self.ids.icon4.icon = 'checkbox-blank-circle-outline'
+                self.ids.icon4.theme_text_color = "Custom"
+                self.ids.icon4.text_color = 0.043, 0.145, 0.278, 1
                 self.ids.label4.theme_text_color = "Custom"
                 self.ids.label4.text_color = 0.043, 0.145, 0.278, 1
                 self.ids.label4.bold = False
+                self.ids.sub_label3.text = f"Pending..."
+                self.ids.sub_label3.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label3.bold = False
                 self.ids.icon5.icon = 'checkbox-blank-circle-outline'
+                self.ids.icon5.theme_text_color = "Custom"
+                self.ids.icon5.text_color = 0.043, 0.145, 0.278, 1
+                masked_account_number = 'xxxxxx' + profile_account_number[index1][-4:]
+                self.ids.label5.text = f"Loan credited to a/c {masked_account_number}"
                 self.ids.label5.theme_text_color = "Custom"
                 self.ids.label5.text_color = 0.043, 0.145, 0.278, 1
                 self.ids.label5.bold = False
-            elif loan_status[index] == 'disbursed':
+                self.ids.sub_label4.text = f"Pending..."
+                self.ids.sub_label4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label4.bold = False
+
+            elif loan_status[index] == 'disbursed':  # label3
                 self.ids.icon1.icon = 'circle-slice-8'
+                self.ids.icon1.theme_text_color = "Custom"
+                self.ids.icon1.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label1.text = f"Application for {product_name[index]} product loan sent"
                 self.ids.label1.theme_text_color = "Custom"
                 self.ids.label1.text_color = 0, 0, 0, 1
                 self.ids.label1.bold = True
-                self.ids.label1.text = f"Application for {product_name[index]} product loan sent"
+                self.ids.sub_label1.text = f"{sub_date[index].strftime('%Y-%m-%d')}"
+                self.ids.sub_label1.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label1.bold = True
                 self.ids.icon3.icon = 'circle-slice-8'
+                self.ids.icon3.theme_text_color = "Custom"
+                self.ids.icon3.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label3.text = f'Loan is approved for ₹{loan_amount[index]:.2f}'
                 self.ids.label3.theme_text_color = "Custom"
                 self.ids.label3.text_color = 0, 0, 0, 1
-                self.ids.label3.text = f'Loan is approved for ₹{loan_amount[index]:.2f}'
                 self.ids.label3.bold = True
+                self.ids.sub_label2.text = f"{lender_accepted_date[index].strftime('%Y-%m-%d %H:%M:%S')}"
+                self.ids.sub_label2.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label2.bold = True
                 self.ids.icon4.icon = 'circle-slice-8'
+                self.ids.icon4.theme_text_color = "Custom"
+                self.ids.icon4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label4.text = f"{product_name[index]} product loan has been disbursed"
                 self.ids.label4.theme_text_color = "Custom"
                 self.ids.label4.text_color = 0, 0, 0, 1
-                self.ids.label4.text = f"{product_name[index]} product loan has been disbursed"
                 self.ids.label4.bold = True
+                self.ids.sub_label3.text = f"{lender_disbursed_date[index].strftime('%Y-%m-%d %H:%M:%S')}"
+                self.ids.sub_label3.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label3.bold = True
                 self.ids.icon5.icon = 'circle-slice-8'
-                self.ids.label5.text = f"Loan credited to a/c {profile_account_number[index1]}"
+                self.ids.icon5.theme_text_color = "Custom"
+                self.ids.icon5.text_color = 0.043, 0.145, 0.278, 1
+                # to hide account number
+                masked_account_number = 'xxxxxx' + profile_account_number[index1][-4:]
+                self.ids.label5.text = f"Loan credited to a/c {masked_account_number}"
                 self.ids.label5.theme_text_color = "Custom"
                 self.ids.label5.text_color = 0, 0, 0, 1
                 self.ids.label5.bold = True
+                self.ids.sub_label4.text = f"Transaction Done."
+                self.ids.sub_label4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label4.bold = True
+
             elif loan_status[index] == 'rejected':
                 self.ids.icon1.icon = 'circle-slice-8'
+                self.ids.icon1.theme_text_color = "Custom"
+                self.ids.icon1.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label1.text = f"Application Rejected"
                 self.ids.label1.theme_text_color = "Custom"
                 self.ids.label1.text_color = 0, 0, 0, 1
                 self.ids.label1.bold = True
-                self.ids.label1.text = f"Application Rejected"
+                self.ids.sub_label1.text = f"{sub_date[index].strftime('%Y-%m-%d')}"
+                self.ids.sub_label1.text_color = 0.043, 0.145, 0.278, 1
                 self.ids.icon3.icon = 'cancel'
+                self.ids.icon3.theme_text_color = "Custom"
+                self.ids.icon3.text_color = 0.902, 0.141, 0.278, 1
+                self.ids.label3.text = f'Loan is Rejected ₹{loan_amount[index]:.2f}'
                 self.ids.label3.theme_text_color = "Custom"
                 self.ids.label3.text_color = 0, 0, 0, 1
-                self.ids.label3.text = f'Loan is Rejected ₹{loan_amount[index]:.2f}'
                 self.ids.label3.bold = True
+                self.ids.sub_label2.text = f"cancel..."
+                self.ids.sub_label2.text_color = 1, 0, 0, 1
                 self.ids.icon4.icon = 'checkbox-blank-circle-outline'
+                self.ids.icon4.theme_text_color = "Custom"
+                self.ids.icon4.text_color = 0.043, 0.145, 0.278, 1
                 self.ids.label4.theme_text_color = "Custom"
-                self.ids.label4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label4.text_color = 0, 0, 0, 1
                 self.ids.label4.bold = False
+                self.ids.sub_label3.text = f"Pending..."
+                self.ids.sub_label3.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label3.bold = False
                 self.ids.icon5.icon = 'checkbox-blank-circle-outline'
+                self.ids.icon5.theme_text_color = "Custom"
+                self.ids.icon5.text_color = 0.043, 0.145, 0.278, 1
+                masked_account_number = 'xxxxxx' + profile_account_number[index1][-4:]
+                self.ids.label5.text = f"Loan credited to a/c {masked_account_number}"
                 self.ids.label5.theme_text_color = "Custom"
                 self.ids.label5.text_color = 0.043, 0.145, 0.278, 1
                 self.ids.label5.bold = False
+                self.ids.sub_label4.text = f"Pending..."
+                self.ids.sub_label4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label4.bold = False
 
     def get_table(self):
         # Make a call to the Anvil server function

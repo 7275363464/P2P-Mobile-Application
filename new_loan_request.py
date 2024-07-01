@@ -1312,7 +1312,8 @@ class NewloanScreen2(Screen):
             self.ids.total_interest_amount.text = "₹" + " " + str(round(interest_amount, 2))
             processing_fee_amount = (processing_fee / 100) * p
             self.ids.total_processing_fee_amount.text = "₹" + " " + str(round(processing_fee_amount, 2))
-            total_repayment_amount = Monthly_EMI * t + interest_amount + processing_fee_amount
+            #total_repayment_amount = Monthly_EMI * t + interest_amount + processing_fee_amount
+            total_repayment_amount = loan_amount + interest_amount + processing_fee_amount
             self.ids.total.text = "₹" + " " + str(round(total_repayment_amount, 2))
 
     def on_pre_leave(self):
@@ -1435,7 +1436,8 @@ class NewloanScreen2(Screen):
                     total_processing_fee_amount=float(total_processing_fee_amount),
                     total_interest_amount=float(total_interest_amount),
                     monthly_emi=float(monthly_EMI),
-                    emi_payment_type=str(emi_type)
+                    emi_payment_type=str(emi_type),
+                    remaining_amount=float(total_repayment)
                 )
 
                 modal_view.dismiss()

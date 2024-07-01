@@ -1193,6 +1193,7 @@ class ViewLoansProfileScreen(Screen):
             pass
 
     def rejected_click(self):
+        rejected_date = datetime.now()
         data = app_tables.fin_loan_details.search()
         loan_id = self.loan_id
         borrower_name = None  # Initialize borrower_name to None
@@ -1206,6 +1207,7 @@ class ViewLoansProfileScreen(Screen):
                     borrower_name = i['borrower_full_name']  # Get borrower name for this loan ID
             index = loan_idlist.index(loan_id)
             data[index]['loan_updated_status'] = 'rejected'
+            data[index]['lender_rejected_timestamp'] = rejected_date
             sm = self.manager
             disbursed = ViewLoansProfileScreenRL(name='ViewLoansProfileScreenRL')
             sm.add_widget(disbursed)
@@ -1443,7 +1445,7 @@ class ViewLoansProfileScreenLR(Screen):
         if loan_id in loan_id_list:
             index = loan_id_list.index(loan_id)
 
-        loan_amount_text = float(self.ids.amount.text) - processing_fee[index]
+        loan_amount_text = float(self.ids.amount.text)
 
         b_index = -1
         l_index = -1

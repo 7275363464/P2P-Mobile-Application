@@ -398,18 +398,43 @@ class MyApp(MDApp):
         self.fetch_product_groups()
 
     def fetch_product_groups(self):
-        # Call the server function using Anvil Uplink
-        product_groups = app_tables.fin_product_details.search()
+        try:
+            # Fetch user email and profession
+            email = anvil.server.call('another_method')
+            user_row = app_tables.fin_user_profile.search(email_user=email)
 
-        # Extract unique product groups
-        unique_groups = set(product['product_group'] for product in product_groups)
+            if not user_row:
+                raise ValueError("User profile not found")
 
-        # Update the Spinner with unique product groups
-        spinner = self.root.get_screen('NewloanScreen').ids.group_id1
-        spinner.values = list(unique_groups)
-        # Clear other Spinners and labels
-        self.clear_spinners_and_labels(['group_id2', 'group_id3'])
-        self.clear_label('product_description')
+            user_profession = user_row[0]['profession']
+            #print(f"User profession: {user_profession}")  # Debug statement
+
+            # Fetch product details from the server
+            product_groups = app_tables.fin_product_details.search()
+
+            # Filter product groups based on user profession
+            filtered_product_groups = [
+                product for product in product_groups
+                if user_profession in [occ.strip() for occ in product['occupation'].split(',')]
+            ]
+
+            # Extract unique product groups
+            unique_groups = set(product['product_group'] for product in filtered_product_groups)
+
+            # Update the Spinner with unique product groups
+            spinner = self.root.get_screen('NewloanScreen').ids.group_id1
+            spinner.values = list(unique_groups)
+            # Clear other Spinners and labels
+            self.clear_spinners_and_labels(['group_id2', 'group_id3'])
+            self.clear_label('product_description')
+
+            # Debugging: Print the filtered product groups
+            #print(f"Number of product groups fetched: {len(unique_groups)}")
+            for group in unique_groups:
+                print(f"Filtered product group: {group}")
+
+        except Exception as e:
+            print(f"Error fetching product groups: {e}")
 
     def fetch_product_categories(self):
         # Clear other Spinners and labels

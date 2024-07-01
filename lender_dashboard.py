@@ -6599,7 +6599,7 @@ class LenderDashboard(Screen):
             lender_cus_id.append(i['customer_id'])
             create_date.append(i['member_since'])
             returns.append(i['return_on_investment'])
-            membership_type.append(i['membership_type'])
+            membership_type.append(i['membership'])
             present_commitment.append(i['present_commitments'])
         #
         if p_customer_id[log_index] in lender_cus_id:
@@ -7096,32 +7096,7 @@ class LenderDashboard(Screen):
         sm.current = 'ReportScreenLender'
 
     def refresh_profile_data(self):
-        email = self.get_email()
-        data = app_tables.fin_user_profile.search(email_user=email)
-        name = []
-        email1 = []
-        mobile_no = []
-        dob = []
-        city = []
-        gender = []
-        marrital_status = []
-        for row in data:
-            name.append(row['full_name'])
-            email1.append(row['email_user'])
-            mobile_no.append(row['mobile'])
-            dob.append(row['date_of_birth'])
-            city.append(row['city'])
-            gender.append(row['gender'])
-            marrital_status.append(row['marital_status'])
-        if email in email1:
-            index = email1.index(email)
-            self.ids.name.text = str(name[index])
-            self.ids.email.text = str(email1[index])
-            self.ids.mobile_no.text = str(mobile_no[index])
-            self.ids.dob.text = str(dob[index])
-            self.ids.city.text = str(city[index])
-            self.ids.gender.text = str(gender[index])
-            self.ids.marrital_status.text = str(marrital_status[index])
+        pass
 
     def get_email(self):
         # Make a call to the Anvil server function
@@ -7502,19 +7477,19 @@ class LenderDashboard(Screen):
         employee = self.get_business1()
         if employee is None:
             if not self.manager.has_screen('None'):
-                self.manager.add_widget(Factory.ViewBusinessScreen1(name='ViewBusinessScreen1'))
-            self.manager.current = 'ViewBusinessScreen1'
+                self.manager.add_widget(Factory.ViewBusinessScreen1(name='ViewBusinessScreen2'))
+            self.manager.current = 'ViewBusinessScreen2'
 
             print("Business is not available for the user.")
             # Handle this case as per your application's logic
         elif employee == 'Individual' or employee == 'individual':
             if not self.manager.has_screen('Individual'):
-                self.manager.add_widget(Factory.ViewBusinessScreen(name='ViewBusinessScreen'))
-            self.manager.current = 'ViewBusinessScreen'
+                self.manager.add_widget(Factory.ViewBusinessScreen(name='ViewBusinessScreen1'))
+            self.manager.current = 'ViewBusinessScreen1'
         else:
             if not self.manager.has_screen('None'):
-                self.manager.add_widget(Factory.ViewBusinessScreen1(name='ViewBusinessScreen1'))
-            self.manager.current = 'ViewBusinessScreen1'
+                self.manager.add_widget(Factory.ViewBusinessScreen1(name='ViewBusinessScreen2'))
+            self.manager.current = 'ViewBusinessScreen2'
 
     def get_business1(self):
         email = self.get_email()
@@ -7532,19 +7507,19 @@ class LenderDashboard(Screen):
         profession = self.get_profession()
         if profession is None:
             if not self.manager.has_screen('None'):
-                self.manager.add_widget(Factory.ViewProfessionalScreen(name='ViewProfessionalScreen'))
-            self.manager.current = 'ViewProfessionalScreen'
+                self.manager.add_widget(Factory.ViewProfessionalScreen(name='ViewProfessionalScreen1'))
+            self.manager.current = 'ViewProfessionalScreen1'
 
             print("Professional is not available for the user.")
             # Handle this case as per your application's logic
         elif profession == 'institutional' or profession == 'Institutional':
             if not self.manager.has_screen('institutional'):
-                self.manager.add_widget(Factory.ViewEmployeeScreen(name='ViewEmployeeScreen'))
-            self.manager.current = 'ViewEmployeeScreen'
+                self.manager.add_widget(Factory.ViewEmployeeScreen(name='ViewEmployeeScreen1'))
+            self.manager.current = 'ViewEmployeeScreen1'
         else:
             if not self.manager.has_screen('None'):
-                self.manager.add_widget(Factory.ViewProfessionalScreen(name='ViewProfessionalScreen'))
-            self.manager.current = 'ViewProfessionalScreen'
+                self.manager.add_widget(Factory.ViewProfessionalScreen(name='ViewProfessionalScreen1'))
+            self.manager.current = 'ViewProfessionalScreen1'
 
     def get_profession(self):
         email = self.get_email()
@@ -7559,8 +7534,8 @@ class LenderDashboard(Screen):
             return None
 
     def Edit_email(self):
-        self.manager.add_widget(Factory.ViewEditScreen7(name='ViewEditScreen7'))
-        self.manager.current = 'ViewEditScreen7'
+        self.manager.add_widget(Factory.ViewEditScreen7(name='ViewEditScreen8'))
+        self.manager.current = 'ViewEditScreen8'
 
     def help_module(self):
         from help_module import HelpScreen
@@ -7677,16 +7652,16 @@ class ViewAccountScreen(Screen):
         self.manager.current = 'LenderDashboard'
 
     def bank(self):
-        self.manager.add_widget(Factory.ViewBankScreen(name='ViewBankScreen1'))
-        self.manager.current = 'ViewBankScreen1'
+        self.manager.add_widget(Factory.ViewBankScreen(name='ViewBankScreen'))
+        self.manager.current = 'ViewBankScreen'
 
     def profile(self):
-        self.manager.add_widget(Factory.ViewProfileScreen(name='ViewProfileScreen1'))
-        self.manager.current = 'ViewProfileScreen1'
+        self.manager.add_widget(Factory.ViewProfileScreen(name='ViewProfileScreen'))
+        self.manager.current = 'ViewProfileScreen'
 
     def personal(self):
-        self.manager.add_widget(Factory.ViewPersonalScreen(name='ViewPersonalScreen1'))
-        self.manager.current = 'ViewPersonalScreen1'
+        self.manager.add_widget(Factory.ViewPersonalScreen(name='ViewPersonalScreen'))
+        self.manager.current = 'ViewPersonalScreen'
 
     def go_to_business1(self):
         employee = self.get_business1()
@@ -7766,7 +7741,7 @@ class ViewProfileScreen(Screen):
         for row in data:
             email1.append(row['email_id'])
             investment.append(row['investment'])
-            membership.append(row['membership_type'])
+            membership.append(row['membership'])
             returns.append(row['return_on_investment'])
             lending.append(row['lending_period'])
 
@@ -7781,7 +7756,10 @@ class ViewProfileScreen(Screen):
         pass
 
     def on_back_button_press(self):
-        self.manager.current = 'ViewAccountScreen'
+        if self.manager.current == 'ViewProfileScreen1':
+            self.manager.current = 'LenderDashboard'
+        else:
+            self.manager.current = 'ViewAccountScreen'
 
     def get_email(self):
         # Make a call to the Anvil server function
@@ -7928,7 +7906,10 @@ class ViewEmployeeScreen(Screen):
         self.manager.current = 'ViewEditScreen4'
 
     def on_back_button_press(self):
-        self.manager.current = 'ViewAccountScreen'
+        if self.manager.current == 'ViewEmployeeScreen1':
+            self.manager.current = 'LenderDashboard'
+        else:
+            self.manager.current = 'ViewAccountScreen'
 
     def get_email(self):
         # Make a call to the Anvil server function
@@ -8315,7 +8296,12 @@ class ViewEditScreen4(Screen):
         view.open()
 
     def on_back_button_press(self):
-        self.manager.current = 'ViewEmployeeScreen'
+        current_screen = self.manager.current
+
+        if current_screen == 'ViewEditScreen4':
+            self.manager.current = 'ViewEmployeeScreen1'
+        else:
+            self.manager.current = 'ViewEmployeeScreen'
 
     def get_email(self):
         # Make a call to the Anvil server function
@@ -8337,7 +8323,10 @@ class ViewEditScreen4(Screen):
 
 class ViewBusinessScreen1(Screen):
     def on_back_button_press(self):
-        self.manager.current = 'ViewAccountScreen'
+        if self.manager.current == 'ViewBusinessScreen2':
+            self.manager.current = 'LenderDashboard'
+        else:
+            self.manager.current = 'ViewAccountScreen'
 
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.on_back_button)
@@ -8354,7 +8343,10 @@ class ViewBusinessScreen1(Screen):
 
 class ViewProfessionalScreen(Screen):
     def on_back_button_press(self):
-        self.manager.current = 'ViewAccountScreen'
+        if self.manager.current == 'ViewProfessionalScreen1':
+            self.manager.current = 'LenderDashboard'
+        else:
+            self.manager.current = 'ViewAccountScreen'
 
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.on_back_button)
@@ -8499,7 +8491,10 @@ class ViewBusinessScreen(Screen):
         return anvil.server.call('another_method')
 
     def on_back_button_press(self):
-        self.manager.current = 'ViewAccountScreen'
+        if self.manager.current == 'ViewBusinessScreen1':
+            self.manager.current = 'LenderDashboard'
+        else:
+            self.manager.current = 'ViewAccountScreen'
 
     def on_pre_enter(self):
         self.business_screen()
@@ -8859,7 +8854,12 @@ class ViewEditScreen5(Screen):
         return anvil.server.call('another_method')
 
     def on_back_button_press(self):
-        self.manager.current = 'ViewBusinessScreen'
+        current_screen = self.manager.current
+
+        if current_screen == 'ViewEditScreen5':
+            self.manager.current = 'ViewBusinessScreen1'
+        else:
+            self.manager.current = 'ViewBusinessScreen'
 
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.on_back_button)
@@ -8983,7 +8983,12 @@ class ViewEditScreen6(Screen):
             return False
 
     def on_back_button_press(self):
-        self.manager.current = 'ViewBankScreen'
+        current_screen = self.manager.current
+
+        if current_screen == 'ViewEditScreen6':
+            self.manager.current = 'ViewBankScreen1'
+        else:
+            self.manager.current = 'ViewBankScreen'
 
     def get_email(self):
         # Make a call to the Anvil server function
@@ -9039,7 +9044,10 @@ class ViewBankScreen(Screen):
         self.bank_screen()
 
     def on_back_button_press(self):
-        self.manager.current = 'ViewAccountScreen'
+        if self.manager.current == 'ViewBankScreen1':
+            self.manager.current = 'LenderDashboard'
+        else:
+            self.manager.current = 'ViewAccountScreen'
 
     def get_email(self):
         # Make a call to the Anvil server function
@@ -9344,10 +9352,16 @@ class ViewPersonalScreen(Screen):
 
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'ViewAccountScreen'
+        if self.manager.current == 'ViewPersonalScreen1':
+            self.manager.current = 'LenderDashboard'
+        else:
+            self.manager.current = 'ViewAccountScreen'
 
     def on_back_button_press(self):
-        self.manager.current = 'ViewAccountScreen'
+        if self.manager.current == 'ViewPersonalScreen1':
+            self.manager.current = 'LenderDashboard'
+        else:
+            self.manager.current = 'ViewAccountScreen'
 
 
 class ViewEditScreen7(Screen):
@@ -9571,10 +9585,16 @@ class ViewEditScreen7(Screen):
 
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'ViewAccountScreen'
+        if self.manager.current == 'ViewEditScreen8':
+            self.manager.current = 'LenderDashboard'
+        else:
+            self.manager.current = 'ViewAccountScreen'
 
     def on_back_button_press(self):
-        self.manager.current = 'ViewAccountScreen'
+        if self.manager.current == 'ViewEditScreen8':
+            self.manager.current = 'LenderDashboard'
+        else:
+            self.manager.current = 'ViewAccountScreen'
 
     def refresh(self):
         self.__init__()
@@ -10127,10 +10147,16 @@ class ViewEditScreen1(Screen):
 
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'ViewPersonalScreen'
+        if self.manager.current == 'ViewEditScreen1':
+            self.manager.current = 'ViewPersonalScreen1'
+        else:
+            self.manager.current = 'ViewPersonalScreen'
 
     def on_back_button_press(self):
-        self.manager.current = 'ViewPersonalScreen'
+        if self.manager.current == 'ViewEditScreen1':
+            self.manager.current = 'ViewPersonalScreen1'
+        else:
+            self.manager.current = 'ViewPersonalScreen'
 
 
 class ReturnsScreen(Screen):

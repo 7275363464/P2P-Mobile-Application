@@ -433,7 +433,7 @@ class LenderDetails(Screen):
         for prof in profile:
             if prof['customer_id'] in self.lender_details:
                 self.lender_details[prof['customer_id']]['mobile_number'] = prof['mobile']
-                self.lender_details[prof['customer_id']]['lending_type'] = prof['lending_type']
+                self.lender_details[prof['customer_id']]['lending_type'] = prof['lendor_lending_type']
 
                 # Load profile photo if available
                 if prof['user_photo']:

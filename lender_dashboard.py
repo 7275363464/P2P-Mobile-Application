@@ -138,7 +138,7 @@ user_helpers1 = """
 
                                         MDLabel:
                                             id: notification_label
-                                            text: "3"
+                                            text:"3"
                                             size_hint_x: None
                                             width: self.texture_size[0]
                                             halign: "center"
@@ -8233,11 +8233,10 @@ class ViewEditScreen4(Screen):
                                            company_name, occupation_type, employment_type, landmark, last_six_months,
                                            organization_type, company_address)
         if success:
-            # self.show_validation_error("Database Update Sucessfully.")
-            # If the update was successful, navigate back to the dashboard screen
-            self.manager.add_widget(Factory.ViewAccountScreen(name='ViewAccountScreen'))
-            self.manager.current = 'ViewAccountScreen'
-
+            if self.manager.current == 'ViewEditScreen4':
+                self.manager.current = 'LenderDashboard'
+            else:
+                self.manager.current = 'ViewAccountScreen'
         else:
             # Handle the case where the update failed (e.g., display an error message)
             self.on_back_button_press()
@@ -8805,10 +8804,10 @@ class ViewEditScreen5(Screen):
                                            year_of_establish, industry_type, last_six_months, din, cin, office_address)
         if success:
 
-            # If the update was successful, navigate back to the dashboard screen
-            self.manager.add_widget(Factory.ViewAccountScreen(name='ViewAccountScreen'))
-            self.manager.current = 'ViewAccountScreen'
-
+            if self.manager.current == 'ViewEditScreen5':
+                self.manager.current = 'LenderDashboard'
+            else:
+                self.manager.current = 'ViewAccountScreen'
         else:
             # Handle the case where the update failed (e.g., display an error message)
             self.on_back_button_press()
@@ -8935,11 +8934,10 @@ class ViewEditScreen6(Screen):
         success = self.update_profile_data(account_holder, account_type, account_number, branch_name, bank_name,
                                            bank_id)
         if success:
-            # self.show_validation_error("Database Update Sucessfully.")
-            # If the update was successful, navigate back to the dashboard screen
-            self.manager.add_widget(Factory.ViewAccountScreen(name='ViewAccountScreen'))
-            self.manager.current = 'ViewAccountScreen'
-
+            if self.manager.current == 'ViewEditScreen6':
+                self.manager.current = 'LenderDashboard'
+            else:
+                self.manager.current = 'ViewAccountScreen'
         else:
             # Handle the case where the update failed (e.g., display an error message)
             self.on_back_button_press()
@@ -9933,10 +9931,10 @@ class ViewEditScreen1(Screen):
                                            email1, mobile_no, dob, gender)
 
         if success:
-            # self.show_validation_error("Database Update Sucessfully.")
-            # If the update was successful, navigate back to the dashboard screen
-            self.manager.add_widget(Factory.ViewAccountScreen(name='ViewAccountScreen'))
-            self.manager.current = 'ViewAccountScreen'
+            if self.manager.current == 'ViewEditScreen1':
+                self.manager.current = 'LenderDashboard'
+            else:
+                self.manager.current = 'ViewAccountScreen'
 
         else:
             # Handle the case where the update failed (e.g., display an error message)

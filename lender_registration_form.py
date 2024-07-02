@@ -1,5 +1,6 @@
 import re
 import os
+import json
 import base64
 from anvil import media
 from io import BytesIO
@@ -9676,6 +9677,7 @@ class LenderScreenIndividualBankForm2(Screen):
 
         data = app_tables.fin_user_profile.search()
         member = app_tables.fin_membership.search()
+        user_email = anvil.server.call('another_method')
         id_list = []
         email_id = ""
         user_name = ""
@@ -9695,15 +9697,7 @@ class LenderScreenIndividualBankForm2(Screen):
             lending_type = data[0]['loan_type']
         if member:
             membership = member[0]['membership_type']
-        if email_id and lending_type and lending_period and user_name and customer_id and investment and membership:
-            app_tables.fin_lender.add_row(user_name=user_name,
-                                          email_id=email_id,
-                                          customer_id=customer_id,
-                                          investment=investment,
-                                          membership=membership,
-                                          lending_period=lending_period,
-                                          lending_type=lending_type,
-                                          member_since=today)
+
         for i in data:
             id_list.append(i['email_user'])
         user_email = anvil.server.call('another_method')
@@ -9716,14 +9710,39 @@ class LenderScreenIndividualBankForm2(Screen):
             data[index]['last_confirm'] = True
             data[index]['profile_status'] = True
             data[index]['mobile_check'] = True
+            existing_record = app_tables.fin_lender.get(email_id=email_id)
+            if not existing_record:
+                app_tables.fin_lender.add_row(user_name=user_name,
+                                              email_id=email_id,
+                                              customer_id=customer_id,
+                                              investment=investment,
+                                              membership=membership,
+                                              lending_period=lending_period,
+                                              lending_type=lending_type,
+                                              member_since=today)
+            else:
+                # Optionally, update the existing record if needed
+                # existing_record.update(user_name=data[index]['full_name'], ...)
+                print(f"Record for {user_email} already exists. Skipping insertion.")
         else:
             print('email not found')
+        self.save_user_info(user_email, b)
         sm = self.manager
         lender_screen = LenderDashboard(name='LenderDashboard')
         sm.add_widget(lender_screen)
         sm.transition.direction = 'left'  # Set the transition direction explicitly
         sm.current = 'LenderDashboard'
 
+    def save_user_info(self, email, b):
+        with open("emails.json", "r") as file:
+            data = json.load(file)
+
+        # Update or create entry for the current user
+        data[email] = {"user_type": b, "logged_status": True}
+        print(data)
+        # Write updated data back to the file
+        with open("emails.json", "w") as file:
+            json.dump(data, file)
     def show_validation_error(self, error_message):
         dialog = MDDialog(
             title="Validation Error",

@@ -36,6 +36,7 @@ from kivy.uix.modalview import ModalView
 from kivy.clock import Clock
 from kivy.uix.label import Label
 from kivymd.uix.spinner import MDSpinner
+import json
 
 from borrower_dashboard import DashboardScreen
 
@@ -1372,6 +1373,11 @@ Borrower = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            
+            MDLabel:
+                text: "Upload Intermediate/PUC Certificate"
+                halign: 'left'
+                bold: True
 
             BoxLayout:
                 orientation: 'horizontal'
@@ -4343,8 +4349,7 @@ class BorrowerScreen(Screen):
         if user_email in id_list:
             index = id_list.index(user_email)
             self.ids.username.text = data[index]['full_name']
-            self.ids.gender_id.text = data[index]['gender']
-            self.ids.date_textfield.text = data[index]['date_of_birth']
+
         else:
             print('email not found')
 
@@ -4527,7 +4532,6 @@ class BorrowerScreen1(Screen):
             # Ensure index is within the bounds of the data and photo lists
             if index < len(data):
                 self.ids.mobile_number.text = data[index]['mobile']
-                self.ids.alternate_email.text = data[index]['mail_id']
             else:
                 print(f"Index {index} out of range for data list of length {len(data)}")
                 return
@@ -9447,27 +9451,47 @@ class BorrowerScreen19(Screen):
             data[index]['mobile_check'] = True
             data[index]['ascend_value'] = float(ascend)
 
-            app_tables.fin_borrower.add_row(
-                email_id=user_email,
-                user_name=data[index]['full_name'],
-                beseem_score=float(ascend),
-                customer_id=user_id_list[index],
-                bank_acc_details=data[index]['account_number'],
-                credit_limit=limit,
-                borrower_since=users[user_index]['signed_up'].date(),
-                wallet_id=wallet[wallet_index]['wallet_id']
-            )
+            existing_record = app_tables.fin_borrower.get(email_id=user_email)
 
+            # If the record does not exist, add a new row
+            if not existing_record:
+                app_tables.fin_borrower.add_row(
+                    email_id=user_email,
+                    user_name=data[index]['full_name'],
+                    ascend_score=float(ascend),
+                    customer_id=user_id_list[index],
+                    bank_acc_details=data[index]['account_number'],
+                    credit_limit=limit,
+                    borrower_since=users[user_index]['signed_up'].date(),
+                    wallet_id=wallet[wallet_index]['wallet_id']
+                )
+            else:
+                # Optionally, update the existing record if needed
+                # existing_record.update(user_name=data[index]['full_name'], ...)
+                print(f"Record for {user_email} already exists. Skipping insertion.")
         else:
             print('email not valid')
         print(user_id_list[index])
         print(ascend)
+        self.save_user_info(user_email, b)
 
         sm = self.manager
         borrower_screen = DashboardScreen(name='DashboardScreen')
         sm.add_widget(borrower_screen)
         sm.transition.direction = 'left'  # Set the transition direction explicitly
         sm.current = 'DashboardScreen'
+
+    def save_user_info(self, email, b):
+        with open("emails.json", "r") as file:
+            data = json.load(file)
+
+        # Update or create entry for the current user
+        data[email] = {"user_type": b, "logged_status": True}
+        print(data)
+        # Write updated data back to the file
+        with open("emails.json", "w") as file:
+            json.dump(data, file)
+
 
     def show_terms_dialog(self):
         dialog = MDDialog(
@@ -10247,7 +10271,8 @@ class BorrowerScreen24(Screen):
         user_email = anvil.server.call('another_method')
         if user_email in id_list:
             index = id_list.index(user_email)
-            data[index]['street'] = street
+            data[index]['street_adress_1'] = street
+            data[index]['street_address_2']=street_address2
             data[index]['duration_at_address'] = spinner_id
             data[index]['present_address'] = spinner_id2
         else:

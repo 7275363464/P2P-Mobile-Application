@@ -8,6 +8,7 @@ from io import BytesIO
 from kivy.core.image import Image as CoreImage
 from kivy.graphics import Color, Ellipse
 import anvil
+import os
 from anvil.tables import app_tables
 from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -118,21 +119,22 @@ user_helpers = '''
                                             pos_hint: {"center_y": 1.3}
                                             theme_text_color: 'Custom'
                                             text_color: 1, 1, 1, 1 
-
-
+        
+        
                                         MDLabel:
                                             id: notification_label
-                                            text: "3"
+                                            text: root.false_count_text
                                             size_hint_x: None
                                             width: self.texture_size[0]
                                             halign: "center"
                                             size_hint_x: None
-                                            width: dp(19)
+                                            width: dp(20)
                                             valign: "center"
                                             theme_text_color: 'Custom'
                                             text_color: 1, 0, 0, 1 
                                             font_name: "Roboto-Bold"
                                             pos_hint: {"center_y": 1.5}
+
                                     BoxLayout:
                                         size_hint_x: None
                                         width: dp(20)
@@ -744,6 +746,7 @@ user_helpers = '''
                         orientation: "horizontal"
                         pos_hint: {"top": 1}
                         size_hint_y: 0.15
+                        spacing: dp(10)
                         padding:dp(10)
                         canvas.before:
                             Color:
@@ -1048,7 +1051,7 @@ user_helpers = '''
                     id: selected_image1
                     size_hint: None, None
                     size: dp(80), dp(80)  # Make sure the size is a perfect square for a circular shape
-                    source: ""  # Set the path to your image source if needed
+                    source: 'icon8.png'  # Set the path to your image source if needed
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     allow_stretch: True
                     keep_ratio: True
@@ -3751,6 +3754,8 @@ user_helpers = '''
                             halign: 'left'
                             pos_hint: {'center_y': 0.5}
 
+                MDLabel:
+                    text: ' '
                 BoxLayout:
                     orientation: "horizontal"
                     size_hint_y: None
@@ -5713,6 +5718,8 @@ user_helpers = '''
                             halign: 'left'
                             pos_hint: {'center_y': 0.5}
 
+                MDLabel:
+                    text: ' '
                 BoxLayout:
                     orientation: "vertical"
                     size_hint_y: None
@@ -6001,7 +6008,7 @@ user_helpers = '''
                             id: selected_image1
                             size_hint: None, None
                             size: dp(80), dp(80)  # Make sure the size is a perfect square for a circular shape
-                            source: ""  # Set the path to your image source if needed
+                            source: 'icon8.png' # Set the path to your image source if needed
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                             allow_stretch: True
                             keep_ratio: True
@@ -6939,7 +6946,6 @@ class DashboardScreen(Screen):
         super().__init__(**kwargs)
         self.load_false_count()
         # Schedule the refresh every 5 seconds
-        Clock.schedule_interval(self.refresh_false_count, 5)
 
     def load_false_count(self):
         try:
@@ -7464,7 +7470,7 @@ class DashboardScreen(Screen):
             self.file_manager_open(icon_id, label_id, file_label_id, image_id)
 
     def on_edit(self):
-        self.manager.add_widget(Factory.EditScreen(name='EditScreen1'))
+        self.manager.add_widget(Factory.EditScreen1(name='EditScreen1'))
         self.manager.current = 'EditScreen1'
 
     def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
@@ -8302,26 +8308,29 @@ class AccountScreen(Screen):
         log_index = 0
         if log_email in email_user:
             log_index = email_user.index(log_email)
-            self.ids.username.text = "Welcome " + name_list[log_index]
+            self.ids.username.text = name_list[log_index]
             self.ids.username.font_style = 'H6'
-            self.ids.username.text = "Welcome " + name_list[log_index]
+            self.ids.username.text = name_list[log_index]
         else:
             # Handle the case when 'logged' is not in the status list
             self.ids.username.text = "User welcome to P2P"
 
-        users = app_tables.users.search()
-
-        user_email = []
+        borrower_data = app_tables.fin_borrower.search()
+        borrower_cus_id = []
+        credit_limit = []
         create_date = []
-        for i in users:
-            user_email.append(i['email'])
-            create_date.append(i['signed_up'])
+        for i in borrower_data:
+            borrower_cus_id.append(i['customer_id'])
+            credit_limit.append(i['credit_limit'])
+            create_date.append(i['borrower_since'])
 
-        if log_email in user_email:
-            user_index = user_email.index(log_email)
-            self.ids.date.text = "Joined Date: " + str(create_date[user_index].date())
+        if p_customer_id[log_index] in borrower_cus_id:
+            index1 = borrower_cus_id.index(p_customer_id[log_index])
+            self.ids.date.text = "[b]Joined Date[/b]: " + str(create_date[index1])
+            self.ids.date.text = "Joined Date: " + str(create_date[index1])
         else:
-            print("no email found")
+            self.ids.date.text = "[b]Joined Date[/b]: None"
+            self.ids.date.text = "[b]Joined Date[/b]: "
 
         data = app_tables.fin_wallet.search()
         w_email = []
@@ -8584,34 +8593,34 @@ class EmployeeScreen(Screen):
             else:
                 employee_id.append(None)
 
-                if row['last_six_month_bank_proof']:
-                    image_data = row['last_six_month_bank_proof'].get_bytes()
-                    if isinstance(image_data, bytes):
-                        print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
-                        # Assuming image_data is already a binary image file
-                        try:
-                            profile_texture_io = BytesIO(image_data)
-                            profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
-                            last_six_months.append(profile_texture_obj)
-                        except Exception as e:
-                            print(f"Error processing image for email {row['email_user']}: {e}")
-                            last_six_months.append(None)
-                    else:
-                        # If image_data is not bytes, assume it's base64 encoded and decode it
-                        try:
-                            image_data_binary = base64.b64decode(image_data)
-                            print(f"Decoded image data length: {len(image_data_binary)}")
-                            profile_texture_io = BytesIO(image_data_binary)
-                            profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
-                            last_six_months.append(profile_texture_obj)
-                        except base64.binascii.Error as e:
-                            print(f"Base64 decoding error for email {row['email_user']}: {e}")
-                            last_six_months.append(None)
-                        except Exception as e:
-                            print(f"Error processing image for email {row['email_user']}: {e}")
-                            last_six_months.append(None)
+            if row['last_six_month_bank_proof']:
+                image_data = row['last_six_month_bank_proof'].get_bytes()
+                if isinstance(image_data, bytes):
+                    print(f"Image data type: {type(image_data)}, length: {len(image_data)}")
+                    # Assuming image_data is already a binary image file
+                    try:
+                        profile_texture_io = BytesIO(image_data)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        last_six_months.append(profile_texture_obj)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        last_six_months.append(None)
                 else:
-                    last_six_months.append(None)
+                    # If image_data is not bytes, assume it's base64 encoded and decode it
+                    try:
+                        image_data_binary = base64.b64decode(image_data)
+                        print(f"Decoded image data length: {len(image_data_binary)}")
+                        profile_texture_io = BytesIO(image_data_binary)
+                        profile_texture_obj = CoreImage(profile_texture_io, ext='png').texture
+                        last_six_months.append(profile_texture_obj)
+                    except base64.binascii.Error as e:
+                        print(f"Base64 decoding error for email {row['email_user']}: {e}")
+                        last_six_months.append(None)
+                    except Exception as e:
+                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        last_six_months.append(None)
+            else:
+                last_six_months.append(None)
 
             email1.append(row['email_user'])
             company_name.append(row['company_name'])
@@ -8974,10 +8983,12 @@ class EditScreen4(Screen):
                                            company_name, occupation_type, employment_type, landmark, last_six_months,
                                            organization_type, company_address)
         if success:
-            # self.show_validation_error("Database Update Sucessfully.")
-            # If the update was successful, navigate back to the dashboard screen
-            self.manager.add_widget(Factory.AccountScreen(name='AccountScreen'))
-            self.manager.current = 'AccountScreen'
+            current_screen = self.manager.current
+
+            if current_screen == 'EditScreen4':
+                self.manager.current = 'DashboardScreen'
+            else:
+                self.manager.current = 'AccountScreen'
 
         else:
             # Handle the case where the update failed (e.g., display an error message)
@@ -9155,6 +9166,7 @@ class StudentScreen(Screen):
 
 
 class EditScreen3(Screen):
+    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         email = self.get_email()
@@ -9215,21 +9227,39 @@ class EditScreen3(Screen):
         pass
 
     def check_and_open_file_manager1(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "college_proof")
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "college_proof",
+                                         self.upload_image)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id):
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, upload_function):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id)
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id, upload_function)
             else:
                 self.request_media_images_permission()
         else:
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id)
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id, upload_function)
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id):
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, upload_function):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id),
+            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
+                                                       upload_function),
         )
         if platform == 'android':
             primary_external_storage = "/storage/emulated/0"
@@ -9237,13 +9267,16 @@ class EditScreen3(Screen):
         else:
             self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id):
-        self.upload_image(path)  # Upload the selected image
-        self.ids[image_id].source = path
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, upload_function):
+        upload_function(path)  # Upload the selected image using the provided function
+        self.ids[image_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
         self.file_manager.close()
 
     def upload_image(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -9257,7 +9290,7 @@ class EditScreen3(Screen):
 
             # Update user_photo column with the media object
             user_data['college_proof'] = user_photo_media
-
+            self.ids['college_proof'].source = ''
             print("Image uploaded successfully.")
         except Exception as e:
             print(f"Error uploading image: {e}")
@@ -9268,10 +9301,12 @@ class EditScreen3(Screen):
         college_address = self.ids.college_address.text
         success = self.update_profile_data(college_name, college_id, college_address)
         if success:
-            # self.show_validation_error("Database Update Sucessfully.")
-            # If the update was successful, navigate back to the dashboard screen
-            self.manager.add_widget(Factory.AccountScreen(name='AccountScreen'))
-            self.manager.current = 'AccountScreen'
+            current_screen = self.manager.current
+
+            if current_screen == 'EditScreen3':
+                self.manager.current = 'DashboardScreen'
+            else:
+                self.manager.current = 'AccountScreen'
 
         else:
             # Handle the case where the update failed (e.g., display an error message)
@@ -9424,10 +9459,12 @@ class EditScreen2(Screen):
         success = self.update_profile_data(type_of_land, acres, crop_name, yearly_income)
 
         if success:
-            # self.show_validation_error("Database Update Sucessfully.")
-            # If the update was successful, navigate back to the dashboard screen
-            self.manager.add_widget(Factory.AccountScreen(name='AccountScreen'))
-            self.manager.current = 'AccountScreen'
+            current_screen = self.manager.current
+
+            if current_screen == 'EditScreen2':
+                self.manager.current = 'DashboardScreen'
+            else:
+                self.manager.current = 'AccountScreen'
 
         else:
             # Handle the case where the update failed (e.g., display an error message)
@@ -9486,6 +9523,7 @@ class EditScreen2(Screen):
 
 
 class PersonalScreen(Screen):
+    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.refresh_profile_data()  # Initial data retrieval
@@ -9679,6 +9717,9 @@ class PersonalScreen(Screen):
 
     def upload_image(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -9692,6 +9733,7 @@ class PersonalScreen(Screen):
 
             # Update user_photo column with the media object
             user_data['user_photo'] = user_photo_media
+            self.ids['selected_image1'].source = ''
 
             print("Image uploaded successfully.")
         except Exception as e:
@@ -9977,33 +10019,33 @@ class EditScreen7(Screen):
                 account.update()
 
             # EMI Details
-            emi_details = app_tables.fin_emi_table.search(lender_email=old_email)
+            emi_details = app_tables.fin_emi_table.search(borrower_email=old_email)
             for loans in emi_details:
-                loans['lender_email'] = new_email
+                loans['borrower_email'] = new_email
                 loans.update()
 
             # Extends Table
-            extends_table = app_tables.fin_extends_loan.search(lender_email_id=old_email)
+            extends_table = app_tables.fin_extends_loan.search(borrower_email_id=old_email)
             for loans in extends_table:
-                loans['lender_email_id'] = new_email
+                loans['borrower_email_id'] = new_email
                 loans.update()
 
             # Foreclosure
-            foreclosure = app_tables.fin_foreclosure.search(lender_email_id=old_email)
+            foreclosure = app_tables.fin_foreclosure.search(borrower_email_id=old_email)
             for loans in foreclosure:
-                loans['lender_email_id'] = new_email
+                loans['borrower_email_id'] = new_email
                 loans.update()
 
-            # Lender
-            fin_lender = app_tables.fin_lender.search(email_id=old_email)
-            for lender in fin_lender:
-                lender['email_id'] = new_email
-                lender.update()
+            # Borrower
+            fin_borrower = app_tables.fin_borrower.search(email_id=old_email)
+            for borrower in fin_borrower:
+                borrower['email_id'] = new_email
+                borrower.update()
 
             # Loan Details
-            loan_details = app_tables.fin_loan_details.search(lender_email_id=old_email)
+            loan_details = app_tables.fin_loan_details.search(borrower_email_id=old_email)
             for loans in loan_details:
-                loans['lender_email_id'] = new_email
+                loans['borrower_email_id'] = new_email
                 loans.update()
 
             # Report Problem
@@ -10011,6 +10053,12 @@ class EditScreen7(Screen):
             for problem in report_problem:
                 problem['email'] = new_email
                 problem.update()
+
+            # Ascend Score
+            ascend_score = app_tables.fin_user_ascend_score.search(borrower_email_id=old_email)
+            for score in ascend_score:
+                score['borrower_email_id'] = new_email
+                score.update()
 
         except Exception as e:
             print(f"An error occurred while updating related tables: {e}")
@@ -10068,7 +10116,10 @@ class ProfileScreen(Screen):
         pass
 
     def on_back_button_press(self):
-        self.manager.current = 'AccountScreen'
+        if self.manager.current == 'ProfileScreen1':
+            self.manager.current = 'DashboardScreen'
+        else:
+            self.manager.current = 'AccountScreen'
 
     def get_email(self):
         # Make a call to the Anvil server function
@@ -10124,7 +10175,10 @@ class BankScreen(Screen):
         self.bank_screen()
 
     def on_back_button_press(self):
-        self.manager.current = 'AccountScreen'
+        if self.manager.current == 'BankScreen1':
+            self.manager.current = 'DashboardScreen'
+        else:
+            self.manager.current = 'AccountScreen'
 
     def get_email(self):
         # Make a call to the Anvil server function
@@ -10201,14 +10255,17 @@ class EditScreen6(Screen):
         bank_name = self.ids.bank_name.text
         bank_id = self.ids.bank_id.text
         branch_name = self.ids.branch_name.text
+        if not account_holder or account_holder.isdigit() or not account_holder[0].isupper():
+            self.show_validation_errors('Please Enter Valid Full Name')
+            return
         success = self.update_profile_data(account_holder, account_type, account_number, branch_name, bank_name,
                                            bank_id)
 
         if success:
-            # self.show_validation_error("Database Update Sucessfully.")
-            # If the update was successful, navigate back to the dashboard screen
-            self.manager.add_widget(Factory.AccountScreen(name='AccountScreen'))
-            self.manager.current = 'AccountScreen'
+            if self.manager.current == 'EditScreen6':
+                self.manager.current = 'DashboardScreen'
+            else:
+                self.manager.current = 'AccountScreen'
 
         else:
             # Handle the case where the update failed (e.g., display an error message)
@@ -10238,7 +10295,10 @@ class EditScreen6(Screen):
             return False
 
     def on_back_button_press(self):
-        self.manager.current = 'BankScreen'
+        if self.manager.current == 'EditScreen6':
+            self.manager.current = 'BankScreen1'
+        else:
+            self.manager.current = 'BankScreen'
 
     def get_email(self):
         # Make a call to the Anvil server function
@@ -10389,7 +10449,11 @@ class BusinessScreen(Screen):
         return anvil.server.call('another_method')
 
     def on_back_button_press(self):
-        self.manager.current = 'AccountScreen'
+        if self.manager.current == 'BusinessScreen1':
+            self.manager.current = 'DashboardScreen'
+        else:
+            self.manager.current = 'AccountScreen'
+
 
     def on_pre_enter(self):
         self.business_screen()
@@ -10622,6 +10686,9 @@ class EditScreen5(Screen):
 
     def upload_image(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -10637,11 +10704,15 @@ class EditScreen5(Screen):
             user_data['last_six_month_bank_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['six_bank'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image1(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -10654,10 +10725,10 @@ class EditScreen5(Screen):
             user_data = data[0]
 
             # Update user_photo column with the media object
-            user_data['last_six_month_bank_proof'] = user_photo_media
             user_data['proof_verification'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['proof'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -10677,10 +10748,10 @@ class EditScreen5(Screen):
         success = self.update_profile_data(business_name, business_address, business_type, employee_working,
                                            year_of_establish, industry_type, last_six_months, din, cin, office_address)
         if success:
-
-            # If the update was successful, navigate back to the dashboard screen
-            self.manager.add_widget(Factory.AccountScreen(name='AccountScreen'))
-            self.manager.current = 'AccountScreen'
+            if self.manager.current == 'EditScreen5':
+                self.manager.current = 'DashboardScreen'
+            else:
+                self.manager.current = 'AccountScreen'
 
         else:
             # Handle the case where the update failed (e.g., display an error message)
@@ -10727,7 +10798,11 @@ class EditScreen5(Screen):
         return anvil.server.call('another_method')
 
     def on_back_button_press(self):
-        self.manager.current = 'BusinessScreen'
+        if self.manager.current == 'EditScreen5':
+            self.manager.current = 'BusinessScreen1'
+        else:
+            self.manager.current = 'BusinessScreen'
+
 
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.on_back_button)
@@ -11016,6 +11091,9 @@ class EditScreen1(Screen):
 
     def upload_image1(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -11031,11 +11109,16 @@ class EditScreen1(Screen):
             user_data['user_photo'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['selected_image1'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image2(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -11048,11 +11131,16 @@ class EditScreen1(Screen):
             user_data = data[0]
             user_data['aadhaar_photo'] = user_photo_media
             print("Image uploaded successfully.")
+            self.ids['upload_gov_id1_img'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def upload_image3(self, file_path):
         try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+
             user_photo_media = media.from_file(file_path, mime_type='image/png')
 
             email = self.get_email()
@@ -11068,6 +11156,7 @@ class EditScreen1(Screen):
             user_data['pan_photo'] = user_photo_media
 
             print("Image uploaded successfully.")
+            self.ids['upload_gov_id2_img'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
@@ -11100,6 +11189,9 @@ class EditScreen1(Screen):
         home_loan = self.ids.home.text
         personal_credit = self.ids.personal.text
         vehicle_loans = self.ids.two.text
+        if not name or len(name.split()) < 2 or name.isdigit() or not name[0].isupper():
+            self.show_validation_errors('Please Enter Full Name and first letter should be capital')
+            return
         # Update the database with the edited data
         # Replace 'update_profile_data' with your actual database update function
         success = self.update_profile_data(vehicle_loans, personal_credit, home_loan, other_loan, profession,
@@ -11108,17 +11200,34 @@ class EditScreen1(Screen):
                                            email1, mobile_no, dob, gender)
 
         if success:
-            self.update_email_logic(email1, name)
+            if self.manager.current == 'EditScreen1':
+                self.manager.current = 'DashboardScreen'
+            else:
+                self.manager.current = 'AccountScreen'
             # self.show_validation_error("Database Update Sucessfully.")
             # If the update was successful, navigate back to the dashboard screen
-            self.manager.add_widget(Factory.AccountScreen(name='AccountScreen'))
-            self.manager.current = 'AccountScreen'
 
         else:
             # Handle the case where the update failed (e.g., display an error message)
             self.on_back_button_press()
 
     def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
+    def show_validation_errors(self, error_message):
         dialog = MDDialog(
             title="Validation Error",
             text=error_message,
@@ -11254,8 +11363,6 @@ class EditScreen1(Screen):
         except Exception as e:
             print(f"An error occurred while updating related tables: {e}")
 
-    def update_email_logic(self, email1, name):
-        self.manager.current = 'MainScreen'
 
     def get_email(self):
         # Make a call to the Anvil server function

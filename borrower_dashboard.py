@@ -114,7 +114,7 @@ user_helpers = '''
 
                                         MDIconButton:
                                             icon: "bell"
-                                            on_touch_down: root.go_to_lender_notification() if self.collide_point(*args[1].pos) else None    
+                                            on_touch_down: root.notification() if self.collide_point(*args[1].pos) else None    
                                             pos_hint: {"center_y": 1.3}
                                             theme_text_color: 'Custom'
                                             text_color: 1, 1, 1, 1 

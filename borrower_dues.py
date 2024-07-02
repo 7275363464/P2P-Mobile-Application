@@ -70,255 +70,262 @@ user_helpers2 = """
         cols: 1
 
         MDTopAppBar:
-            title:"Today's Dues"
-            md_bg_color:0.043, 0.145, 0.278, 1
+            title: "Today's Dues"
+            md_bg_color: 0.043, 0.145, 0.278, 1
             theme_text_color: 'Custom'
-            text_color: 1,1,1,1 
-            size_hint:1,None
+            text_color: 1, 1, 1, 1
+            size_hint: 1, None
             elevation: 3
             left_action_items: [['arrow-left', lambda x: root.go_back()]]
             right_action_items: [['wallet']]
-            pos_hint: {'top': 1} 
+            pos_hint: {'top': 1}
 
-        BoxLayout:
-            orientation: 'vertical'
-            spacing: dp(50)
-            padding: dp(30)
-            size_hint_y: None
-            height: self.minimum_height
-            canvas.before:
-                Color:
-                    rgba: 230/255, 245/255, 255/255, 1 
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [1, 1, 1, 1]
-                    source: "background.jpg"
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            GridLayout:
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height 
 
-            MDGridLayout:
-                cols: 2
-
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: dp(50)
+                    padding: dp(30)
+                    size_hint_y: None
+                    height: self.minimum_height
+                    canvas.before:
+                        Color:
+                            rgba: 230/255, 245/255, 255/255, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [1, 1, 1, 1]
+                            source: "background.jpg"
+    
+                    MDGridLayout:
+                        cols: 2
+    
+                        MDLabel:
+                            text: 'Loan Amount:'
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 0, 0, 0, 1
+                            bold: True
+    
+                    MDGridLayout:
+                        cols: 2
+                        MDIconButton:
+                            icon: 'currency-inr'
+                            halign: 'left'
+                            size_hint_y: None
+                            height: dp(1)
+                            theme_text_color: 'Custom'
+                            text_color: 0, 0, 0, 1
+                            bold: True
+    
+                        MDLabel:
+                            id: loan_amount1
+                            halign: 'left'
+                            bold: True
+                            theme_text_color: 'Custom'
+                            text_color: 0, 0, 0, 1
+                            bold: True
+    
+                    MDLabel:
+                        text: ''
+                        halign: 'left'
+                        size_hint_y: None
+                        height: dp(5)
+    
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: 'Borrower Name'
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 0, 0, 0, 1
+                            bold: True
+    
+                        MDLabel:
+                            id: name
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold: True
+    
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: 'Tenure'
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 0, 0, 0, 1
+                            bold: True
+    
+                        MDLabel:
+                            id: tenure
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold: True
+    
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: 'Interest Rate'
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 0, 0, 0, 1
+                            bold: True
+    
+                        MDLabel:
+                            id: interest_rate
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold: True
+    
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: 'Account Number'
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 0, 0, 0, 1
+                            bold: True
+    
+                        MDLabel:
+                            id: account_number
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold: True
+    
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: 'Loan Status'
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 0, 0, 0, 1
+                            bold: True
+    
+                        MDLabel:
+                            id: status
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold: True
+    
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: 'Emi Amount'
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 0, 0, 0, 1
+                            bold: True
+    
+                        MDLabel:
+                            id: emi_amount
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold: True
+    
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            id: extra
+                            text: 'Extra Payment'
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 0, 0, 0, 1
+                            bold: True
+    
+                        MDLabel:
+                            id: extra_amount
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold: True
+    
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            id: total
+                            text: 'Total Amount'
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 0, 0, 0, 1
+                            bold: True
+    
+                        MDLabel:
+                            id: total_amount
+                            halign: 'left'
+                            theme_text_color: 'Custom'
+                            text_color: 140/255, 140/255, 140/255, 1
+                            bold: True
+    
+                    MDGridLayout:
+                        cols: 2
+                        MDLabel:
+                            text: "Payment Details"
+                            font_size: dp(16)
+                            bold: True
+                            halign: "left"
+    
+                        Button:
+                            text: 'View Payments                   '
+                            background_color: 0, 0, 0, 0
+                            color: 0, 0.5, 1, 1
+                            font_size: '15sp'
+                            halign: "left"
+                            size_hint: None, None
+                            size: self.texture_size
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.28}
+                            on_release: root.go_to_menu_screen()
+                            halign: "left"
+    
                 MDLabel:
-                    text: 'Loan Amount:'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    bold: True
-            MDGridLayout:
-                cols: 2
-                MDIconButton:
-                    icon: 'currency-inr'
+                    text: ''
                     halign: 'left'
                     size_hint_y: None
-                    height: dp(1)
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    bold: True
-
-                MDLabel:
-                    id: loan_amount1
-                    halign: 'left'
-                    bold: True
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    bold: True
-
-            MDLabel:
-                text: ''
-                halign: 'left'
-                size_hint_y: None
-                height: dp(5)
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Borrower Name'
-                    halign: 'left'
-                    ttheme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    bold: True
-
-                MDLabel:
-                    id: name
-                    halign: 'left'
-                    theme_text_color: 'Custom' 
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True   
-
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Tenure'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    bold: True
-
-                MDLabel:
-                    id: tenure
-                    halign: 'left'
-                    theme_text_color: 'Custom' 
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-
-
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Interest Rate'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    bold: True
-
-                MDLabel:
-                    id: interest_rate
-                    halign: 'left'
-                    theme_text_color: 'Custom' 
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Account Number'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    bold: True
-
-                MDLabel:
-                    id: account_number
-                    halign: 'left'
-                    theme_text_color: 'Custom' 
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Loan Status'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    bold: True
-
-                MDLabel:
-                    id: status
-                    halign: 'left'
-                    theme_text_color: 'Custom' 
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Emi Amount'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    bold: True
-
-                MDLabel:
-                    id: emi_amount
-                    halign: 'left'
-                    theme_text_color: 'Custom' 
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    id: extra
-                    text: 'Extra Payment'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    bold: True
-
-                MDLabel:
-                    id: extra_amount
-                    halign: 'left'
-                    theme_text_color: 'Custom' 
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    id: total
-                    text: 'Total Amount'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1
-                    bold: True
-
-                MDLabel:
-                    id: total_amount
-                    halign: 'left'
-                    theme_text_color: 'Custom' 
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-
-            MDGridLayout:
-                cols: 2
-
-                MDLabel:
-                    text: "Payment Details"
-                    font_size:dp(16)
-                    bold:True
-                    halign:"left"
-
-                Button:
-                    text:'View Payments                   '
-                    background_color: 0, 0, 0, 0
-                    color: 0, 0.5, 1, 1
-                    font_size: '15sp'
-                    halign:"left"
-                    size_hint: None, None
-                    size: self.texture_size
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.28}
-                    on_release: root.go_to_menu_screen()
-                    halign:"left"
-
-
-
-
-        MDLabel:
-            text: ''
-            halign: 'left'
-            size_hint_y: None
-            height: dp(55)
-
-        MDBoxLayout:
-            orientation: 'horizontal'
-            spacing: dp(30)
-            padding: dp(30)
-            size_hint_y: None
-            height: self.minimum_height
-            canvas.before:
-                Color:
-                    rgba: 249/255, 249/255, 247/255, 1 
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [25, 25, 25, 25]
-            MDRaisedButton:
-                text: "Part Payment"
-                md_bg_color:0.043, 0.145, 0.278, 1
-                on_release: root.go_to_part_payment()
-                pos_hint: {'center_x': 0.5, 'center_y': 2}
-                size_hint: 0.4, None 
-                font_name:"Roboto-Bold"
-                font_size:dp(15) 
-
-            MDRaisedButton:
-                id: pay
-                text: "Pay Now"
-                md_bg_color:0.043, 0.145, 0.278, 1
-                on_release: root.go_to_paynow()
-                pos_hint: {'center_x': 0.5, 'center_y': 2}
-                size_hint: 0.4, None 
-                font_name:"Roboto-Bold"
-                font_size:dp(15) 
+                    height: dp(55)
+        
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(30)
+                    padding: dp(30)
+                    size_hint_y: None
+                    height: self.minimum_height
+                    canvas.before:
+                        Color:
+                            rgba: 249/255, 249/255, 247/255, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [25, 25, 25, 25]
+        
+                    MDRaisedButton:
+                        text: "Part Payment"
+                        md_bg_color: 0.043, 0.145, 0.278, 1
+                        on_release: root.go_to_part_payment()
+                        pos_hint: {'center_x': 0.5, 'center_y': 2}
+                        size_hint: 0.4, None
+                        font_name: "Roboto-Bold"
+                        font_size: dp(15)
+        
+                    MDRaisedButton:
+                        id: pay
+                        text: "Pay Now"
+                        md_bg_color: 0.043, 0.145, 0.278, 1
+                        on_release: root.go_to_paynow()
+                        pos_hint: {'center_x': 0.5, 'center_y': 2}
+                        size_hint: 0.4, None
+                        font_name: "Roboto-Bold"
+                        font_size: dp(15)
 
 <PartPayment>          
     GridLayout:
@@ -904,10 +911,13 @@ class BorrowerDuesScreen(Screen):
         elif loan_status[index] == "extension":
             emi_number = 0
             emi_data = app_tables.fin_emi_table.search(loan_id=str(value))
+            emi_data1 = app_tables.fin_emi_table.search()
             if emi_data and value in emi_loan_id:
-                emi = emi_data[0]
+                last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
+                print(last_index, emi_data1[0])
+                emi = emi_data1[last_index]
                 emi_number = emi['emi_number']
-            print(loan_status[index])
+                print(loan_status[index], emi)
             extend_row = app_tables.fin_extends_loan.get(
                 loan_id=str(value),
                 emi_number=emi_number
@@ -915,7 +925,7 @@ class BorrowerDuesScreen(Screen):
             if extend_row is not None and extend_row['status'] == "approved":
                 extend_amount += extend_row['extension_amount']
                 new_emi_amount += extend_row['new_emi']
-                total_amount = new_emi_amount + extend_amount
+                total_amount = new_emi_amount
                 print(new_emi_amount, extend_amount)
                 print(extend_amount)
                 next_emi_num = emi_number + 1
@@ -960,7 +970,7 @@ class BorrowerDuesScreen(Screen):
                     product_index = product_id.index(loan_product[index])
                     lapsed_percentage = lapsed_fee[product_index] + days_left
                     lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
-                    self.ids.extra_amount.text = str(round(extend_amount + lapsed_amount, 2))
+                    self.ids.extra_amount.text = str(round(lapsed_amount, 2))
                     self.ids.emi_amount.text = str(new_emi_amount)
                     self.ids.total_amount.text = str(round(total_amount + lapsed_amount + processing_fee, 2))
                     self.ids.extra.text = "Extra Payment (Late payment Fee)"
@@ -977,7 +987,7 @@ class BorrowerDuesScreen(Screen):
                         default_amount = default_fee_amount[product_index]
                     lapsed_percentage = lapsed_fee[product_index] + days_left
                     lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
-                    extra_payment = extend_amount + default_amount + lapsed_amount
+                    extra_payment =  default_amount + lapsed_amount
                     total_payment = total_amount + default_amount + lapsed_amount
                     self.ids.extra_amount.text = str(round(extra_payment, 2))
                     self.ids.emi_amount.text = str(new_emi_amount)
@@ -1001,7 +1011,7 @@ class BorrowerDuesScreen(Screen):
                         default_amount = (monthly_emi[index] * default_percentage) / 100
                     elif default_type[product_index] == 'Default fee (₹)':
                         default_amount = default_fee_amount[product_index]
-                    extra_payment_total = extend_amount + npa_amount + lapsed_amount + default_amount
+                    extra_payment_total = npa_amount + lapsed_amount + default_amount
                     total_payment = total_amount + npa_amount + lapsed_amount + default_amount
                     self.ids.extra_amount.text = str(round(extra_payment_total, 2))
                     self.ids.emi_amount.text = str(new_emi_amount)
@@ -1858,11 +1868,6 @@ class PartPayment(Screen):
             payment_type.append(i['payment_type'])
             emi_remain_amount.append(i['total_remaining_amount'])
 
-        last_index = 0
-        if value not in emi_loan_id:
-            emi_number = 1
-        else:
-            last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
 
         product = app_tables.fin_product_details.search()
         product_id = []
@@ -1922,16 +1927,6 @@ class PartPayment(Screen):
             remaining_amount_list.append(i['remaining_amount'])
             emi_amount.append(i['monthly_emi'])
 
-        loan_details = app_tables.fin_loan_details.search()
-        loan_id1 = []
-        remain_amount = []
-        for i in loan_details:
-            loan_id1.append(i['loan_id'])
-            remain_amount.append(i['remaining_amount'])
-        if value in loan_id1:
-            index0 = loan_id1.index(value)
-            self.ids.remain.text = str(remain_amount[index0])
-
         index = 0
 
         if value in loan_id:
@@ -1942,6 +1937,14 @@ class PartPayment(Screen):
             self.ids.status.text = str(loan_status[index])
             self.ids.interest_rate.text = str(interest[index])
             self.ids.emi_amount.text = str(monthly_emi[index])
+
+        last_index = 0
+
+        if value not in emi_loan_id:
+            self.ids.remain.text = str(remain_amount[index])
+        else:
+            last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
+            self.ids.remain.text = str(emi_remain_amount[last_index])
 
         cos_id = []
         account_num = []
@@ -2382,9 +2385,10 @@ class PartPayment(Screen):
         elif loan_status[index] == "extension":
             part_payment_extra_amount = 0
             emi_number = 0
-            emi_data = app_tables.fin_emi_table.search(loan_id=str(value))
+            #emi_data = app_tables.fin_emi_table.search(loan_id=str(value))
+            emi_data = app_tables.fin_emi_table.search()
             if emi_data and value in emi_loan_id:
-                emi = emi_data[0]
+                emi = emi_data[last_index]
                 emi_number = emi['emi_number']
             print(loan_status[index])
             extend_row = app_tables.fin_extends_loan.get(
@@ -2394,7 +2398,7 @@ class PartPayment(Screen):
             if extend_row is not None and extend_row['status'] == "approved":
                 extend_amount += extend_row['extension_amount']
                 new_emi_amount += extend_row['new_emi']
-                total_amount = new_emi_amount + extend_amount
+                total_amount = new_emi_amount
                 print(new_emi_amount, extend_amount)
                 print(extend_amount)
                 next_emi_num = emi_number + 1
@@ -2438,19 +2442,20 @@ class PartPayment(Screen):
                         part_days_left = (today_date - part_payment_date[last_index]).days
 
                 self.days2 = part_days_left
+                print(late_fee)
                 if late_fee == 'lapsed fee':
                     part_late_fee = None
                     special_index = 0
                     product_index = product_id.index(loan_product[index])
                     lapsed_percentage = lapsed_fee[product_index] + days_left
                     lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
-                    extend_amount += extend_row['extension_amount'] + lapsed_amount
+                    extend_amount = lapsed_amount
                     part_pay = (total_amount + extend_amount) / 2
-                    self.ids.extra_amount.text = str(round(extend_amount + lapsed_amount, 2))
+                    self.ids.extra_amount.text = str(round(extend_amount, 2))
                     self.ids.emi_amount.text = str(new_emi_amount)
                     self.ids.total_amount.text = str(round(total_amount + lapsed_amount + processing_fee, 2))
                     self.ids.extra.text = "Extra Payment (Late payment Fee)"
-                    self.ids.amount1.text = str(round(part_pay, 2))
+                    self.ids.amount1.text = str(round(float(self.ids.total_amount.text), 2))
                     data1[index]['loan_state_status'] = "lapsed"
 
                     if value in emi_loan_id:
@@ -2468,31 +2473,32 @@ class PartPayment(Screen):
                             if part_late_fee == 'lapsed fee':
                                 days = days_left + part_days_left - min_days[special_index] + 1
                                 lapsed_percentage = lapsed_fee[product_index] + days
+                                lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 self.ids.extra_amount.text = str(
-                                    round(extend_amount + lapsed_amount + (part_payment_extra_amount / 2),
+                                    round( (part_payment_extra_amount),
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + extend_amount + lapsed_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee,
+                                    round(total_amount + (
+                                                part_payment_extra_amount) + processing_fee,
                                           2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                             elif part_late_fee == 'default fee':
                                 days = days_left + part_days_left - min_days[special_index] + 1
                                 lapsed_percentage = lapsed_fee[product_index] + days
-                                part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
+                                lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 default_percentage = default_fee_percentage[product_index] + days
                                 if default_type[product_index] == 'Default fee (%)':
                                     part_payment_extra_amount = (monthly_emi[index] * default_percentage) / 100
                                 elif default_type[product_index] == 'Default fee (₹)':
                                     part_payment_extra_amount = default_fee_amount[product_index] * days
                                 self.ids.extra_amount.text = str(
-                                    round(extend_amount + part_payment_extra_amount + lapsed_amount + (
-                                            part_payment_extra_amount / 2),
+                                    round(lapsed_amount + (
+                                            part_payment_extra_amount),
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + extend_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee, 2))
+                                    round(total_amount + lapsed_amount + (
+                                                part_payment_extra_amount) + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount,
                                       (part_payment_extra_amount / 2))
@@ -2513,16 +2519,15 @@ class PartPayment(Screen):
                                     npa_extra_amount = (monthly_emi[index] * npa_percentage) / 100
                                 elif npa_type[product_index] == 'Non Performing Asset (₹)':
                                     npa_extra_amount = default_fee_amount[product_index]
-                                part_payment_extra_amount = part_payment_extra_amount + npa_extra_amount
+                                #part_payment_extra_amount = part_payment_extra_amount + npa_extra_amount
                                 self.ids.extra_amount.text = str(
                                     round(
-                                        extend_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2),
+                                        (npa_extra_amount + lapsed_amount + part_payment_extra_amount),
                                         2))
                                 self.ids.total_amount.text = str(
                                     round(
-                                        total_amount + extend_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee, 2))
+                                        total_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
+                                                part_payment_extra_amount) + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(part_payment_extra_amount / 2, days)
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount, npa_extra_amount,
@@ -2539,14 +2544,16 @@ class PartPayment(Screen):
                         default_amount = (monthly_emi[index] * default_percentage) / 100
                     elif default_type[product_index] == 'Default fee (₹)':
                         default_amount = default_fee_amount[product_index]
-                    extend_amount += extend_row['extension_amount'] + lapsed_amount + default_amount
+
+                    print(lapsed_amount, default_amount, extend_row['extension_amount'])
+                    extend_amount = lapsed_amount + default_amount
                     part_pay = (total_amount + extend_amount) / 2
-                    self.ids.extra_amount.text = str(round(extend_amount + default_amount + lapsed_amount, 2))
+                    self.ids.extra_amount.text = str(round(extend_amount, 2))
                     self.ids.emi_amount.text = str(new_emi_amount)
                     self.ids.total_amount.text = str(
                         round(total_amount + default_amount + lapsed_amount + processing_fee, 2))
                     self.ids.extra.text = "Extra Payment (Default)"
-                    self.ids.amount1.text = str(round(part_pay, 2))
+                    self.ids.amount1.text = str(round(float(self.ids.total_amount.text)/2, 2))
                     if value in emi_loan_id:
                         if payment_type[last_index] == 'part payment':
                             part_days_left = (today_date - part_payment_date[last_index]).days
@@ -2565,30 +2572,27 @@ class PartPayment(Screen):
                                 lapsed_percentage = lapsed_fee[product_index] + days
                                 part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 self.ids.extra_amount.text = str(
-                                    round(extend_amount + lapsed_amount + (part_payment_extra_amount / 2),
-                                          2))
+                                    round(part_payment_extra_amount,2))
                                 self.ids.total_amount.text = str(
                                     round(
-                                        total_amount + extend_amount + lapsed_amount + (
-                                                    part_payment_extra_amount / 2) + processing_fee,
+                                        total_amount + (
+                                                    part_payment_extra_amount) + processing_fee,
                                         2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                             elif part_late_fee == 'default fee':
                                 days = days_left + part_days_left - min_days[special_index] + 1
                                 lapsed_percentage = lapsed_fee[product_index] + days
-                                part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
+                                lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 default_percentage = default_fee_percentage[product_index] + days
                                 if default_type[product_index] == 'Default fee (%)':
                                     part_payment_extra_amount = (monthly_emi[index] * default_percentage) / 100
                                 elif default_type[product_index] == 'Default fee (₹)':
                                     part_payment_extra_amount = default_fee_amount[product_index] * days
                                 self.ids.extra_amount.text = str(
-                                    round(extend_amount + part_payment_extra_amount + lapsed_amount + (
-                                            part_payment_extra_amount / 2),
+                                    round( part_payment_extra_amount + lapsed_amount ,
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + extend_amount + part_payment_extra_amount + (
-                                            part_payment_extra_amount / 2) + processing_fee, 2))
+                                    round(total_amount + part_payment_extra_amount + lapsed_amount + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount,
                                       (part_payment_extra_amount / 2))
@@ -2611,8 +2615,7 @@ class PartPayment(Screen):
                                 part_payment_extra_amount = part_payment_extra_amount + npa_extra_amount
                                 self.ids.extra_amount.text = str(
                                     round(
-                                        extend_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2),
+                                         npa_extra_amount + lapsed_amount + part_payment_extra_amount,
                                         2))
                                 self.ids.total_amount.text = str(
                                     round(
@@ -2642,15 +2645,15 @@ class PartPayment(Screen):
                         npa_amount = (monthly_emi[index] * npa_percentage) / 100
                     elif npa_type[product_index] == 'Non Performing Asset (₹)':
                         npa_amount = default_fee_amount[product_index]
-                    extend_amount += extend_row['extension_amount'] + lapsed_amount + default_amount + npa_amount
+                    extend_amount = lapsed_amount + default_amount + npa_amount
                     part_pay = (total_amount + extend_amount) / 2
                     self.ids.extra_amount.text = str(
-                        round(extend_amount + npa_amount + lapsed_amount + default_amount, 2))
+                        round(extend_amount, 2))
                     self.ids.emi_amount.text = str(new_emi_amount)
                     self.ids.total_amount.text = str(
                         round(total_amount + npa_amount + lapsed_amount + default_amount + processing_fee, 2))
                     self.ids.extra.text = "Extra Payment (Default)"
-                    self.ids.amount1.text = str(round(part_pay, 2))
+                    self.ids.amount1.text = str(round(float(self.ids.total_amount.text), 2))
                     data1[index]['loan_state_status'] = 'npa'
                     if value in emi_loan_id:
                         if payment_type[last_index] == 'part payment':
@@ -2669,30 +2672,27 @@ class PartPayment(Screen):
                                 lapsed_percentage = lapsed_fee[product_index] + days
                                 part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 self.ids.extra_amount.text = str(
-                                    round(extend_amount + lapsed_amount + (part_payment_extra_amount / 2),
+                                    round( part_payment_extra_amount,
                                           2))
                                 self.ids.total_amount.text = str(
                                     round(
-                                        total_amount + extend_amount + lapsed_amount + (
-                                                    part_payment_extra_amount / 2) + processing_fee,
+                                        total_amount + part_payment_extra_amount + processing_fee,
                                         2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                             elif part_late_fee == 'default fee':
                                 days = days_left + part_days_left - min_days[special_index] + 1
                                 lapsed_percentage = lapsed_fee[product_index] + days
-                                part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
+                                lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 default_percentage = default_fee_percentage[product_index] + days
                                 if default_type[product_index] == 'Default fee (%)':
                                     part_payment_extra_amount = (monthly_emi[index] * default_percentage) / 100
                                 elif default_type[product_index] == 'Default fee (₹)':
                                     part_payment_extra_amount = default_fee_amount[product_index] * days
                                 self.ids.extra_amount.text = str(
-                                    round(extend_amount + part_payment_extra_amount + lapsed_amount + (
-                                            part_payment_extra_amount / 2),
+                                    round(part_payment_extra_amount + lapsed_amount ,
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + extend_amount + part_payment_extra_amount + (
-                                            part_payment_extra_amount / 2) + processing_fee, 2))
+                                    round(total_amount + part_payment_extra_amount + lapsed_amount + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount,
                                       (part_payment_extra_amount / 2))
@@ -2713,16 +2713,14 @@ class PartPayment(Screen):
                                     npa_extra_amount = (monthly_emi[index] * npa_percentage) / 100
                                 elif npa_type[product_index] == 'Non Performing Asset (₹)':
                                     npa_extra_amount = default_fee_amount[product_index]
-                                part_payment_extra_amount = part_payment_extra_amount + npa_extra_amount
+                                #part_payment_extra_amount = part_payment_extra_amount + npa_extra_amount
                                 self.ids.extra_amount.text = str(
                                     round(
-                                        extend_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2),
+                                         npa_extra_amount + lapsed_amount + part_payment_extra_amount,
                                         2))
                                 self.ids.total_amount.text = str(
                                     round(
-                                        total_amount + extend_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee, 2))
+                                        total_amount + extend_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(part_payment_extra_amount / 2, days)
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount, npa_extra_amount,
@@ -2734,8 +2732,8 @@ class PartPayment(Screen):
                     extend_amount += extend_row['extension_amount']
                     total_amount = monthly_emi[index] + extend_amount
                     part_pay = (total_amount) / 2
-                    self.ids.extra_amount.text = str(round(extend_amount))
-                    self.ids.emi_amount.text = str(0)
+                    self.ids.extra_amount.text = str(0)
+                    self.ids.emi_amount.text = str(new_emi_amount)
                     self.ids.total_amount.text = str(round(total_amount + processing_fee))
                     self.ids.extra.text = "Extra Payment"
                     self.ids.amount1.text = str(round(part_pay, 2))
@@ -2757,30 +2755,27 @@ class PartPayment(Screen):
                                 lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 self.ids.extra_amount.text = str(
-                                    round(extend_amount + lapsed_amount + (part_payment_extra_amount / 2),
+                                    round(extend_amount + lapsed_amount ,
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + extend_amount + lapsed_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee,
+                                    round(total_amount + extend_amount + lapsed_amount + processing_fee,
                                           2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                             elif part_late_fee == 'default fee':
                                 days = days_left + part_days_left - min_days[special_index] + 1
                                 lapsed_percentage = lapsed_fee[product_index] + days
                                 lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
-                                part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
+                                #part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 default_percentage = default_fee_percentage[product_index] + days
                                 if default_type[product_index] == 'Default fee (%)':
                                     part_payment_extra_amount = (monthly_emi[index] * default_percentage) / 100
                                 elif default_type[product_index] == 'Default fee (₹)':
                                     part_payment_extra_amount = default_fee_amount[product_index] * days
                                 self.ids.extra_amount.text = str(
-                                    round(extend_amount + part_payment_extra_amount + lapsed_amount + (
-                                            part_payment_extra_amount / 2),
+                                    round(part_payment_extra_amount + lapsed_amount,
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + extend_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee, 2))
+                                    round(total_amount + part_payment_extra_amount + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount,
                                       (part_payment_extra_amount / 2))
@@ -2804,13 +2799,11 @@ class PartPayment(Screen):
                                 part_payment_extra_amount = part_payment_extra_amount + npa_extra_amount
                                 self.ids.extra_amount.text = str(
                                     round(
-                                        extend_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2),
+                                         npa_extra_amount + lapsed_amount + part_payment_extra_amount ,
                                         2))
                                 self.ids.total_amount.text = str(
                                     round(
-                                        total_amount + extend_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee, 2))
+                                        total_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(part_payment_extra_amount / 2, days)
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount, npa_extra_amount,
@@ -3307,6 +3300,7 @@ class PartPayment(Screen):
         emi_amount = []
         total_pro_fee_amount = []
         remaining_amount_list = []
+        loan_status = []
         for i in data1:
             loan_id.append(i['loan_id'])
             cos_id1.append(i['borrower_customer_id'])
@@ -3322,6 +3316,7 @@ class PartPayment(Screen):
             interest_rate.append(i['interest_rate'])
             total_pro_fee_amount.append(i['total_processing_fee_amount'])
             remaining_amount_list.append(i['remaining_amount'])
+            loan_status.append(i['loan_updated_status'])
 
         cos_id = []
         account_num = []
@@ -3339,6 +3334,19 @@ class PartPayment(Screen):
         for i in wallet:
             wallet_customer_id.append(i['customer_id'])
             wallet_amount.append(i['wallet_amount'])
+
+
+        extend_data = app_tables.fin_extends_loan.search()
+
+        extend_loan_id = []
+        new_emi = []
+        for i in extend_data:
+            extend_loan_id.append(i['loan_id'])
+            new_emi.append(i['new_emi'])
+
+        extend_index = 0
+        if value in extend_loan_id:
+            extend_index = extend_loan_id.index(value)
 
         lender_customer_id = []
         loan_id_list = []
@@ -3380,6 +3388,8 @@ class PartPayment(Screen):
         if value not in emi_loan_id:
             emi_number = 1
             remaining_amount = (remaining_amount_list[index] - ((emi_amount[index] + processing_fee) / 2))
+            if loan_status[index] == 'extension' and value in extend_loan_id:
+                remaining_amount = (remaining_amount_list[index] - ((new_emi[extend_index] + processing_fee) / 2))
         else:
             last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
             remaining_amount = (emi_remain_amount[last_index] - ((emi_amount[index] + processing_fee) / 2))

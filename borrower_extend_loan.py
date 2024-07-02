@@ -1062,9 +1062,9 @@ class ExtendRequestScreen1(Screen):
         emi_paid = monthly_emi[loan_in1] * total_payments
         extension_amount = (loan_amount[loan_in1] * extend_fee[index11]) / 100
         self.ids.extend_amount1.text = str(extension_amount)
-        final_repay_amount = (loan_amount[loan_in1] - emi_paid) + extension_amount
+        final_repay_amount = remain_amount[last_index] + extension_amount
         self.ids.repay_amount.text = str(final_repay_amount)
-        new_emi = remain_amount[last_index] / outstanding_amount
+        new_emi = final_repay_amount / outstanding_amount
         self.ids.new_emi.text = str(round(new_emi, 2))
         print(outstanding_amount)
         print(tenure[loan_in1])

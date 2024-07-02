@@ -138,7 +138,7 @@ user_helpers1 = """
 
                                         MDLabel:
                                             id: notification_label
-                                            text:root.false_count_text
+                                            text:"3"
                                             size_hint_x: None
                                             width: self.texture_size[0]
                                             halign: "center"

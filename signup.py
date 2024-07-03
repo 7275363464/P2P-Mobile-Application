@@ -499,9 +499,9 @@ class SignupScreen(Screen):
             print(f"No user found for email: {email}")
 
         # Other input validations
-        if not name or len(name.split()) < 2 or not re.match(r'^[a-zA-Z\s]+$', name):
+        if not name or len(name.split()) < 2 or not name[0].isupper() or not re.match(r'^[a-zA-Z\s]+$', name):
             validation_errors.append(
-                (self.ids.name, "Please enter a valid first name and last name"))
+                (self.ids.name, "Please enter a valid full name and first letter capital"))
         else:
             self.ids.name.helper_text = ''
 

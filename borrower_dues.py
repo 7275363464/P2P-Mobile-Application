@@ -756,6 +756,7 @@ class BorrowerDuesScreen(Screen):
             last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
 
         if value in emi_loan_id:
+            last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
             if part_payment_type[last_index] == 'pay now' and part_payment_done[last_index] == 2:
                 self.ids.pay.opacity = 1
                 self.ids.pay.disabled = False
@@ -763,9 +764,13 @@ class BorrowerDuesScreen(Screen):
                 last_index] != value:
                 self.ids.pay.opacity = 1
                 self.ids.pay.disabled = False
-            elif part_payment_type[last_index] == "part payment" and part_payment_done[last_index] == 1:
+            elif part_payment_type[last_index] == "part payment" and part_payment_done[last_index] == 1 and  emi_loan_id[
+                last_index] == value:
                 self.ids.pay.opacity = 0
                 self.ids.pay.disabled = True
+            else:
+                self.ids.pay.opacity = 1
+                self.ids.pay.disabled = False
         else:
             self.ids.pay.opacity = 1
             self.ids.pay.disabled = False
@@ -910,7 +915,7 @@ class BorrowerDuesScreen(Screen):
 
         elif loan_status[index] == "extension":
             emi_number = 0
-            emi_data = app_tables.fin_emi_table.search(loan_id=str(value))
+            #emi_data = app_tables.fin_emi_table.search(loan_id=str(value))
             emi_data1 = app_tables.fin_emi_table.search()
             if emi_data and value in emi_loan_id:
                 last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
@@ -919,8 +924,7 @@ class BorrowerDuesScreen(Screen):
                 emi_number = emi['emi_number']
                 print(loan_status[index], emi)
             extend_row = app_tables.fin_extends_loan.get(
-                loan_id=str(value),
-                emi_number=emi_number
+                loan_id=str(value)
             )
             if extend_row is not None and extend_row['status'] == "approved":
                 extend_amount += extend_row['extension_amount']
@@ -1032,9 +1036,9 @@ class BorrowerDuesScreen(Screen):
                 loan_id=str(value)
             )
             if foreclosure_row is not None and foreclosure_row['status'] == 'approved':
-                foreclose_amount1 += foreclosure_row['foreclose_amount']
-                emi_amount1 += foreclosure_row['total_due_amount']
-                total_amount = foreclose_amount1 + emi_amount1
+                #foreclose_amount1 += foreclosure_row['foreclose_amount']
+                emi_amount1 = foreclosure_row['total_due_amount']
+                total_amount = emi_amount1
                 log_email = anvil.server.call('another_method')
                 profile = app_tables.fin_user_profile.search()
                 print(log_email)
@@ -1071,7 +1075,7 @@ class BorrowerDuesScreen(Screen):
                     product_index = product_id.index(loan_product[index])
                     lapsed_percentage = lapsed_fee[product_index] + days_left
                     lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
-                    self.ids.extra_amount.text = str(round(foreclose_amount1 + lapsed_amount, 2))
+                    self.ids.extra_amount.text = str(round(lapsed_amount, 2))
                     self.ids.emi_amount.text = str(emi_amount1)
                     self.ids.total_amount.text = str(round(total_amount + lapsed_amount + processing_fee, 2))
                     self.ids.total.text = "Total Amount (Late payment Fee)"
@@ -1089,7 +1093,7 @@ class BorrowerDuesScreen(Screen):
                         default_amount = default_fee_amount[product_index]
                     lapsed_percentage = lapsed_fee[product_index] + days_left
                     lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
-                    extra_payment_total = foreclose_amount1 + default_amount + lapsed_amount
+                    extra_payment_total = default_amount + lapsed_amount
                     total_payment = total_amount + default_amount + lapsed_amount
                     self.ids.extra_amount.text = str(round(extra_payment_total, 2))
                     self.ids.emi_amount.text = str(emi_amount1)
@@ -1113,7 +1117,7 @@ class BorrowerDuesScreen(Screen):
                         default_amount = (monthly_emi[index] * default_percentage) / 100
                     elif default_type[product_index] == 'Default fee (₹)':
                         default_amount = default_fee_amount[product_index]
-                    extra_payment_total = foreclose_amount1 + npa_amount + lapsed_amount + default_amount
+                    extra_payment_total = npa_amount + lapsed_amount + default_amount
                     total_payment = total_amount + npa_amount + lapsed_amount + default_amount
                     self.ids.extra_amount.text = str(round(extra_payment_total, 2))
                     self.ids.emi_amount.text = str(emi_amount1)
@@ -1180,6 +1184,7 @@ class BorrowerDuesScreen(Screen):
         emi_amount = []
         total_pro_fee_amount = []
         remaining_amount_list = []
+        loan_status = []
         for i in data1:
             loan_id.append(i['loan_id'])
             cos_id1.append(i['borrower_customer_id'])
@@ -1195,6 +1200,7 @@ class BorrowerDuesScreen(Screen):
             emi_amount.append(i['monthly_emi'])
             total_pro_fee_amount.append(i['total_processing_fee_amount'])
             remaining_amount_list.append(i['remaining_amount'])
+            loan_status.append(i['loan_updated_status'])
 
         cos_id = []
         account_num = []
@@ -1302,15 +1308,43 @@ class BorrowerDuesScreen(Screen):
         print(b_index)
         processing_fee = total_pro_fee_amount[index] / float(tenure)
         print(processing_fee, extra_amount)
+        extend_data = app_tables.fin_extends_loan.search()
+        extend_loan_id = []
+        new_emi = []
+        for i in extend_data:
+            extend_loan_id.append(i['loan_id'])
+            new_emi.append(i['new_emi'])
+
+        forclosure_data = app_tables.fin_foreclosure.search()
+        forclosure_loan_id = []
+        foreclosure_total_amount = []
+        for i in forclosure_data:
+            forclosure_loan_id.append(i['loan_id'])
+            foreclosure_total_amount.append(i['total_due_amount'])
+        extend_index = 0
+        if value in extend_loan_id:
+            extend_index = extend_loan_id.index(value)
+        foreclosure_index = 0
+        if value in forclosure_loan_id:
+            foreclosure_index = forclosure_loan_id.index(value)
         if value in loan_id:
             index = loan_id.index(value)
         if value not in emi_loan_id:
             remain_amount_emi = total_repay_amount[index] - emi_amount[index]
             remaining_amount = remaining_amount_list[index] - (emi_amount[index] + processing_fee)
+            if loan_status[index] == 'extension' and value in extend_loan_id:
+                remaining_amount = (remaining_amount_list[index] - (new_emi[extend_index] + processing_fee))
+            elif loan_status[index] == 'foreclosure' and value in forclosure_loan_id:
+                remaining_amount = 0
         else:
             last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
             remain_amount_emi = remain_amo[last_index] - emi_amount[index]
             remaining_amount = emi_remain_amount[last_index] - (emi_amount[index] + processing_fee)
+            if loan_status[index] == 'extension' and value in extend_loan_id:
+                remaining_amount = (emi_remain_amount[last_index] - (new_emi[extend_index] + processing_fee))
+            elif loan_status[index] == 'foreclosure' and value in forclosure_loan_id:
+                remaining_amount = 0
+
 
         if wallet[b_index]['wallet_amount'] >= float(total):
             wallet[b_index]['wallet_amount'] -= float(total)
@@ -1387,6 +1421,9 @@ class BorrowerDuesScreen(Screen):
                 if tenure:
                     re_ten = 0
                     data1[index]['loan_updated_status'] = 'closed'
+            if loan_status[index] == 'foreclosure' and value in forclosure_loan_id:
+                remaining_amount = 0
+                re_ten = 0
 
             app_tables.fin_emi_table.add_row(
                 loan_id=str(value),
@@ -1444,7 +1481,12 @@ class BorrowerDuesScreen(Screen):
 
             if data1[index]['loan_updated_status'] == 'foreclosure':
                 data1[index]['loan_updated_status'] = 'closed'
-            data1[index]['remaining_amount'] = float(remaining_amount)
+            if data1[index]['remaining_amount'] == None:
+                data1[index]['remaining_amount'] = 0
+                data1[index]['remaining_amount'] = float(remaining_amount)
+            else:
+                data1[index]['remaining_amount'] = float(remaining_amount)
+
             data1[index]['total_amount_paid'] += float(total)
             anvil.server.call('loan_text', None)
             sm = self.manager
@@ -2392,21 +2434,21 @@ class PartPayment(Screen):
                 emi_number = emi['emi_number']
             print(loan_status[index])
             extend_row = app_tables.fin_extends_loan.get(
-                loan_id=str(value),
-                emi_number=emi_number
+                loan_id=str(value)
             )
+            print(extend_row is not None , extend_row['status'] == "approved")
             if extend_row is not None and extend_row['status'] == "approved":
-                extend_amount += extend_row['extension_amount']
+                extend_amount = 0
                 new_emi_amount += extend_row['new_emi']
                 total_amount = new_emi_amount
                 print(new_emi_amount, extend_amount)
                 print(extend_amount)
-                next_emi_num = emi_number + 1
-                next_emi = app_tables.fin_emi_table.get(loan_id=str(value), emi_number=next_emi_num)
+                # next_emi_num = emi_number + 1
+                # next_emi = app_tables.fin_emi_table.get(loan_id=str(value), emi_number=next_emi_num)
 
-                if next_emi is not None:
-                    next_payment_amount = next_emi['amount_paid']
-                    extend_amount += next_payment_amount
+                # if next_emi is not None:
+                #     next_payment_amount = next_emi['amount_paid']
+                #     extend_amount += next_payment_amount
                 log_email = anvil.server.call('another_method')
                 profile = app_tables.fin_user_profile.search()
                 email_user = []
@@ -2450,7 +2492,7 @@ class PartPayment(Screen):
                     lapsed_percentage = lapsed_fee[product_index] + days_left
                     lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
                     extend_amount = lapsed_amount
-                    part_pay = (total_amount + extend_amount) / 2
+                    #part_pay = (total_amount + extend_amount) / 2
                     self.ids.extra_amount.text = str(round(extend_amount, 2))
                     self.ids.emi_amount.text = str(new_emi_amount)
                     self.ids.total_amount.text = str(round(total_amount + lapsed_amount + processing_fee, 2))
@@ -2476,11 +2518,11 @@ class PartPayment(Screen):
                                 lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 self.ids.extra_amount.text = str(
-                                    round( (part_payment_extra_amount),
+                                    round( part_payment_extra_amount,
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + (
-                                                part_payment_extra_amount) + processing_fee,
+                                    round(total_amount +
+                                                part_payment_extra_amount + processing_fee,
                                           2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                             elif part_late_fee == 'default fee':
@@ -2497,8 +2539,8 @@ class PartPayment(Screen):
                                             part_payment_extra_amount),
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + lapsed_amount + (
-                                                part_payment_extra_amount) + processing_fee, 2))
+                                    round(total_amount + lapsed_amount +
+                                                part_payment_extra_amount + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount,
                                       (part_payment_extra_amount / 2))
@@ -2526,8 +2568,7 @@ class PartPayment(Screen):
                                         2))
                                 self.ids.total_amount.text = str(
                                     round(
-                                        total_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount) + processing_fee, 2))
+                                        total_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(part_payment_extra_amount / 2, days)
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount, npa_extra_amount,
@@ -2548,7 +2589,7 @@ class PartPayment(Screen):
                     print(lapsed_amount, default_amount, extend_row['extension_amount'])
                     extend_amount = lapsed_amount + default_amount
                     part_pay = (total_amount + extend_amount) / 2
-                    self.ids.extra_amount.text = str(round(extend_amount, 2))
+                    self.ids.extra_amount.text = str(round(lapsed_amount + default_amount, 2))
                     self.ids.emi_amount.text = str(new_emi_amount)
                     self.ids.total_amount.text = str(
                         round(total_amount + default_amount + lapsed_amount + processing_fee, 2))
@@ -2575,8 +2616,8 @@ class PartPayment(Screen):
                                     round(part_payment_extra_amount,2))
                                 self.ids.total_amount.text = str(
                                     round(
-                                        total_amount + (
-                                                    part_payment_extra_amount) + processing_fee,
+                                        total_amount +
+                                                    part_payment_extra_amount + processing_fee,
                                         2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                             elif part_late_fee == 'default fee':
@@ -2612,15 +2653,14 @@ class PartPayment(Screen):
                                     npa_extra_amount = (monthly_emi[index] * npa_percentage) / 100
                                 elif npa_type[product_index] == 'Non Performing Asset (₹)':
                                     npa_extra_amount = default_fee_amount[product_index]
-                                part_payment_extra_amount = part_payment_extra_amount + npa_extra_amount
+                                #part_payment_extra_amount = part_payment_extra_amount + npa_extra_amount
                                 self.ids.extra_amount.text = str(
                                     round(
                                          npa_extra_amount + lapsed_amount + part_payment_extra_amount,
                                         2))
                                 self.ids.total_amount.text = str(
                                     round(
-                                        total_amount + extend_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee, 2))
+                                        total_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(part_payment_extra_amount / 2, days)
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount, npa_extra_amount,
@@ -2720,7 +2760,7 @@ class PartPayment(Screen):
                                         2))
                                 self.ids.total_amount.text = str(
                                     round(
-                                        total_amount + extend_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount + processing_fee, 2))
+                                        total_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(part_payment_extra_amount / 2, days)
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount, npa_extra_amount,
@@ -2755,10 +2795,10 @@ class PartPayment(Screen):
                                 lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 self.ids.extra_amount.text = str(
-                                    round(extend_amount + lapsed_amount ,
+                                    round(lapsed_amount ,
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + extend_amount + lapsed_amount + processing_fee,
+                                    round(total_amount + lapsed_amount + processing_fee,
                                           2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                             elif part_late_fee == 'default fee':
@@ -2775,7 +2815,7 @@ class PartPayment(Screen):
                                     round(part_payment_extra_amount + lapsed_amount,
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + part_payment_extra_amount + processing_fee, 2))
+                                    round(total_amount + part_payment_extra_amount + lapsed_amount + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount,
                                       (part_payment_extra_amount / 2))
@@ -2816,9 +2856,9 @@ class PartPayment(Screen):
                 loan_id=str(value)
             )
             if foreclosure_row is not None and foreclosure_row['status'] == 'approved':
-                foreclose_amount1 += foreclosure_row['foreclose_amount']
-                emi_amount1 += foreclosure_row['total_due_amount']
-                total_amount = foreclose_amount1 + emi_amount1
+                #foreclose_amount1 += foreclosure_row['foreclose_amount']
+                emi_amount1 = foreclosure_row['total_due_amount']
+                total_amount = emi_amount1
                 log_email = anvil.server.call('another_method')
                 profile = app_tables.fin_user_profile.search()
                 email_user = []
@@ -2863,13 +2903,13 @@ class PartPayment(Screen):
                     product_index = product_id.index(loan_product[index])
                     lapsed_percentage = lapsed_fee[product_index] + days_left
                     lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
-                    foreclose_amount1 += foreclosure_row['foreclose_amount'] + lapsed_amount
-                    part_pay = (total_amount + foreclose_amount1) / 2
-                    self.ids.extra_amount.text = str(round(foreclose_amount1 + lapsed_amount, 2))
+                    #foreclose_amount1 += foreclosure_row['foreclose_amount'] + lapsed_amount
+                    #part_pay = (total_amount + foreclose_amount1) / 2
+                    self.ids.extra_amount.text = str(round(lapsed_amount, 2))
                     self.ids.emi_amount.text = str(emi_amount1)
                     self.ids.total_amount.text = str(round(total_amount + lapsed_amount + processing_fee, 2))
                     self.ids.total.text = "Total Amount (Late payment Fee)"
-                    self.ids.amount1.text = str(round(part_pay, 2))
+                    self.ids.amount1.text = str(round(float(self.ids.total_amount.text), 2))
 
                     if value in emi_loan_id:
                         if payment_type[last_index] == 'part payment':
@@ -2888,29 +2928,26 @@ class PartPayment(Screen):
                                 lapsed_percentage = lapsed_fee[product_index] + days
                                 part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 self.ids.extra_amount.text = str(
-                                    round(foreclose_amount1 + lapsed_amount + (part_payment_extra_amount / 2),
+                                    round(part_payment_extra_amount,
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + foreclose_amount1 + lapsed_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee,
+                                    round(total_amount + part_payment_extra_amount + processing_fee,
                                           2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                             elif part_late_fee == 'default fee':
                                 days = days_left + part_days_left - min_days[special_index] + 1
                                 lapsed_percentage = lapsed_fee[product_index] + days
-                                part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
+                                lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 default_percentage = default_fee_percentage[product_index] + days
                                 if default_type[product_index] == 'Default fee (%)':
                                     part_payment_extra_amount = (monthly_emi[index] * default_percentage) / 100
                                 elif default_type[product_index] == 'Default fee (₹)':
                                     part_payment_extra_amount = default_fee_amount[product_index] * days
                                 self.ids.extra_amount.text = str(
-                                    round(foreclose_amount1 + part_payment_extra_amount + lapsed_amount + (
-                                            part_payment_extra_amount / 2),
+                                    round(part_payment_extra_amount + lapsed_amount,
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + foreclose_amount1 + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee, 2))
+                                    round(total_amount + lapsed_amount + part_payment_extra_amount + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount,
                                       (part_payment_extra_amount / 2))
@@ -2931,16 +2968,14 @@ class PartPayment(Screen):
                                     npa_extra_amount = (monthly_emi[index] * npa_percentage) / 100
                                 elif npa_type[product_index] == 'Non Performing Asset (₹)':
                                     npa_extra_amount = default_fee_amount[product_index]
-                                part_payment_extra_amount = part_payment_extra_amount + npa_extra_amount
                                 self.ids.extra_amount.text = str(
                                     round(
-                                        foreclose_amount1 + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2),
+                                        npa_extra_amount + lapsed_amount + part_payment_extra_amount,
                                         2))
                                 self.ids.total_amount.text = str(
                                     round(
-                                        total_amount + foreclose_amount1 + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee, 2))
+                                        total_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount +
+                                                 + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(part_payment_extra_amount / 2, days)
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount, npa_extra_amount,
@@ -2959,14 +2994,14 @@ class PartPayment(Screen):
                         default_amount = (monthly_emi[index] * default_percentage) / 100
                     elif default_type[product_index] == 'Default fee (₹)':
                         default_amount = default_fee_amount[product_index]
-                    foreclose_amount1 += foreclosure_row['foreclose_amount'] + lapsed_amount + default_amount
-                    part_pay = (total_amount + foreclose_amount1) / 2
-                    self.ids.extra_amount.text = str(round(foreclose_amount1 + default_amount + lapsed_amount, 2))
+                    #foreclose_amount1 += foreclosure_row['foreclose_amount'] + lapsed_amount + default_amount
+                    #part_pay = (total_amount + foreclose_amount1) / 2
+                    self.ids.extra_amount.text = str(round(default_amount + lapsed_amount, 2))
                     self.ids.emi_amount.text = str(emi_amount1)
                     self.ids.total_amount.text = str(
                         round(total_amount + default_amount + lapsed_amount + processing_fee, 2))
                     self.ids.total.text = "Total Amount (Default)"
-                    self.ids.amount1.text = str(round(part_pay, 2))
+                    self.ids.amount1.text = str(round(float(self.ids.total_amount.text)/2, 2))
                     data1[index]['loan_state_status'] = "default"
                     if value in emi_loan_id:
                         if payment_type[last_index] == 'part payment':
@@ -2985,29 +3020,26 @@ class PartPayment(Screen):
                                 lapsed_percentage = lapsed_fee[product_index] + days
                                 part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 self.ids.extra_amount.text = str(
-                                    round(foreclose_amount1 + lapsed_amount + (part_payment_extra_amount / 2),
+                                    round(part_payment_extra_amount,
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + foreclose_amount1 + lapsed_amount + (
-                                            part_payment_extra_amount / 2) + processing_fee,
+                                    round(total_amount + part_payment_extra_amount + processing_fee,
                                           2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                             elif part_late_fee == 'default fee':
                                 days = days_left + part_days_left - min_days[special_index] + 1
                                 lapsed_percentage = lapsed_fee[product_index] + days
-                                part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
+                                lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 default_percentage = default_fee_percentage[product_index] + days
                                 if default_type[product_index] == 'Default fee (%)':
                                     part_payment_extra_amount = (monthly_emi[index] * default_percentage) / 100
                                 elif default_type[product_index] == 'Default fee (₹)':
                                     part_payment_extra_amount = default_fee_amount[product_index] * days
                                 self.ids.extra_amount.text = str(
-                                    round(foreclose_amount1 + part_payment_extra_amount + lapsed_amount + (
-                                            part_payment_extra_amount / 2),
+                                    round(part_payment_extra_amount + lapsed_amount,
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + foreclose_amount1 + part_payment_extra_amount + (
-                                            part_payment_extra_amount / 2) + processing_fee, 2))
+                                    round(total_amount + lapsed_amount + part_payment_extra_amount + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount,
                                       (part_payment_extra_amount / 2))
@@ -3028,16 +3060,14 @@ class PartPayment(Screen):
                                     npa_extra_amount = (monthly_emi[index] * npa_percentage) / 100
                                 elif npa_type[product_index] == 'Non Performing Asset (₹)':
                                     npa_extra_amount = default_fee_amount[product_index]
-                                part_payment_extra_amount = part_payment_extra_amount + npa_extra_amount
                                 self.ids.extra_amount.text = str(
                                     round(
-                                        foreclose_amount1 + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2),
+                                        npa_extra_amount + lapsed_amount + part_payment_extra_amount,
                                         2))
                                 self.ids.total_amount.text = str(
                                     round(
-                                        total_amount + foreclose_amount1 + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee, 2))
+                                        total_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount +
+                                        + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(part_payment_extra_amount / 2, days)
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount, npa_extra_amount,
@@ -3061,16 +3091,15 @@ class PartPayment(Screen):
                         npa_amount = (monthly_emi[index] * npa_percentage) / 100
                     elif npa_type[product_index] == 'Non Performing Asset (₹)':
                         npa_amount = default_fee_amount[product_index]
-                    foreclose_amount1 += foreclosure_row[
-                                             'foreclose_amount'] + lapsed_amount + npa_amount + default_amount
-                    part_pay = (total_amount + foreclose_amount1) / 2
+                    #foreclose_amount1 += foreclosure_row['foreclose_amount'] + lapsed_amount + npa_amount + default_amount
+                    #part_pay = (total_amount + foreclose_amount1) / 2
                     self.ids.extra_amount.text = str(
-                        round(foreclose_amount1 + npa_amount + default_amount + lapsed_amount, 2))
+                        round( npa_amount + default_amount + lapsed_amount, 2))
                     self.ids.emi_amount.text = str(emi_amount1)
                     self.ids.total_amount.text = str(
                         round(total_amount + npa_amount + default_amount + lapsed_amount, 2))
                     self.ids.extra.text = "Extra Payment (Default)"
-                    self.ids.amount1.text = str(round(part_pay, 2))
+                    self.ids.amount1.text = str(round(float(self.ids.total_amount.text)/2, 2))
 
                     if value in emi_loan_id:
                         if payment_type[last_index] == 'part payment':
@@ -3089,29 +3118,26 @@ class PartPayment(Screen):
                                 lapsed_percentage = lapsed_fee[product_index] + days
                                 part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 self.ids.extra_amount.text = str(
-                                    round(foreclose_amount1 + lapsed_amount + (part_payment_extra_amount / 2),
+                                    round(part_payment_extra_amount,
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + foreclose_amount1 + lapsed_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee,
+                                    round(total_amount + part_payment_extra_amount + processing_fee,
                                           2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                             elif part_late_fee == 'default fee':
                                 days = days_left + part_days_left - min_days[special_index] + 1
                                 lapsed_percentage = lapsed_fee[product_index] + days
-                                part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
+                                lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 default_percentage = default_fee_percentage[product_index] + days
                                 if default_type[product_index] == 'Default fee (%)':
                                     part_payment_extra_amount = (monthly_emi[index] * default_percentage) / 100
                                 elif default_type[product_index] == 'Default fee (₹)':
                                     part_payment_extra_amount = default_fee_amount[product_index] * days
                                 self.ids.extra_amount.text = str(
-                                    round(foreclose_amount1 + part_payment_extra_amount + lapsed_amount + (
-                                            part_payment_extra_amount / 2),
+                                    round(part_payment_extra_amount + lapsed_amount,
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + foreclose_amount1 + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee, 2))
+                                    round(total_amount + lapsed_amount + part_payment_extra_amount + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount,
                                       (part_payment_extra_amount / 2))
@@ -3132,16 +3158,14 @@ class PartPayment(Screen):
                                     npa_extra_amount = (monthly_emi[index] * npa_percentage) / 100
                                 elif npa_type[product_index] == 'Non Performing Asset (₹)':
                                     npa_extra_amount = default_fee_amount[product_index]
-                                part_payment_extra_amount = part_payment_extra_amount + npa_extra_amount
                                 self.ids.extra_amount.text = str(
                                     round(
-                                        foreclose_amount1 + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2),
+                                        npa_extra_amount + lapsed_amount + part_payment_extra_amount,
                                         2))
                                 self.ids.total_amount.text = str(
                                     round(
-                                        total_amount + foreclose_amount1 + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee, 2))
+                                        total_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount +
+                                        + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(part_payment_extra_amount / 2, days)
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount, npa_extra_amount,
@@ -3152,14 +3176,14 @@ class PartPayment(Screen):
                     special_index = 0
                     part_late_fee = None
                     product_index = product_id.index(loan_product[index])
-                    foreclose_amount1 += foreclosure_row['foreclose_amount']
+                    #foreclose_amount1 += foreclosure_row['foreclose_amount']
                     total_amount = monthly_emi[index] + foreclose_amount1
                     part_pay = (total_amount + foreclose_amount1) / 2
                     self.ids.extra.text = "Extra Payment"
-                    self.ids.extra_amount.text = str(round(foreclose_amount1))
-                    self.ids.emi_amount.text = str(0)
+                    self.ids.extra_amount.text = str(0)
+                    self.ids.emi_amount.text = str(emi_amount1)
                     self.ids.total_amount.text = str(round(total_amount + processing_fee))
-                    self.ids.amount1.text = str(round(part_pay, 2))
+                    self.ids.amount1.text = str(round(float(self.ids.total_amount.text)))
                     if value in emi_loan_id:
                         if payment_type[last_index] == 'part payment':
                             part_days_left = (today_date - part_payment_date[last_index]).days
@@ -3173,40 +3197,36 @@ class PartPayment(Screen):
                             print(part_late_fee)
 
                             if part_late_fee == 'lapsed fee':
-
                                 days = days_left + part_days_left - min_days[special_index] + 1
                                 lapsed_percentage = lapsed_fee[product_index] + days
                                 part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
-                                lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 self.ids.extra_amount.text = str(
-                                    round(foreclose_amount1 + lapsed_amount + (part_payment_extra_amount / 2),
+                                    round(part_payment_extra_amount,
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + foreclose_amount1 + lapsed_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee,
+                                    round(total_amount + part_payment_extra_amount + processing_fee,
                                           2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                             elif part_late_fee == 'default fee':
                                 days = days_left + part_days_left - min_days[special_index] + 1
                                 lapsed_percentage = lapsed_fee[product_index] + days
-                                part_payment_extra_amount = (monthly_emi[index] * lapsed_percentage) / 100
+                                lapsed_amount = (monthly_emi[index] * lapsed_percentage) / 100
                                 default_percentage = default_fee_percentage[product_index] + days
                                 if default_type[product_index] == 'Default fee (%)':
                                     part_payment_extra_amount = (monthly_emi[index] * default_percentage) / 100
                                 elif default_type[product_index] == 'Default fee (₹)':
                                     part_payment_extra_amount = default_fee_amount[product_index] * days
                                 self.ids.extra_amount.text = str(
-                                    round(foreclose_amount1 + part_payment_extra_amount + loan_amount + (
-                                            part_payment_extra_amount / 2),
+                                    round(part_payment_extra_amount + lapsed_amount,
                                           2))
                                 self.ids.total_amount.text = str(
-                                    round(total_amount + foreclose_amount1 + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee, 2))
+                                    round(total_amount + lapsed_amount + part_payment_extra_amount + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
-
+                                print(extend_amount, part_payment_extra_amount, lapsed_amount,
+                                      (part_payment_extra_amount / 2))
                             elif part_late_fee == 'NPA fee':
                                 npa_extra_amount = 0
-                                part_days_left = (part_payment_date[last_index] - next_payment[last_index]).days
+                                part_days_left = (today_date - part_payment_date[last_index]).days
                                 days = days_left + part_days_left - min_days[special_index] + 1
                                 default_percentage = default_fee_percentage[product_index] + days
                                 lapsed_percentage = lapsed_fee[product_index] + days
@@ -3221,16 +3241,14 @@ class PartPayment(Screen):
                                     npa_extra_amount = (monthly_emi[index] * npa_percentage) / 100
                                 elif npa_type[product_index] == 'Non Performing Asset (₹)':
                                     npa_extra_amount = default_fee_amount[product_index]
-                                part_payment_extra_amount = part_payment_extra_amount + npa_extra_amount
                                 self.ids.extra_amount.text = str(
                                     round(
-                                        foreclose_amount1 + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2),
+                                        npa_extra_amount + lapsed_amount + part_payment_extra_amount,
                                         2))
                                 self.ids.total_amount.text = str(
                                     round(
-                                        total_amount + foreclose_amount1 + npa_extra_amount + lapsed_amount + part_payment_extra_amount + (
-                                                part_payment_extra_amount / 2) + processing_fee, 2))
+                                        total_amount + npa_extra_amount + lapsed_amount + part_payment_extra_amount +
+                                        + processing_fee, 2))
                                 self.ids.amount1.text = str(round(float(self.ids.total_amount.text) / 2, 2))
                                 print(part_payment_extra_amount / 2, days)
                                 print(extend_amount, part_payment_extra_amount, lapsed_amount, npa_extra_amount,
@@ -3393,6 +3411,8 @@ class PartPayment(Screen):
         else:
             last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(value)
             remaining_amount = (emi_remain_amount[last_index] - ((emi_amount[index] + processing_fee) / 2))
+            if loan_status[index] == 'extension' and value in extend_loan_id:
+                remaining_amount = (emi_remain_amount[last_index] - ((new_emi[extend_index] + processing_fee) / 2))
             print(remaining_amount, (emi_amount[index], processing_fee), remaining_amount_list[index],
                   emi_remain_amount[last_index])
         wallet = app_tables.fin_wallet.search()
@@ -3405,6 +3425,13 @@ class PartPayment(Screen):
             wallet_amount.append(i['wallet_amount'])
             wallet_email.append(i['user_email'])
             wallet_id.append(i['wallet_id'])
+
+        forclosure_data = app_tables.fin_foreclosure.search()
+        forclosure_loan_id = []
+        foreclosure_total_amount = []
+        for i in forclosure_data:
+            forclosure_loan_id.append(i['loan_id'])
+            foreclosure_total_amount.append(i['total_due_amount'])
 
         transaction = app_tables.fin_wallet_transactions.search()
         t_id = []
@@ -3514,7 +3541,11 @@ class PartPayment(Screen):
                 else:
                     data1[index]['lender_returns'] += float(round(monthly_lender_returns / 2, 2))
 
-                data1[index]['remaining_amount'] = float(remaining_amount)
+                if data1[index]['remaining_amount'] == None:
+                    data1[index]['remaining_amount'] = 0
+                    data1[index]['remaining_amount'] = float(remaining_amount)
+                else:
+                    data1[index]['remaining_amount'] = float(remaining_amount)
                 data1[index]['total_amount_paid'] += float(pay)
                 anvil.server.call('loan_text', None)
                 sm = self.manager
@@ -3529,15 +3560,15 @@ class PartPayment(Screen):
                     emi_number = emi_num[last_index] + 1
 
                 if emi_type_pay[index].strip() == 'Monthly':
-                    payment_date = schedule_date[index] + timedelta(days=30)
+                    payment_date = next_payment[last_index]
                     print(schedule_date[index])
                 elif emi_type_pay[index].strip() == 'Three Months':
-                    payment_date = schedule_date[index] + timedelta(days=90)
+                    payment_date = next_payment[last_index]
                 elif emi_type_pay[index].strip() == 'Six Months':
-                    payment_date = schedule_date[index] + timedelta(days=180)
+                    payment_date = next_payment[last_index]
                 elif emi_type_pay[index].strip() == 'One Time':
                     if tenure:
-                        payment_date = schedule_date[index] + timedelta(days=30 * int(tenure))
+                        payment_date = next_payment[last_index]
 
                 re_ten = 0
                 remain_amount = 0
@@ -3581,7 +3612,11 @@ class PartPayment(Screen):
                     days_left=self.days1,
                     total_platform_fee=round(float(float(self.ids.extra_amount.text) + processing_fee) / 2, 2)
                 )
-                data1[index]['remaining_amount'] = float(remaining_amount)
+                if data1[index]['remaining_amount'] == None:
+                    data1[index]['remaining_amount'] = 0
+                    data1[index]['remaining_amount'] = float(remaining_amount)
+                else:
+                    data1[index]['remaining_amount'] = float(remaining_amount)
                 app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
                                                            customer_id=wallet_customer_id[b_index],
                                                            user_email=wallet_email[b_index],
@@ -3616,7 +3651,15 @@ class PartPayment(Screen):
                     data1[index]['lender_returns'] += float(round(monthly_lender_returns / 2, 2))
                 else:
                     data1[index]['lender_returns'] += float(round(monthly_lender_returns / 2, 2))
-                data1[index]['remaining_amount'] = float(remaining_amount)
+                if loan_status[index] == 'foreclosure' and value in forclosure_loan_id:
+                    data1[index]['remaining_amount'] -= float((float(total)-float(extra_amount))/2)
+                    emi_data[last_index]['total_remaining_amount'] = float((float(total)-float(extra_amount))/2)
+                else:
+                    if data1[index]['remaining_amount'] == None:
+                        data1[index]['remaining_amount'] = 0
+                        data1[index]['remaining_amount'] = float(remaining_amount)
+                    else:
+                        data1[index]['remaining_amount'] = float(remaining_amount)
                 data1[index]['total_amount_paid'] += float(pay)
                 anvil.server.call('loan_text', None)
                 sm = self.manager
@@ -3703,7 +3746,10 @@ class PartPayment(Screen):
 
                 print(paid_amount1)
                 print(remain_amount)
-                data1[index]['remaining_amount'] = float(remaining_amount)
+                if loan_status[index] == 'foreclosure' and value in forclosure_loan_id:
+                    remaining_amount = 0
+                    re_ten = 0
+                    data1[index]['loan_updated_status'] = 'closed'
 
                 app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
                                                            customer_id=wallet_customer_id[b_index],
@@ -3753,7 +3799,11 @@ class PartPayment(Screen):
                 emi_data[last_index]['total_platform_fee'] += round(
                     float(float(self.ids.extra_amount.text) + processing_fee) / 2, 2)
 
-                data1[index]['remaining_amount'] = float(remaining_amount)
+                if data1[index]['remaining_amount'] == None:
+                    data1[index]['remaining_amount'] = 0
+                    data1[index]['remaining_amount'] = float(remaining_amount)
+                else:
+                    data1[index]['remaining_amount'] = float(remaining_amount)
                 data1[index]['total_amount_paid'] += float(pay)
                 anvil.server.call('loan_text', None)
                 sm = self.manager
@@ -3964,7 +4014,7 @@ class DuesScreen(Screen):
             #     markup=True,
             # ))
             text_layout.add_widget(MDLabel(
-                text=f"[b]Loan Amount[/b]: {loan_amount[number]}",
+                text=f"[b]Loan Amount[/b]: {loan_amount[i]}",
                 theme_text_color='Custom',
                 text_color=(0, 0, 0, 1),
                 halign='left',

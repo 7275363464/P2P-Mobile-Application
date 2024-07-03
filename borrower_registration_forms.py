@@ -697,9 +697,6 @@ Borrower = '''
                 keep_ratio: True
                 size_hint_y: None
                 size: dp(50), dp(50)
-                height: dp(36)
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
             GridLayout:
                 cols: 1
@@ -766,6 +763,7 @@ Borrower = '''
 
                 MDIconButton:
                     icon: 'upload'
+                    id: upload_icon1
                     theme_text_color: "Custom"
                     text_color: 0, 0, 0, 1  # Black text color
                     size_hint_x: None
@@ -784,17 +782,16 @@ Borrower = '''
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
-            Image:
-                id: image_label1
-                source: ''
-                allow_stretch: True
-                keep_ratio: True
-                size_hint_y: None
-                size: dp(50), dp(50)
-                height: dp(36)
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
+                Image:
+                    id: image_label1
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             MDLabel:
                 text: "Upload Intermediate/PUC"
                 halign: 'left'
@@ -834,17 +831,16 @@ Borrower = '''
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
-            Image:
-                id: image_label1
-                source: ''
-                allow_stretch: True
-                keep_ratio: True
-                size_hint_y: None
-                size: dp(50), dp(50)
-                height: dp(36)
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
+                Image:
+                    id: image_label2
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             GridLayout:
                 cols: 1
                 spacing:dp(30)
@@ -936,7 +932,7 @@ Borrower = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
+                    
             MDLabel:
                 text: "Upload Intermediate/PUC Certificate"
                 halign: 'left'
@@ -1036,7 +1032,6 @@ Borrower = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
             GridLayout:
                 cols: 1
                 spacing:dp(30)
@@ -1120,7 +1115,7 @@ Borrower = '''
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
                 Image:
-                    id: image_label2
+                    id: image_label1
                     source: ''
                     allow_stretch: True
                     keep_ratio: True
@@ -1179,7 +1174,7 @@ Borrower = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
+                    
             MDLabel:
                 text: "Upload Bachelors Certificate"
                 halign: 'left'
@@ -1229,7 +1224,7 @@ Borrower = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
+                    
             MDLabel:
                 text: "Upload Masters Certificate"
                 halign: 'left'
@@ -1278,7 +1273,7 @@ Borrower = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
+                    
             GridLayout:
                 cols: 1
                 spacing:dp(30)
@@ -1414,7 +1409,7 @@ Borrower = '''
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
                 Image:
-                    id: image_label1
+                    id: image_label2
                     source: ''
                     allow_stretch: True
                     keep_ratio: True
@@ -1464,7 +1459,7 @@ Borrower = '''
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
                 Image:
-                    id: image_label1
+                    id: image_label3
                     source: ''
                     allow_stretch: True
                     keep_ratio: True
@@ -1514,7 +1509,7 @@ Borrower = '''
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
                 Image:
-                    id: image_label1
+                    id: image_label4
                     source: ''
                     allow_stretch: True
                     keep_ratio: True
@@ -1562,7 +1557,7 @@ Borrower = '''
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 Image:
-                    id: image_label1
+                    id: image_label5
                     source: ''
                     allow_stretch: True
                     keep_ratio: True
@@ -2054,7 +2049,7 @@ Borrower = '''
     MDBoxLayout:
         orientation: 'vertical'
         spacing: dp(20)
-        padding: dp(50)
+        padding: dp(30)
 
         MDLabel:
             text:""
@@ -2125,7 +2120,7 @@ Borrower = '''
                     Color:
                         rgba: 0, 0, 0, 1  # Border color (black in this example)
                     Line:
-                        width: 0.7  # Border width
+                        width: 0.7 # Border width
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
                 MDIconButton:
@@ -2757,7 +2752,7 @@ Borrower = '''
             MDLabel:
                 text: ""
                 size_hint_y: None
-                height:dp(20)
+                height:dp(15)
 
             MDLabel:
                 text: 'Employment Details'
@@ -2781,6 +2776,32 @@ Borrower = '''
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
+            
+            MDLabel:
+                text:"Select Your Salary Type:"
+                halign: 'left'
+                font_size: "15dp"
+                font_name: "Roboto-Bold"
+            MDLabel:
+                text:""
+            Spinner:
+                id: salary_type_id
+                text: " Select Salary type"
+                font_size: "15dp"
+                multiline: False
+                size_hint: 1 , None
+                height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
+                background_color: 0,0,0,0
+                background_normal:''
+                color: 0, 0, 0, 1
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  
+                    Line:
+                        width: 0.7
+                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
             MDTextField:              
                 id: designation
@@ -2900,12 +2921,16 @@ Borrower = '''
                 padding: [0, "30dp", 0, 0]
                 MDRaisedButton:
                     text: "Next"
-                    on_release: root.add_data(annual_salary.text, designation.text)
+                    on_release: root.add_data(salary_type_id.text,annual_salary.text, designation.text)
                     md_bg_color: 0.043, 0.145, 0.278, 1
                     pos_hint: {'right': 1, 'y': 0.5}
                     text_color: 1, 1, 1, 1
                     size_hint: 1, None
                     height: "50dp"
+            MDLabel:
+                text:""
+            MDLabel:
+                text:""
 
 <BorrowerScreen14>:
     MDTopAppBar:
@@ -2999,7 +3024,7 @@ Borrower = '''
 
             MDTextField:              
                 id:business_number
-                hint_text: 'Enter Business Phone Number'
+                hint_text: 'Enter Company Phone Number'
                 multiline: False                        
                 helper_text_mode: 'on_focus'
                 size_hint_y: None
@@ -4775,7 +4800,7 @@ class BorrowerScreen1(Screen):
         if user_email in id_list:
             index = id_list.index(user_email)
             data[index]['mobile'] = mobile_number
-            data[index]['mail_id'] = alternate_email
+            data[index]['another_email'] = alternate_email
         else:
             print('no email found')
         # self.manager.current = 'BorrowerScreen2'
@@ -8460,6 +8485,19 @@ class BorrowerScreen13(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        gender_data = app_tables.fin_borrower_salary_type.search()
+        gender_list = []
+        for i in gender_data:
+            gender_list.append(i['borrower_salary_type'])
+        self.unique_gender = []
+        for i in gender_list:
+            if i not in self.unique_gender:
+                self.unique_gender.append(i)
+        print(self.unique_gender)
+        if len(self.unique_gender) >= 1:
+            self.ids.salary_type_id.values = ['Select Salary type'] + self.unique_gender
+        else:
+            self.ids.salary_type_id.values = ['Select Salary type']
 
     def get_email(self):
         return anvil.server.call('another_method')
@@ -8618,7 +8656,7 @@ class BorrowerScreen13(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def add_data(self, annual_salary, designation):
+    def add_data(self, annual_salary, designation,salary_type_id):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -8637,9 +8675,9 @@ class BorrowerScreen13(Screen):
 
         # Perform the actual action (e.g., fetching loan requests)
         # You can replace the sleep with your actual logic
-        Clock.schedule_once(lambda dt: self.perform_data_addition_action(annual_salary, designation, modal_view), 2)
+        Clock.schedule_once(lambda dt: self.perform_data_addition_action(annual_salary, salary_type_id,designation, modal_view), 2)
 
-    def perform_data_addition_action(self, annual_salary, designation, modal_view):
+    def perform_data_addition_action(self,salary_type_id, annual_salary, designation, modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
 
@@ -8654,6 +8692,13 @@ class BorrowerScreen13(Screen):
             self.show_validation_error("Please Enter Valid Designation.")
             return
 
+        if not all([salary_type_id]):
+            # Display a validation error dialog
+            self.show_validation_error("Please fill in all fields.")
+            return  # Prevent further execution if any field is missing
+        if salary_type_id not in self.unique_gender:
+            self.show_validation_error('Select a valid salary type')
+            return
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -8679,6 +8724,7 @@ class BorrowerScreen13(Screen):
             index = id_list.index(user_email)
             data[index]['annual_salary'] = annual_salary
             data[index]['designation'] = designation
+            data[index]['salary_type'] = salary_type_id
         else:
             print('email not found')
 

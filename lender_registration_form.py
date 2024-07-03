@@ -1729,14 +1729,17 @@ KV = '''
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
-            MDLabel:
-                id: image_label1
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label1
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    
             MDLabel:
                 text: "Upload Intermediate/PUC Certificate"
                 halign: 'left'
@@ -1776,14 +1779,16 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDLabel:
-                id: image_label2
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label2
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             MDLabel:
                 text: "Upload Bachelors certificate"
                 halign: 'left'
@@ -1824,14 +1829,16 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDLabel:
-                id: image_label3
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label3
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             MDLabel:
                 text: "Upload Masters Certificate"
                 halign: 'left'
@@ -1874,14 +1881,16 @@ KV = '''
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
-            MDLabel:
-                id: image_label4
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label4
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
 
             MDLabel:
@@ -1922,14 +1931,16 @@ KV = '''
                     height: dp(36)
                     valign: 'middle'  # Align the label text vertically in the center
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDLabel:
-                id: image_label5
-                text: ''
-                halign: 'center'
-                theme_text_color: "Custom"
-                text_color: 0, 0, 0, 1  # Black text color
-                valign: 'middle'  # Align the label text vertically in the center
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Image:
+                    id: image_label5
+                    source: ''
+                    allow_stretch: True
+                    keep_ratio: True
+                    size_hint_y: None
+                    size: dp(50), dp(50)
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
             MDRectangleFlatButton:
                 text: "Next"
@@ -5193,19 +5204,17 @@ class LenderScreen5(Screen):
             cursor.execute("UPDATE fin_registration_table SET highest_qualification = ? WHERE customer_id = ?",
                            (id, row_id_list[log_index]))
             conn.commit()
-            data = app_tables.fin_user_profile.search()
-            id_list = []
-            for i in data:
-                id_list.append(i['email_user'])
-
-            user_email = anvil.server.call('another_method')
-            if user_email in id_list:
-                index = id_list.index(user_email)
-                data[index]['qualification'] = id
-            else:
-                print('email not found')
         else:
             print('User is not logged in.')
+        data = app_tables.fin_user_profile.search()
+        id_list = [i['email_user'] for i in data]
+
+        user_email = anvil.server.call('another_method')
+        if user_email in id_list:
+            index = id_list.index(user_email)
+            data[index]['qualification'] = id
+        else:
+            print('email not found')
 
     def go_to_dashboard(self):
         self.manager.current = 'DashScreen'

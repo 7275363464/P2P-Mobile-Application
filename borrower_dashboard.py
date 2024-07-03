@@ -7754,6 +7754,7 @@ class DashboardScreen(Screen):
         self.refresh_profile_data()
 
     def on_pre_enter(self):
+        self.load_false_count()
         # Bind the back button event to the on_back_button method
         Window.bind(on_keyboard=self.on_back_button)
         log_email = anvil.server.call('another_method')

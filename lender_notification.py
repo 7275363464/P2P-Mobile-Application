@@ -601,7 +601,7 @@ class Lend_NotificationScreen(Screen):
                     icon="chevron-right"
                 ),
                 text=f"{borrower_name[i]} has an [b]overdue[/b] payment",  # Corrected line
-                secondary_text=f"for Rs:{loan_amount_for_id} loan amount in {product_name_for_id} product",
+                secondary_text=f"for Rs {loan_amount_for_id} loan amount in {product_name_for_id} product",
                 tertiary_text=f"Day Passed Due Date : {(today_date - shedule_date[loan_id[i]]).days}",
                 text_color=(0, 0, 0, 1),  # Black color
                 theme_text_color='Custom',
@@ -679,7 +679,7 @@ class Lend_NotificationScreen(Screen):
                     icon="chevron-right"
                 ),
                 text=f"{borrower_name} has sent a [b]foreclose[/b] request",
-                secondary_text=f"for Rs:{loan_amount} loan amount in {product_name} product",
+                secondary_text=f"for Rs {loan_amount} loan amount in {product_name} product",
                 tertiary_text=" ",
                 text_color=(0, 0, 0, 1),
                 theme_text_color='Custom',
@@ -726,9 +726,10 @@ class Lend_NotificationScreen(Screen):
                 record.update()
 
             self.show_success_dialog('The foreclosure request has been approved successfully.')
-            self.manager.add_widget(Factory.DashboardScreenLF(name='DashboardScreenLF'))
-            # Switch to the 'DashboardScreenLF' screen
-            self.manager.current = 'DashboardScreenLF'
+            # self.manager.add_widget(Factory.DashboardScreenLF(name='DashboardScreenLF'))
+            # # Switch to the 'DashboardScreenLF' screen
+            # self.manager.current = 'DashboardScreenLF'
+            self.manager.current = 'Lend_NotificationScreen'
         else:
             print("No data found for loan_id:", loan_id)
 
@@ -737,29 +738,30 @@ class Lend_NotificationScreen(Screen):
         loan_records = app_tables.fin_loan_details.search(loan_id=loan_id)
 
         if foreclosure_records and loan_records:
-            # Extract lender and product data from the first loan record (assuming there's only one matching record)
             lender_customer_id = loan_records[0]['lender_customer_id']
             lender_email_id = loan_records[0]['lender_email_id']
             lender_full_name = loan_records[0]['lender_full_name']
             product_name = loan_records[0]['product_name']
 
-            # Update 'status', 'status_timestamp', lender data, and product name in fin_foreclosure table for each record
             for record in foreclosure_records:
-                record['status'] = 'rejected'
-                record['status_timestamp'] = datetime.now()
-                record['lender_customer_id'] = lender_customer_id
-                record['lender_email_id'] = lender_email_id
-                record['lender_full_name'] = lender_full_name
-                record['product_name'] = product_name
-                record.update()
+                try:
+                    record['status'] = 'rejected'
+                    record['status_timestamp'] = datetime.now()
+                    record['lender_customer_id'] = lender_customer_id
+                    record['lender_email_id'] = lender_email_id
+                    record['lender_full_name'] = lender_full_name
+                    record['product_name'] = product_name
+                    record.update()
+                except anvil.tables.TableError as e:
+                    print(f"Error updating record: {e}")
+                    # Handle the error appropriately, e.g., logging, notifying the user, etc.
 
             self.show_reject_dialog('The foreclosure request has been rejected.')
-            self.manager.add_widget(Factory.DashboardScreenLF(name='DashboardScreenLF'))
-            # Switch to the 'DashboardScreenLF' screen
-            self.manager.current = 'DashboardScreenLF'
+            # self.manager.add_widget(Factory.DashboardScreenLF(name='DashboardScreenLF'))
+            # self.manager.current = 'DashboardScreenLF'
+            self.manager.current = 'Lend_NotificationScreen'
         else:
             print("No data found for loan_id:", loan_id)
-
     def show_success_dialog(self, message):
         dialog = MDDialog(
             title="Success",
@@ -828,7 +830,7 @@ class Lend_NotificationScreen(Screen):
             product_name = extension['product_name']
 
 
-            message = f"for Rs:{loan_amount} loan amount in {product_name} product"
+            message = f"for Rs {loan_amount} loan amount in {product_name} product"
             # Create accept and reject buttons
             accept_button = Button(
                 text="Approve",
@@ -905,7 +907,7 @@ class Lend_NotificationScreen(Screen):
                 loan_details_record.update()
 
             # Show success dialog
-            self.show_dialog('Success', 'Request approved successfully!', 'OK', 'NewExtension')
+            self.show_dialog('Success', 'The extension request has been approved successfully.', 'OK', 'Lend_NotificationScreen')
         else:
             print("No data found for loan_id:", loan_id)
 
@@ -921,7 +923,7 @@ class Lend_NotificationScreen(Screen):
                 extends_loan_record.update()
 
             # Show reject dialog
-            self.show_dialog('Reject', 'Request rejected!', 'OK', 'NewExtension')
+            self.show_dialog('Reject', 'The extension request has been rejected successfully.', 'OK', 'Lend_NotificationScreen')
         else:
             print("No data found for loan_id:", loan_id)
 
@@ -940,7 +942,7 @@ class Lend_NotificationScreen(Screen):
 
     def on_dialog_dismiss(self, dialog, next_screen):
         dialog.dismiss()
-        self.manager.add_widget(Factory.NewExtension(name=next_screen))
+        # self.manager.add_widget(Factory.NewExtension(name=next_screen))
         self.manager.current = next_screen
 
     def on_accept_loan(self, loan_id):
@@ -952,6 +954,7 @@ class Lend_NotificationScreen(Screen):
             if i['loan_id'] == loan_id:
                 borrower_name = i['borrower_full_name']
                 loan_entry = i  # Store the loan entry to update
+                break  # Exit loop after finding the loan entry
 
         if loan_entry:  # Check if the loan entry was found
             loan_entry['loan_updated_status'] = 'approved'
@@ -971,11 +974,14 @@ class Lend_NotificationScreen(Screen):
                 loan_entry['lender_email_id'] = user_profile['email_user']
 
             # Perform additional actions if needed
+            sm = self.manager
 
             # Show success dialogue
-            self.show_success_dialog(f"{borrower_name} loan approved successfully")
-            self.manager.add_widget(Factory.ViewLoansScreen(name='ViewLoansScreen'))
-            self.manager.current = 'ViewLoansScreen'
+            self.show_success_dialog(f"{borrower_name} loan is approved successfully")
+            # Navigate to 'ViewLoansProfileScreenLR' after loan approval
+            self.manager.add_widget(Factory.ViewLoansProfileScreenLR(name='ViewLoansProfileScreenLR'))
+            sm.current = 'ViewLoansProfileScreenLR'
+            self.manager.get_screen('ViewLoansProfileScreenLR').initialize_with_value(loan_id, data)
         else:
             # Handle the case where loan_id is not found if necessary
             pass
@@ -1008,9 +1014,11 @@ class Lend_NotificationScreen(Screen):
                 loan_entry['lender_email_id'] = user_profile['email_user']
 
             # Perform additional actions if needed
-            self.show_success_dialog(f"{borrower_name} loan rejected successfully")
-            self.manager.add_widget(Factory.ViewLoansScreen(name='ViewLoansScreen'))
-            self.manager.current = 'ViewLoansScreen'
+            self.show_success_dialog(f"{borrower_name} loan is rejected successfully")
+            # self.manager.add_widget(Factory.LenderDashboard(name='LenderDashboard'))
+            # self.manager.current = 'LenderDashboard'
+            self.manager.current = 'Lend_NotificationScreen'
+
         else:
             # Handle the case where loan_id is not found if necessary
             pass
@@ -1036,7 +1044,7 @@ class Lend_NotificationScreen(Screen):
             product_name = loan['product_name']
 
             if loan_status != 'approved':
-                message = f"for Rs:{loan_amount} loan amount in {product_name} product"
+                message = f"for Rs {loan_amount} loan amount in {product_name} product"
                 # Design for under process loans
                 item = ThreeLineAvatarIconListItem(
                     IconLeftWidget(

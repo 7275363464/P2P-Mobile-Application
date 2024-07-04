@@ -2716,7 +2716,7 @@ KV = '''
                 halign: 'center'
                 bold: True
                 size_hint_y: None
-                height:dp(30)
+                height:dp(15)
 
             MDTextField:
                 id: annual_salary
@@ -2733,6 +2733,32 @@ KV = '''
                 input_type: 'number'
                 on_touch_down: root.on_annual_salary_touch_down()
                 helper_text_color_normal: "black"
+            
+            MDLabel:
+                text:"Select Your Salary Type:"
+                halign: 'left'
+                font_size: "15dp"
+                font_name: "Roboto-Bold"
+            MDLabel:
+                text:""
+            Spinner:
+                id: salary_type_id
+                text: " Select Salary type"
+                font_size: "15dp"
+                multiline: False
+                size_hint: 1 , None
+                height:"40dp"
+                width: dp(200)
+                text_size: self.width - dp(20), None
+                background_color: 0,0,0,0
+                background_normal:''
+                color: 0, 0, 0, 1
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  
+                    Line:
+                        width: 0.7
+                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
             MDTextField:
                 id: designation
@@ -2856,14 +2882,17 @@ KV = '''
 
             MDRectangleFlatButton:
                 text: "Next"
-                on_release: root.add_data(annual_salary.text, designation.text)
+                on_release: root.add_data(salary_type_id.text,annual_salary.text, designation.text)
                 md_bg_color: 0.043, 0.145, 0.278, 1
                 pos_hint: {'right': 1, 'y': 0.5}
                 text_color: 1, 1, 1, 1
                 size_hint: 1, None
                 height: "50dp"
                 font_name: "Roboto-Bold"
-
+            MDLabel:
+                text: ''
+            MDLabel:
+                text: ''
 
 <LenderScreenIndividualForm3>:
     MDTopAppBar:
@@ -5052,6 +5081,7 @@ class LenderScreen4(Screen):
             data[index]['country'] = country
         else:
             print('no email found')
+
         sm = self.manager
         lender_screen = LenderScreen5(name='LenderScreen5')
         sm.add_widget(lender_screen)
@@ -6420,6 +6450,8 @@ class LenderScreen_Edu_Masters(Screen):
 
 class LenderScreen_Edu_PHD(Screen):
     MAX_IMAGE_SIZE_MB = 2
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
@@ -6434,39 +6466,39 @@ class LenderScreen_Edu_PHD(Screen):
 
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1")
+                                         "image_label1",self.upload_image1)
 
     def check_and_open_file_manager2(self):
         self.check_and_open_file_manager("upload_icon2", "upload_label2", "selected_file_label2", "selected_image2",
-                                         "image_label2")
+                                         "image_label2",self.upload_image2)
 
     def check_and_open_file_manager3(self):
         self.check_and_open_file_manager("upload_icon3", "upload_label3", "selected_file_label3", "selected_image3",
-                                         "image_label3")
+                                         "image_label3",self.upload_image3)
 
     def check_and_open_file_manager4(self):
         self.check_and_open_file_manager("upload_icon4", "upload_label4", "selected_file_label4", "selected_image4",
-                                         "image_label4")
+                                         "image_label4",self.upload_image4)
 
     def check_and_open_file_manager5(self):
         self.check_and_open_file_manager("upload_icon5", "upload_label5", "selected_file_label5", "selected_image5",
-                                         "image_label5")
+                                         "image_label5",self.upload_image5)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id,upload_function):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id,upload_function)
             else:
                 self.request_media_images_permission()
         else:
             # For non-Android platforms, directly open the file manager
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id)
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id,upload_function)
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id,upload_function):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
+                                                       image_label_id,upload_function),
         )
         if platform == 'android':
             primary_external_storage = "/storage/emulated/0"
@@ -6475,94 +6507,10 @@ class LenderScreen_Edu_PHD(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
-
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path3(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
-
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path4(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
-
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path5(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
-
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id,upload_function):
         # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
-        self.upload_image1(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen_Edu_PHD').ids[image_label_id].text = file_name  # Update the label text
-        self.file_manager.close()
-
-    def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
-        self.upload_image2(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen_Edu_PHD').ids[image_label_id].text = file_name  # Update the label text
-        self.file_manager.close()
-
-    def select_path3(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
-        self.upload_image3(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen_Edu_PHD').ids[image_label_id].text = file_name  # Update the label text
-        self.file_manager.close()
-
-    def select_path4(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
-        self.upload_image4(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen_Edu_PHD').ids[image_label_id].text = file_name  # Update the label text
-        self.file_manager.close()
-
-    def select_path5(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-        # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
-        self.upload_image5(path)  # Upload the selected image
-        self.ids[image_label_id].source = path
+        upload_function(path)  # Upload the selected image
+        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
         file_name = os.path.basename(path)  # Extract file name from the path
         self.manager.get_screen('LenderScreen_Edu_PHD').ids[image_label_id].text = file_name  # Update the label text
         self.file_manager.close()
@@ -6683,6 +6631,128 @@ class LenderScreen_Edu_PHD(Screen):
             self.ids.upload_label5.text = 'Upload Successfully'
         except ValueError:
             print('User is not logged in.')
+
+    def upload_image1(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['tenth_class'] = user_photo_media
+
+            print("Image uploaded successfully.")
+            self.ids['image_label1'].source = ''
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def get_email(self):
+        return anvil.server.call('another_method')
+
+    def upload_image2(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['intermediate'] = user_photo_media
+
+            print("Image uploaded successfully.")
+            self.ids['image_label2'].source = ''
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image3(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['btech'] = user_photo_media
+
+            print("Image uploaded successfully.")
+            self.ids['image_label3'].source = ''
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image4(self, file_path):
+        try:
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['mtech'] = user_photo_media
+
+            print("Image uploaded successfully.")
+            self.ids['image_label4'].source = ''
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image5(self, file_path):
+        try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['phd'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
 
     def go_to_dashboard(self):
         self.manager.current = 'DashScreen'
@@ -6859,12 +6929,12 @@ class LenderScreen6(Screen):
             # Handle the case where the user is not logged in
             print("User is not logged in.")
 
-        data = app_tables.fin_user_profile.search()
+        data = app_tables.fin_lender.search()
         id_list = [i['email_user'] for i in data]
         user_email = anvil.server.call('another_method')
         if user_email in id_list:
             index = id_list.index(user_email)
-            data[index]['loan_type'] = spinner
+            data[index]['lending_type'] = spinner
             data[index]['investment'] = investment
             data[index]['lending_period'] = spinner2
         else:
@@ -7087,6 +7157,12 @@ class LenderScreenInstitutionalForm2(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
+    def calculate_age(self, year_of_estd):
+        today = datetime.today()
+        dob = datetime.strptime(year_of_estd, '%Y-%m-%d')
+        age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+        return age
+
     def add_data(self, industry_type, last_six_months_turnover, year_of_estd):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
@@ -7279,6 +7355,8 @@ class LenderScreenInstitutionalForm2(Screen):
         if user_email in id_list:
             index = id_list.index(user_email)
             data[index]['year_of_estd'] = year_of_estd
+            age = self.calculate_age(year_of_estd)
+            data[index]['business_age'] = age
             data[index]['industry_type'] = industry_type
             data[index]['six_month_turnover'] = last_six_months_turnover
         else:
@@ -7755,6 +7833,21 @@ class LenderScreenIndividualForm1(Screen):
 
 class LenderScreenIndividualForm2(Screen):
     MAX_IMAGE_SIZE_MB = 2
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        gender_data = app_tables.fin_borrower_salary_type.search()
+        gender_list = []
+        for i in gender_data:
+            gender_list.append(i['borrower_salary_type'])
+        self.unique_gender = []
+        for i in gender_list:
+            if i not in self.unique_gender:
+                self.unique_gender.append(i)
+        print(self.unique_gender)
+        if len(self.unique_gender) >= 1:
+            self.ids.salary_type_id.values = ['Select Salary type'] + self.unique_gender
+        else:
+            self.ids.salary_type_id.values = ['Select Salary type']
 
     def get_email(self):
         return anvil.server.call('another_method')
@@ -9743,15 +9836,29 @@ class LenderScreenIndividualBankForm2(Screen):
         sm.current = 'LenderDashboard'
 
     def save_user_info(self, email, b):
-        with open("emails.json", "r") as file:
-            data = json.load(file)
+        user_data = {
+            'email': email,
+            'logged_status': True,
+            'user_type': b
+        }
 
-        # Update or create entry for the current user
-        data[email] = {"user_type": b, "logged_status": True}
-        print(data)
-        # Write updated data back to the file
+        # Check if the emails.json file exists and load data, or initialize as an empty dict
+        if os.path.exists("emails.json"):
+            with open("emails.json", "r") as file:
+                try:
+                    data = json.load(file)
+                except json.JSONDecodeError:
+                    data = {}
+        else:
+            data = {}
+
+        data[email] = user_data
+
+        # Write back the updated data to emails.json
         with open("emails.json", "w") as file:
-            json.dump(data, file)
+            json.dump(data, file, indent=4)
+
+
     def show_validation_error(self, error_message):
         dialog = MDDialog(
             title="Validation Error",

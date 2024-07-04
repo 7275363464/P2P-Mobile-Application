@@ -10,7 +10,7 @@ from kivy.uix.widget import Widget
 from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
 
-from chatbot import ChatBotScreen
+#from chatbot import ChatBotScreen
 from lender_portfolio import Lend_Portfolio
 from anvil.tables import app_tables
 import base64
@@ -9193,7 +9193,7 @@ class ViewPersonalScreen(Screen):
                 upload_gov_id2.append(None)
 
             name.append(row['full_name'])
-            alternate_email.append(row['mail_id'])
+            alternate_email.append(row['another_email'])
             email1.append(row['email_user'])
             mobile_no.append(row['mobile'])
             dob.append(row['date_of_birth'])
@@ -9784,7 +9784,7 @@ class ViewEditScreen1(Screen):
                 upload_gov_id2.append(None)
 
             name.append(row['full_name'])
-            alternate_email.append(row['mail_id'])
+            alternate_email.append(row['another_email'])
             email1.append(row['email_user'])
             mobile_no.append(row['mobile'])
             dob.append(row['date_of_birth'])
@@ -9966,7 +9966,7 @@ class ViewEditScreen1(Screen):
             # we retrieve the first matching row
             user_profile = data[0]
             user_profile.update(full_name=name,
-                                mail_id=alternate_email,
+                                another_email=alternate_email,
                                 email_user=email1,
                                 mobile=mobile_no,
                                 gender=gender,

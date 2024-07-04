@@ -9652,7 +9652,7 @@ class PersonalScreen(Screen):
                 upload_gov_id2.append(None)
 
             name.append(row['full_name'])
-            alternate_email.append(row['mail_id'])
+            alternate_email.append(row['another_email'])
             email1.append(row['email_user'])
             mobile_no.append(row['mobile'])
             dob.append(row['date_of_birth'])
@@ -11028,7 +11028,7 @@ class EditScreen1(Screen):
                 upload_gov_id2.append(None)
 
             name.append(row['full_name'])
-            alternate_email.append(row['mail_id'])
+            alternate_email.append(row['another_email'])
             email1.append(row['email_user'])
             mobile_no.append(row['mobile'])
             dob.append(row['date_of_birth'])
@@ -11254,7 +11254,7 @@ class EditScreen1(Screen):
             try:
                 # Update the user's profile data
                 user_profile.update(full_name=name,
-                                    mail_id=alternate_email,
+                                    another_email=alternate_email,
                                     email_user=email1,
                                     mobile=mobile_no,
                                     gender=gender,

@@ -30,7 +30,7 @@ from lender_dashboard import LenderDashboard
 from login import OTPScreen
 from signup import SignupScreen, EmailOTPScreen
 
-anvil.server.connect("server_X7NIDKXJPK7UT4XPLZZY75EU-C4RCUGZ5WVN7WE3B")
+anvil.server.connect("server_ZXO6CXSVA45X44LXLRTCRXKJ-LBTFRDF2ECQMGWB4")
 
 
 class MyApp(MDApp):
@@ -116,10 +116,10 @@ class MyApp(MDApp):
 
     def send_email_otp(self, email):
         try:
-            from_mail = "gtpltechnologies@gmail.com"
+            from_mail = "gtpl.march2023@gmail.com"
             server = smtplib.SMTP('smtp.gmail.com', 587)
             server.starttls()
-            server.login(from_mail, "uszy dzhb itss socd")
+            server.login(from_mail, "ohcz etov xtpy zhne")
 
             msg = EmailMessage()
             msg['Subject'] = "OTP Verification"
@@ -146,10 +146,10 @@ class MyApp(MDApp):
 
     def send_signup_success_email(self, email):
         try:
-            from_mail = "gtpltechnologies@gmail.com"
+            from_mail = "gtpl.march2023@gmail.com"
             server = smtplib.SMTP('smtp.gmail.com', 587)
             server.starttls()
-            server.login(from_mail, "uszy dzhb itss socd")
+            server.login(from_mail, "ohcz etov xtpy zhne")
 
             msg = EmailMessage()
             msg['Subject'] = "Welcome to P2P Lending Platform!"
@@ -196,7 +196,7 @@ class MyApp(MDApp):
     def update_email_verification_status(self, email):
         try:
             # Connect to Anvil server
-            anvil.server.connect("server_X7NIDKXJPK7UT4XPLZZY75EU-C4RCUGZ5WVN7WE3B")
+            anvil.server.connect("server_ZXO6CXSVA45X44LXLRTCRXKJ-LBTFRDF2ECQMGWB4")
 
             # Create or update the user profile directly
             app_tables.users.add_row(email=email, email_verified=True)
@@ -216,34 +216,41 @@ class MyApp(MDApp):
         ''', (entered_email,))
 
         user_data = cursor.fetchone()
-
-        # Assuming app_tables.users and app_tables.fin_user_profile are valid references
         data = app_tables.users.search()
         profile = app_tables.fin_user_profile.search()
-        email_list = [i['email'] for i in data]
-        registration_approve = [i['registration_approve'] for i in profile]
-        user_type = [i['usertype'] for i in profile]
-        email_user = [i['email_user'] for i in profile]
+        email_list = []
+        registration_approve = []
+        user_type = []
+        email_user = []
+
+        for i in data:
+            email_list.append(i['email'])
+        for i in profile:
+            registration_approve.append(i['registration_approve'])
+            user_type.append(i['usertype'])
+            email_user.append(i['email_user'])
 
         if entered_email in email_list:
-            index = email_list.index(entered_email)
+            i = email_list.index(entered_email)
             if entered_email in email_user:
-                index_profile = email_user.index(entered_email)
+                index = email_user.index(entered_email)
             else:
                 self.show_dialog('No email found')
                 return
 
-            if registration_approve[index_profile] is True:
-                self.save_user_info(entered_email, user_type[index_profile])
-                if user_type[index_profile] == 'borrower':
+            if (email_list[i] == entered_email) and (registration_approve[index] is True):
+                # Update and save user info to email.json
+                self.save_user_info(entered_email, user_type[index])
+
+                if user_type[index] == 'borrower':
                     Clock.schedule_once(lambda dt: self.show_dashboard('DashboardScreen'), 0)
-                elif user_type[index_profile] == 'lender':
+                elif user_type[index] == 'lender':
                     Clock.schedule_once(lambda dt: self.show_dashboard('LenderDashboard'), 0)
                 else:
                     Clock.schedule_once(lambda dt: self.show_dashboard('DashScreen'), 0)
+
                 return
-            elif registration_approve[index_profile] is None or user_type[index_profile] == "":
-                self.save_user_info(entered_email, 'default')  # Set user_type to 'default'
+            elif registration_approve[index] is None or user_type[index] == "":
                 Clock.schedule_once(lambda dt: self.show_dashboard('DashScreen'), 0)
                 return
             else:
@@ -253,10 +260,10 @@ class MyApp(MDApp):
             self.show_dialog("Email not found")
 
     def save_user_info(self, email, user_type):
-        print(user_type, email)
         user_data = {
-            'user_type': user_type,
-            'logged_status': True
+            'email': email,
+            'logged_status': True,
+            'user_type': user_type
         }
 
         # Check if the emails.json file exists and load data, or initialize as an empty dict
@@ -269,8 +276,6 @@ class MyApp(MDApp):
         else:
             data = {}
 
-        # Update email_user and specific email entry with user_data
-        data['email_user'] = email
         data[email] = user_data
 
         # Write back the updated data to emails.json

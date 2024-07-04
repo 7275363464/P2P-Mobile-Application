@@ -7829,6 +7829,12 @@ class BorrowerScreen10(Screen):
             lambda dt: self.perform_data_addition_action(industry_type, last_six_months_turnover,
                                                          year_of_estd, modal_view), 2)
 
+    def calculate_age(self, year_of_estd):
+        today = datetime.today()
+        dob = datetime.strptime(year_of_estd, '%Y-%m-%d')
+        age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+        return age
+
     def perform_data_addition_action(self, industry_type, last_six_months_turnover,
                                      year_of_estd, modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
@@ -7883,6 +7889,8 @@ class BorrowerScreen10(Screen):
             data[index]['industry_type'] = industry_type
             data[index]['six_month_turnover'] = last_six_months_turnover
             data[index]['year_of_estd'] = year_of_estd
+            age = self.calculate_age(year_of_estd)
+            data[index]['business_age'] = age
         else:
             print('no email found')
         sm = self.manager
@@ -9528,16 +9536,27 @@ class BorrowerScreen19(Screen):
         sm.current = 'DashboardScreen'
 
     def save_user_info(self, email, b):
-        with open("emails.json", "r") as file:
-            data = json.load(file)
+        user_data = {
+            'email': email,
+            'logged_status': True,
+            'user_type': b
+        }
 
-        # Update or create entry for the current user
-        data[email] = {"user_type": b, "logged_status": True}
-        print(data)
-        # Write updated data back to the file
+        # Check if the emails.json file exists and load data, or initialize as an empty dict
+        if os.path.exists("emails.json"):
+            with open("emails.json", "r") as file:
+                try:
+                    data = json.load(file)
+                except json.JSONDecodeError:
+                    data = {}
+        else:
+            data = {}
+
+        data[email] = user_data
+
+        # Write back the updated data to emails.json
         with open("emails.json", "w") as file:
-            json.dump(data, file)
-
+            json.dump(data, file, indent=4)
 
     def show_terms_dialog(self):
         dialog = MDDialog(

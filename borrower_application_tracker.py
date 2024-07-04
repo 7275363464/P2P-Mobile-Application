@@ -1,6 +1,7 @@
 from anvil.tables import app_tables
 from kivy import platform
 from kivy.core.window import Window
+from kivy.graphics import Color
 from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
@@ -92,12 +93,12 @@ application_tracker = """
                     size_hint_y: None
                     height: 50
 
-                    canvas:
+                    canvas.before:
                         Color:
                             rgba: 0.043, 0.145, 0.278, 1
                         Line:
                             width: 2
-                            points: self.x + dp(24), self.y + dp(12) , self.x + dp(24), self.y - dp(34)
+                            points: self.x + dp(24), self.y + dp(12), self.x + dp(24), self.y - dp(34)
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -128,12 +129,12 @@ application_tracker = """
                     text_color: 0.043, 0.145, 0.278, 1
                     size_hint_y: None
                     height: 50
-                    canvas:
+                    canvas.before:
                         Color:
                             rgba: 0.043, 0.145, 0.278, 1
                         Line:
                             width: 2
-                            points: self.x + dp(24), self.y + dp(12) , self.x + dp(24), self.y - dp(34)
+                            points: self.x + dp(24), self.y + dp(12), self.x + dp(24), self.y - dp(34)
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -163,12 +164,12 @@ application_tracker = """
                     text_color: 0.043, 0.145, 0.278, 1
                     size_hint_y: None
                     height: 50
-                    canvas:
+                    canvas.before:
                         Color:
                             rgba: 0.043, 0.145, 0.278, 1
                         Line:
                             width: 2
-                            points: self.x + dp(24), self.y + dp(12) , self.x + dp(24), self.y - dp(34)
+                            points: self.x + dp(24), self.y + dp(12), self.x + dp(24), self.y - dp(34)
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -266,121 +267,157 @@ class ApplicationTrackerScreen(Screen):
                 print('under process')
                 self.ids.icon1.icon = 'circle-slice-8'
                 self.ids.icon1.theme_text_color = "Custom"
-                self.ids.icon1.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.icon1.text_color = 0, 1, 0, 1
+                if self.ids.icon1.canvas.before.children:
+                    for instruction in self.ids.icon1.canvas.before.children:
+                        if isinstance(instruction, Color):
+                            instruction.rgba = 0, 1, 0, 1  # Green color
                 self.ids.label1.text = f"Application for {product_name[index]} product loan sent"
                 self.ids.label1.theme_text_color = "Custom"
                 self.ids.label1.text_color = 0, 0, 0, 1
                 self.ids.label1.bold = True
                 self.ids.sub_label1.text = f"{sub_date[index].strftime('%Y-%m-%d')}"
-                self.ids.sub_label1.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label1.text_color = 0, 0, 0, 1
                 self.ids.sub_label1.bold = True
                 self.ids.icon3.icon = 'checkbox-blank-circle-outline'
                 self.ids.icon3.theme_text_color = "Custom"
-                self.ids.icon3.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.icon3.text_color = 0, 0, 0, 1
+                if self.ids.icon3.canvas.before.children:
+                    for instruction in self.ids.icon3.canvas.before.children:
+                        if isinstance(instruction, Color):
+                            instruction.rgba = 0, 0, 0, 1  # Green color
                 self.ids.label3.text = f"Loan Approval status"
                 self.ids.label3.theme_text_color = "Custom"
                 self.ids.label3.text_color = 0, 0, 0, 1
                 self.ids.label3.bold = False
                 self.ids.sub_label2.text = f"Pending..."
-                self.ids.sub_label2.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label2.text_color = 0, 0, 0, 1
                 self.ids.sub_label2.bold = False
                 self.ids.icon4.icon = 'checkbox-blank-circle-outline'
                 self.ids.icon4.theme_text_color = "Custom"
-                self.ids.icon4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.icon4.text_color = 0, 0, 0, 1
+                if self.ids.icon4.canvas.before.children:
+                    for instruction in self.ids.icon4.canvas.before.children:
+                        if isinstance(instruction, Color):
+                            instruction.rgba = 0, 0, 0, 1  # Green color
                 self.ids.label4.theme_text_color = "Custom"
-                self.ids.label4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label4.text_color = 0, 0, 0, 1
                 self.ids.label4.bold = False
                 self.ids.sub_label3.text = f"Pending..."
-                self.ids.sub_label3.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label3.text_color = 0, 0, 0, 1
                 self.ids.sub_label3.bold = False
                 self.ids.icon5.icon = 'checkbox-blank-circle-outline'
                 self.ids.icon5.theme_text_color = "Custom"
-                self.ids.icon5.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.icon5.text_color = 0, 0, 0, 1
                 masked_account_number = 'xxxxxx' + profile_account_number[index1][-4:]
                 self.ids.label5.text = f"Loan credited to a/c {masked_account_number}"
                 self.ids.label5.theme_text_color = "Custom"
-                self.ids.label5.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label5.text_color = 0, 0, 0, 1
                 self.ids.label5.bold = False
                 self.ids.sub_label4.text = f"Pending..."
-                self.ids.sub_label4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label4.text_color = 0, 0, 0, 1
                 self.ids.sub_label4.bold = False
 
             elif loan_status[index] == 'approved':  # label2
                 self.ids.icon1.icon = 'circle-slice-8'
                 self.ids.icon1.theme_text_color = "Custom"
-                self.ids.icon1.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.icon1.text_color = 0, 1, 0, 1
+                if self.ids.icon1.canvas.before.children:
+                    for instruction in self.ids.icon1.canvas.before.children:
+                        if isinstance(instruction, Color):
+                            instruction.rgba = 0, 1, 0, 1  # Green color
                 self.ids.label1.text = f"Application for {product_name[index]} product loan sent"
                 self.ids.label1.theme_text_color = "Custom"
                 self.ids.label1.text_color = 0, 0, 0, 1
                 self.ids.label1.bold = True
                 self.ids.sub_label1.text = f"{sub_date[index].strftime('%Y-%m-%d')}"
-                self.ids.sub_label1.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label1.text_color = 0, 0, 0, 1
                 self.ids.sub_label1.bold = True
                 self.ids.icon3.icon = 'circle-slice-8'
                 self.ids.icon3.theme_text_color = "Custom"
-                self.ids.icon3.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.icon3.text_color = 0, 1, 0, 1
+                if self.ids.icon3.canvas.before.children:
+                    for instruction in self.ids.icon3.canvas.before.children:
+                        if isinstance(instruction, Color):
+                            instruction.rgba = 0, 1, 0, 1  # Green color
                 self.ids.label3.text = f'Loan is approved for ₹{loan_amount[index]:.2f}'
                 self.ids.label3.theme_text_color = "Custom"
                 self.ids.label3.text_color = 0, 0, 0, 1
                 self.ids.label3.bold = True
                 self.ids.sub_label2.text = f"{lender_accepted_date[index].strftime('%Y-%m-%d %H:%M:%S')}"
-                self.ids.sub_label2.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label2.text_color = 0, 0, 0, 1
                 self.ids.sub_label2.bold = True
                 self.ids.icon4.icon = 'checkbox-blank-circle-outline'
                 self.ids.icon4.theme_text_color = "Custom"
-                self.ids.icon4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.icon4.text_color = 0, 0, 0, 1
+                if self.ids.icon4.canvas.before.children:
+                    for instruction in self.ids.icon4.canvas.before.children:
+                        if isinstance(instruction, Color):
+                            instruction.rgba = 0, 0, 0, 1  # Green color
                 self.ids.label4.theme_text_color = "Custom"
-                self.ids.label4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label4.text_color = 0, 0, 0, 1
                 self.ids.label4.bold = False
                 self.ids.sub_label3.text = f"Pending..."
-                self.ids.sub_label3.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label3.text_color = 0, 0, 0, 1
                 self.ids.sub_label3.bold = False
                 self.ids.icon5.icon = 'checkbox-blank-circle-outline'
                 self.ids.icon5.theme_text_color = "Custom"
-                self.ids.icon5.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.icon5.text_color = 0, 0, 0, 1
                 masked_account_number = 'xxxxxx' + profile_account_number[index1][-4:]
                 self.ids.label5.text = f"Loan credited to a/c {masked_account_number}"
                 self.ids.label5.theme_text_color = "Custom"
-                self.ids.label5.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label5.text_color = 0, 0, 0, 1
                 self.ids.label5.bold = False
                 self.ids.sub_label4.text = f"Pending..."
-                self.ids.sub_label4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label4.text_color = 0, 0, 0, 1
                 self.ids.sub_label4.bold = False
 
             elif loan_status[index] == 'disbursed':  # label3
                 self.ids.icon1.icon = 'circle-slice-8'
                 self.ids.icon1.theme_text_color = "Custom"
-                self.ids.icon1.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.icon1.text_color = 0, 1, 0, 1
+                if self.ids.icon1.canvas.before.children:
+                    for instruction in self.ids.icon1.canvas.before.children:
+                        if isinstance(instruction, Color):
+                            instruction.rgba = 0, 1, 0, 1  # Green color
                 self.ids.label1.text = f"Application for {product_name[index]} product loan sent"
                 self.ids.label1.theme_text_color = "Custom"
                 self.ids.label1.text_color = 0, 0, 0, 1
                 self.ids.label1.bold = True
                 self.ids.sub_label1.text = f"{sub_date[index].strftime('%Y-%m-%d')}"
-                self.ids.sub_label1.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label1.text_color = 0, 0, 0, 1
                 self.ids.sub_label1.bold = True
                 self.ids.icon3.icon = 'circle-slice-8'
                 self.ids.icon3.theme_text_color = "Custom"
-                self.ids.icon3.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.icon3.text_color = 0, 1, 0, 1
+                if self.ids.icon3.canvas.before.children:
+                    for instruction in self.ids.icon3.canvas.before.children:
+                        if isinstance(instruction, Color):
+                            instruction.rgba = 0, 1, 0, 1  # Green color
                 self.ids.label3.text = f'Loan is approved for ₹{loan_amount[index]:.2f}'
                 self.ids.label3.theme_text_color = "Custom"
                 self.ids.label3.text_color = 0, 0, 0, 1
                 self.ids.label3.bold = True
                 self.ids.sub_label2.text = f"{lender_accepted_date[index].strftime('%Y-%m-%d %H:%M:%S')}"
-                self.ids.sub_label2.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label2.text_color = 0, 0, 0, 1
                 self.ids.sub_label2.bold = True
                 self.ids.icon4.icon = 'circle-slice-8'
                 self.ids.icon4.theme_text_color = "Custom"
-                self.ids.icon4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.icon4.text_color = 0, 1, 0, 1
+                if self.ids.icon4.canvas.before.children:
+                    for instruction in self.ids.icon4.canvas.before.children:
+                        if isinstance(instruction, Color):
+                            instruction.rgba = 0, 1, 0, 1  # Green color
                 self.ids.label4.text = f"{product_name[index]} product loan has been disbursed"
                 self.ids.label4.theme_text_color = "Custom"
                 self.ids.label4.text_color = 0, 0, 0, 1
                 self.ids.label4.bold = True
                 self.ids.sub_label3.text = f"{lender_disbursed_date[index].strftime('%Y-%m-%d %H:%M:%S')}"
-                self.ids.sub_label3.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label3.text_color = 0, 0, 0, 1
                 self.ids.sub_label3.bold = True
                 self.ids.icon5.icon = 'circle-slice-8'
                 self.ids.icon5.theme_text_color = "Custom"
-                self.ids.icon5.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.icon5.text_color = 0, 1, 0, 1
                 # to hide account number
                 masked_account_number = 'xxxxxx' + profile_account_number[index1][-4:]
                 self.ids.label5.text = f"Loan credited to a/c {masked_account_number}"
@@ -388,22 +425,30 @@ class ApplicationTrackerScreen(Screen):
                 self.ids.label5.text_color = 0, 0, 0, 1
                 self.ids.label5.bold = True
                 self.ids.sub_label4.text = f"Transaction Done."
-                self.ids.sub_label4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label4.text_color = 0, 0, 0, 1
                 self.ids.sub_label4.bold = True
 
             elif loan_status[index] == 'rejected':
                 self.ids.icon1.icon = 'circle-slice-8'
                 self.ids.icon1.theme_text_color = "Custom"
-                self.ids.icon1.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.icon1.text_color = 0, 1, 0, 1
+                if self.ids.icon1.canvas.before.children:
+                    for instruction in self.ids.icon1.canvas.before.children:
+                        if isinstance(instruction, Color):
+                            instruction.rgba = 0, 1, 0, 1  # Green color
                 self.ids.label1.text = f"Application Rejected"
                 self.ids.label1.theme_text_color = "Custom"
                 self.ids.label1.text_color = 0, 0, 0, 1
                 self.ids.label1.bold = True
                 self.ids.sub_label1.text = f"{sub_date[index].strftime('%Y-%m-%d')}"
-                self.ids.sub_label1.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label1.text_color = 0, 0, 0, 1
                 self.ids.icon3.icon = 'cancel'
                 self.ids.icon3.theme_text_color = "Custom"
                 self.ids.icon3.text_color = 0.902, 0.141, 0.278, 1
+                if self.ids.icon3.canvas.before.children:
+                    for instruction in self.ids.icon3.canvas.before.children:
+                        if isinstance(instruction, Color):
+                            instruction.rgba = 0.902, 0.141, 0.278, 1  # Green color
                 self.ids.label3.text = f'Loan is Rejected ₹{loan_amount[index]:.2f}'
                 self.ids.label3.theme_text_color = "Custom"
                 self.ids.label3.text_color = 0, 0, 0, 1
@@ -412,23 +457,27 @@ class ApplicationTrackerScreen(Screen):
                 self.ids.sub_label2.text_color = 1, 0, 0, 1
                 self.ids.icon4.icon = 'checkbox-blank-circle-outline'
                 self.ids.icon4.theme_text_color = "Custom"
-                self.ids.icon4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.icon4.text_color = 0, 0, 0, 1
+                if self.ids.icon4.canvas.before.children:
+                    for instruction in self.ids.icon4.canvas.before.children:
+                        if isinstance(instruction, Color):
+                            instruction.rgba = 0, 0, 0, 1  # Green color
                 self.ids.label4.theme_text_color = "Custom"
                 self.ids.label4.text_color = 0, 0, 0, 1
                 self.ids.label4.bold = False
                 self.ids.sub_label3.text = f"Pending..."
-                self.ids.sub_label3.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label3.text_color = 0, 0, 0, 1
                 self.ids.sub_label3.bold = False
                 self.ids.icon5.icon = 'checkbox-blank-circle-outline'
                 self.ids.icon5.theme_text_color = "Custom"
-                self.ids.icon5.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.icon5.text_color = 0, 0, 0, 1
                 masked_account_number = 'xxxxxx' + profile_account_number[index1][-4:]
                 self.ids.label5.text = f"Loan credited to a/c {masked_account_number}"
                 self.ids.label5.theme_text_color = "Custom"
-                self.ids.label5.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.label5.text_color = 0, 0, 0, 1
                 self.ids.label5.bold = False
                 self.ids.sub_label4.text = f"Pending..."
-                self.ids.sub_label4.text_color = 0.043, 0.145, 0.278, 1
+                self.ids.sub_label4.text_color = 0, 0, 0, 1
                 self.ids.sub_label4.bold = False
 
     def get_table(self):

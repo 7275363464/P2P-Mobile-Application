@@ -453,7 +453,7 @@ loan_forecloseB = '''
                             text_color: 140/255, 140/255, 140/255, 1
 
                         MDLabel:
-                            text: "Foreclosure Fee "
+                            text: "Foreclosure Fee(%)"
                             halign: "left"
 
                         MDLabel:
@@ -1196,10 +1196,12 @@ class ForecloseDetails(Screen):
         month_emi = []
         loan_id1 = []
         loan_amount = []
+        interest = []
         tenure = []
         for i in data:
             month_emi.append(i['monthly_emi'])
             loan_id1.append(i['loan_id'])
+            interest.append(i['total_interest_amount'])
             loan_amount.append(i['loan_amount'])
             tenure.append(i['tenure'])
 
@@ -1229,39 +1231,63 @@ class ForecloseDetails(Screen):
             total_payment = number
             total_amount = month_emi[index2] * total_payment
             self.ids.totalamount.text = str(total_amount)
+            print(month_emi[index2])
+            print(total_amount)
 
+        monthly_installment = 0
         if value in loan_id1:
             index3 = loan_id1.index(value)
-            monthly_installment = loan_amount[index3] / tenure[index3]
+            monthly_installment = (loan_amount[index3] + float(interest[index3]))/tenure[index3]
             monthly_installment = round(monthly_installment, 2)
             self.ids.monthly_installment.text = str(monthly_installment)
+            print(loan_amount[index3])
+            print(tenure[index3])
 
         if value in loan_id1:
             index4 = loan_id1.index(value)
             interest_amount = month_emi[index4] - monthly_installment
             interest_amount = round(interest_amount, 2)
             self.ids.interest_amount.text = str(interest_amount)
-
+            print(month_emi[index4])
+            print(monthly_installment)
+        overall_outstanding_amount = 0
         if value in loan_id1:
             index5 = loan_id1.index(value)
-            overall_outstanding_amount = loan_amount[index5] - (monthly_installment * total_payment)
+            overall_outstanding_amount = (loan_amount[index5] + float(interest[index5])) - (monthly_installment * total_payment)
             overall_outstanding_amount = round(overall_outstanding_amount, 2)
             self.ids.overall_amount.text = str(overall_outstanding_amount)
+            print(loan_amount[index5])
+            print(monthly_installment)
+            print(total_payment)
+            print(monthly_installment * total_payment)
 
+        outstanding_months = 0
         if value in loan_id1:
             index6 = loan_id1.index(value)
             outstanding_months = tenure[index6] - total_payment
             overall_monthly_installment = monthly_installment * outstanding_months
             print(monthly_installment, outstanding_months)
+            print(monthly_installment * outstanding_months)
             overall_monthly_installment = round(overall_monthly_installment, 2)
             self.ids.over_month.text = str(overall_monthly_installment)
+            print(tenure[index6])
+            print(total_payment)
+            print(tenure[index6] - total_payment)
+            print(overall_monthly_installment)
 
+        overall_interest_amount = 0
         if value in loan_id1:
             index7 = loan_id1.index(value)
             interest_amount_per_month = month_emi[index7] - monthly_installment
             overall_interest_amount = interest_amount_per_month * outstanding_months
             overall_interest_amount = round(overall_interest_amount, 2)
             self.ids.overall_interest_amount.text = str(overall_interest_amount)
+            print(month_emi[index7])
+            print(monthly_installment)
+            print(interest_amount_per_month)
+            print(outstanding_months)
+            print(month_emi[index7] - monthly_installment)
+            print(interest_amount_per_month * outstanding_months)
 
         if value in loan_id1:
             total_amount1 = overall_outstanding_amount + overall_interest_amount
@@ -1269,6 +1295,8 @@ class ForecloseDetails(Screen):
             self.ids.total_amount.text = str(rounded_total_amount)
             outstanding_amount1 = overall_outstanding_amount
             self.ids.outstanding_amount.text = str(outstanding_amount1)
+            print(overall_outstanding_amount)
+            print(overall_interest_amount)
 
         product_id1 = []
         for product in data:

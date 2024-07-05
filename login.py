@@ -71,10 +71,11 @@ KV = """
 
         BoxLayout:
             id: float1
+            spacing:dp(10)
             orientation: 'vertical'
             size_hint: 0.8, None
             height: "80dp"
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            pos_hint: {'center_x': 0.5, 'center_y': 0.51}
             canvas.before:
                 Color:
                     rgba: 1,1,1,1
@@ -82,31 +83,32 @@ KV = """
                     rectangle: self.x, self.y, self.width, self.height
             MDTextField:
                 id: email      
-                hint_text: "Email"
+                hint_text: " Email"
+                mode: "rectangle"
                 hint_text_color: 0.043, 0.145, 0.278, 1  # Indigo color for hint text
                 helper_text_mode: "on_focus"
                 icon_right: "account"
+                line_color_normal: 0.043, 0.145, 0.278, 1
                 hint_text_color: 0, 0, 0, 1
                 hint_text_color_normal: "black"
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
                 font_name: "Roboto-Bold"
-                pos_hint: {'center_x': 0.5, 'center_y': 0.61}
+                pos_hint: {'center_x': 0.5, 'center_y': 0.56}
                 theme_text_color: "Custom"
                 text_color: 0, 0, 0, 1  # Change the text color here (black in this example)
 
             MDTextField:
                 id: password
-                hint_text: "Password"
-                hint_text_color: 0.043, 0.145, 0.278, 1  # Indigo color for hint text
+                hint_text: " Password"
+                mode: "rectangle"
+                hint_text_color: 0, 0, 0, 1  # Indigo color for hint text
                 color_mode: 'custom'
                 line_color_normal: 0.043, 0.145, 0.278, 1
-                helper_text: "Enter your password"
-                helper_text_mode: "on_focus"
                 icon_right: "lock"
                 password: not password_visibility.active
                 size_hint_y: None
-                height: "30dp"
+                height: "10dp"
                 width: dp(200)
                 hint_text_color: 0, 0, 0, 1
                 hint_text_color_normal: "black"
@@ -116,13 +118,25 @@ KV = """
                 on_text_validate: app.validate_password()
                 theme_text_color: "Custom"
                 text_color: 0, 0, 0, 1  # Change the text color here (black in this example)
+            MDLabel:
+                text: "Forgot password ?"
+                height:dp(10)
+                theme_text_color: 'Custom'
+                size_hint_y: None
+                pos_hint: {'center_x': 0.5, 'center_y': 0.40}
+                text_color: 6/255, 143/255, 236/255, 1
+                halign: 'left'
+                font_size: dp(13)
+                valign: 'center'
+                on_touch_down: app.root.get_screen("prelogin").go_to_login_otp() if self.collide_point(*args[1].pos) else None
+
 
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: None
             height: "29dp"
             spacing:dp(5)
-            pos_hint: {'center_x': 0.6, 'center_y': 0.4}
+            pos_hint: {'center_x': 0.6, 'center_y': 0.40}
             MDCheckbox:
                 id: password_visibility
                 size_hint: None, None
@@ -136,7 +150,8 @@ KV = """
                 size: "30dp", "30dp"
                 theme_text_color: "Secondary"
                 halign: "left"
-                valign: "center"      
+                valign: "center"     
+             
         GridLayout:
             id:grid1
             cols: 1
@@ -195,8 +210,6 @@ KV = """
             height: "50dp"
 
             MDRoundFlatButton:
-                on_release: root.go_to_login_otp()
-
                 md_bg_color: 1,1,1,1
                 theme_text_color: 'Custom'
                 text_color: 0, 0, 0, 1
@@ -210,17 +223,17 @@ KV = """
                     orientation: 'horizontal'
                     spacing: dp(10)
                     height:dp(20)
-                    width:dp(150)
+                    width:dp(200)
                     pos_hint: {'center_x': 0.7, 'center_y': 0.5}
 
                     Image:
-                        source: "login.png"
+                        source: "google-logo-9808.png"
                         size_hint: None, None
-                        size: "20dp", "25dp"  
-                        pos_hint: {'center_x': 0.8, 'center_y': 0.5}
+                        size: "20dp", "20dp"  
 
                     MDLabel:
-                        text: "Login with OTP"
+                        text: "  Sign In with Google"
+
                         theme_text_color: 'Custom'
                         text_color: 0, 0, 0, 1
                         pos_hint: {'center_x': 0.8, 'center_y': 0.5}
@@ -237,7 +250,7 @@ KV = """
         pos_hint: {'center_x': 0.5, 'center_y': 0.1}
 
         MDTextButton:
-            text: "Already have an account? [color=#0699FF]Sign In[/color]"
+            text: "Don't have an account? [color=#0699FF]Sign UP[/color]"
             font_name: "Roboto"
             font_size: dp(14)
             markup: True
@@ -247,10 +260,12 @@ KV = """
             text_color: 0.043, 0.145, 0.278, 1
             on_release: root.go_to_signup()
 
+
 <LoginScreen>:
     id: login_otp_screen
     BoxLayout:
         orientation: 'vertical'
+        spacing: dp(10)
         canvas.before:
             Color:
                 rgba: 0.95, 0.95, 0.95, 1
@@ -267,25 +282,26 @@ KV = """
         BoxLayout:
             orientation: 'vertical'
             padding: dp(20)
-            spacing: dp(20)
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            spacing: dp(30)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.9}
 
 
             Image:
-                source: "user.png"
+                source: "forgot-password.png"
                 size_hint: None, None
-                size: "100dp", "100dp"
-                pos_hint: {'center_x': 0.5}
+                size: "80dp", "80dp"
+                pos_hint: {"center_x": 0.5,"center_y": 0.5}
         Widget:
-            size_hint_y: 1
+            size_hint_y: 2
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(36)
-            padding: [dp(10), dp(15)]
-            size_hint: 1, None
-            height: dp(50)
+            spacing: dp(25)
+            size_hint: 0.8, None
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+            height: dp(80)
             MDLabel:
-                text: "Login"
+                text: "Reset account password"
                 halign: "center"
                 bold: True
                 font_style: "H6"
@@ -296,116 +312,48 @@ KV = """
                 id: user_input
                 hint_text: " Email ID"
                 mode: "rectangle"
-                helper_text: "Enter an valid email "
+                helper_text: "Enter an registered email id"
                 icon_right: "account"
                 size_hint: 1, None
                 height: dp(80)
                 pos_hint: {'center_x': 0.5}
                 font_size: "18sp"
+                
 
 
             MDRoundFlatButton:
                 id: login_with_otp
                 text: "Send OTP"
-                size_hint_y: None
-                size_hint_x: 1
-                height: dp(40)
+                size_hint_x: None
+                pos_hint: {'center_x': 0.5}
+                size_hint: 0.9, None
+                height: "50dp"
                 bold: True
                 font_name: "Roboto-Bold"
                 md_bg_color: 0.043, 0.145, 0.278, 1
                 on_release: app.verify_login()
                 text_color: 1, 1, 1, 1
-        Widget:
-            size_hint_y: 1
-<OTPScreen>:
-    id: otp_screen
-    BoxLayout:
-        orientation: 'vertical'
-        padding: [dp(20), dp(2)]
-        spacing: dp(20)
-        canvas.before:
-            Color:
-                rgba: 0.95, 0.95, 0.95, 1  # Light gray background
-            Rectangle:
-                pos: self.pos
-                size: self.size
-        MDIconButton:
-            icon: "arrow-left"
-            pos_hint: {"center_x": 0.01,"center_y": 1}
-            user_font_size: "30sp"
-            theme_text_color: "Custom"
-            text_color: rgba(26, 24, 58, 255)
-            on_release: root.go_back()
-        Widget:
-            size_hint_y: 1
-
-        BoxLayout:
-            orientation: 'vertical'
-            padding: dp(20)
-            spacing: dp(20)
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDLabel:
-                text: " "
-            MDLabel:
-                text: " "
-            MDLabel:
-                text: " "
-
-            Image:
-                source: "one-time-password.png"
-                size_hint: None, None
-                size: "100dp", "100dp"
-                pos_hint: {'center_x': 0.5}
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(20)
-            padding: [dp(10), dp(15)]
-            size_hint: 1, None
-            height: self.minimum_height
-            MDLabel:
-                text: "Enter Verification Code"
-                halign: "center"
-                bold: True
-                font_style: "H6"
-                halign: "center"
-                valign: "middle"
-            MDBoxLayout:
-                orientation: 'vertical'
-                size_hint: 1, None
-                height: dp(38)
-                MDLabel:
-                    id: otp_message
-                    text: "We have sent you an OTP on "
-                    size_hint_x: 1
-                    theme_text_color: "Primary"
-                    font_size: "14sp"
-
-                    halign: "center"
-                    valign: "middle"
-
-                MDLabel:
-                    id: user_contact
-                    text: "mani"
-                    size_hint_x: 1
-                    theme_text_color: "Primary"
-                    font_size: "14sp"
-                    halign: "center"
-                    valign: "middle"
+                
             MDTextField:
                 id: otp_input
-                hint_text: "OTP"
+                hint_text: " Enter OTP"
                 mode: "rectangle"
                 icon_right: "key"
                 size_hint: 1, None
-                height: dp(40)
+                visibility:False
                 pos_hint: {'center_x': 0.5}
                 font_size: "14sp"
+                opacity: 0
+                disabled: True
             MDBoxLayout:
+                id:disable_otp
                 orientation: 'horizontal'
                 size_hint_y: None
                 height: dp(25)
                 spacing: dp(5)
                 padding: [0, dp(5)]
+                opacity: 0
+                disabled: True
                 MDLabel:
                     text: "Still not received OTP?"
                     size_hint_x: None
@@ -423,17 +371,104 @@ KV = """
                     on_release: app.resend_otp()
 
             MDRoundFlatButton:
-                text: "Verify OTP"
-                size_hint_y: None
-                size_hint_x: 1
-                height: dp(40)
+                id:verify_otp
+                text: "verify otp"
+                size_hint_x: None
+                pos_hint: {'center_x': 0.5}
+                size_hint: 0.9, None
+                height: "50dp"
                 bold: True
                 font_name: "Roboto-Bold"
                 md_bg_color: 0.043, 0.145, 0.278, 1
                 on_release: app.check_otp()
                 text_color: 1, 1, 1, 1
+                opacity: 0
+                disabled: True
         Widget:
-            size_hint_y: 1
+            size_hint_y: 0.5
+
+<OTPScreen>:
+    id: otp_screen
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [dp(20), dp(2)]
+        spacing: dp(10)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1  # Light gray background
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        MDIconButton:
+            icon: "arrow-left"
+            pos_hint: {"center_x": 0.01,"center_y": 1}
+            user_font_size: "30sp"
+            theme_text_color: "Custom"
+            text_color: rgba(26, 24, 58, 255)
+            on_release: root.go_back()
+        Widget:
+            size_hint_y: 1.5
+
+        BoxLayout:
+            orientation: 'vertical'
+            padding: dp(20)
+            spacing: dp(20)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        
+            Image:
+                source: "one-time-password.png"
+                size_hint: None, None
+                size: "60dp", "60dp"
+                pos_hint: {'center_x': 0.5}
+        MDBoxLayout:
+            orientation: 'vertical'
+            spacing: dp(20)
+            padding: [dp(10), dp(15)]
+            size_hint: 1, None
+            height: self.minimum_height
+            MDLabel:
+                text: "Reset Your Password"
+                halign: "center"
+                bold: True
+                font_style: "H6"
+                halign: "center"
+                valign: "middle"
+            MDBoxLayout:
+                orientation: 'vertical'
+                size_hint: 1, None
+                height: dp(28)
+                
+            MDTextField:
+                id: password
+                hint_text: " New Password"
+                mode: "rectangle"
+                size_hint: 1, None
+                height: dp(40)
+                pos_hint: {'center_x': 0.5}
+                font_size: "14sp"
+            MDTextField:
+                id: password2
+                hint_text: " Confirm password"
+                mode: "rectangle"
+                size_hint: 1, None
+                height: dp(40)
+                pos_hint: {'center_x': 0.5}
+                font_size: "14sp"
+            MDRoundFlatButton:
+                id:save_password
+                text: "Save Password"
+                size_hint_x: None
+                pos_hint: {'center_x': 0.5}
+                size_hint: 0.9, None
+                height: "50dp"
+                bold: True
+                font_name: "Roboto-Bold"
+                md_bg_color: 0.043, 0.145, 0.278, 1
+                on_release: app.update_password()
+                text_color: 1, 1, 1, 1
+                
+        Widget:
+            size_hint_y: 1.8
 """
 Builder.load_string(KV)
 
@@ -722,21 +757,11 @@ class PreLoginScreen(Screen):
 
     def go_back(self):
 
-        self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'MainScreen'
-
+        self.manager.add_widget(Factory.SignupScreen(name='SignupScreen'))
+        self.manager.current = 'SignupScreen'
 
 
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.lang import Builder
-from kivy.properties import BooleanProperty
-from kivy.uix.label import Label
-from kivy.uix.popup import Popup
-from twilio.rest import Client
-import random
-import smtplib
-from email.message import EmailMessage
-
 
 class LoginScreen(Screen):
 
@@ -749,6 +774,8 @@ class OTPScreen(Screen):
     def go_back(self):
         self.manager.add_widget(Factory.LoginScreen(name='login'))
         self.manager.current = 'login'
+
+
 
 
 class MyScreenManager(ScreenManager):

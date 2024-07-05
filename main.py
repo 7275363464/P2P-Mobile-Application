@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 import random
@@ -6,6 +7,7 @@ import sqlite3
 from datetime import datetime
 from email.message import EmailMessage
 
+import bcrypt
 from bson import utc
 from kivy.app import App
 from kivy.clock import Clock
@@ -25,12 +27,12 @@ from anvil.tables import app_tables
 
 from borrower_dashboard import DashboardScreen
 from dashboard import DashScreen
-from homepage import MainScreen
+
 from lender_dashboard import LenderDashboard
-from login import OTPScreen
+from login import OTPScreen, PreLoginScreen
 from signup import SignupScreen, EmailOTPScreen
 
-anvil.server.connect("server_ZXO6CXSVA45X44LXLRTCRXKJ-LBTFRDF2ECQMGWB4")
+anvil.server.connect("server_73YYSLJ5XYD2RR7P45E53KL4-MQV73PHHFFCHO4HD")
 
 
 class MyApp(MDApp):
@@ -44,7 +46,7 @@ class MyApp(MDApp):
         self.load_initial_screen()
 
         # Add all the screens to the ScreenManager
-        main_screen = MainScreen(name='MainScreen')
+        main_screen = PreLoginScreen(name='prelogin')
         otp_screen = OTPScreen(name='otp')
         signup_screen = SignupScreen(name='SignupScreen')
         email_otp_screen = EmailOTPScreen(name='email_otp')
@@ -56,9 +58,8 @@ class MyApp(MDApp):
         return self.sm
 
     def resend_otp(self):
-        login_otp_screen = self.root.get_screen('login')
-        user_input = login_otp_screen.ids.user_input.text
-        self.send_otp()
+        ##user_input = login_screen.ids.user_input.text
+        self.verify_login()
 
     def verify_email(self):
         signup_screen = self.root.get_screen('SignupScreen')
@@ -72,7 +73,15 @@ class MyApp(MDApp):
         login_screen = self.root.get_screen('login')
         user_input = login_screen.ids.user_input.text.strip()
         print(f"User input: {user_input}")  # Debug print
-
+        login_screen = self.root.get_screen('login')
+        login_screen.ids.otp_input.opacity = 1
+        login_screen.ids.otp_input.disabled = False
+        login_screen.ids.disable_otp.opacity = 1
+        login_screen.ids.disable_otp.disabled = False
+        login_screen.ids.verify_otp.opacity = 1
+        login_screen.ids.verify_otp.disabled = False
+        #login_screen.ids.login_with_otp.opacity = 0
+        login_screen.ids.login_with_otp.disabled = True
         if user_input:
             self.send_otp(signup=False)
         else:
@@ -97,7 +106,7 @@ class MyApp(MDApp):
             if signup:
                 self.show_email_otp_screen(user_input, signup=True)
             else:
-                self.show_otp_screen(user_input)
+                pass
         else:
             self.show_dialog("Please enter a phone number or email ID")
 
@@ -133,16 +142,55 @@ class MyApp(MDApp):
             self.show_dialog(f"Failed to send email: {e}")
 
     def check_otp(self):
-        otp_screen = self.root.get_screen('otp')
-        entered_otp = otp_screen.ids.otp_input.text
         login_screen = self.root.get_screen('login')
+        entered_otp = login_screen.ids.otp_input.text
         user_input = login_screen.ids.user_input.text
 
         if str(self.n) == entered_otp:
             self.show_dialog("OTP verified successfully")
-            self.perform_database_operations(user_input)
+            self.sm.add_widget(OTPScreen(name='otp'))
+            self.sm.current = 'otp'
         else:
             self.show_dialog("Invalid OTP. Please try again.")
+
+    def update_password(self):
+        login_screen = self.root.get_screen('login')
+        user_input = login_screen.ids.user_input.text
+        otp_screen = self.root.get_screen('otp')
+        password = otp_screen.ids.password.text
+        password2 = otp_screen.ids.password2.text
+
+        if password and password2 and password == password2:
+            try:
+                # Hash the password
+                hashed_password_str = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+                # Update the password in Anvil table
+                user = app_tables.users.get(email=user_input)
+                if user:
+                    user['password_hash'] = hashed_password_str
+
+                self.show_dialog("Password updated successfully")
+                self.sm.add_widget(PreLoginScreen(name='prelogin'))
+                self.sm.current = 'prelogin'
+            except Exception as e:
+                self.show_dialog(f"Failed to update password in Anvil table: {e}")
+        else:
+            self.show_dialog("Passwords do not match")
+
+    def show_dialog(self, message):
+        if not self.dialog:
+            self.dialog = MDDialog(
+                text=message,
+                buttons=[
+                    MDFlatButton(
+                        text="OK",
+                        on_release=lambda x: self.dialog.dismiss()
+                    )
+                ]
+            )
+        self.dialog.text = message
+        self.dialog.open()
 
     def send_signup_success_email(self, email):
         try:
@@ -196,7 +244,7 @@ class MyApp(MDApp):
     def update_email_verification_status(self, email):
         try:
             # Connect to Anvil server
-            anvil.server.connect("server_ZXO6CXSVA45X44LXLRTCRXKJ-LBTFRDF2ECQMGWB4")
+            anvil.server.connect("server_73YYSLJ5XYD2RR7P45E53KL4-MQV73PHHFFCHO4HD")
 
             # Create or update the user profile directly
             app_tables.users.add_row(email=email, email_verified=True)
@@ -291,10 +339,7 @@ class MyApp(MDApp):
             self.sm.add_widget(DashScreen(name=screen_name))
         self.sm.current = screen_name
 
-    def show_otp_screen(self, user_input):
-        otp_screen = self.root.get_screen('otp')
-        otp_screen.ids.user_contact.text = user_input
-        self.sm.current = 'otp'
+
 
     def show_email_otp_screen(self, user_input, signup=True):
         email_otp_screen = self.root.get_screen('email_otp')
@@ -374,8 +419,8 @@ class MyApp(MDApp):
                     self.sm.current = 'DashScreen'
                 break
         else:
-            self.sm.add_widget(MainScreen(name='MainScreen'))
-            self.sm.current = 'MainScreen'
+            self.sm.add_widget(PreLoginScreen(name='prelogin'))
+            self.sm.current = 'prelogin'
 
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.on_keyboard)

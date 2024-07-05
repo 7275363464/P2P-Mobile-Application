@@ -121,31 +121,63 @@ KV = """
 
         MDTextField:
             id: password
-            hint_text: "Enter Your Password"
-            icon_left: 'lock-outline'
-            helper_text_mode: 'on_focus'
+            hint_text: " Password"
+            hint_text_color: 0.043, 0.145, 0.278, 1  # Indigo color for hint text
+            color_mode: 'custom'
+            line_color_normal: 0.043, 0.145, 0.278, 1
+            icon_left: "lock"
+            password: not password_visibility.active
+            size_hint_y: None
+            height: "10dp"
+            width: dp(200)
             hint_text_color: 0, 0, 0, 1
             hint_text_color_normal: "black"
             text_color_normal: "black"
             helper_text_color_normal: "black"
-            multiline: False
-            helper_text: "Password must be greater than 8 characters"
-            password: True
-            font_name: "Roboto-Bold"
+            pos_hint: {'center_x': 0.5, 'center_y': 0.51}
+            on_text_validate: app.validate_password()
+            theme_text_color: "Custom"
+            
+            text_color: 0, 0, 0, 1  # Change the text color here (black in this example)
 
         MDTextField:
             id: password2
             hint_text: "Re-Enter Your Password"
-            helper_text: "Password does not match"
-            helper_text_mode: 'on_focus'
-            icon_left: 'lock-outline'
-            password: True
+            hint_text_color: 0.043, 0.145, 0.278, 1  # Indigo color for hint text
+            color_mode: 'custom'
+            line_color_normal: 0.043, 0.145, 0.278, 1
+            icon_left: "lock"
+            password: not password_visibility.active
+            size_hint_y: None
+            height: "10dp"
+            width: dp(200)
             hint_text_color: 0, 0, 0, 1
             hint_text_color_normal: "black"
             text_color_normal: "black"
             helper_text_color_normal: "black"
-            font_name: "Roboto-Bold"
+            pos_hint: {'center_x': 0.5, 'center_y': 0.51}
+            on_text_validate: app.validate_password()
+            theme_text_color: "Custom"
+            text_color: 0, 0, 0, 1  # Change the text color here (black in this example)
+        
+        BoxLayout:
+            orientation: 'horizontal'
+            width: "260dp"
+            height: "10dp"
+            
+            MDCheckbox:
+                id: password_visibility
+                size_hint_x: None
+                width: "20dp"
+                on_active: root.on_checkbox_active(self, self.active)
 
+            MDLabel:
+                text: "Show Password"
+                font_size:dp(12)
+                size: "30dp", "30dp"
+                theme_text_color: "Secondary"
+                halign: "left"
+                valign: "center"      
         BoxLayout:
             orientation: 'horizontal'
             width: "260dp"
@@ -344,6 +376,14 @@ class SignupScreen(Screen):
     def go_to_signin(self):
         self.manager.add_widget(Factory.PreLoginScreen(name='prelogin'))
         self.manager.current = 'prelogin'
+
+    def on_checkbox_active(self, checkbox, value):
+        # Update password visibility based on the checkbox state
+        if hasattr(self, 'SignupScreen'):
+            self.SignupScreen.ids.password.password = not value
+            self.SignupScreen.ids.password2.password = not value
+            print(value)
+
 
     def on_mobile_number_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
@@ -677,7 +717,7 @@ class SignupScreen(Screen):
     def go_back(self):
         # Navigate to the previous screen with a slide transition
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'MainScreen'
+        self.manager.current = 'prelogin'
 
 
 class EmailOTPScreen(Screen):

@@ -3052,101 +3052,321 @@ Borrower = '''
                     font_name: "Roboto-Bold"
 
 <BorrowerScreen15>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'BorrowerScreen7')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
     MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(20)
-        padding: dp(30)
 
-        MDLabel:
-            text:""
-            size_hint_y: None
-            height:dp(60)
+        MDTopAppBar:
+            title: "P2P LENDING"
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'BorrowerScreen7')]]
+            right_action_items: [['home', lambda x: root.go_to_dashboard()]]
+            title_align: 'center'  # Center-align the title
+            md_bg_color: 0.043, 0.145, 0.278, 1
 
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(30)
-            padding: dp(30)  # Reduce the top padding
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: 'Borrower Registration Form'
-                halign: 'center'
-                font_size: "20dp"
-                font_name: "Roboto-Bold"
-
-            MDLabel:
-                text:"Select Marrital Status Type:"
-                halign: 'left'
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
+        ScrollView:
+            MDBoxLayout:
+                orientation: 'vertical'
                 size_hint_y: None
-                height:dp(20)
+                height: self.minimum_height
+                padding: dp(30)
+                spacing: dp(20)
 
-            Spinner:
-                id: marital_status_id
-                text: " Select Marital Status"
-                font_size: "15dp"
-                multiline: False
-                size_hint: 1 , None
-                height:"40dp"
-                width: dp(200)
-                text_size: self.width - dp(20), None
-                background_color: 0,0,0,0
-                background_normal:''
-                color: 0, 0, 0, 1
-                canvas.before:
+                canvas:
                     Color:
-                        rgba: 0, 0, 0, 1  
+                        rgba: 174/255, 214/255, 241/255, 1 # Dull background color
                     Line:
-                        width: 0.7
+                        width: 0.7  # Border width
                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
-            MDLabel:
-                text: ''
-                halign: 'center'
-                size_hint_y: None
-                height:dp(5)
+                MDLabel:
+                    text: 'Borrower Registration Form'
+                    halign: 'center'
+                    font_size: "20dp"
+                    font_name: "Roboto-Bold"
+                    
+                MDLabel:
+                    text: ''
+                    halign: 'center'
+                    size_hint_y: None
+                    height: dp(30)
 
-            GridLayout:
-                cols: 1
-                spacing:dp(30)
-                padding: [0, "30dp", 0, 0]
-                MDRaisedButton:
-                    text: "Next"
-                    on_release: root.add_data(marital_status_id.text)
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    text_color: 1, 1, 1, 1
+                MDLabel:
+                    text: "Select Marital Status Type:"
+                    halign: 'left'
+                    font_size: "15dp"
+                    font_name: "Roboto-Bold"
+                    size_hint_y: None
+                    height: dp(20)
+
+                Spinner:
+                    id: marital_status_id
+                    text: "Select Marital Status"
+                    font_size: "15dp"
+                    multiline: False
                     size_hint: 1, None
-                    height: "50dp"
-                    font_name: "Roboto-Bold" 
-            MDLabel:
-                text: ''
-                halign: 'center'
-                size_hint_y: None
-                height:dp(50)    
+                    height: "40dp"
+                    width: dp(200)
+                    text_size: self.width - dp(20), None
+                    background_color: 0, 0, 0, 0
+                    background_normal: ''
+                    color: 0, 0, 0, 1
+                    values: ["Married", "Unmarried", "Others"]
+                    on_text: root.update_person_details_visibility(self.text)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1  
+                        Line:
+                            width: 0.7
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+                MDBoxLayout:
+                    id: person_details_box
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: dp(0)
+                    opacity: 0
+                    spacing: dp(20)
+                    MDLabel:
+                        text: 'Provide Guarantor Details'
+                        halign: 'center'
+                        bold: True
+                        size_hint_y: None
+                        height: dp(50)
+                        
+                    MDLabel:
+                        text:"How is the person related to you:"
+                        halign: 'left'
+                        font_size: "15dp"
+                        font_name: "Roboto-Bold"
+                        size_hint_y: None
+                        height:dp(20)
+        
+                    Spinner:
+                        id: relation_name
+                        text: "How is the person related to you"
+                        font_size: "15dp"
+                        multiline: False
+                        size_hint: 1 , None
+                        height:"40dp"
+                        width: dp(200)
+                        values: ["How is the person related to you", "Father", "Mother", "Spouse", "Others"]
+                        text_size: self.width - dp(20), None
+                        on_text: root.others()
+                        background_color: 0,0,0,0
+                        background_normal:''
+                        color: 0, 0, 0, 1
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 0, 1  
+                            Line:
+                                width: 0.7
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+                    MDTextField:
+                        id: person_name
+                        hint_text: 'Enter Full Name'
+                        helper_text: 'Enter Valid Person Name'
+                        multiline: False
+                        helper_text_mode: 'on_focus'
+                        halign: 'left'
+                        font_size: "15dp"
+                        theme_text_color: "Custom"
+                        hint_text_color: 0, 0, 0, 1
+                        hint_text_color_normal: "black"
+                        text_color_normal: "black"
+                        helper_text_color_normal: "black"
+                        mode: "rectangle"
+
+                    MDTextField:
+                        id: person_dob
+                        hint_text: 'Enter Date Of Birth'
+                        helper_text: 'YYYY-MM-DD'
+                        multiline: False
+                        helper_text_mode: 'on_focus'
+                        halign: 'left'
+                        input_type: 'number'
+                        font_size: "15dp"
+                        theme_text_color: "Custom"
+                        hint_text_color: 0, 0, 0, 1
+                        hint_text_color_normal: "black"
+                        text_color_normal: "black"
+                        helper_text_color_normal: "black"
+                        mode: "rectangle"
+
+                    MDTextField:
+                        id: person_ph_no
+                        hint_text: 'Enter Phone No'
+                        helper_text: 'Enter Valid Phone No'
+                        helper_text_mode: 'on_focus'
+                        halign: 'left'
+                        input_type: 'number'
+                        font_size: "15dp"
+                        theme_text_color: "Custom"
+                        hint_text_color: 0, 0, 0, 1
+                        hint_text_color_normal: "black"
+                        text_color_normal: "black"
+                        helper_text_color_normal: "black"
+                        mode: "rectangle"
+
+                    MDTextField:
+                        id: person_profession
+                        hint_text: 'Enter Profession'
+                        helper_text: 'Enter valid Profession'
+                        multiline: False
+                        helper_text_mode: 'on_focus'
+                        font_size: "15dp"
+                        theme_text_color: "Custom"
+                        hint_text_color: 0, 0, 0, 1
+                        hint_text_color_normal: "black"
+                        text_color_normal: "black"
+                        helper_text_color_normal: "black"
+                        mode: "rectangle"
+                        
+
+                MDBoxLayout:
+                    id: spouse_details
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: dp(0)
+                    opacity: 0
+                    spacing: dp(20)
+                    MDLabel:
+                        text: 'Provide Guarantor Details'
+                        halign: 'center'
+                        bold: True
+                        size_hint_y: None
+                        height: dp(50)
+
+                    MDTextField:
+                        id: spouse_name
+                        hint_text: 'Enter Spouse Name '
+                        multiline: False
+                        helper_text: "Enter Valid Spouse Name"
+                        helper_text_mode: 'on_focus'
+                        font_size: "15dp"
+                        theme_text_color: "Custom"
+                        hint_text_color: 0, 0, 0, 1
+                        hint_text_color_normal: "black"
+                        text_color_normal: "black"
+                        helper_text_color_normal: "black"
+                        mode: "rectangle"
+        
+        
+                    MDTextField:
+                        id: spouse_date_textfield
+                        hint_text: "Enter Marriage Date"
+                        helper_text: 'YYYY-MM-DD'
+                        helper_text_mode: 'on_focus'
+                        hint_text_color: 0, 0, 0, 1
+                        input_type:'number'
+                        font_size: "15dp"
+                        theme_text_color: "Custom"
+                        hint_text_color: 0, 0, 0, 1
+                        hint_text_color_normal: "black"
+                        text_color_normal: "black"
+                        helper_text_color_normal: "black"
+                        mode: "rectangle"
+        
+                    MDTextField:
+                        id: spouse_mobile
+                        hint_text: 'Enter Spouse Mobile No'
+                        multiline: False
+                        helper_text: "Enter valid Spouse Mobile No"
+                        helper_text_mode: 'on_focus'
+                        input_type: 'number'  
+                        font_size: "15dp"
+                        theme_text_color: "Custom"
+                        hint_text_color: 0, 0, 0, 1
+                        hint_text_color_normal: "black"
+                        text_color_normal: "black"
+                        helper_text_color_normal: "black"
+                        mode: "rectangle"
+                        
+                    MDLabel:
+                        text:"Select Spouse Profession Type:"
+                        halign: 'left'
+                        font_size: "15dp"
+                        font_name: "Roboto-Bold"
+                        size_hint_y: None
+                        height:dp(20)
+        
+                    Spinner:
+                        id: spouse_profession
+                        text: "Select Spouse Profession"
+                        font_size: "15dp"
+                        multiline: False
+                        size_hint: 1 , None
+                        height:"40dp"
+                        width: dp(200)
+                        text_size: self.width - dp(20), None
+                        background_color: 0,0,0,0
+                        background_normal:''
+                        color: 0, 0, 0, 1
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 0, 1  
+                            Line:
+                                width: 0.7
+                                rectangle: (self.x, self.y, self.width, self.height)
+        
+                    MDTextField:
+                        id: spouse_company_name
+                        hint_text: 'Enter Spouse Company Name'
+                        multiline: False
+                        helper_text: 'Enter Valid Spouse Company Name (if working)'
+                        helper_text_mode: 'on_focus'
+                        font_size: "15dp"
+                        theme_text_color: "Custom"
+                        hint_text_color: 0, 0, 0, 1
+                        hint_text_color_normal: "black"
+                        text_color_normal: "black"
+                        helper_text_color_normal: "black"
+                        mode: "rectangle"
+        
+                    MDTextField:
+                        id: spouse_annual_salary
+                        hint_text: 'Enter Annual Salary'
+                        multiline: False
+                        helper_text: 'Enter valid Annual Salary (if working)'
+                        helper_text_mode: 'on_focus'
+                        input_type: 'number'
+                        input_type: 'number'
+                        font_size: "15dp"
+                        theme_text_color: "Custom"
+                        hint_text_color: 0, 0, 0, 1
+                        hint_text_color_normal: "black"
+                        text_color_normal: "black"
+                        helper_text_color_normal: "black"
+                        mode: "rectangle"
+        
+                GridLayout:
+                    cols: 1
+                    spacing: dp(30)
+                    padding: [0, "30dp", 0, 0]
+
+                    MDRaisedButton:
+                        text: "Next"
+                        on_release: root.add_data(marital_status_id.text)
+                        md_bg_color: 0.043, 0.145, 0.278, 1
+                        pos_hint: {'right': 1, 'y': 0.5}
+                        text_color: 1, 1, 1, 1
+                        size_hint: 1, None
+                        height: "50dp"
+                        font_name: "Roboto-Bold"
+
+                MDLabel:
+                    text: ''
+                    halign: 'center'
+                    size_hint_y: None
+                    height: dp(50)
 
 <BorrowerScreen16>:
     MDTopAppBar:
         title: "P2P LENDING"
         elevation: 2
         pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'BorrowerScreen21')]]
+        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'BorrowerScreen15')]]
         right_action_items: [['home', lambda x: root.go_to_dashboard()]]
         title_align: 'center'  # Center-align the title
         md_bg_color: 0.043, 0.145, 0.278, 1
@@ -8781,6 +9001,7 @@ class BorrowerScreen13(Screen):
 class BorrowerScreen15(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.profession_type = None
         spinner_data = app_tables.fin_borrower_marrital_status.search()
         data_list = []
         for i in spinner_data:
@@ -8795,6 +9016,84 @@ class BorrowerScreen15(Screen):
         else:
             self.ids.marital_status_id.values = ['Select Marital Status']
 
+        spinner_data2 = app_tables.fin_spouse_profession.search()
+        data_list2 = []
+        for i in spinner_data2:
+            data_list2.append(i['spouse_profession'])
+        self.unique_list2 = []
+        for i in data_list2:
+            if i not in self.unique_list2:
+                self.unique_list2.append(i)
+        print(self.unique_list2)
+        if len(self.unique_list2) >= 1:
+            self.ids.spouse_profession.values = ['Select Spouse Profession Type'] + self.unique_list2
+        else:
+            self.ids.spouse_profession.values = ['Select Spouse Profession Type']
+
+        person_details_box = self.ids.person_details_box
+        spouse_details = self.ids.spouse_details
+        person_details_box.height = 0
+        person_details_box.opacity = 0
+        person_details_box.disabled = True
+        spouse_details.height = 0
+        spouse_details.opacity = 0
+        spouse_details.disabled = True
+
+    def update_person_details_visibility(self, marital_status):
+        person_details_box = self.ids.person_details_box
+        spouse_details = self.ids.spouse_details
+        if marital_status != "Married":
+            person_details_box.height = person_details_box.minimum_height
+            person_details_box.opacity = 1
+            person_details_box.disabled = False
+            spouse_details.height = 0
+            spouse_details.opacity = 0
+            spouse_details.disabled = True
+            self.profession_type = "Un-Married"
+        elif marital_status == 'Married':
+            spouse_details.height = spouse_details.minimum_height
+            spouse_details.opacity = 1
+            spouse_details.disabled = False
+            person_details_box.height = 0
+            person_details_box.opacity = 0
+            person_details_box.disabled = True
+            self.profession_type = "Married"
+        else:
+            person_details_box.height = person_details_box.minimum_height
+            person_details_box.opacity = 1
+            person_details_box.disabled = False
+            spouse_details.height = 0
+            spouse_details.opacity = 0
+            spouse_details.disabled = True
+            self.profession_type = "Others"
+
+    def others(self):
+        relation_name2 = MDTextField(
+            hint_text='How is the person related to you',
+            helper_text='Enter Valid Person Relation',
+            multiline=False,
+            helper_text_mode='on_focus',
+            halign='left',
+            font_size="15dp",
+            theme_text_color="Custom",
+            hint_text_color=(0, 0, 0, 1),
+            hint_text_color_normal="black",
+            text_color_normal="black",
+            helper_text_color_normal="black",
+            mode="rectangle"
+        )
+
+        if self.ids.relation_name.text == "Others":
+            self.ids.person_details_box.add_widget(relation_name2)
+        else:
+            self.ids.person_details_box.remove_widget(relation_name2)
+    def on_date_touch_down(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.person_dob.input_type = 'number'
+
+    def on_mother_ph_no_touch_down(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.person_ph_no.input_type = 'number'
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
         anim = Animation(y=modal_height - loading_label.height, duration=1) + \
@@ -8839,39 +9138,6 @@ class BorrowerScreen15(Screen):
             self.show_validation_error('Select a valid Marital status')
             return
 
-        if marital_status_id == 'Un-Married' or marital_status_id == 'Not Married':
-            sm = self.manager
-            borrower_screen = BorrowerScreen22(name='BorrowerScreen22')
-            sm.add_widget(borrower_screen)
-            sm.transition.direction = 'left'
-            sm.current = 'BorrowerScreen22'
-
-        elif marital_status_id == 'Married':
-            sm = self.manager
-            borrower_screen = BorrowerScreen21(name='BorrowerScreen21')
-            sm.add_widget(borrower_screen)
-            sm.transition.direction = 'left'
-            sm.current = 'BorrowerScreen21'
-
-        elif marital_status_id == 'Divorced':
-            sm = self.manager
-            borrower_screen = BorrowerScreen22(name='BorrowerScreen22')
-            sm.add_widget(borrower_screen)
-            sm.transition.direction = 'left'
-            sm.current = 'BorrowerScreen22'
-        elif marital_status_id == 'Other':
-            sm = self.manager
-            borrower_screen = BorrowerScreen22(name='BorrowerScreen22')
-            sm.add_widget(borrower_screen)
-            sm.transition.direction = 'left'
-            sm.current = 'BorrowerScreen22'
-        else:
-            sm = self.manager
-            borrower_screen = BorrowerScreen20(name='BorrowerScreen20')
-            sm.add_widget(borrower_screen)
-            sm.transition.direction = 'left'
-            sm.current = 'BorrowerScreen20'
-
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -8898,6 +9164,164 @@ class BorrowerScreen15(Screen):
             data[index]['marital_status'] = marital_status_id
         else:
             print('email not found')
+
+        if self.profession_type == "Married":
+            spouse_name = self.ids.spouse_name.text
+            spouse_date_textfield = self.ids.spouse_date_textfield.text
+            spouse_mobile = self.ids.spouse_mobile.text
+            spouse_company_name = self.ids.spouse_company_name.text
+            spouse_company_address = self.ids.spouse_profession.text
+            spouse_annual_salary = self.ids.spouse_annual_salary.text
+
+            if not all([spouse_name, spouse_date_textfield, spouse_mobile]):
+                # Display a validation error dialog
+                self.show_validation_error("Please fill in all fields.")
+                return  # Prevent further execution if any field is missing
+            if len(spouse_name) < 3:
+                self.show_validation_error("Please Enter Spouse Valid Name.")
+                return
+            try:
+                dob = datetime.strptime(spouse_date_textfield, "%Y-%m-%d").date()  # Convert to date object
+                today = datetime.now().date()
+                if dob > today:
+                    self.show_validation_error("Spouse's marriage date must be less than today's date.")
+                    return
+            except ValueError:
+                self.show_validation_error("Please enter a valid Marriage Date in format YYYY-MM-DD")
+                return
+
+            if len(spouse_mobile) != 10 or not spouse_mobile.isdigit():
+                self.show_validation_error("Please Enter Spouse Valid Mobile Number.")
+                return
+
+            cursor.execute('select * from fin_users')
+            rows = cursor.fetchall()
+            row_id_list = []
+            status = []
+            for row in rows:
+                row_id_list.append(row[0])
+                status.append(row[-1])
+
+            if 'logged' in status:
+                log_index = status.index('logged')
+                cursor.execute(
+                    "UPDATE fin_registration_table SET spouse_name = ?,spouse_date_textfield = ?, spouse_mobile = ? WHERE customer_id = ?",
+                    (spouse_name, spouse_date_textfield, spouse_mobile, row_id_list[log_index]))
+                conn.commit()
+            else:
+                # Handle the case where the user is not logged in
+                print("User is not logged in.")
+
+            data = app_tables.fin_user_profile.search()
+            data2 = app_tables.fin_guarantor_details.search()
+            cus_id_list2 = [i['customer_id'] for i in data2]
+            id_list = [i['email_user'] for i in data]
+            cus_id_list = [i['customer_id'] for i in data]
+            user_email = anvil.server.call('another_method')
+            if user_email in id_list:
+                index = id_list.index(user_email)
+                if cus_id_list[index] in cus_id_list2:
+                    index2 = cus_id_list2.index(cus_id_list[index])
+                    data2[index2]['guarantor_name'] = spouse_name
+                    data2[index2]['guarantor_mobile_no'] = int(spouse_mobile)
+                    data2[index2]['guarantor_marriage_dates'] = str(spouse_date_textfield)
+                    data2[index2]['guarantor_company_name'] = spouse_company_name
+                    data2[index2]['guarantor_annual_earning'] = spouse_annual_salary
+                    data2[index2]['guarantor_profession'] = spouse_company_address
+                else:
+                    print('customer_id is not valid')
+
+            else:
+                print('email not valid')
+        else:
+            relation_name = self.ids.relation_name.text
+            person_name = self.ids.person_name.text
+            person_dob = self.ids.person_dob.text
+            person_ph_no = self.ids.person_ph_no.text
+            person_proffession = self.ids.person_profession.text
+            if not all([relation_name, person_name, person_dob, person_ph_no, person_proffession]):
+                # Display a validation error dialog
+                self.show_validation_error("Please fill in all fields.")
+                return  # Prevent further execution if any field is missing
+
+            if len(relation_name) < 3:
+                self.show_validation_error('Enter a valid relation name')
+                return
+            if len(person_name) < 3:
+                self.show_validation_error('Enter a valid person name')
+                return
+            try:
+                dob = datetime.strptime(person_dob, "%Y-%m-%d")
+                today = datetime.now()
+                age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+                if age < 18:
+                    self.show_validation_error("Enter a Valid Date of Birth Age must be Greater Than 18")
+                    return
+
+            except ValueError:
+                self.show_validation_error("Please enter a valid date of birth in the format YYYY-MM-DD")
+                return
+            if not person_ph_no.isdigit() or len(person_ph_no) != 10:
+                self.show_validation_error("Please Enter Valid Person Number.")
+                return
+            if len(person_name) < 3:
+                self.show_validation_error('Enter a valid person profession')
+                return
+
+            data = app_tables.fin_user_profile.search()
+            data2 = app_tables.fin_guarantor_details.search()
+            cus_id_list2 = [i['customer_id'] for i in data2]
+            id_list = [i['email_user'] for i in data]
+            cus_id_list = [i['customer_id'] for i in data]
+            user_email = anvil.server.call('another_method')
+            if user_email in id_list:
+                index = id_list.index(user_email)
+                if cus_id_list[index] in cus_id_list2:
+                    index2 = cus_id_list2.index(cus_id_list[index])
+                    data2[index2]['guarantor_name'] = person_name
+                    data2[index2]['guarantor_person_relation'] = relation_name
+                    data2[index2]['guarantor_mobile_no'] = int(person_ph_no)
+                    data2[index2]['guarantor_profession'] = person_proffession
+                    data2[index2]['guarantor_date_of_births'] = person_dob
+
+                else:
+                    print('customer_id is not valid')
+
+            else:
+                print('email not valid')
+
+        if marital_status_id == 'Un-Married' or marital_status_id == 'Not Married':
+            sm = self.manager
+            borrower_screen = BorrowerScreen20(name='BorrowerScreen20')
+            sm.add_widget(borrower_screen)
+            sm.transition.direction = 'left'
+            sm.current = 'BorrowerScreen20'
+
+        elif marital_status_id == 'Married':
+            sm = self.manager
+            borrower_screen = BorrowerScreen20(name='BorrowerScreen20')
+            sm.add_widget(borrower_screen)
+            sm.transition.direction = 'left'
+            sm.current = 'BorrowerScreen20'
+
+        elif marital_status_id == 'Divorced':
+            sm = self.manager
+            borrower_screen = BorrowerScreen20(name='BorrowerScreen20')
+            sm.add_widget(borrower_screen)
+            sm.transition.direction = 'left'
+            sm.current = 'BorrowerScreen20'
+        elif marital_status_id == 'Other':
+            sm = self.manager
+            borrower_screen = BorrowerScreen20(name='BorrowerScreen20')
+            sm.add_widget(borrower_screen)
+            sm.transition.direction = 'left'
+            sm.current = 'BorrowerScreen20'
+        else:
+            sm = self.manager
+            borrower_screen = BorrowerScreen20(name='BorrowerScreen20')
+            sm.add_widget(borrower_screen)
+            sm.transition.direction = 'left'
+            sm.current = 'BorrowerScreen20'
 
     def show_validation_error(self, error_message):
         dialog = MDDialog(
@@ -9083,7 +9507,7 @@ class BorrowerScreen16(Screen):
 
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'BorrowerScreen21'
+        self.manager.current = 'BorrowerScreen15'
 
 
 class BorrowerScreen17(Screen):

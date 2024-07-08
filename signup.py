@@ -124,13 +124,11 @@ KV = """
             size: dp(250), dp(60)
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             size_hint_x: 1.02
-
             MDTextField:
                 id: password
                 hint_text: "Password"
                 hint_text_color: 0.043, 0.145, 0.278, 1  # Indigo color for hint text
                 color_mode: 'custom'
-                line_color_normal: 0.043, 0.145, 0.278, 1
                 icon_left: "lock"
                 password: True
                 size_hint_y: None
@@ -141,9 +139,10 @@ KV = """
                 text_color_normal: "black"
                 helper_text_color_normal: "black"
                 pos_hint: {'center_x': 0.5, 'center_y': 0.51}
-                on_text: app.check_password_match(password, password2)
+                on_text: root.check_password_match(self, root.ids.password2)
                 theme_text_color: "Custom"          
-                text_color: 0, 0, 0, 1  # Change the text color here (black in this example)
+                text_color: 0, 0, 0, 1 
+                helper_text: ""
             MDIconButton:
                 id: password_visibility
                 icon: "eye-off"
@@ -155,25 +154,29 @@ KV = """
                 theme_text_color: "Secondary"
                 pos_hint: {'center_x': 0.95, 'center_y': 0.5}
                 on_release: app.toggle_password_visibility(password, password2, password_visibility)
-
+        
         MDTextField:
             id: password2
             hint_text: "Re-Enter Your Password"
             hint_text_color: 0.043, 0.145, 0.278, 1  # Indigo color for hint text
             color_mode: 'custom'
-            line_color_normal: 0.043, 0.145, 0.278, 1
             icon_left: "lock"
             password: True
             size_hint_y: None
-            height: "8dp"
+            height: "10dp"
+            helper_text_mode: 'on_error'
             width: dp(200)
+            hint_text_color: 0, 0, 0, 1
             hint_text_color_normal: "black"
             text_color_normal: "black"
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            on_text: app.check_password_match(password, self)
+            helper_text_color_normal: "black"
+            pos_hint: {'center_x': 0.5, 'center_y': 0.51}
+            on_text: root.check_password_match(root.ids.password, self)
             theme_text_color: "Custom"
-            text_color: 0, 0, 0, 1  # Change the text color here (black in this example)
-           
+            text_color: 0, 0, 0, 1 
+            helper_text: ""
+        
+             
         BoxLayout:
             orientation: 'horizontal'
             width: "260dp"
@@ -371,6 +374,8 @@ class SignupScreen(Screen):
     def go_to_signin(self):
         self.manager.add_widget(Factory.PreLoginScreen(name='prelogin'))
         self.manager.current = 'prelogin'
+
+
 
     def on_mobile_number_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
@@ -659,6 +664,39 @@ class SignupScreen(Screen):
         return len(password) >= 8 and bool(
             re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+=-])[A-Za-z\d!@#$%^&*()_+=-]+$', password))
 
+    import re
+
+    def check_password_match(self, password, password2):
+        password_text = password.text
+        password2_text = password2.text
+
+        # Check the main password field
+        if not password_text:
+            password.helper_text = "Password cannot be empty"
+            password.error = True
+        elif len(password_text) < 8:
+            password.helper_text = "Password must be at least 8 characters long"
+            password.error = True
+        elif not re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+=-])[A-Za-z\d!@#$%^&*()_+=-]+$',
+                          password_text):
+            password.helper_text = "Password must include (a-z), (A-Z), (0-9), and (!@#$%^&*()_+=-)"
+            password.error = True
+        else:
+            password.helper_text = ""
+            password.error = False
+
+        # Check the confirmation password field only if it has been filled out
+        if password2_text:
+            if password_text != password2_text:
+                password2.helper_text = "Passwords do not match"
+                password2.error = True
+            else:
+                password2.helper_text = ""
+                password2.error = False
+        else:
+            password2.helper_text = ""
+            password2.error = False
+
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.on_keyboard)
         Window.bind(on_keyboard=self.on_back_button)
@@ -685,7 +723,7 @@ class SignupScreen(Screen):
     def go_back(self):
         # Navigate to the previous screen with a slide transition
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'MainScreen'
+        self.manager.current = 'prelogin'
 
 
 class EmailOTPScreen(Screen):

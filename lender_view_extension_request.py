@@ -1454,15 +1454,19 @@ class ViewProfileE(Screen):
         profile = app_tables.fin_user_profile.search()
         email_user = self.email_user()
         data = app_tables.fin_loan_details.search()
+        extend_ten = app_tables.fin_extends_loan.search()
         lender_cos_id = []
         lender_email = []
         lender_name = []
         product_name = []
+        loan_tenure = []
+
         for i in data:
             lender_cos_id.append(i['lender_customer_id'])
             lender_email.append(i['lender_email_id'])
             lender_name.append(i['lender_full_name'])
             product_name.append(i['product_name'])
+            loan_tenure.append(i['tenure'])
         index1 = 0
         if loan_id in data:
             index1 = loan_id.index(loan_id)
@@ -1474,6 +1478,17 @@ class ViewProfileE(Screen):
             profile_customer_id.append(i['customer_id'])
             profile_email.append(i['email_user'])
             profile_name.append(i['full_name'])
+
+        loan_extend_id = []
+        loan_rx_mon_tenure = []
+        for i in extend_ten:
+            loan_extend_id.append(i['loan_id'])
+            loan_rx_mon_tenure.append(i['total_extension_months'])
+        ext_lan = 0
+        if loan_id in loan_extend_id:
+            ext_lan = loan_extend_id.index(loan_id)
+            print(loan_rx_mon_tenure[ext_lan], loan_tenure[index1], self.loan_id)
+
         email_index = 0
         if email_user in profile_email:
             email_index = profile_email.index(email_user)
@@ -1484,26 +1499,27 @@ class ViewProfileE(Screen):
                 if i['loan_id'] == loan_id:
                     borrower_name = i['borrower_full_name']
                     break
-            extends_loan_records[index1]['status_timestamp'] = approved_date
-            extends_loan_records[index1]['lender_customer_id'] = lender_cos_id[email_index]
-            extends_loan_records[index1]['lender_full_name'] = lender_name[email_index]
-            extends_loan_records[index1]['lender_email_id'] = lender_email[email_index]
-            extends_loan_records[index1]['product_name'] = product_name[email_index]
+            extends_loan_records[0]['status_timestamp'] = approved_date
+            extends_loan_records[0]['lender_customer_id'] = lender_cos_id[index1]
+            extends_loan_records[0]['lender_full_name'] = lender_name[index1]
+            extends_loan_records[0]['lender_email_id'] = lender_email[index1]
+            extends_loan_records[0]['product_name'] = product_name[index1]
 
         if extends_loan_records and loan_details_records:
             for extends_loan_record in extends_loan_records:
                 extends_loan_record['status'] = 'approved'
                 extends_loan_record.update()
 
-            for record in loan_records:
-                record['loan_updated_status'] = 'extension'
-                record.update()
+            for loan_id in loan_records:
+                data[index1]['loan_updated_status'] = 'extension'
+                data[index1]['tenure'] += loan_rx_mon_tenure[ext_lan]
+                print(data[index1]['loan_updated_status'])
+                loan_id.update()
 
             # Switch to the 'NewExtension' screen
             self.manager.current = 'ALLLoansEX'
         else:
             print("No data found for loan_id:", loan_id)
-
     def show_validation_error(self, error_message):
         dialog = MDDialog(
             title="Validation Error",
@@ -1538,17 +1554,20 @@ class ViewProfileE(Screen):
         extends_loan_records = app_tables.fin_extends_loan.search(loan_id=loan_id)
         approved_date = datetime.now()
         profile = app_tables.fin_user_profile.search()
+        extend_ten = app_tables.fin_extends_loan.search()
         email_user = self.email_user()
         data1 = app_tables.fin_loan_details.search()
         lender_cos_id = []
         lender_email = []
         lender_name = []
         product_name = []
+        loan_tenure = []
         for i in data1:
             lender_cos_id.append(i['lender_customer_id'])
             lender_email.append(i['lender_email_id'])
             lender_name.append(i['lender_full_name'])
             product_name.append(i['product_name'])
+            loan_tenure.append(i['tenure'])
         index1 = 0
         if loan_id in data1:
             index1 = loan_id.index(loan_id)
@@ -1562,6 +1581,7 @@ class ViewProfileE(Screen):
             profile_customer_id.append(i['customer_id'])
             profile_email.append(i['email_user'])
             profile_name.append(i['full_name'])
+
         email_index = 0
         if email_user in profile_email:
             email_index = profile_email.index(email_user)
@@ -1570,11 +1590,11 @@ class ViewProfileE(Screen):
         if loan_id in loan_idlist:
             index = loan_idlist.index(loan_id)
             data[index]['status'] = 'rejected'
-            extends_loan_records[index1]['status_timestamp'] = approved_date
-            extends_loan_records[index1]['lender_customer_id'] = lender_cos_id[email_index]
-            extends_loan_records[index1]['lender_full_name'] = lender_name[email_index]
-            extends_loan_records[index1]['lender_email_id'] = lender_email[email_index]
-            extends_loan_records[index1]['product_name'] = product_name[email_index]
+            extends_loan_records[0]['status_timestamp'] = approved_date
+            extends_loan_records[0]['lender_customer_id'] = lender_cos_id[index1]
+            extends_loan_records[0]['lender_full_name'] = lender_name[index1]
+            extends_loan_records[0]['lender_email_id'] = lender_email[index1]
+            extends_loan_records[0]['product_name'] = product_name[index1]
             self.manager.current = 'ALLLoansEX'
 
     def on_pre_enter(self):

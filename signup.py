@@ -81,7 +81,7 @@ KV = """
 
         MDFloatLayout:
             size_hint: None, None
-            size: dp(250), dp(40)
+            size: dp(250), dp(50)
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             size_hint_x: 1.02
 
@@ -116,29 +116,45 @@ KV = """
 
                 theme_text_color: 'Custom'
                 text_color: 6/255, 143/255, 236/255, 1
-                pos_hint: {'center_x': 1, 'center_y': 0.5}
+                pos_hint: {'center_x': 0.95, 'center_y': 0.5}
                 on_release: app.verify_email()
 
-        MDTextField:
-            id: password
-            hint_text: " Password"
-            hint_text_color: 0.043, 0.145, 0.278, 1  # Indigo color for hint text
-            color_mode: 'custom'
-            line_color_normal: 0.043, 0.145, 0.278, 1
-            icon_left: "lock"
-            password: not password_visibility.active
-            size_hint_y: None
-            height: "10dp"
-            width: dp(200)
-            hint_text_color: 0, 0, 0, 1
-            hint_text_color_normal: "black"
-            text_color_normal: "black"
-            helper_text_color_normal: "black"
-            pos_hint: {'center_x': 0.5, 'center_y': 0.51}
-            on_text_validate: app.validate_password()
-            theme_text_color: "Custom"
-            
-            text_color: 0, 0, 0, 1  # Change the text color here (black in this example)
+        MDFloatLayout:
+            size_hint: None, None
+            size: dp(250), dp(60)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint_x: 1.02
+
+            MDTextField:
+                id: password
+                hint_text: "Password"
+                hint_text_color: 0.043, 0.145, 0.278, 1  # Indigo color for hint text
+                color_mode: 'custom'
+                line_color_normal: 0.043, 0.145, 0.278, 1
+                icon_left: "lock"
+                password: True
+                size_hint_y: None
+                height: "10dp"
+                width: dp(200)
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.51}
+                on_text: app.check_password_match(password, password2)
+                theme_text_color: "Custom"          
+                text_color: 0, 0, 0, 1  # Change the text color here (black in this example)
+            MDIconButton:
+                id: password_visibility
+                icon: "eye-off"
+                size_hint_y: None
+                padding: dp(-10)
+                size_hint_x: 0.4
+                height: dp(25)
+                text_color: 6/255, 143/255, 236/255, 1
+                theme_text_color: "Secondary"
+                pos_hint: {'center_x': 0.95, 'center_y': 0.5}
+                on_release: app.toggle_password_visibility(password, password2, password_visibility)
 
         MDTextField:
             id: password2
@@ -147,37 +163,17 @@ KV = """
             color_mode: 'custom'
             line_color_normal: 0.043, 0.145, 0.278, 1
             icon_left: "lock"
-            password: not password_visibility.active
+            password: True
             size_hint_y: None
-            height: "10dp"
+            height: "8dp"
             width: dp(200)
-            hint_text_color: 0, 0, 0, 1
             hint_text_color_normal: "black"
             text_color_normal: "black"
-            helper_text_color_normal: "black"
-            pos_hint: {'center_x': 0.5, 'center_y': 0.51}
-            on_text_validate: app.validate_password()
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            on_text: app.check_password_match(password, self)
             theme_text_color: "Custom"
             text_color: 0, 0, 0, 1  # Change the text color here (black in this example)
-        
-        BoxLayout:
-            orientation: 'horizontal'
-            width: "260dp"
-            height: "10dp"
-            
-            MDCheckbox:
-                id: password_visibility
-                size_hint_x: None
-                width: "20dp"
-                on_active: root.on_checkbox_active(self, self.active)
-
-            MDLabel:
-                text: "Show Password"
-                font_size:dp(12)
-                size: "30dp", "30dp"
-                theme_text_color: "Secondary"
-                halign: "left"
-                valign: "center"      
+           
         BoxLayout:
             orientation: 'horizontal'
             width: "260dp"
@@ -367,7 +363,6 @@ KV = """
 
 """
 
-
 class SignupScreen(Screen):
     Builder.load_string(KV)
     create_user_table()
@@ -376,14 +371,6 @@ class SignupScreen(Screen):
     def go_to_signin(self):
         self.manager.add_widget(Factory.PreLoginScreen(name='prelogin'))
         self.manager.current = 'prelogin'
-
-    def on_checkbox_active(self, checkbox, value):
-        # Update password visibility based on the checkbox state
-        if hasattr(self, 'SignupScreen'):
-            self.SignupScreen.ids.password.password = not value
-            self.SignupScreen.ids.password2.password = not value
-            print(value)
-
 
     def on_mobile_number_touch_down(self):
         # Change keyboard mode to numeric when the mobile number text input is touched
@@ -525,23 +512,10 @@ class SignupScreen(Screen):
         for i in c_id:
             anvil_email.append(i['email_user'])
 
-        # Check if the email is verified in the users table
-        user = app_tables.users.get(email=email)
-        email_verified = False
-        if user:
-            try:
-                email_verified = user['email_verified']
-            except KeyError:
-                # Add debug statement
-                print(f"Unexpected user object: {user}")
-        else:
-            # Add debug statement
-            print(f"No user found for email: {email}")
-
         # Other input validations
-        if not name or len(name.split()) < 2 or not name[0].isupper() or not re.match(r'^[a-zA-Z\s]+$', name):
+        if not name or len(name.split()) < 2 or not re.match(r'^[a-zA-Z\s]+$', name):
             validation_errors.append(
-                (self.ids.name, "Please enter a valid full name and first letter capital"))
+                (self.ids.name, "Please enter a valid first name and last name"))
         else:
             self.ids.name.helper_text = ''
 
@@ -558,9 +532,7 @@ class SignupScreen(Screen):
             validation_errors.append((self.ids.user_input, "Email already exists"))
         elif existing_user:
             validation_errors.append((self.ids.user_input, "Email already exists"))
-        elif not email_verified:
-            validation_errors.append(
-                (self.ids.user_input, "Email verification is pending.Please Verify to Continue."))
+
         else:
             self.ids.user_input.helper_text = ''
 
@@ -603,18 +575,14 @@ class SignupScreen(Screen):
         self.ids.terms_checkbox.active = False
         self.ids.kyc_checkbox.active = False
 
-        # Transition to the next screen if email is verified
-        if email_verified:
-            sm = self.manager
-            if not sm.has_screen('prelogin'):
-                lender_screen = PreLoginScreen(name='prelogin')
-                sm.add_widget(lender_screen)
-            sm.transition.direction = 'left'  # Set the transition direction explicitly
-            sm.current = 'prelogin'
 
-        else:
-            self.show_validation_error(self.ids.user_input,
-                                       "Email verification is pending. Please verify your email before proceeding.")
+        sm = self.manager
+        if not sm.has_screen('prelogin'):
+            lender_screen = PreLoginScreen(name='prelogin')
+            sm.add_widget(lender_screen)
+        sm.transition.direction = 'left'  # Set the transition direction explicitly
+        sm.current = 'prelogin'
+
 
     def wallet_generator(self, email_user, name, customer_id1):
         wallet = app_tables.fin_wallet.search()
@@ -717,7 +685,7 @@ class SignupScreen(Screen):
     def go_back(self):
         # Navigate to the previous screen with a slide transition
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'prelogin'
+        self.manager.current = 'MainScreen'
 
 
 class EmailOTPScreen(Screen):

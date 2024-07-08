@@ -57,6 +57,20 @@ class MyApp(MDApp):
 
         return self.sm
 
+    def toggle_password_visibility(self, password_field1, password_field2, icon_button):
+        password_field1.password = not password_field1.password
+        password_field2.password = not password_field2.password
+        icon_button.icon = "eye" if password_field1.password else "eye-off"
+
+    def check_password_match(self, password, password2):
+        if password.text != password2.text:
+            password2.helper_text = 'Passwords do not match'
+            password2.helper_text_mode = 'on_error'
+            password2.helper_text_color = (1, 0, 0, 1)  # Red color for helper text
+        else:
+            password2.helper_text = ''
+            password2.helper_text_mode = 'on_error'
+
     def resend_otp(self):
         ##user_input = login_screen.ids.user_input.text
         self.verify_login()
@@ -246,10 +260,18 @@ class MyApp(MDApp):
             # Connect to Anvil server
             anvil.server.connect("server_73YYSLJ5XYD2RR7P45E53KL4-MQV73PHHFFCHO4HD")
 
-            # Create or update the user profile directly
-            app_tables.users.add_row(email=email, email_verified=True)
+            # Check if the email already exists in the table
+            user = app_tables.users.get(email=email)
+
+            if user is not None:
+                # Update the existing row
+                user.update(email_verified=True)
+            else:
+                # Create a new row
+                app_tables.users.add_row(email=email, email_verified=True)
         except Exception as e:
             print(f"Error updating email verification status: {e}")
+
     def go_to_signup_screen(self, dt):
         self.sm.current = 'SignupScreen'
 

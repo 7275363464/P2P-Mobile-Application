@@ -1401,6 +1401,7 @@ class ViewProfileScreenLF(Screen):
         index1 = 0
         if loan_id in lender_loan_id:
             index1 = lender_loan_id.index(loan_id)
+
         loan_idlist = [i['loan_id'] for i in data]
         profile_customer_id = []
         profile_email = []
@@ -1420,10 +1421,10 @@ class ViewProfileScreenLF(Screen):
                     borrower_name = i['borrower_full_name']
                     break
             foreclosure_records[0]['status_timestamp'] = approved_date
-            foreclosure_records[0]['lender_customer_id'] = lender_cos_id[email_index]
-            foreclosure_records[0]['lender_full_name'] = lender_name[email_index]
-            foreclosure_records[0]['lender_email_id'] = lender_email[email_index]
-            foreclosure_records[0]['product_name'] = product_name[email_index]
+            foreclosure_records[0]['lender_customer_id'] = lender_cos_id[index1]
+            foreclosure_records[0]['lender_full_name'] = lender_name[index1]
+            foreclosure_records[0]['lender_email_id'] = lender_email[index1]
+            foreclosure_records[0]['product_name'] = product_name[index1]
 
         if foreclosure_records and loan_records:
             for record in foreclosure_records:
@@ -1493,10 +1494,10 @@ class ViewProfileScreenLF(Screen):
             index = loan_idlist.index(loan_id)
             foreclosure_records[index1]['status'] = 'rejected'
             foreclosure_records[0]['status_timestamp'] = approved_date
-            foreclosure_records[0]['lender_customer_id'] = lender_cos_id[email_index]
-            foreclosure_records[0]['lender_full_name'] = lender_name[email_index]
-            foreclosure_records[0]['lender_email_id'] = lender_email[email_index]
-            foreclosure_records[0]['product_name'] = product_name[email_index]
+            foreclosure_records[0]['lender_customer_id'] = lender_cos_id[index1]
+            foreclosure_records[0]['lender_full_name'] = lender_name[index1]
+            foreclosure_records[0]['lender_email_id'] = lender_email[index1]
+            foreclosure_records[0]['product_name'] = product_name[index1]
             self.manager.current = 'ViewAllLoansLF'
 
     def on_pre_enter(self):

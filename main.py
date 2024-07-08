@@ -32,7 +32,7 @@ from lender_dashboard import LenderDashboard
 from login import OTPScreen, PreLoginScreen
 from signup import SignupScreen, EmailOTPScreen
 
-anvil.server.connect("server_73YYSLJ5XYD2RR7P45E53KL4-MQV73PHHFFCHO4HD")
+anvil.server.connect("server_MMDT5BC6JQJX7LA72XRFWMCS-VDS6LDYSOGBPZ3DB")
 
 
 class MyApp(MDApp):
@@ -593,15 +593,34 @@ class MyApp(MDApp):
         approval_date = app_tables.fin_approval_days.search()
         today_date = datetime.now(tz=utc).date()
         foreclose = app_tables.fin_foreclosure.search()
+        data = app_tables.fin_loan_details.search()
+        loan_id = []
+        loan_tenure = []
+
+        for i in data:
+            loan_id.append(i['loan_id'])
+            loan_tenure.append(i['tenure'])
+        index1 = 0
+        if loan_id in data:
+            index1 = loan_id.index(loan_id)
 
         requested_on = []
         extend_status = []
+        loan_extend_id = []
+        loan_rx_mon_tenure = []
 
         s = 0
         for i in extend:
             s += 1
             requested_on.append(i['extension_request_date'])
             extend_status.append(i['status'])
+            loan_extend_id.append(i['loan_id'])
+            loan_rx_mon_tenure.append(i['total_extension_months'])
+
+        ext_lan = 0
+        if loan_id in loan_extend_id:
+            ext_lan = loan_extend_id.index(loan_id)
+            print(loan_rx_mon_tenure[ext_lan], loan_tenure[index1])
 
         for_request_time = []
         foreclose_status = []
@@ -630,6 +649,7 @@ class MyApp(MDApp):
             a += 1
             if extend_status[i] == "under process" and requested_on != None :
                 if ((today_date - requested_on[i].date()).days) >= app_date[index]:
+                    data[index1]['tenure'] += loan_rx_mon_tenure[ext_lan]
                     extend[i]["status"] = "approved"
 
         y = -1

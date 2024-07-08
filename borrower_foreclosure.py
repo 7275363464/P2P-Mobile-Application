@@ -1360,7 +1360,7 @@ class ForecloseDetails(Screen):
             emi_number.append(i['emi_number'])
             loan_id4.append(i['loan_id'])
         if loan_id in loan_id4:
-            index = loan_id4.index(loan_id)
+            index1 = loan_id4.index(loan_id)
             highest_number = max(emi_number) if emi_number else 0
             total_payment = highest_number
 

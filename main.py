@@ -62,14 +62,6 @@ class MyApp(MDApp):
         password_field2.password = not password_field2.password
         icon_button.icon = "eye" if password_field1.password else "eye-off"
 
-    def check_password_match(self, password, password2):
-        if password.text != password2.text:
-            password2.helper_text = 'Passwords do not match'
-            password2.helper_text_mode = 'on_error'
-            password2.helper_text_color = (1, 0, 0, 1)  # Red color for helper text
-        else:
-            password2.helper_text = ''
-            password2.helper_text_mode = 'on_error'
 
     def resend_otp(self):
         ##user_input = login_screen.ids.user_input.text

@@ -7207,7 +7207,7 @@ class LenderDashboard(Screen):
                 file.truncate()
 
         # Switch to MainScreen
-        self.manager.current = 'MainScreen'
+        self.manager.current = 'prelogin'
 
     def account(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 600), background_color=[0, 0, 0, 0])

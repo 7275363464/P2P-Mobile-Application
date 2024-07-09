@@ -2,6 +2,9 @@ import re
 import os
 import json
 import base64
+
+from Crypto.SelfTest.Cipher.test_CBC import file_name
+from kivy.uix.button import Button
 from anvil import media
 from io import BytesIO
 from kivy.core.image import Image as CoreImage
@@ -621,1171 +624,1125 @@ KV = '''
 
 
 <LenderScreen5>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
+    BoxLayout:
         orientation: 'vertical'
-        spacing: dp(50)
-        padding: dp(30)
+        MDTopAppBar:
+            title: "P2P LENDING"
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen4')]]
+            right_action_items: [['home', lambda x: root.go_to_dashboard()]]
+            title_align: 'center'  # Center-align the title
+            md_bg_color: 0.043, 0.145, 0.278, 1
 
-        MDLabel:
-            text:""
-            size_hint_y: None
-            height:dp(40)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(30)
-            padding: dp(30)  # Reduce the top padding
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: 'Lender Registration Form'
-                halign: 'center'
-                font_size: "20dp"
-                font_name: "Roboto-Bold"
-
-            MDLabel:
-                text: 'Education Details'
-                halign: 'center'
-                font_size: "20dp"
-                font_name: "Roboto-Bold"
-
-
-            MDLabel:
-                text: "Select Education Details:"
-                halign: 'left'
-                bold:True
+        MDScrollView:
+            MDBoxLayout:
+                id: parent_layout_id
+                orientation: 'vertical'
+                spacing: dp(5)
+                padding: dp(30)
                 size_hint_y: None
-                font_size: "15dp"
-                height:dp(5)
-
-            Spinner:
-                id: spinner_id
-                text: "Please Select Education Details"
-                multiline: False
-                size_hint: 1 , None
-                font_size: "15dp"
-                halign: "left"
-                height:"40dp"
-                width: dp(200)
-                text_size: self.width - dp(20), None
-                background_color: 0,0,0,0
-                background_normal:''
-                color: 0, 0, 0, 1
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1
-                    Line:
-                        width: 0.7
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: ' '
-                halign: 'center'
-                font_size: "20dp"
-                font_name: "Roboto-Bold"
-            MDRectangleFlatButton:
-                text: "Next"
-                on_press: root.next_pressed(spinner_id.text)
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
-
-
-<LenderScreen_Edu_10th>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen5')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(30)
-        padding: dp(30)
-        MDLabel:
-            text: ""
-            size_hint_y: None
-            height:dp(50)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(50)
-            padding: dp(30)
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: 'Education Details'
-                halign: 'center'
-                bold: True
-                size_hint_y: None
-                height:dp(0)
-
-            MDLabel:
-                text: "Upload 10th standard certificate"
-                halign: 'left'
-                bold:True
-                size_hint_y: None
-                font_size: "15dp"
-                height:dp(5)
-
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('LenderScreen_Edu_10th').check_and_open_file_manager1()
-
-                MDLabel:
-                    id: upload_label1
-                    text: 'Upload Certificate'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
+                height: self.minimum_height
+                # dropdown details
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    spacing: dp(5)
+                    padding: dp(10)
                     size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            # MDLabel:
-            #     id: image_label1
-            #     text: ''
-            #     halign: 'center'
-            #     theme_text_color: "Custom"
-            #     text_color: 0, 0, 0, 1  # Black text color
-            #     valign: 'middle'  # Align the label text vertically in the center
-            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            Image:
-                id: image_label1
-                source: ''
-                allow_stretch: True
-                keep_ratio: True
-                size_hint_y: None
-                size: dp(50), dp(50)
-
-            MDRectangleFlatButton:
-                text: "Next"
-                on_release: root.go_to_lender_screen4()
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
-
-
-<LenderScreen_Edu_Intermediate>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen5')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
-        MDLabel:
-            text: ""
-            size_hint_y: None
-            height:dp(50)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(20)
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: 'Education Details'
-                halign: 'center'
-                bold: True
-            MDLabel:
-                text: "Upload 10th standard"
-                halign: 'left'
-                bold: True
-                font_size: "15dp"
-
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('LenderScreen_Edu_Intermediate').check_and_open_file_manager1()
-
-                MDLabel:
-                    id: upload_label1
-                    text: 'Upload Certificate'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
+                    height: dp(200)
+                    # md_bg_color:253/255, 254/255, 254/255, 1
+                    # canvas:
+                    #     Color:
+                    #         rgba: 174/255, 214/255, 241/255, 1 # Dull background color
+                    #     Line:
+                    #         width: 0.7  # Border width
+                    #         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+        
+                    MDLabel:
+                        text: 'Lender Registration Form'
+                        halign: 'center'
+                        font_size: "15dp"
+                        font_name: "Roboto-Bold"
+                        bold: True
+        
+                    MDLabel:
+                        text: 'Education Details'
+                        halign: 'center'
+                        font_size: "15dp"
+                        bold: True
+        
+        
+                    MDLabel:
+                        text: "Select Education Details:"
+                        halign: 'left'
+                        font_size: "15dp"
+                        # font_name: "Roboto-Bold"
+                        bold: True
+                    # MDBoxLayout:
+                    #     orientation: 'horizontal'
+                    #     canvas.before:
+                    #         Color:
+                    #             rgba: 0.5, 0.5, 0.5, 1
+                    #         Line:
+                    #             rectangle: self.x, self.y, self.width, self.height
+                    #             width: 0.7
+                    Spinner:
+                        id: spinner_id
+                        text: "Please Select Education Details"
+                        multiline: False
+                        size_hint: 1 , None
+                        font_size: "15dp"
+                        halign: "left"
+                        height:"40dp"
+                        width: dp(200)
+                        text_size: self.width - dp(20), None
+                        background_color: 0,0,0,0
+                        background_normal:''
+                        option_cls: 'CustomSpinnerOption'
+                        color: 0, 0, 0, 1
+                        on_text: root.update_education_details(spinner_id.text)
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 0, 1  
+                            Line:
+                                width: 0.7
+                                rectangle: (self.x, self.y, self.width, self.height)
+                        
+                        # MDIconButton:
+                        #     icon: 'downarrow'
+                        #     theme_text_color: "Custom"
+                        #     text_color: 0, 0, 0, 1  # Black text color
+                        #     size_hint_x: None
+                        #     width: dp(24)
+                # 10th details            
+                MDBoxLayout:
+                    id: box_10th
+                    orientation: 'vertical'
+                    spacing: dp(5)
+                    padding: dp(10)
                     size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            # MDLabel:
-            #     id: image_label1
-            #     text: ''
-            #     halign: 'center'
-            #     theme_text_color: "Custom"
-            #     text_color: 0, 0, 0, 1  # Black text color
-            #     valign: 'middle'  # Align the label text vertically in the center
-            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-                Image:
-                    id: image_label1
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDLabel:
-                text: "Upload Intermediate/PUC"
-                halign: 'left'
-                bold: True
-                font_size: "15dp"
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('LenderScreen_Edu_Intermediate').check_and_open_file_manager2()
-
-                MDLabel:
-                    id: upload_label2
-                    text: 'Upload Certificate'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            # MDLabel:
-            #     id: image_label2
-            #     text: ''
-            #     halign: 'center'
-            #     theme_text_color: "Custom"
-            #     text_color: 0, 0, 0, 1  # Black text color
-            #     valign: 'middle'  # Align the label text vertically in the center
-            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                Image:
-                    id: image_label2
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDRectangleFlatButton:
-                text: "Next"
-                on_release: root.go_to_lender_screen4()
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
-
-<LenderScreen_Edu_Bachelors>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen5')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title"
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
-        MDLabel:
-            text: ""
-            size_hint_y: None
-            height:dp(50)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(20)
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-            MDLabel:
-                text: 'Education Details'
-                halign: 'center'
-                bold: True
-            MDLabel:
-                text: "Upload 10th standard Certificate"
-                halign: 'left'
-                font_size: "15dp"
-                bold: True
-
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "5dp"
-                size_hint: None, None
-                size: dp(270), dp(60)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('LenderScreen_Edu_Bachelors').check_and_open_file_manager1()
-
-                MDLabel:
-                    id: upload_label1
-                    text: 'Upload Certificate'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                Image:
-                    id: image_label1
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            # MDLabel:
-            #     id: image_label1
-            #     text: ''
-            #     halign: 'center'
-            #     theme_text_color: "Custom"
-            #     text_color: 0, 0, 0, 1  # Black text color
-            #     valign: 'middle'  # Align the label text vertically in the center
-            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDLabel:
-                text: "Upload Intermediate/PUC Certificate"
-                halign: 'left'
-                bold: True
-                font_size: "15dp"
-
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(270), dp(60)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('LenderScreen_Edu_Bachelors').check_and_open_file_manager2()
-
-                MDLabel:
-                    id: upload_label2
-                    text: 'Upload Certificate'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                Image:
-                    id: image_label2
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            # MDLabel:
-            #     id: image_label2
-            #     text: ''
-            #     halign: 'center'
-            #     theme_text_color: "Custom"
-            #     text_color: 0, 0, 0, 1  # Black text color
-            #     valign: 'middle'  # Align the label text vertically in the center
-            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDLabel:
-                text: "Upload Bachelors certificate"
-                halign: 'left'
-                font_size: "15dp"
-                bold: True
-
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(270), dp(60)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('LenderScreen_Edu_Bachelors').check_and_open_file_manager3()
-
-                MDLabel:
-                    id: upload_label3
-                    text: 'Upload Certificate'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                Image:
-                    id: image_label3
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            # MDLabel:
-            #     id: image_label3
-            #     text: ''
-            #     halign: 'center'
-            #     theme_text_color: "Custom"
-            #     text_color: 0, 0, 0, 1  # Black text color
-            #     valign: 'middle'  # Align the label text vertically in the center
-            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            MDRectangleFlatButton:
-                text: "Next"
-                on_release: root.go_to_lender_screen4()
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
-
-<LenderScreen_Edu_Masters>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen5')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
-        MDLabel:
-            text: ""
-            size_hint_y: None
-            height:dp(50)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(20)
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-            MDLabel:
-                text: 'Education Details'
-                halign: 'center'
-                bold: True
-            MDLabel:
-                text: "Upload 10th standard Certificate"
-                halign: 'left'
-                bold: True
-                font_size: "15dp"
-
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(270), dp(60)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('LenderScreen_Edu_Masters').check_and_open_file_manager1()
-
-                MDLabel:
-                    id: upload_label1
-                    text: 'Upload Certificate'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                Image:
-                    id: image_label1
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            # MDLabel:
-            #     id: image_label1
-            #     text: ''
-            #     halign: 'center'
-            #     theme_text_color: "Custom"
-            #     text_color: 0, 0, 0, 1  # Black text color
-            #     valign: 'middle'  # Align the label text vertically in the center
-            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDLabel:
-                text: "Upload Intermediate/PUC Certificate"
-                halign: 'left'
-                bold: True
-                font_size: "15dp"
-
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(270), dp(60)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('LenderScreen_Edu_Masters').check_and_open_file_manager2()
-
-                MDLabel:
-                    id: upload_label2
-                    text: 'Upload Certificate'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                Image:
-                    id: image_label2
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            # MDLabel:
-            #     id: image_label2
-            #     text: ''
-            #     halign: 'left'
-            #     theme_text_color: "Custom"
-            #     text_color: 0, 0, 0, 1  # Black text color
-            #     valign: 'middle'  # Align the label text vertically in the center
-            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDLabel:
-                text: "Upload Bachelors certificate"
-                halign: 'left'
-                bold: True
-                font_size: "15dp"
-
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(270), dp(60)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('LenderScreen_Edu_Masters').check_and_open_file_manager3()
-
-                MDLabel:
-                    id: upload_label3
-                    text: 'Upload Certificate'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                Image:
-                    id: image_label3
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            # MDLabel:
-            #     id: image_label3
-            #     text: ''
-            #     halign: 'center'
-            #     theme_text_color: "Custom"
-            #     text_color: 0, 0, 0, 1  # Black text color
-            #     valign: 'middle'  # Align the label text vertically in the center
-            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            MDLabel:
-                text: "Upload Masters Certificate"
-                halign: 'left'
-                bold: True
-                font_size: "15dp"
-
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(270), dp(60)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('LenderScreen_Edu_Masters').check_and_open_file_manager4()
-
-                MDLabel:
-                    id: upload_label4
-                    text: 'Upload Certificate'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                Image:
-                    id: image_label4
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            # MDLabel:
-            #     id: image_label4
-            #     text: ''
-            #     halign: 'center'
-            #     theme_text_color: "Custom"
-            #     text_color: 0, 0, 0, 1  # Black text color
-            #     valign: 'middle'  # Align the label text vertically in the center
-            #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            MDRectangleFlatButton:
-                text: "Next"
-                on_release: root.go_to_lender_screen4()
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
-
-<LenderScreen_Edu_PHD>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen5')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
-        MDLabel:
-            text: ""
-            size_hint_y: None
-            height:dp(50)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(20)
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: 'Education Details'
-                halign: 'center'
-                bold: True
-            MDLabel:
-                text: ''
-                halign: 'center'
-                bold: True
-            MDLabel:
-                text: "Upload 10th standard Certificate"
-                halign: 'left'
-                font_size: "15dp"
-                bold: True
-
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('LenderScreen_Edu_PHD').check_and_open_file_manager1()
-
-                MDLabel:
-                    id: upload_label1
-                    text: 'Upload Certificate'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-                Image:
-                    id: image_label1
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    height: dp(220)
+                    # md_bg_color:253/255, 254/255, 254/255, 1
+                    # canvas:
+                    #     Color:
+                    #         rgba: 174/255, 214/255, 241/255, 1 # Dull background color
+                    #     Line:
+                    #         width: 0.7  # Border width
+                    #         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+        
                     
-            MDLabel:
-                text: "Upload Intermediate/PUC Certificate"
-                halign: 'left'
-                bold: True
-                font_size: "15dp"
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('LenderScreen_Edu_PHD').check_and_open_file_manager2()
-
-                MDLabel:
-                    id: upload_label2
-                    text: 'Upload Certificate'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
+        
+                    MDLabel:
+                        text: "Upload 10th standard certificate"
+                        halign: 'left'
+                        bold: True
+                        # size_hint_y: None
+                        # height: dp(50)
+                        font_size: "15dp"
+        
+        
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        padding: "10dp"
+                        spacing: "10dp"
+                        # size_hint: None, None
+                        # size: dp(250), dp(63)  # Adjust size as needed
+                        # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        canvas:
+                            Color:
+                                rgba: 0.5, 0.5, 0.5, 1 
+                            Line:
+                                rectangle: self.x, self.y, self.width, self.height
+                                width: 0.7
+        
+        
+                        MDIconButton:
+                            icon: 'upload'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_x: None
+                            width: dp(24)
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: app.root.get_screen('LenderScreen5').check_and_open_file_manager1()
+        
+                        MDLabel:
+                            id: upload_label1
+                            text: 'Upload Certificate'
+                            halign: 'left'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_y: None
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        
+                    # MDLabel:
+                    #     id: image_label1
+                    #     text: ''
+                    #     halign: 'center'
+                    #     theme_text_color: "Custom"
+                    #     text_color: 0, 0, 0, 1  # Black text color
+                    #     valign: 'middle'  # Align the label text vertically in the center
+                    #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        Image:
+                            id: image_label1
+                            source: ''
+                            allow_stretch: True
+                            keep_ratio: True
+                            size_hint_y: None
+                            on_touch_down: root.on_image_click(self, args[1])
+                            size: dp(50), dp(50)
+                            height: dp(36)
+                    GridLayout:
+                        cols: 1
+                        spacing:dp(10)
+                        padding: [0, "30dp", 0, 0]
+                        MDRectangleFlatButton:
+                            text: "Next"
+                            on_release: root.go_to_lender_screen4()
+                            md_bg_color: 0.043, 0.145, 0.278, 1
+                            pos_hint: {'right': 1, 'y': 0.5}
+                            text_color: 1, 1, 1, 1
+                            size_hint: 1, None
+                            height: "50dp"
+                            font_name: "Roboto-Bold"
+                            
+                # intermediate/puc
+                MDBoxLayout:
+                    id: box_12th
+                    orientation: 'vertical'
+                    spacing: dp(5)
+                    padding: dp(10)
                     size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                Image:
-                    id: image_label2
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
+                    height: dp(350)
+                    # md_bg_color:253/255, 254/255, 254/255, 1
+                    # canvas:
+                    #     Color:
+                    #         rgba: 174/255, 214/255, 241/255, 1 # Dull background color
+                    #     Line:
+                    #         width: 0.7  # Border width
+                    #         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+        
+                    MDLabel:
+                        text: 'Intermediate/PUC Education Details'
+                        halign: 'center'
+                        bold: True
+                        font_size: "15dp"
+                        
+                    MDLabel:
+                        text: "Upload 10th standard"
+                        halign: 'left'
+                        bold: True
+                        # size_hint_y: None
+                        # height: dp(50)
+                        font_size: "15dp"
+        
+        
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        padding: "10dp"
+                        spacing: "10dp"
+                        # size_hint: None, None
+                        # size: dp(250), dp(63)  # Adjust size as needed
+                        # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        canvas:
+                            Color:
+                                rgba: 0.5, 0.5, 0.5, 1 
+                            Line:
+                                rectangle: self.x, self.y, self.width, self.height
+                                width: 0.7
+        
+        
+                        MDIconButton:
+                            icon: 'upload'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_x: None
+                            width: dp(24)
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: app.root.get_screen('LenderScreen5').check_and_open_file_manager2()
+        
+                        MDLabel:
+                            id: upload_label1
+                            text: 'Upload Certificate'
+                            halign: 'left'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_y: None
+                            font_size: "15dp"
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    # MDLabel:
+                    #     id: image_label1
+                    #     text: ''
+                    #     halign: 'center'
+                    #     theme_text_color: "Custom"
+                    #     text_color: 0, 0, 0, 1  # Black text color
+                    #     valign: 'middle'  # Align the label text vertically in the center
+                    #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        
+                        Image:
+                            id: image_label2
+                            source: ''
+                            allow_stretch: True
+                            keep_ratio: True
+                            size_hint_y: None
+                            size: dp(50), dp(50)
+                            on_touch_down: root.on_image_click(self, args[1])
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    MDLabel:
+                        text: "Upload Intermediate/PUC"
+                        halign: 'left'
+                        bold: True
+                        font_size: "15dp"
+        
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        padding: "10dp"
+                        spacing: "10dp"
+                        # size_hint: None, None
+                        # size: dp(250), dp(60)  # Adjust size as needed
+                        # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        canvas:
+                            Color:
+                                rgba: 0.5, 0.5, 0.5, 1
+                            Line:
+                                rectangle: self.x, self.y, self.width, self.height
+                                width: 0.7
+        
+        
+                        MDIconButton:
+                            icon: 'upload'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_x: None
+                            width: dp(24)
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: app.root.get_screen('LenderScreen5').check_and_open_file_manager3()
+        
+                        MDLabel:
+                            id: upload_label2
+                            text: 'Upload Certificate'
+                            halign: 'left'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_y: None
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    # MDLabel:
+                    #     id: image_label2
+                    #     text: ''
+                    #     halign: 'center'
+                    #     theme_text_color: "Custom"
+                    #     text_color: 0, 0, 0, 1  # Black text color
+                    #     valign: 'middle'  # Align the label text vertically in the center
+                    #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        Image:
+                            id: image_label3
+                            source: ''
+                            allow_stretch: True
+                            keep_ratio: True
+                            size_hint_y: None
+                            size: dp(50), dp(50)
+                            height: dp(36)
+                            on_touch_down: root.on_image_click(self, args[1])
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    
+                    GridLayout:
+                        cols: 1
+                        spacing:dp(15)
+                        padding: [0, "30dp", 0, 0]
+                        MDRectangleFlatButton:
+                            text: "Next"
+                            on_release: root.go_to_lender_screen4()
+                            md_bg_color: 0.043, 0.145, 0.278, 1
+                            pos_hint: {'right': 1, 'y': 0.5}
+                            text_color: 1, 1, 1, 1
+                            size_hint: 1, None
+                            height: "20dp"
+                            font_name: "Roboto-Bold"
+                #for btech
+                MDBoxLayout:
+                    id: box_bachelors
+                    orientation: 'vertical'
+                    spacing: dp(5)
+                    padding: dp(10)
                     size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDLabel:
-                text: "Upload Bachelors certificate"
-                halign: 'left'
-                font_size: "15dp"
-                bold: True
-
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('LenderScreen_Edu_PHD').check_and_open_file_manager3()
-
-                MDLabel:
-                    id: upload_label3
-                    text: 'Upload Certificate'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
+                    height: dp(500)
+                    # md_bg_color:253/255, 254/255, 254/255, 1
+                    # canvas:
+                    #     Color:
+                    #         rgba: 174/255, 214/255, 241/255, 1 # Dull background color
+                    #     Line:
+                    #         width: 0.7  # Border width
+                    #         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+                    MDLabel:
+                        text: 'Bachelors Education Details'
+                        halign: 'center'
+                        font_size: "15dp"
+                        bold: True
+                        
+                    MDLabel:
+                        text: "Upload 10th standard Certificate"
+                        halign: 'left'
+                        bold: True
+        
+        
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        padding: "10dp"
+                        spacing: "10dp"
+                        # size_hint: None, None
+                        # size: dp(250), dp(60)  # Adjust size as needed
+                        # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        canvas:
+                            Color:
+                                rgba: 0.5, 0.5, 0.5, 1 
+                            Line:
+                                rectangle: self.x, self.y, self.width, self.height
+                                width: 0.7
+        
+        
+                        MDIconButton:
+                            icon: 'upload'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_x: None
+                            width: dp(24)
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: app.root.get_screen('LenderScreen5').check_and_open_file_manager4()
+        
+                        MDLabel:
+                            id: upload_label1
+                            text: 'Upload Certificate'
+                            halign: 'center'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_y: None
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        Image:
+                            id: image_label4
+                            source: ''
+                            allow_stretch: True
+                            keep_ratio: True
+                            on_touch_down: root.on_image_click(self, args[1])
+                            size_hint_y: None
+                            size: dp(50), dp(50)
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    # MDLabel:
+                    #     id: image_label1
+                    #     text: ''
+                    #     halign: 'center'
+                    #     theme_text_color: "Custom"
+                    #     text_color: 0, 0, 0, 1  # Black text color
+                    #     valign: 'middle'  # Align the label text vertically in the center
+                    #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    MDLabel:
+                        text: "Upload Intermediate/PUC Certificate"
+                        halign: 'left'
+                        bold: True
+                        
+        
+        
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        padding: "10dp"
+                        spacing: "10dp"
+                        # size_hint: None, None
+                        # size: dp(250), dp(60)  # Adjust size as needed
+                        # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        canvas:
+                            Color:
+                                rgba: 0.5, 0.5, 0.5, 1
+                            Line:
+                                rectangle: self.x, self.y, self.width, self.height
+                                width: 0.7
+        
+        
+                        MDIconButton:
+                            icon: 'upload'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_x: None
+                            width: dp(24)
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: app.root.get_screen('LenderScreen5').check_and_open_file_manager5()
+        
+                        MDLabel:
+                            id: upload_label2
+                            text: 'Upload Certificate'
+                            halign: 'left'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_y: None
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        Image:
+                            id: image_label5
+                            source: ''
+                            allow_stretch: True
+                            keep_ratio: True
+                            size_hint_y: None
+                            size: dp(50), dp(50)
+                            height: dp(36)
+                            on_touch_down: root.on_image_click(self, args[1])
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    # MDLabel:
+                    #     id: image_label2
+                    #     text: ''
+                    #     halign: 'center'
+                    #     theme_text_color: "Custom"
+                    #     text_color: 0, 0, 0, 1  # Black text color
+                    #     valign: 'middle'  # Align the label text vertically in the center
+                    #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    MDLabel:
+                        text: "Upload Bachelors certificate"
+                        halign: 'left'
+                        bold: True
+        
+        
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        padding: "10dp"
+                        spacing: "10dp"
+                        # size_hint: None, None
+                        # size: dp(250), dp(60)  # Adjust size as needed
+                        # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        canvas:
+                            Color:
+                                rgba: 0.5, 0.5, 0.5, 1 
+                            Line:
+                                rectangle: self.x, self.y, self.width, self.height
+                                width: 0.7
+        
+        
+                        MDIconButton:
+                            icon: 'upload'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_x: None
+                            width: dp(24)
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: app.root.get_screen('LenderScreen5').check_and_open_file_manager6()
+        
+                        MDLabel:
+                            id: upload_label3
+                            text: 'Upload Certificate'
+                            halign: 'left'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_y: None
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        Image:
+                            id: image_label6
+                            source: ''
+                            allow_stretch: True
+                            on_touch_down: root.on_image_click(self, args[1])
+                            keep_ratio: True
+                            size_hint_y: None
+                            size: dp(50), dp(50)
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    # MDLabel:
+                    #     id: image_label3
+                    #     text: ''
+                    #     halign: 'center'
+                    #     theme_text_color: "Custom"
+                    #     text_color: 0, 0, 0, 1  # Black text color
+                    #     valign: 'middle'  # Align the label text vertically in the center
+                    #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    GridLayout:
+                        cols: 1
+                        spacing:dp(15)
+                        padding: [0, "30dp", 0, 0]
+                        MDRectangleFlatButton:
+                            text: "Next"
+                            on_release: root.go_to_lender_screen4()
+                            md_bg_color: 0.043, 0.145, 0.278, 1
+                            pos_hint: {'right': 1, 'y': 0.5}
+                            text_color: 1, 1, 1, 1
+                            size_hint: 1, None
+                            height: "50dp"
+                            font_name: "Roboto-Bold"
+                #master details 
+                MDBoxLayout:
+                    id: box_masters
+                    orientation: 'vertical'
+                    spacing: dp(5)
+                    padding: dp(10)
                     size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                Image:
-                    id: image_label3
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
+                    height: dp(540)
+                    # md_bg_color:253/255, 254/255, 254/255, 1
+                    # canvas:
+                    #     Color:
+                    #         rgba: 174/255, 214/255, 241/255, 1 # Dull background color
+                    #     Line:
+                    #         width: 0.7  # Border width
+                    #         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+                    # MDCard:
+                    #     orientation: "vertical"
+                    #     size_hint: None, None
+                    #     size: "280dp", "480dp"
+                    #     pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    
+                    MDLabel:
+                        text: 'Masters Education Details'
+                        halign: 'center'
+                        bold: True
+                        font_size: "15dp"
+                    MDLabel:
+                        text: "Upload 10th standard Certificate"
+                        halign: 'left'
+                        bold: True
+            
+            
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        padding: "10dp"
+                        spacing: "10dp"
+                        # size_hint: None, None
+                        # size: dp(250), dp(60)  # Adjust size as needed
+                        # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        canvas:
+                            Color:
+                                rgba: 0.5, 0.5, 0.5, 1 
+                            Line:
+                                rectangle: self.x, self.y, self.width, self.height
+                                width: 0.7
+            
+            
+                        MDIconButton:
+                            icon: 'upload'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_x: None
+                            width: dp(24)
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: app.root.get_screen('LenderScreen5').check_and_open_file_manager7()
+            
+                        MDLabel:
+                            id: upload_label1
+                            text: 'Upload Certificate'
+                            halign: 'left'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_y: None
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        Image:
+                            id: image_label7
+                            source: ''
+                            allow_stretch: True
+                            keep_ratio: True
+                            size_hint_y: None
+                            size: dp(50), dp(50)
+                            on_touch_down: root.on_image_click(self, args[1])
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        # MDLabel:
+                        #     id: image_label1
+                        #     text: ''
+                        #     halign: 'center'
+                        #     theme_text_color: "Custom"
+                        #     text_color: 0, 0, 0, 1  # Black text color
+                        #     valign: 'middle'  # Align the label text vertically in the center
+                        #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    MDLabel:
+                        text: "Upload Intermediate/PUC Certificate"
+                        halign: 'left'
+                        bold: True
+                            
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        padding: "10dp"
+                        spacing: "10dp"
+                        # size_hint: None, None
+                        # size: dp(250), dp(60)  # Adjust size as needed
+                        # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        canvas:
+                            Color:
+                                rgba: 0.5, 0.5, 0.5, 1
+                            Line:
+                                rectangle: self.x, self.y, self.width, self.height
+                                width: 0.7
+            
+                        MDIconButton:
+                            icon: 'upload'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_x: None
+                            width: dp(24)
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: app.root.get_screen('LenderScreen5').check_and_open_file_manager8()
+            
+                        MDLabel:
+                            id: upload_label2
+                            text: 'Upload Certificate'
+                            halign: 'left'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_y: None
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        Image:
+                            id: image_label8
+                            source: ''
+                            allow_stretch: True
+                            keep_ratio: True
+                            on_touch_down: root.on_image_click(self, args[1])
+                            size_hint_y: None
+                            size: dp(50), dp(50)
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        # MDLabel:
+                        #     id: image_label2
+                        #     text: ''
+                        #     halign: 'left'
+                        #     theme_text_color: "Custom"
+                        #     text_color: 0, 0, 0, 1  # Black text color
+                        #     valign: 'middle'  # Align the label text vertically in the center
+                        #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    MDLabel:
+                        text: "Upload Bachelors certificate"
+                        halign: 'left'
+                        bold: True
+            
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        padding: "10dp"
+                        spacing: "10dp"
+                        # size_hint: None, None
+                        # size: dp(250), dp(60)  # Adjust size as needed
+                        # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        canvas:
+                            Color:
+                                rgba: 0.5, 0.5, 0.5, 1 
+                            Line:
+                                rectangle: self.x, self.y, self.width, self.height
+                                width: 0.7
+            
+            
+                        MDIconButton:
+                            icon: 'upload'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_x: None
+                            width: dp(24)
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: app.root.get_screen('LenderScreen5').check_and_open_file_manager9()
+        
+                        MDLabel:
+                            id: upload_label3
+                            text: 'Upload Certificate'
+                            halign: 'left'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_y: None
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        Image:
+                            id: image_label9
+                            source: ''
+                            allow_stretch: True
+                            keep_ratio: True
+                            size_hint_y: None
+                            size: dp(50), dp(50)
+                            on_touch_down: root.on_image_click(self, args[1])
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        # MDLabel:
+                        #     id: image_label3
+                        #     text: ''
+                        #     halign: 'center'
+                        #     theme_text_color: "Custom"
+                        #     text_color: 0, 0, 0, 1  # Black text color
+                        #     valign: 'middle'  # Align the label text vertically in the center
+                        #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            
+                    MDLabel:
+                        text: "Upload Masters Certificate"
+                        halign: 'left'
+                        bold: True
+            
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        padding: "10dp"
+                        spacing: "10dp"
+                        # size_hint: None, None
+                        # size: dp(250), dp(60)  # Adjust size as needed
+                        # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        canvas:
+                            Color:
+                                rgba: 0.5, 0.5, 0.5, 1
+                            Line:
+                                rectangle: self.x, self.y, self.width, self.height
+                                width: 0.7
+            
+                        MDIconButton:
+                            icon: 'upload'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_x: None
+                            width: dp(24)
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: app.root.get_screen('LenderScreen5').check_and_open_file_manager10()
+            
+                        MDLabel:
+                            id: upload_label4
+                            text: 'Upload Certificate'
+                            halign: 'left'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_y: None
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        Image:
+                            id: image_label10
+                            source: ''
+                            allow_stretch: True
+                            on_touch_down: root.on_image_click(self, args[1])
+                            keep_ratio: True
+                            size_hint_y: None
+                            size: dp(50), dp(50)
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        # MDLabel:
+                        #     id: image_label4
+                        #     text: ''
+                        #     halign: 'center'
+                        #     theme_text_color: "Custom"
+                        #     text_color: 0, 0, 0, 1  # Black text color
+                        #     valign: 'middle'  # Align the label text vertically in the center
+                        #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    GridLayout:
+                        cols: 1
+                        spacing:dp(15)
+                        padding: [0, "30dp", 0, 0]
+                        MDRectangleFlatButton:
+                            text: "Next"
+                            on_release: root.go_to_lender_screen4()
+                            md_bg_color: 0.043, 0.145, 0.278, 1
+                            pos_hint: {'right': 1, 'y': 0.5}
+                            text_color: 1, 1, 1, 1
+                            size_hint: 1, None
+                            height: "50dp"
+                            font_name: "Roboto-Bold"            
+                
+                #PHD details
+                MDBoxLayout:
+                    id: box_phd
+                    orientation: 'vertical'
+                    spacing: dp(5)
+                    padding: dp(10)
                     size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            MDLabel:
-                text: "Upload Masters Certificate"
-                halign: 'left'
-                font_size: "15dp"
-                bold: True
-
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('LenderScreen_Edu_PHD').check_and_open_file_manager4()
-
-                MDLabel:
-                    id: upload_label4
-                    text: 'Upload Certificate'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-                Image:
-                    id: image_label4
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-
-            MDLabel:
-                text: "Upload PHD Certificate"
-                halign: 'left'
-                font_size: "15dp"
-                bold: True
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('LenderScreen_Edu_PHD').check_and_open_file_manager5()
-                MDLabel:
-                    id: upload_label5
-                    text: 'Upload Certificate'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                Image:
-                    id: image_label5
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            MDRectangleFlatButton:
-                text: "Next"
-                on_release: root.go_to_lender_screen4()
-                md_bg_color: 0.043, 0.145, 0.278, 1
-                pos_hint: {'right': 1, 'y': 0.5}
-                text_color: 1, 1, 1, 1
-                size_hint: 1, None
-                height: "50dp"
-                font_name: "Roboto-Bold"
+                    height: dp(620)
+                    # md_bg_color:253/255, 254/255, 254/255, 1
+                    # canvas:
+                    #     Color:
+                    #         rgba: 174/255, 214/255, 241/255, 1 # Dull background color
+                    #     Line:
+                    #         width: 0.7  # Border width
+                    #         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+                    # MDCard:
+                    #     orientation: "vertical"
+                    #     size_hint: None, None
+                    #     size: "280dp", "550dp"
+                    #     pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    MDLabel:
+                        text: 'PHD Education Details'
+                        halign: 'center'
+                        bold: True
+                    # MDLabel:
+                    #     text: ''
+                    #     halign: 'center'
+                    #     bold: True
+                    MDLabel:
+                        text: "Upload 10th standard Certificate"
+                        halign: 'left'
+                        bold: True
+                    
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        padding: "10dp"
+                        spacing: "10dp"
+                        # size_hint: None, None
+                        # size: dp(250), dp(60)  # Adjust size as needed
+                        # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        canvas:
+                            Color:
+                                rgba: 0.5, 0.5, 0.5, 1 
+                            Line:
+                                rectangle: self.x, self.y, self.width, self.height
+                                width: 0.7
+            
+                        MDIconButton:
+                            icon: 'upload'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_x: None
+                            width: dp(24)
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: app.root.get_screen('LenderScreen5').check_and_open_file_manager11()
+        
+                        MDLabel:
+                            id: upload_label1
+                            text: 'Upload Certificate'
+                            halign: 'left'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_y: None
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        
+                        Image:
+                            id: image_label11
+                            on_touch_down: root.on_image_click(self, args[1])
+                            source: ''
+                            allow_stretch: True
+                            keep_ratio: True
+                            size_hint_y: None
+                            size: dp(50), dp(50)
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                
+                    MDLabel:
+                        text: "Upload Intermediate/PUC Certificate"
+                        halign: 'left'
+                        bold: True
+        
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        padding: "10dp"
+                        spacing: "10dp"
+                        # size_hint: None, None
+                        # size: dp(250), dp(60)  # Adjust size as needed
+                        # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        canvas:
+                            Color:
+                                rgba: 0.5, 0.5, 0.5, 1
+                            Line:
+                                rectangle: self.x, self.y, self.width, self.height
+                                width: 0.7
+            
+                        MDIconButton:
+                            icon: 'upload'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_x: None
+                            width: dp(24)
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: app.root.get_screen('LenderScreen5').check_and_open_file_manager12()
+            
+                        MDLabel:
+                            id: upload_label2
+                            text: 'Upload Certificate'
+                            halign: 'left'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_y: None
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        Image:
+                            id: image_label12
+                            source: ''
+                            allow_stretch: True
+                            keep_ratio: True
+                            size_hint_y: None
+                            size: dp(50), dp(50)
+                            on_touch_down: root.on_image_click(self, args[1])
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    MDLabel:
+                        text: "Upload Bachelors certificate"
+                        halign: 'left'
+                        bold: True
+            
+            
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        padding: "10dp"
+                        spacing: "10dp"
+                        # size_hint: None, None
+                        # size: dp(250), dp(60)  # Adjust size as needed
+                        # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        canvas:
+                            Color:
+                                rgba: 0.5, 0.5, 0.5, 1 
+                            Line:
+                                rectangle: self.x, self.y, self.width, self.height
+                                width: 0.7
+            
+                        MDIconButton:
+                            icon: 'upload'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_x: None
+                            width: dp(24)
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: app.root.get_screen('LenderScreen5').check_and_open_file_manager13()
+            
+                        MDLabel:
+                            id: upload_label3
+                            text: 'Upload Certificate'
+                            halign: 'left'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_y: None
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        Image:
+                            id: image_label13
+                            source: ''
+                            allow_stretch: True
+                            on_touch_down: root.on_image_click(self, args[1])
+                            keep_ratio: True
+                            size_hint_y: None
+                            size: dp(50), dp(50)
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    MDLabel:
+                        text: "Upload Masters Certificate"
+                        halign: 'left'
+                        bold: True
+            
+            
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        padding: "10dp"
+                        spacing: "10dp"
+                        # size_hint: None, None
+                        # size: dp(250), dp(60)  # Adjust size as needed
+                        # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        canvas:
+                            Color:
+                                rgba: 0.5, 0.5, 0.5, 1 
+                            Line:
+                                rectangle: self.x, self.y, self.width, self.height
+                                width: 0.7
+            
+            
+                        MDIconButton:
+                            icon: 'upload'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_x: None
+                            width: dp(24)
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: app.root.get_screen('LenderScreen5').check_and_open_file_manager14()
+        
+                        MDLabel:
+                            id: upload_label4
+                            text: 'Upload Certificate'
+                            halign: 'left'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_y: None
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        
+                        Image:
+                            id: image_label14
+                            on_touch_down: root.on_image_click(self, args[1])
+                            source: ''
+                            allow_stretch: True
+                            keep_ratio: True
+                            size_hint_y: None
+                            size: dp(50), dp(50)
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            
+            
+                    MDLabel:
+                        text: "Upload PHD Certificate"
+                        halign: 'left'
+                        bold: True
+            
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        padding: "10dp"
+                        spacing: "10dp"
+                        # size_hint: None, None
+                        # size: dp(250), dp(60)  # Adjust size as needed
+                        # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        canvas:
+                            Color:
+                                rgba: 0.5, 0.5, 0.5, 1 
+                            Line:
+                                rectangle: self.x, self.y, self.width, self.height
+                                width: 0.7
+            
+                        MDIconButton:
+                            icon: 'upload'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_x: None
+                            width: dp(24)
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: app.root.get_screen('LenderScreen5').check_and_open_file_manager15()
+                        MDLabel:
+                            id: upload_label5
+                            text: 'Upload Certificate'
+                            halign: 'left'
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1  # Black text color
+                            size_hint_y: None
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        Image:
+                            id: image_label15
+                            source: ''
+                            allow_stretch: True
+                            on_touch_down: root.on_image_click(self, args[1])
+                            keep_ratio: True
+                            size_hint_y: None
+                            size: dp(50), dp(50)
+                            height: dp(36)
+                            valign: 'middle'  # Align the label text vertically in the center
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    GridLayout:
+                        cols: 1
+                        spacing:dp(15)
+                        padding: [0, "30dp", 0, 0]
+                        MDRectangleFlatButton:
+                            text: "Next"
+                            on_release: root.go_to_lender_screen4()
+                            md_bg_color: 0.043, 0.145, 0.278, 1
+                            pos_hint: {'right': 1, 'y': 0.5}
+                            text_color: 1, 1, 1, 1
+                            size_hint: 1, None
+                            height: "50dp"
+                            font_name: "Roboto-Bold"
 
 
 <LenderScreen6>:
@@ -2717,7 +2674,7 @@ KV = '''
 
             MDRectangleFlatButton:
                 text: "Next"
-                on_release: root.add_data(salary_type_id.text,annual_salary.text, designation.text)
+                on_release: root.add_data(salary_type_id.text, designation.text)
                 md_bg_color: 0.043, 0.145, 0.278, 1
                 pos_hint: {'right': 1, 'y': 0.5}
                 text_color: 1, 1, 1, 1
@@ -3670,226 +3627,201 @@ KV = '''
                     font_name: "Roboto-Bold"
 
 <LenderScreenIndividualBankForm1>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen7')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
+    BoxLayout:
         orientation: 'vertical'
-        spacing: dp(20)
-        padding: dp(50)
-
-        MDLabel:
-            text:""
-            size_hint_y: None
-            height:dp(40)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(30)  # Reduce the top padding
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: 'Applicant Bank Details'
-                halign: 'center'
-                font_size: "20dp"
-                font_name: "Roboto-Bold"
-            MDTextField:
-                id: account_holder_name
-                hint_text: 'Enter account holder name '
-                helper_text: 'Enter Your account holder name'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                size_hint_y:None
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDLabel:
-                text: 'Select Account Type:'
-                halign: 'left'
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
+        MDTopAppBar:
+            title: "P2P LENDING"
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen7')]]
+            right_action_items: [['home', lambda x: root.go_to_dashboard()]]
+            title_align: 'center'  # Center-align the title
+            md_bg_color: 0.043, 0.145, 0.278, 1
+        ScrollView:
+            MDBoxLayout:
+                orientation: 'vertical'
+                spacing: dp(5)
+                padding: dp(10)
                 size_hint_y: None
-                height:dp(20)
-
-            Spinner:
-                id: spinner_id
-                text: "Select Account Type"
-                font_size: "15dp"
-                multiline: False
-                size_hint: 1 , None
-                height:"40dp"
-                width: dp(200)
-                text_size: self.width - dp(20), None
-                background_color: 0,0,0,0
-                background_normal:''
-                color: 0, 0, 0, 1
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1  
-                    Line:
-                        width: 0.7
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDTextField:
-                id: account_number
-                hint_text: 'Enter account number '
-                multiline: False
-                helper_text: 'Enter Your account number'
-                helper_text_mode: 'on_focus'
-                size_hint_y: None
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-                input_type: 'number'
-
-            MDTextField:
-                id: bank_name
-                hint_text: 'Enter bank name '
-                multiline: False
-                helper_text_mode: 'on_focus'
-                size_hint_y:None
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            GridLayout:
-                cols: 1
-                spacing:dp(30)
-                padding: [0, "30dp", 0, 0]
-                MDRectangleFlatButton:
-                    text: "Next"
-                    on_release: root.add_data(account_holder_name.text, spinner_id.text, account_number.text, bank_name.text)
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    text_color: 1, 1, 1, 1
-                    size_hint: 1, None
-                    height: "50dp"
-                    font_name: "Roboto-Bold"
-
-<LenderScreenIndividualBankForm2>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreenIndividualBankForm1')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(20)
-        padding: dp(50)
-
-        MDLabel:
-            text:""
-            size_hint_y: None
-            height:dp(40)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(25)
-            padding: dp(30)  # Reduce the top padding
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: 'Applicant Bank Details'
-                halign: 'center'
-                font_size: "20dp"
-                font_name: "Roboto-Bold"
-
-            MDTextField:
-                id: ifsc_code
-                hint_text: 'Enter Bank ID '
-                multiline: False
-                helper_text: 'Enter valid Bank ID'
-                helper_text_mode: 'on_focus'
-                size_hint_y:None
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDTextField:
-                id: branch_name
-                hint_text: 'Enter branch name'
-                hint_text_mode: 'on_focus'
-                hint_text_mode: 'on_focus'
-                multiline: False
-                halign: 'left'
-                multiline: False
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-            BoxLayout:
-                orientation: 'horizontal'
-                size_hint_y: None
-                height: "29dp"
-                spacing:dp(5)
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                MDCheckbox:
-                    id: check
-                    size_hint: None, None
-                    size: "30dp", "30dp"
-                    active: False
-                    on_active: root.on_checkbox_active(self, self.active)
-
-                MDLabel:
-                    text: "I Agree Terms and Conditions"
-                    size: "30dp", "30dp"
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1
-                    halign: "left"
-                    valign: "center"
-                    on_touch_down: app.root.get_screen("LenderScreenIndividualBankForm2").show_terms_dialog() if self.collide_point(*args[1].pos) else None
-
-
-            GridLayout:
-                cols: 1
-                spacing:dp(30)
-                MDRectangleFlatButton:
-                    text: "Next"
-                    on_release: root.go_to_lender_dashboard(ifsc_code.text, branch_name.text)
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    text_color: 1, 1, 1, 1
-                    size_hint: 1, None
-                    height: "50dp"
-                    font_name: "Roboto-Bold"
+                height: self.minimum_height 
+        
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    spacing: dp(5)
+                    padding: dp(10)
+                    size_hint_y: None
+                    height: dp(500)
+                    # md_bg_color:253/255, 254/255, 254/255, 1
+                    # canvas:
+                    #     Color:
+                    #         rgba: 174/255, 214/255, 241/255, 1 # Dull background color
+                    #     Line:
+                    #         width: 0.7  # Border width
+                    #         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+        
+                    MDLabel:
+                        text: 'Applicant Bank Details'
+                        halign: 'center'
+                        font_size: "15dp"
+                        font_name: "Roboto-Bold"
+                    MDTextField:
+                        id: account_holder_name
+                        hint_text: 'Enter account holder name '
+                        multiline: False
+                        helper_text_mode: 'on_focus'
+                        size_hint_y:None
+                        font_size: "15dp"
+                        theme_text_color: "Custom"
+                        hint_text_color: 0, 0, 0, 1
+                        text_color_normal: "black"
+                        mode: "rectangle"
+                        radius: [0, 0, 0, 0]  # Makes the corners square
+                        
+        
+                    MDLabel:
+                        text: 'Select Account Type:'
+                        halign: 'left'
+                        font_size: "15dp"
+                        height:"40dp"
+                    #     font_name: "Roboto-Bold"
+                        
+                    Spinner:
+                        id: account_type
+                        text: "Select Account Type"
+                        font_size: "15dp"
+                        multiline: False
+                        size_hint: 1 , None
+                        height:"40dp"
+                        width: dp(200)
+                        text_size: self.width - dp(20), None
+                        background_color: 0,0,0,0
+                        option_cls: 'CustomSpinnerOption'
+                        background_normal:''
+                        color: 0, 0, 0, 1
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 0, 1  
+                            Line:
+                                rectangle: self.x, self.y, self.width, self.height
+                                width: 0.7
+                            
+                            
+                    MDTextField:
+                        id: account_number
+                        hint_text: 'Enter account number '
+                        multiline: False
+                        helper_text_mode: 'on_focus'
+                        size_hint_y: None
+                        font_size: "15dp"
+                        theme_text_color: "Custom"
+                        hint_text_color: 0, 0, 0, 1
+                        text_color_normal: "black"
+                        input_type: 'number'
+                        mode: "rectangle"
+                        radius: [0, 0, 0, 0]  # Makes the corners square
+        
+                    MDTextField:
+                        id: bank_name
+                        hint_text: 'Enter bank name '
+                        multiline: False
+                        helper_text_mode: 'on_focus'
+                        size_hint_y:None
+                        font_size: "15dp"
+                        theme_text_color: "Custom"
+                        hint_text_color: 0, 0, 0, 1
+                        text_color_normal: "black"
+                        mode: "rectangle"
+                        radius: [0, 0, 0, 0]  # Makes the corners square
+                        
+                    # GridLayout:
+                    #     cols: 1
+                    #     spacing:dp(30)
+                    #     padding: [0, "30dp", 0, 0]
+                    #     MDRectangleFlatButton:
+                    #         text: "Next"
+                    #         on_release: root.add_data(account_holder_name.text, spinner_id.text, account_number.text, bank_name.text)
+                    #         md_bg_color: 0.043, 0.145, 0.278, 1
+                    #         pos_hint: {'right': 1, 'y': 0.5}
+                    #         text_color: 1, 1, 1, 1
+                    #         size_hint: 1, None
+                    #         height: "50dp"
+                    #         font_name: "Roboto-Bold"
+    
+                # MDBoxLayout:
+                #     orientation: 'vertical'
+                #     spacing: dp(10)
+                #     padding: dp(30)
+                #     size_hint_y: None
+                #     height: dp(350)
+                #     md_bg_color:253/255, 254/255, 254/255, 1
+                #     canvas:
+                #         Color:
+                #             rgba: 174/255, 214/255, 241/255, 1 # Dull background color
+                #         Line:
+                #             width: 0.7  # Border width
+                #             rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+        
+                    MDTextField:
+                        id: ifsc_code
+                        hint_text: 'Enter Bank ID '
+                        multiline: False
+                        helper_text_mode: 'on_focus'
+                        size_hint_y:None
+                        font_size: "15dp"
+                        theme_text_color: "Custom"
+                        hint_text_color: 0, 0, 0, 1
+                        text_color_normal: "black"
+                        mode: "rectangle"
+                        radius: [0, 0, 0, 0]  # Makes the corners square
+        
+                    MDTextField:
+                        id: branch_name
+                        hint_text: 'Enter branch name'
+                        hint_text_mode: 'on_focus'
+                        multiline: False
+                        halign: 'left'
+                        multiline: False
+                        font_size: "15dp"
+                        theme_text_color: "Custom"
+                        hint_text_color: 0, 0, 0, 1
+                        text_color_normal: "black"
+                        mode: "rectangle"
+                        radius: [0, 0, 0, 0]  # Makes the corners square
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        size_hint_y: None
+                        height: "29dp"
+                        spacing:dp(10)
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        MDCheckbox:
+                            id: check
+                            size_hint: None, None
+                            size: "30dp", "30dp"
+                            active: False
+                            on_active: root.on_checkbox_active(self, self.active)
+        
+                        MDLabel:
+                            text: "I Agree Terms and Conditions"
+                            size: "30dp", "30dp"
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1
+                            halign: "center"
+                            valign: "center"
+                            on_touch_down: app.root.get_screen("LenderScreenIndividualBankForm1").show_terms_dialog() if self.collide_point(*args[1].pos) else None
+        
+        
+                    GridLayout:
+                        cols: 1
+                        spacing:dp(30)
+                        MDRectangleFlatButton:
+                            text: "Submit"
+                            on_release: root.go_to_lender_dashboard(ifsc_code.text, branch_name.text,account_holder_name.text, account_type.text, account_number.text, bank_name.text)
+                            md_bg_color: 0.043, 0.145, 0.278, 1
+                            pos_hint: {'right': 1, 'y': 0.5}
+                            text_color: 1, 1, 1, 1
+                            size_hint: 1, None
+                            height: "50dp"
+                            font_name: "Roboto-Bold"
 
 '''
 
@@ -4561,95 +4493,174 @@ class LenderScreen3(Screen):
         self.manager.current = 'LenderScreen'
 
 class LenderScreen5(Screen):
+    MAX_IMAGE_SIZE_MB = 2
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         spinner_data = app_tables.fin_lendor_qualification.search()
         data_list = []
         for i in spinner_data:
             data_list.append(i['lendor_qualification'])
-        unique_list = []
+        self.unique_list = []
         for i in data_list:
-            if i not in unique_list:
-                unique_list.append(i)
-        print(unique_list)
-        if len(unique_list) >= 1:
-            self.ids.spinner_id.values = ['Select Education Details'] + unique_list
+            if i not in self.unique_list:
+                self.unique_list.append(i)
+        print(self.unique_list)
+        if len(self.unique_list) >= 1:
+            self.ids.spinner_id.values = self.unique_list
         else:
             self.ids.spinner_id.values = ['Select Education Details']
 
-    def animate_loading_text(self, loading_label, modal_height):
-        # Define the animation to move the label vertically
-        anim = Animation(y=modal_height - loading_label.height, duration=1) + \
-               Animation(y=0, duration=1)
-        # Loop the animation
-        anim.repeat = True
-        anim.bind(on_complete=lambda *args: self.animate_loading_text(loading_label, modal_height))
-        anim.start(loading_label)
-        # Store the animation object
-        loading_label.animation = anim  # Store the animation object in a custom attribute
+        self.ids.box_10th.opacity = 0
+        self.ids.box_12th.opacity = 0
+        self.ids.box_bachelors.opacity = 0
+        self.ids.box_masters.opacity = 0
+        self.ids.box_phd.opacity = 0
 
-    def next_pressed(self, id):
-        modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
+    def on_image_click(self, instance, touch):
+        if instance.collide_point(*touch.pos):
+            self.show_image_popup(instance.source)
 
-        # Create MDLabel with white text color, increased font size, and bold text
-        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
-                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
-                                font_size="50sp", bold=True)
+    def show_image_popup(self, image_source):
+        layout = BoxLayout(orientation='vertical')
 
-        # Set initial y-position off-screen
-        loading_label.y = -loading_label.height
+        popup_img = Image(source=image_source)
+        layout.add_widget(popup_img)
 
-        modal_view.add_widget(loading_label)
-        modal_view.open()
+        close_button = Button(text='Close', size_hint=(1, 0.1))
+        close_button.bind(on_press=self.close_popup)
+        layout.add_widget(close_button)
 
-        # Perform the animation
-        self.animate_loading_text(loading_label, modal_view.height)
+        self.popup = Popup(title='Image Preview',
+                           content=layout,
+                           size_hint=(0.8, 0.8))
+        self.popup.open()
 
-        # Perform the actual action (e.g., fetching loan requests)
-        # You can replace the sleep with your actual logic
-        Clock.schedule_once(lambda dt: self.perform_data_addition_action(id, modal_view), 2)
+    def close_popup(self, instance):
+        self.popup.dismiss()
+    # def animate_loading_text(self, loading_label, modal_height):
+    #     # Define the animation to move the label vertically
+    #     anim = Animation(y=modal_height - loading_label.height, duration=1) + \
+    #            Animation(y=0, duration=1)
+    #     # Loop the animation
+    #     anim.repeat = True
+    #     anim.bind(on_complete=lambda *args: self.animate_loading_text(loading_label, modal_height))
+    #     anim.start(loading_label)
+    #     # Store the animation object
+    #     loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def perform_data_addition_action(self, id, modal_view):
-        modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
-        modal_view.dismiss()
-        if not id or id == 'Select Education Details':
-            self.show_validation_error("Please Select Your Education Details.")
+    # def update_education_details(self, id):
+        # modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
+        #
+        # # Create MDLabel with white text color, increased font size, and bold text
+        # loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
+        #                         theme_text_color="Custom", text_color=[1, 1, 1, 1],
+        #                         font_size="50sp", bold=True)
+        #
+        # # Set initial y-position off-screen
+        # loading_label.y = -loading_label.height
+        #
+        # modal_view.add_widget(loading_label)
+        # modal_view.open()
+        #
+        # # Perform the animation
+        # self.animate_loading_text(loading_label, modal_view.height)
+        #
+        # # Perform the actual action (e.g., fetching loan requests)
+        # # You can replace the sleep with your actual logic
+        # Clock.schedule_once(lambda dt: self.perform_data_addition_action(id, modal_view))
+
+    def update_education_details(self, id):
+        # modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
+        # modal_view.dismiss()
+        spinner_id = self.ids.spinner_id.text
+        print(spinner_id)
+        if spinner_id not in self.unique_list:
+            self.show_validation_error('Select a Valid Education Type')
             return
-        if id == '10th class' or id == '10th standard':
-            LenderScreen_Edu_10th()
-            sm = self.manager
-            lender_screen = LenderScreen_Edu_10th(name='LenderScreen_Edu_10th')
-            sm.add_widget(lender_screen)
-            sm.transition.direction = 'left'  # Set the transition direction explicitly
-            sm.current = 'LenderScreen_Edu_10th'
-        elif id == 'Intermediate' or id == '12th standard':
-            LenderScreen_Edu_Intermediate()
-            sm = self.manager
-            lender_screen = LenderScreen_Edu_Intermediate(name='LenderScreen_Edu_Intermediate')
-            sm.add_widget(lender_screen)
-            sm.transition.direction = 'left'  # Set the transition direction explicitly
-            sm.current = 'LenderScreen_Edu_Intermediate'
-        elif id == 'Bachelors' or id == "Bachelor's degree":
 
-            sm = self.manager
-            lender_screen = LenderScreen_Edu_Bachelors(name='LenderScreen_Edu_Bachelors')
-            sm.add_widget(lender_screen)
-            sm.transition.direction = 'left'  # Set the transition direction explicitly
-            sm.current = 'LenderScreen_Edu_Bachelors'
-        elif id == 'Masters' or id == "Master's degree":
+        all_boxes = ['box_10th', 'box_12th', 'box_bachelors', 'box_masters', 'box_phd']
 
-            sm = self.manager
-            lender_screen = LenderScreen_Edu_Masters(name='LenderScreen_Edu_Masters')
-            sm.add_widget(lender_screen)
-            sm.transition.direction = 'left'  # Set the transition direction explicitly
-            sm.current = 'LenderScreen_Edu_Masters'
-        elif id == 'PHD' or id == 'PhD':
+        # Map spinner_id to the corresponding box id
+        spinner_to_box = {
+            '10th class': 'box_10th',
+            '10th standard': 'box_10th',
+            'Intermediate': 'box_12th',
+            '12th standard': 'box_12th',
+            'Bachelors': 'box_bachelors',
+            "Bachelor's degree": 'box_bachelors',
+            'Masters': 'box_masters',
+            "Master's degree": 'box_masters',
+            'PHD': 'box_phd',
+            'PhD': 'box_phd'
+        }
 
-            sm = self.manager
-            lender_screen = LenderScreen_Edu_PHD(name='LenderScreen_Edu_PHD')
-            sm.add_widget(lender_screen)
-            sm.transition.direction = 'left'  # Set the transition direction explicitly
-            sm.current = 'LenderScreen_Edu_PHD'
+        selected_box_id = spinner_to_box.get(spinner_id)
+
+        # Get the parent layout of the boxes
+        parent_layout = self.ids.parent_layout_id  # Replace with the actual id of the parent layout
+
+        # Hide all boxes
+        for box_id in all_boxes:
+            box = self.ids[box_id]
+            box.opacity = 0
+
+        # Show the selected box
+        if selected_box_id:
+            selected_box = self.ids[selected_box_id]
+            selected_box.opacity = 1
+
+        # Remove all boxes from the parent layout
+        for box_id in all_boxes:
+            box = self.ids[box_id]
+            if box.parent:
+                parent_layout.remove_widget(box)
+
+        # Re-add boxes to the parent layout in order, with the visible box on top
+        if selected_box_id:
+            parent_layout.add_widget(self.ids[selected_box_id])
+        for box_id in all_boxes:
+            if box_id != selected_box_id:
+                parent_layout.add_widget(self.ids[box_id])
+
+        self.adjust_screen_height()
+    #     if not id or id == 'Select Education Details':
+    #         self.show_validation_error("Please Select Your Education Details.")
+    #         return
+    #     if id == '10th class' or id == '10th standard':
+    #         LenderScreen_Edu_10th()
+    #         sm = self.manager
+    #         lender_screen = LenderScreen_Edu_10th(name='LenderScreen_Edu_10th')
+    #         sm.add_widget(lender_screen)
+    #         sm.transition.direction = 'left'  # Set the transition direction explicitly
+    #         sm.current = 'LenderScreen_Edu_10th'
+    #     elif id == 'Intermediate' or id == '12th standard':
+    #         LenderScreen_Edu_Intermediate()
+    #         sm = self.manager
+    #         lender_screen = LenderScreen_Edu_Intermediate(name='LenderScreen_Edu_Intermediate')
+    #         sm.add_widget(lender_screen)
+    #         sm.transition.direction = 'left'  # Set the transition direction explicitly
+    #         sm.current = 'LenderScreen_Edu_Intermediate'
+    #     elif id == 'Bachelors' or id == "Bachelor's degree":
+    #
+    #         sm = self.manager
+    #         lender_screen = LenderScreen_Edu_Bachelors(name='LenderScreen_Edu_Bachelors')
+    #         sm.add_widget(lender_screen)
+    #         sm.transition.direction = 'left'  # Set the transition direction explicitly
+    #         sm.current = 'LenderScreen_Edu_Bachelors'
+    #     elif id == 'Masters' or id == "Master's degree":
+    #
+    #         sm = self.manager
+    #         lender_screen = LenderScreen_Edu_Masters(name='LenderScreen_Edu_Masters')
+    #         sm.add_widget(lender_screen)
+    #         sm.transition.direction = 'left'  # Set the transition direction explicitly
+    #         sm.current = 'LenderScreen_Edu_Masters'
+    #     elif id == 'PHD' or id == 'PhD':
+    #
+    #         sm = self.manager
+    #         lender_screen = LenderScreen_Edu_PHD(name='LenderScreen_Edu_PHD')
+    #         sm.add_widget(lender_screen)
+    #         sm.transition.direction = 'left'  # Set the transition direction explicitly
+    #         sm.current = 'LenderScreen_Edu_PHD'
         print(id)
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
@@ -4674,7 +4685,66 @@ class LenderScreen5(Screen):
             data[index]['qualification'] = id
         else:
             print('email not found')
+    # def update_education_details(self, ):
+    #     spinner_id=self.ids.spinner_id.text
+    #     print(spinner_id)
+    #     if spinner_id not in self.unique_list:
+    #         self.show_validation_error('Select a Valid Education Type')
+    #         return
+    #
+    #     all_boxes = ['box_10th', 'box_12th', 'box_bachelors', 'box_masters', 'box_phd']
+    #
+    #     # Map spinner_id to the corresponding box id
+    #     spinner_to_box = {
+    #         '10th class': 'box_10th',
+    #         '10th standard': 'box_10th',
+    #         'Intermediate': 'box_12th',
+    #         '12th standard': 'box_12th',
+    #         'Bachelors': 'box_bachelors',
+    #         "Bachelor's degree": 'box_bachelors',
+    #         'Masters': 'box_masters',
+    #         "Master's degree": 'box_masters',
+    #         'PHD': 'box_phd',
+    #         'PhD': 'box_phd'
+    #     }
+    #
+    #     selected_box_id = spinner_to_box.get(spinner_id)
+    #
+    #     # Get the parent layout of the boxes
+    #     parent_layout = self.ids.parent_layout_id  # Replace with the actual id of the parent layout
+    #
+    #     # Hide all boxes
+    #     for box_id in all_boxes:
+    #         box = self.ids[box_id]
+    #         box.opacity = 0
+    #
+    #     # Show the selected box
+    #     if selected_box_id:
+    #         selected_box = self.ids[selected_box_id]
+    #         selected_box.opacity = 1
+    #
+    #     # Remove all boxes from the parent layout
+    #     for box_id in all_boxes:
+    #         box = self.ids[box_id]
+    #         if box.parent:
+    #             parent_layout.remove_widget(box)
+    #
+    #     # Re-add boxes to the parent layout in order, with the visible box on top
+    #     if selected_box_id:
+    #         parent_layout.add_widget(self.ids[selected_box_id])
+    #     for box_id in all_boxes:
+    #         if box_id != selected_box_id:
+    #             parent_layout.add_widget(self.ids[box_id])
+    #
+    #     self.adjust_screen_height()
 
+    def adjust_screen_height(self):
+        height = 0
+        for box_id in ['box_10th', 'box_12th', 'box_bachelors', 'box_masters', 'box_phd']:
+            box = self.ids[box_id]
+            if box.opacity == 1:
+                height += box.height
+        self.height = height
     def go_to_dashboard(self):
         self.manager.current = 'DashScreen'
 
@@ -4713,12 +4783,12 @@ class LenderScreen5(Screen):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'LenderScreen3'
 
-
-class LenderScreen_Edu_10th(Screen):
-    MAX_IMAGE_SIZE_MB = 2
-
-    def refresh(self):
-        pass
+# ================================================================================
+# class LenderScreen_Edu_10th(Screen):
+#     MAX_IMAGE_SIZE_MB = 2
+#
+#     def refresh(self):
+#         pass
 
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
@@ -4732,82 +4802,38 @@ class LenderScreen_Edu_10th(Screen):
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
     def check_and_open_file_manager1(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
+        self.check_and_open_file_manager("upload_icon1", "upload_label1",
+                                         "selected_file_label1", "selected_image1",
                                          "image_label1", self.upload_image)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
-        if platform == 'android':
-            if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
-            else:
-                self.request_media_images_permission()
-        else:
-            # For non-Android platforms, directly open the file manager
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
-
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id, upload_function),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
-
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
-        upload_function(path)  # Upload the selected image using the provided function
-        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
-        self.file_manager.close()
-
-    # self.manager.get_screen('LenderScreen_Edu_10th').ids[image_label_id].text = file_name  # Update the label text
-    # self.file_manager.close()
-
-    def get_email(self):
-        return anvil.server.call('another_method')
-
-    def upload_image(self, file_path):
-        try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
-
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
-            email = self.get_email()
-            data = app_tables.fin_user_profile.search(email_user=email)
-
-            if not data:
-                print("No data found for email:", email)
-                return
-
-            user_data = data[0]
-
-            # Update user_photo column with the media object
-            user_data['tenth_class'] = user_photo_media
-            print("Image uploaded successfully.")
-            self.ids['image_label1'].source = ''
-
-        except Exception as e:
-            print(f"Error uploading image: {e}")
-
-    def show_validation_error(self, error_message):
-        dialog = MDDialog(
-            title="Validation Error",
-            text=error_message,
-            size_hint=(0.8, None),
-            height=dp(200),
-            buttons=[
-                MDRectangleFlatButton(
-                    text="OK",
-                    text_color=(0.043, 0.145, 0.278, 1),
-                    on_release=lambda x: dialog.dismiss()
-                )
-            ]
-        )
-        dialog.open()
+    # def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+    #     if platform == 'android':
+    #         if check_permission(Permission.READ_MEDIA_IMAGES):
+    #             self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
+    #         else:
+    #             self.request_media_images_permission()
+    #     else:
+    #         # For non-Android platforms, directly open the file manager
+    #         self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
+    #
+    # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+    #     self.file_manager = MDFileManager(
+    #         exit_manager=self.exit_manager,
+    #         select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function),
+    #     )
+    #     if platform == 'android':
+    #         primary_external_storage = "/storage/emulated/0"
+    #         self.file_manager.show(primary_external_storage)
+    #     else:
+    #         # For other platforms, show the file manager from the root directory
+    #         self.file_manager.show('/')
+    #
+    # def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_image):
+    #     upload_image(path)  # Upload the selected image using the provided function
+    #     self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
+    #     self.file_manager.close()
+    #     self.manager.get_screen('LenderScreen5').ids[image_label_id].text = file_name  # Update the label text
+    #     self.file_manager.close()
 
     def exit_manager(self, *args):
         self.file_manager.close()
@@ -4851,6 +4877,58 @@ class LenderScreen_Edu_10th(Screen):
             self.ids.upload_label1.text = 'Upload Successfully'
         else:
             print('User is not logged in.')
+
+    def upload_image(self, file_path):
+        try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+
+            file_extension = os.path.splitext(file_path)[1].lower()
+            if file_extension not in ['.png', '.jpg', '.jpeg', '.pdf']:
+                self.show_validation_error("Unsupported file type. Please upload an image or a PDF.")
+                return
+
+            if file_extension in ['.png', '.jpg', '.jpeg']:
+                mime_type = 'image/png' if file_extension == '.png' else 'image/jpeg'
+            elif file_extension == '.pdf':
+                mime_type = 'application/pdf'
+
+            user_photo_media = media.from_file(file_path, mime_type=mime_type)
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['tenth_class'] = user_photo_media
+            print("Image uploaded successfully.")
+            # self.ids['image_label1'].source = user_photo_media
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+    def get_email(self):
+        return anvil.server.call('another_method')
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
 
     def go_to_dashboard(self):
         self.manager.current = 'DashScreen'
@@ -4908,12 +4986,12 @@ class LenderScreen_Edu_10th(Screen):
         # Switch to the LoginScreen
         sm.current = 'LenderScreen6'
 
-
-class LenderScreen_Edu_Intermediate(Screen):
-    MAX_IMAGE_SIZE_MB = 2
-
-    def refresh(self):
-        pass
+#===============================================================================
+# class LenderScreen_Edu_Intermediate(Screen):
+#     MAX_IMAGE_SIZE_MB = 2
+#
+#     def refresh(self):
+#         pass
 
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
@@ -4926,37 +5004,43 @@ class LenderScreen_Edu_Intermediate(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def check_and_open_file_manager1(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1", self.upload_image1)
-
     def check_and_open_file_manager2(self):
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
+                                         "image_label2", self.upload_image1)
+
+    def check_and_open_file_manager3(self):
         self.check_and_open_file_manager("upload_icon2", "upload_label2", "selected_file_label2", "selected_image2",
-                                         "image_label2", self.upload_image2)
+                                         "image_label3", self.upload_image2)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
-        if platform == 'android':
-            if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
-            else:
-                self.request_media_images_permission()
-        else:
-            # For non-Android platforms, directly open the file manager
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
-
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id, upload_function),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
-
+    # def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+    #     if platform == 'android':
+    #         if check_permission(Permission.READ_MEDIA_IMAGES):
+    #             self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
+    #         else:
+    #             self.request_media_images_permission()
+    #     else:
+    #         # For non-Android platforms, directly open the file manager
+    #         self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
+    #
+    # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+    #     self.file_manager = MDFileManager(
+    #         exit_manager=self.exit_manager,
+    #         select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
+    #                                                    image_label_id, upload_function),
+    #     )
+    #     if platform == 'android':
+    #         primary_external_storage = "/storage/emulated/0"
+    #         self.file_manager.show(primary_external_storage)
+    #     else:
+    #         # For other platforms, show the file manager from the root directory
+    #         self.file_manager.show('/')
+    #
+    # def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+    #     upload_function(path)  # Upload the selected image using the provided function
+    #     self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
+    #     self.file_manager.close()
+    #     self.manager.get_screen('LenderScreen5').ids[image_label_id].text = file_name  # Update the label text
+    #     self.file_manager.close()
     # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
     #     self.file_manager = MDFileManager(
     #         exit_manager=self.exit_manager,
@@ -4969,82 +5053,6 @@ class LenderScreen_Edu_Intermediate(Screen):
     #     else:
     #         # For other platforms, show the file manager from the root directory
     #         self.file_manager.show('/')
-
-    def upload_image1(self, file_path):
-        try:
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
-            email = self.get_email()
-            data = app_tables.fin_user_profile.search(email_user=email)
-
-            if not data:
-                print("No data found for email:", email)
-                return
-
-            user_data = data[0]
-
-            # Update user_photo column with the media object
-            user_data['tenth_class'] = user_photo_media
-
-            print("Image uploaded successfully.")
-            self.ids['image_label1'].source = ''
-
-        except Exception as e:
-            print(f"Error uploading image: {e}")
-
-    def get_email(self):
-        return anvil.server.call('another_method')
-
-    def upload_image2(self, file_path):
-        try:
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
-            email = self.get_email()
-            data = app_tables.fin_user_profile.search(email_user=email)
-
-            if not data:
-                print("No data found for email:", email)
-                return
-
-            user_data = data[0]
-
-            # Update user_photo column with the media object
-            user_data['intermediate'] = user_photo_media
-
-            print("Image uploaded successfully.")
-            self.ids['image_label2'].source = ''
-        except Exception as e:
-            print(f"Error uploading image: {e}")
-
-    def show_validation_error(self, error_message):
-        dialog = MDDialog(
-            title="Validation Error",
-            text=error_message,
-            size_hint=(0.8, None),
-            height=dp(200),
-            buttons=[
-                MDRectangleFlatButton(
-                    text="OK",
-                    text_color=(0.043, 0.145, 0.278, 1),
-                    on_release=lambda x: dialog.dismiss()
-                )
-            ]
-        )
-        dialog.open()
-
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
-        upload_function(path)  # Upload the selected image using the provided function
-        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
-        self.file_manager.close()
-        # self.manager.get_screen('LenderScreen_Edu_Intermediate').ids[
-        #     image_label_id].text = file_name  # Update the label text
-        # self.file_manager.close()
-
-    # def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-    #     self.upload_image2(path)  # Upload the selected image
-    #     self.ids[image_label_id].source = path
-    #     file_name = os.path.basename(path)  # Extract file name from the path
-    #     self.manager.get_screen('LenderScreen_Edu_Intermediate').ids[
-    #         image_label_id].text = file_name  # Update the label text
-    #     self.file_manager.close()
 
     def exit_manager(self, *args):
         self.file_manager.close()
@@ -5071,7 +5079,7 @@ class LenderScreen_Edu_Intermediate(Screen):
         )
         view.open()
 
-    def update_data_with_file_1(self, file_path):
+    def update_data_with_file_2(self, file_path):
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -5088,7 +5096,7 @@ class LenderScreen_Edu_Intermediate(Screen):
         except ValueError:
             print('User is not logged in.')
 
-    def update_data_with_file_2(self, file_path):
+    def update_data_with_file_3(self, file_path):
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -5105,6 +5113,103 @@ class LenderScreen_Edu_Intermediate(Screen):
             self.ids.upload_label2.text = 'Upload Successfully'
         except ValueError:
             print('User is not logged in.')
+
+    def upload_image1(self, file_path):
+        try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+            file_extension = os.path.splitext(file_path)[1].lower()
+            if file_extension not in ['.png', '.jpg', '.jpeg', '.pdf']:
+                self.show_validation_error("Unsupported file type. Please upload an image or a PDF.")
+                return
+
+            if file_extension in ['.png', '.jpg', '.jpeg']:
+                mime_type = 'image/png' if file_extension == '.png' else 'image/jpeg'
+            elif file_extension == '.pdf':
+                mime_type = 'application/pdf'
+
+            user_photo_media = media.from_file(file_path, mime_type=mime_type)
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['tenth_class'] = user_photo_media
+
+            print("Image uploaded successfully.")
+            # self.ids['image_label1'].source = ''
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def get_email(self):
+        return anvil.server.call('another_method')
+
+    def upload_image2(self, file_path):
+        try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+            file_extension = os.path.splitext(file_path)[1].lower()
+            if file_extension not in ['.png', '.jpg', '.jpeg', '.pdf']:
+                self.show_validation_error("Unsupported file type. Please upload an image or a PDF.")
+                return
+
+            if file_extension in ['.png', '.jpg', '.jpeg']:
+                mime_type = 'image/png' if file_extension == '.png' else 'image/jpeg'
+            elif file_extension == '.pdf':
+                mime_type = 'application/pdf'
+
+            user_photo_media = media.from_file(file_path, mime_type=mime_type)
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['intermediate'] = user_photo_media
+
+            print("Image uploaded successfully.")
+            # self.ids['image_label2'].source = ''
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def show_validation_error(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
+
+
+
+    # def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     self.upload_image2(path)  # Upload the selected image
+    #     self.ids[image_label_id].source = path
+    #     file_name = os.path.basename(path)  # Extract file name from the path
+    #     self.manager.get_screen('LenderScreen_Edu_Intermediate').ids[
+    #         image_label_id].text = file_name  # Update the label text
+    #     self.file_manager.close()
+
 
     def go_to_dashboard(self):
         self.manager.current = 'DashScreen'
@@ -5162,87 +5267,9 @@ class LenderScreen_Edu_Intermediate(Screen):
         # Switch to the LoginScreen
         sm.current = 'LenderScreen6'
 
-
-class LenderScreen_Edu_Bachelors(Screen):
-    MAX_IMAGE_SIZE_MB = 2
-
-    def upload_image1(self, file_path):
-        try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
-            email = self.get_email()
-            data = app_tables.fin_user_profile.search(email_user=email)
-
-            if not data:
-                print("No data found for email:", email)
-                return
-
-            user_data = data[0]
-
-            # Update user_photo column with the media object
-            user_data['tenth_class'] = user_photo_media
-
-            print("Image uploaded successfully.")
-            self.ids['image_label1'].source = ''
-        except Exception as e:
-            print(f"Error uploading image: {e}")
-
-    def get_email(self):
-        return anvil.server.call('another_method')
-
-    def upload_image2(self, file_path):
-        try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
-
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
-            email = self.get_email()
-            data = app_tables.fin_user_profile.search(email_user=email)
-
-            if not data:
-                print("No data found for email:", email)
-                return
-
-            user_data = data[0]
-
-            # Update user_photo column with the media object
-            user_data['intermediate'] = user_photo_media
-
-            print("Image uploaded successfully.")
-            self.ids['image_label2'].source = ''
-        except Exception as e:
-            print(f"Error uploading image: {e}")
-
-    def upload_image3(self, file_path):
-        try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
-
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
-            email = self.get_email()
-            data = app_tables.fin_user_profile.search(email_user=email)
-
-            if not data:
-                print("No data found for email:", email)
-                return
-
-            user_data = data[0]
-
-            # Update user_photo column with the media object
-            user_data['btech'] = user_photo_media
-
-            print("Image uploaded successfully.")
-            self.ids['image_label3'].source = ''
-        except Exception as e:
-            print(f"Error uploading image: {e}")
-
-    def refresh(self):
-        pass
-
+# ================================================================================
+# class LenderScreen_Edu_Bachelors(Screen):
+#     MAX_IMAGE_SIZE_MB = 2
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
         anim = Animation(y=modal_height - loading_label.height, duration=1) + \
@@ -5254,46 +5281,33 @@ class LenderScreen_Edu_Bachelors(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def check_and_open_file_manager1(self):
+    def check_and_open_file_manager4(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1", self.upload_image1)
+                                         "image_label4", self.upload_image3)
 
-    def check_and_open_file_manager2(self):
+    def check_and_open_file_manager5(self):
         self.check_and_open_file_manager("upload_icon2", "upload_label2", "selected_file_label2", "selected_image2",
-                                         "image_label2", self.upload_image2)
+                                         "image_label5", self.upload_image4)
 
-    def check_and_open_file_manager3(self):
+    def check_and_open_file_manager6(self):
         self.check_and_open_file_manager("upload_icon3", "upload_label3", "selected_file_label3", "selected_image3",
-                                         "image_label3", self.upload_image3)
+                                         "image_label6", self.upload_image5)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
-        if platform == 'android':
-            if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
-            else:
-                self.request_media_images_permission()
-        else:
-            # For non-Android platforms, directly open the file manager
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
-
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id, upload_function),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
-
-    # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    # def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+    #     if platform == 'android':
+    #         if check_permission(Permission.READ_MEDIA_IMAGES):
+    #             self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
+    #         else:
+    #             self.request_media_images_permission()
+    #     else:
+    #         # For non-Android platforms, directly open the file manager
+    #         self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
+    #
+    # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
     #     self.file_manager = MDFileManager(
     #         exit_manager=self.exit_manager,
-    #         select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
-    #                                                    image_label_id),
+    #         select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
+    #                                                    image_label_id, upload_function),
     #     )
     #     if platform == 'android':
     #         primary_external_storage = "/storage/emulated/0"
@@ -5302,45 +5316,12 @@ class LenderScreen_Edu_Bachelors(Screen):
     #         # For other platforms, show the file manager from the root directory
     #         self.file_manager.show('/')
     #
-    # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
-    #     self.file_manager = MDFileManager(
-    #         exit_manager=self.exit_manager,
-    #         select_path=lambda path: self.select_path3(path, icon_id, label_id, file_label_id, image_id,
-    #                                                    image_label_id),
-    #     )
-    #     if platform == 'android':
-    #         primary_external_storage = "/storage/emulated/0"
-    #         self.file_manager.show(primary_external_storage)
-    #     else:
-    #         # For other platforms, show the file manager from the root directory
-    #         self.file_manager.show('/')
-
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
-        # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
-        upload_function(path)  # Upload the selected image using the provided function
-        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
-        self.file_manager.close()
-
-        # self.manager.get_screen('LenderScreen_Edu_Bachelors').ids[
-        # image_label_id].text = file_name  # Update the label text
-        # self.file_manager.close()
-
-    # def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    # def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
     #     # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
-    #     self.upload_image2(path)  # Upload the selected image
-    #     self.ids[image_label_id].source = path
-    #     file_name = os.path.basename(path)  # Extract file name from the path
-    #     self.manager.get_screen('LenderScreen_Edu_Bachelors').ids[
-    #         image_label_id].text = file_name  # Update the label text
+    #     upload_function(path)  # Upload the selected image using the provided function
+    #     self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
     #     self.file_manager.close()
-    #
-    # def select_path3(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
-    #     # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
-    #     self.upload_image3(path)  # Upload the selected image
-    #     self.ids[image_label_id].source = path
-    #     file_name = os.path.basename(path)  # Extract file name from the path
-    #     self.manager.get_screen('LenderScreen_Edu_Bachelors').ids[
-    #         image_label_id].text = file_name  # Update the label text
+    #     self.manager.get_screen('LenderScreen5').ids[image_label_id].text = file_name  # Update the label text
     #     self.file_manager.close()
 
     def exit_manager(self, *args):
@@ -5368,7 +5349,7 @@ class LenderScreen_Edu_Bachelors(Screen):
         )
         view.open()
 
-    def update_data_with_file_1(self, file_path):
+    def update_data_with_file_4(self, file_path):
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -5385,7 +5366,7 @@ class LenderScreen_Edu_Bachelors(Screen):
         except ValueError:
             print('User is not logged in.')
 
-    def update_data_with_file_2(self, file_path):
+    def update_data_with_file_5(self, file_path):
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -5403,7 +5384,7 @@ class LenderScreen_Edu_Bachelors(Screen):
         except ValueError:
             print('User is not logged in.')
 
-    def update_data_with_file_3(self, file_path):
+    def update_data_with_file_6(self, file_path):
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -5420,6 +5401,159 @@ class LenderScreen_Edu_Bachelors(Screen):
             self.ids.upload_label3.text = 'Upload Successfully'
         except ValueError:
             print('User is not logged in.')
+
+    def upload_image3(self, file_path):
+        try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+            file_extension = os.path.splitext(file_path)[1].lower()
+            if file_extension not in ['.png', '.jpg', '.jpeg', '.pdf']:
+                self.show_validation_error("Unsupported file type. Please upload an image or a PDF.")
+                return
+
+            if file_extension in ['.png', '.jpg', '.jpeg']:
+                mime_type = 'image/png' if file_extension == '.png' else 'image/jpeg'
+            elif file_extension == '.pdf':
+                mime_type = 'application/pdf'
+
+            user_photo_media = media.from_file(file_path, mime_type=mime_type)
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['tenth_class'] = user_photo_media
+
+            print("Image uploaded successfully.")
+            # self.ids['image_label1'].source = ''
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def get_email(self):
+        return anvil.server.call('another_method')
+
+    def upload_image4(self, file_path):
+        try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+            file_extension = os.path.splitext(file_path)[1].lower()
+            if file_extension not in ['.png', '.jpg', '.jpeg', '.pdf']:
+                self.show_validation_error("Unsupported file type. Please upload an image or a PDF.")
+                return
+
+            if file_extension in ['.png', '.jpg', '.jpeg']:
+                mime_type = 'image/png' if file_extension == '.png' else 'image/jpeg'
+            elif file_extension == '.pdf':
+                mime_type = 'application/pdf'
+
+            user_photo_media = media.from_file(file_path, mime_type=mime_type)
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['intermediate'] = user_photo_media
+
+            print("Image uploaded successfully.")
+            # self.ids['image_label2'].source = ''
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def upload_image5(self, file_path):
+        try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+            file_extension = os.path.splitext(file_path)[1].lower()
+            if file_extension not in ['.png', '.jpg', '.jpeg', '.pdf']:
+                self.show_validation_error("Unsupported file type. Please upload an image or a PDF.")
+                return
+
+            if file_extension in ['.png', '.jpg', '.jpeg']:
+                mime_type = 'image/png' if file_extension == '.png' else 'image/jpeg'
+            elif file_extension == '.pdf':
+                mime_type = 'application/pdf'
+
+            user_photo_media = media.from_file(file_path, mime_type=mime_type)
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['btech'] = user_photo_media
+
+            print("Image uploaded successfully.")
+            # self.ids['image_label3'].source = ''
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
+    def refresh(self):
+        pass
+
+
+    # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     self.file_manager = MDFileManager(
+    #         exit_manager=self.exit_manager,
+    #         select_path=lambda path: self.select_path2(path, icon_id, label_id, file_label_id, image_id,
+    #                                                    image_label_id),
+    #     )
+    #     if platform == 'android':
+    #         primary_external_storage = "/storage/emulated/0"
+    #         self.file_manager.show(primary_external_storage)
+    #     else:
+    #         # For other platforms, show the file manager from the root directory
+    #         self.file_manager.show('/')
+    #
+    # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     self.file_manager = MDFileManager(
+    #         exit_manager=self.exit_manager,
+    #         select_path=lambda path: self.select_path3(path, icon_id, label_id, file_label_id, image_id,
+    #                                                    image_label_id),
+    #     )
+    #     if platform == 'android':
+    #         primary_external_storage = "/storage/emulated/0"
+    #         self.file_manager.show(primary_external_storage)
+    #     else:
+    #         # For other platforms, show the file manager from the root directory
+    #         self.file_manager.show('/')
+
+
+
+    # def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+    #     self.upload_image2(path)  # Upload the selected image
+    #     self.ids[image_label_id].source = path
+    #     file_name = os.path.basename(path)  # Extract file name from the path
+    #     self.manager.get_screen('LenderScreen_Edu_Bachelors').ids[
+    #         image_label_id].text = file_name  # Update the label text
+    #     self.file_manager.close()
+    #
+    # def select_path3(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
+    #     # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+    #     self.upload_image3(path)  # Upload the selected image
+    #     self.ids[image_label_id].source = path
+    #     file_name = os.path.basename(path)  # Extract file name from the path
+    #     self.manager.get_screen('LenderScreen_Edu_Bachelors').ids[
+    #         image_label_id].text = file_name  # Update the label text
+    #     self.file_manager.close()
+
 
     def show_validation_error(self, error_message):
         dialog = MDDialog(
@@ -5493,9 +5627,9 @@ class LenderScreen_Edu_Bachelors(Screen):
         # Switch to the LoginScreen
         sm.current = 'LenderScreen6'
 
-
-class LenderScreen_Edu_Masters(Screen):
-    MAX_IMAGE_SIZE_MB = 2
+#========================================================================
+# class LenderScreen_Edu_Masters(Screen):
+#     MAX_IMAGE_SIZE_MB = 2
 
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
@@ -5508,44 +5642,44 @@ class LenderScreen_Edu_Masters(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def check_and_open_file_manager1(self):
+    def check_and_open_file_manager7(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1", self.upload_image1)
+                                         "image_label7", self.upload_image8)
 
-    def check_and_open_file_manager2(self):
+    def check_and_open_file_manager8(self):
         self.check_and_open_file_manager("upload_icon2", "upload_label2", "selected_file_label2", "selected_image2",
-                                         "image_label2", self.upload_image2)
+                                         "image_label8", self.upload_image9)
 
-    def check_and_open_file_manager3(self):
+    def check_and_open_file_manager9(self):
         self.check_and_open_file_manager("upload_icon3", "upload_label3", "selected_file_label3", "selected_image3",
-                                         "image_label3", self.upload_image3)
+                                         "image_label9", self.upload_image10)
 
-    def check_and_open_file_manager4(self):
+    def check_and_open_file_manager10(self):
         self.check_and_open_file_manager("upload_icon4", "upload_label4", "selected_file_label4", "selected_image4",
-                                         "image_label4", self.upload_image4)
+                                         "image_label10", self.upload_image11)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
-        if platform == 'android':
-            if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
-            else:
-                self.request_media_images_permission()
-        else:
-            # For non-Android platforms, directly open the file manager
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
-
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id, upload_function),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
+    # def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+    #     if platform == 'android':
+    #         if check_permission(Permission.READ_MEDIA_IMAGES):
+    #             self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
+    #         else:
+    #             self.request_media_images_permission()
+    #     else:
+    #         # For non-Android platforms, directly open the file manager
+    #         self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
+    #
+    # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+    #     self.file_manager = MDFileManager(
+    #         exit_manager=self.exit_manager,
+    #         select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
+    #                                                    image_label_id, upload_function),
+    #     )
+    #     if platform == 'android':
+    #         primary_external_storage = "/storage/emulated/0"
+    #         self.file_manager.show(primary_external_storage)
+    #     else:
+    #         # For other platforms, show the file manager from the root directory
+    #         self.file_manager.show('/')
 
     # def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id):
     #     self.file_manager = MDFileManager(
@@ -5573,9 +5707,22 @@ class LenderScreen_Edu_Masters(Screen):
     #         # For other platforms, show the file manager from the root directory
     #         self.file_manager.show('/')
 
-    def upload_image1(self, file_path):
+    def upload_image6(self, file_path):
         try:
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+            file_extension = os.path.splitext(file_path)[1].lower()
+            if file_extension not in ['.png', '.jpg', '.jpeg', '.pdf']:
+                self.show_validation_error("Unsupported file type. Please upload an image or a PDF.")
+                return
+
+            if file_extension in ['.png', '.jpg', '.jpeg']:
+                mime_type = 'image/png' if file_extension == '.png' else 'image/jpeg'
+            elif file_extension == '.pdf':
+                mime_type = 'application/pdf'
+
+            user_photo_media = media.from_file(file_path, mime_type=mime_type)
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
 
@@ -5589,16 +5736,29 @@ class LenderScreen_Edu_Masters(Screen):
             user_data['tenth_class'] = user_photo_media
 
             print("Image uploaded successfully.")
-            self.ids['image_label1'].source = ''
+            # self.ids['image_label1'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def get_email(self):
         return anvil.server.call('another_method')
 
-    def upload_image2(self, file_path):
+    def upload_image7(self, file_path):
         try:
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+            file_extension = os.path.splitext(file_path)[1].lower()
+            if file_extension not in ['.png', '.jpg', '.jpeg', '.pdf']:
+                self.show_validation_error("Unsupported file type. Please upload an image or a PDF.")
+                return
+
+            if file_extension in ['.png', '.jpg', '.jpeg']:
+                mime_type = 'image/png' if file_extension == '.png' else 'image/jpeg'
+            elif file_extension == '.pdf':
+                mime_type = 'application/pdf'
+
+            user_photo_media = media.from_file(file_path, mime_type=mime_type)
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
 
@@ -5612,13 +5772,26 @@ class LenderScreen_Edu_Masters(Screen):
             user_data['intermediate'] = user_photo_media
 
             print("Image uploaded successfully.")
-            self.ids['image_label2'].source = ''
+            # self.ids['image_label2'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
-    def upload_image3(self, file_path):
+    def upload_image8(self, file_path):
         try:
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+            file_extension = os.path.splitext(file_path)[1].lower()
+            if file_extension not in ['.png', '.jpg', '.jpeg', '.pdf']:
+                self.show_validation_error("Unsupported file type. Please upload an image or a PDF.")
+                return
+
+            if file_extension in ['.png', '.jpg', '.jpeg']:
+                mime_type = 'image/png' if file_extension == '.png' else 'image/jpeg'
+            elif file_extension == '.pdf':
+                mime_type = 'application/pdf'
+
+            user_photo_media = media.from_file(file_path, mime_type=mime_type)
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
 
@@ -5636,9 +5809,22 @@ class LenderScreen_Edu_Masters(Screen):
         except Exception as e:
             print(f"Error uploading image: {e}")
 
-    def upload_image4(self, file_path):
+    def upload_image9(self, file_path):
         try:
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+            file_extension = os.path.splitext(file_path)[1].lower()
+            if file_extension not in ['.png', '.jpg', '.jpeg', '.pdf']:
+                self.show_validation_error("Unsupported file type. Please upload an image or a PDF.")
+                return
+
+            if file_extension in ['.png', '.jpg', '.jpeg']:
+                mime_type = 'image/png' if file_extension == '.png' else 'image/jpeg'
+            elif file_extension == '.pdf':
+                mime_type = 'application/pdf'
+
+            user_photo_media = media.from_file(file_path, mime_type=mime_type)
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
 
@@ -5685,15 +5871,13 @@ class LenderScreen_Edu_Masters(Screen):
     #         # For other platforms, show the file manager from the root directory
     #         self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
-        # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
-        upload_function(path)  # Upload the selected image using the provided function
-        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
-        self.file_manager.close()
-
-    # self.manager.get_screen('LenderScreen_Edu_Masters').ids[
-    #     image_label_id].text = file_name  # Update the label text
-    # self.file_manager.close()
+    # def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+    #     # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
+    #     upload_function(path)  # Upload the selected image using the provided function
+    #     self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
+    #     self.file_manager.close()
+    #     self.manager.get_screen('LenderScreen5').ids[image_label_id].text = file_name  # Update the label text
+    #     self.file_manager.close()
 
     # def select_path2(self, path, icon_id, label_id, file_label_id, image_id, image_label_id):
     #     # self.manager.get_screen('LenderScreen2').ids[image_id].source = path  # Set the source of the Image widget
@@ -5747,7 +5931,7 @@ class LenderScreen_Edu_Masters(Screen):
         )
         view.open()
 
-    def update_data_with_file_1(self, file_path):
+    def update_data_with_file_7(self, file_path):
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -5764,7 +5948,7 @@ class LenderScreen_Edu_Masters(Screen):
         except ValueError:
             print('User is not logged in.')
 
-    def update_data_with_file_2(self, file_path):
+    def update_data_with_file_8(self, file_path):
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -5782,7 +5966,7 @@ class LenderScreen_Edu_Masters(Screen):
         except ValueError:
             print('User is not logged in.')
 
-    def update_data_with_file_3(self, file_path):
+    def update_data_with_file_9(self, file_path):
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -5800,7 +5984,7 @@ class LenderScreen_Edu_Masters(Screen):
         except ValueError:
             print('User is not logged in.')
 
-    def update_data_with_file_4(self, file_path):
+    def update_data_with_file_10(self, file_path):
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -5876,11 +6060,11 @@ class LenderScreen_Edu_Masters(Screen):
         # Switch to the LoginScreen
         sm.current = 'LenderScreen6'
 
-
-class LenderScreen_Edu_PHD(Screen):
-    MAX_IMAGE_SIZE_MB = 2
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+#=====================================================================
+# class LenderScreen_Edu_PHD(Screen):
+#     MAX_IMAGE_SIZE_MB = 2
+#     def __init__(self, **kwargs):
+#         super().__init__(**kwargs)
 
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically
@@ -5893,25 +6077,25 @@ class LenderScreen_Edu_PHD(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def check_and_open_file_manager1(self):
+    def check_and_open_file_manager11(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1",self.upload_image1)
+                                         "image_label11",self.upload_image10)
 
-    def check_and_open_file_manager2(self):
+    def check_and_open_file_manager12(self):
         self.check_and_open_file_manager("upload_icon2", "upload_label2", "selected_file_label2", "selected_image2",
-                                         "image_label2",self.upload_image2)
+                                         "image_label12",self.upload_image11)
 
-    def check_and_open_file_manager3(self):
+    def check_and_open_file_manager13(self):
         self.check_and_open_file_manager("upload_icon3", "upload_label3", "selected_file_label3", "selected_image3",
-                                         "image_label3",self.upload_image3)
+                                         "image_label13",self.upload_image12)
 
-    def check_and_open_file_manager4(self):
+    def check_and_open_file_manager14(self):
         self.check_and_open_file_manager("upload_icon4", "upload_label4", "selected_file_label4", "selected_image4",
-                                         "image_label4",self.upload_image4)
+                                         "image_label14",self.upload_image13)
 
-    def check_and_open_file_manager5(self):
+    def check_and_open_file_manager15(self):
         self.check_and_open_file_manager("upload_icon5", "upload_label5", "selected_file_label5", "selected_image5",
-                                         "image_label5",self.upload_image5)
+                                         "image_label15",self.upload_image14)
 
     def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id,upload_function):
         if platform == 'android':
@@ -5941,7 +6125,7 @@ class LenderScreen_Edu_PHD(Screen):
         upload_function(path)  # Upload the selected image
         self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
         file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('LenderScreen_Edu_PHD').ids[image_label_id].text = file_name  # Update the label text
+        self.manager.get_screen('LenderScreen5').ids[image_label_id].text = file_name  # Update the label text
         self.file_manager.close()
 
     def exit_manager(self, *args):
@@ -5972,7 +6156,7 @@ class LenderScreen_Edu_PHD(Screen):
     def refresh(self):
         pass
 
-    def update_data_with_file_1(self, file_path):
+    def update_data_with_file_11(self, file_path):
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -5989,7 +6173,7 @@ class LenderScreen_Edu_PHD(Screen):
         except ValueError:
             print('User is not logged in.')
 
-    def update_data_with_file_2(self, file_path):
+    def update_data_with_file_12(self, file_path):
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -6007,7 +6191,7 @@ class LenderScreen_Edu_PHD(Screen):
         except ValueError:
             print('User is not logged in.')
 
-    def update_data_with_file_3(self, file_path):
+    def update_data_with_file_13(self, file_path):
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -6025,7 +6209,7 @@ class LenderScreen_Edu_PHD(Screen):
         except ValueError:
             print('User is not logged in.')
 
-    def update_data_with_file_4(self, file_path):
+    def update_data_with_file_14(self, file_path):
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -6043,7 +6227,7 @@ class LenderScreen_Edu_PHD(Screen):
         except ValueError:
             print('User is not logged in.')
 
-    def update_data_with_file_5(self, file_path):
+    def update_data_with_file_15(self, file_path):
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -6061,9 +6245,22 @@ class LenderScreen_Edu_PHD(Screen):
         except ValueError:
             print('User is not logged in.')
 
-    def upload_image1(self, file_path):
+    def upload_image10(self, file_path):
         try:
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+            file_extension = os.path.splitext(file_path)[1].lower()
+            if file_extension not in ['.png', '.jpg', '.jpeg', '.pdf']:
+                self.show_validation_error("Unsupported file type. Please upload an image or a PDF.")
+                return
+
+            if file_extension in ['.png', '.jpg', '.jpeg']:
+                mime_type = 'image/png' if file_extension == '.png' else 'image/jpeg'
+            elif file_extension == '.pdf':
+                mime_type = 'application/pdf'
+
+            user_photo_media = media.from_file(file_path, mime_type=mime_type)
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
 
@@ -6077,16 +6274,29 @@ class LenderScreen_Edu_PHD(Screen):
             user_data['tenth_class'] = user_photo_media
 
             print("Image uploaded successfully.")
-            self.ids['image_label1'].source = ''
+            # self.ids['image_label1'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
     def get_email(self):
         return anvil.server.call('another_method')
 
-    def upload_image2(self, file_path):
+    def upload_image11(self, file_path):
         try:
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+            file_extension = os.path.splitext(file_path)[1].lower()
+            if file_extension not in ['.png', '.jpg', '.jpeg', '.pdf']:
+                self.show_validation_error("Unsupported file type. Please upload an image or a PDF.")
+                return
+
+            if file_extension in ['.png', '.jpg', '.jpeg']:
+                mime_type = 'image/png' if file_extension == '.png' else 'image/jpeg'
+            elif file_extension == '.pdf':
+                mime_type = 'application/pdf'
+
+            user_photo_media = media.from_file(file_path, mime_type=mime_type)
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
 
@@ -6100,13 +6310,26 @@ class LenderScreen_Edu_PHD(Screen):
             user_data['intermediate'] = user_photo_media
 
             print("Image uploaded successfully.")
-            self.ids['image_label2'].source = ''
+            # self.ids['image_label2'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
-    def upload_image3(self, file_path):
+    def upload_image12(self, file_path):
         try:
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+            file_extension = os.path.splitext(file_path)[1].lower()
+            if file_extension not in ['.png', '.jpg', '.jpeg', '.pdf']:
+                self.show_validation_error("Unsupported file type. Please upload an image or a PDF.")
+                return
+
+            if file_extension in ['.png', '.jpg', '.jpeg']:
+                mime_type = 'image/png' if file_extension == '.png' else 'image/jpeg'
+            elif file_extension == '.pdf':
+                mime_type = 'application/pdf'
+
+            user_photo_media = media.from_file(file_path, mime_type=mime_type)
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
 
@@ -6120,13 +6343,26 @@ class LenderScreen_Edu_PHD(Screen):
             user_data['btech'] = user_photo_media
 
             print("Image uploaded successfully.")
-            self.ids['image_label3'].source = ''
+            # self.ids['image_label3'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
-    def upload_image4(self, file_path):
+    def upload_image13(self, file_path):
         try:
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+            file_extension = os.path.splitext(file_path)[1].lower()
+            if file_extension not in ['.png', '.jpg', '.jpeg', '.pdf']:
+                self.show_validation_error("Unsupported file type. Please upload an image or a PDF.")
+                return
+
+            if file_extension in ['.png', '.jpg', '.jpeg']:
+                mime_type = 'image/png' if file_extension == '.png' else 'image/jpeg'
+            elif file_extension == '.pdf':
+                mime_type = 'application/pdf'
+
+            user_photo_media = media.from_file(file_path, mime_type=mime_type)
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
 
@@ -6140,16 +6376,26 @@ class LenderScreen_Edu_PHD(Screen):
             user_data['mtech'] = user_photo_media
 
             print("Image uploaded successfully.")
-            self.ids['image_label4'].source = ''
+            # self.ids['image_label4'].source = ''
         except Exception as e:
             print(f"Error uploading image: {e}")
 
-    def upload_image5(self, file_path):
+    def upload_image14(self, file_path):
         try:
             if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
                 self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
                 return
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            file_extension = os.path.splitext(file_path)[1].lower()
+            if file_extension not in ['.png', '.jpg', '.jpeg', '.pdf']:
+                self.show_validation_error("Unsupported file type. Please upload an image or a PDF.")
+                return
+
+            if file_extension in ['.png', '.jpg', '.jpeg']:
+                mime_type = 'image/png' if file_extension == '.png' else 'image/jpeg'
+            elif file_extension == '.pdf':
+                mime_type = 'application/pdf'
+
+            user_photo_media = media.from_file(file_path, mime_type=mime_type)
             email = self.get_email()
             data = app_tables.fin_user_profile.search(email_user=email)
 
@@ -6359,7 +6605,7 @@ class LenderScreen6(Screen):
             print("User is not logged in.")
 
         data = app_tables.fin_lender.search()
-        id_list = [i['email_user'] for i in data]
+        id_list = [i['email_id'] for i in data]
         user_email = anvil.server.call('another_method')
         if user_email in id_list:
             index = id_list.index(user_email)
@@ -8987,120 +9233,120 @@ class LenderScreenIndividualBankForm1(Screen):
                 unique_list.append(i)
         print(unique_list)
         if len(unique_list) >= 1:
-            self.ids.spinner_id.values = ['Select Account Type'] + unique_list
+            self.ids.account_type.values = unique_list
         else:
-            self.ids.spinner_id.values = ['Select Account Type']
+            self.ids.account_type.values = ['Select Account Type']
 
-    def animate_loading_text(self, loading_label, modal_height):
-        # Define the animation to move the label vertically
-        anim = Animation(y=modal_height - loading_label.height, duration=1) + \
-               Animation(y=0, duration=1)
-        # Loop the animation
-        anim.repeat = True
-        anim.bind(on_complete=lambda *args: self.animate_loading_text(loading_label, modal_height))
-        anim.start(loading_label)
-        # Store the animation object
-        loading_label.animation = anim  # Store the animation object in a custom attribute
+    # def animate_loading_text(self, loading_label, modal_height):
+    #     # Define the animation to move the label vertically
+    #     anim = Animation(y=modal_height - loading_label.height, duration=1) + \
+    #            Animation(y=0, duration=1)
+    #     # Loop the animation
+    #     anim.repeat = True
+    #     anim.bind(on_complete=lambda *args: self.animate_loading_text(loading_label, modal_height))
+    #     anim.start(loading_label)
+    #     # Store the animation object
+    #     loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def add_data(self, account_holder_name, account_type, account_number, bank_name):
-        modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
-
-        # Create MDLabel with white text color, increased font size, and bold text
-        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
-                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
-                                font_size="50sp", bold=True)
-
-        # Set initial y-position off-screen
-        loading_label.y = -loading_label.height
-
-        modal_view.add_widget(loading_label)
-        modal_view.open()
-
-        # Perform the animation
-        self.animate_loading_text(loading_label, modal_view.height)
-
-        # Perform the actual action (e.g., fetching loan requests)
-        # You can replace the sleep with your actual logic
-        Clock.schedule_once(
-            lambda dt: self.perform_data_addition_action4(account_holder_name, account_type, account_number, bank_name,
-                                                          modal_view), 2)
-
-    def perform_data_addition_action4(self, account_holder_name, account_type, account_number, bank_name, modal_view):
-        modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
-        modal_view.dismiss()
-
-        # Check for missing fields
-        if not all([account_holder_name, account_type, account_number, bank_name]):
-            # Display a validation error dialog
-            self.show_validation_error("Please fill in all fields.")
-            return  # Prevent further execution if any field is missing
-        if not re.match(r'^[a-zA-Z]{3,}$', account_holder_name) or not account_holder_name[0].isupper():
-            self.show_validation_error('Enter a valid account name and first letter should be capital')
-            return
-        if account_type not in account_type == 'Select Account Type':
-            self.show_validation_error('Enter a valid account type')
-            return
-        if len(account_number) < 3 or not account_number.isdigit():
-            self.show_validation_error('Enter a valid account number')
-            return
-        if not re.match(r'^[a-zA-Z]{3,}$', bank_name):
-            self.show_validation_error('Enter a valid bank name')
-            return
-        cursor.execute('select * from fin_users')
-        rows = cursor.fetchall()
-        row_id_list = []
-        status = []
-        email_list = []
-        for row in rows:
-            row_id_list.append(row[0])
-            status.append(row[-1])
-            email_list.append(row[2])
-        if 'logged' in status:
-            log_index = status.index('logged')
-
-            cursor.execute(
-                "UPDATE fin_registration_table SET account_holder_name = ?, account_type = ?, account_number = ?, bank_name = ? WHERE customer_id = ?",
-                (account_holder_name, account_type, account_number, bank_name, row_id_list[log_index]))
-            conn.commit()
-        else:
-            # Handle the case where the user is not logged in
-            print("User is not logged in.")
-        data = app_tables.fin_user_profile.search()
-        id_list = []
-        for i in data:
-            id_list.append(i['email_user'])
-        user_email = anvil.server.call('another_method')
-        if user_email in id_list:
-            index = id_list.index(user_email)
-            data[index]['account_name'] = account_holder_name
-            data[index]['account_type'] = account_type
-            data[index]['account_number'] = account_number
-            data[index]['bank_name'] = bank_name
-        else:
-            print('email not valid')
-
-        # self.manager.current = 'LenderScreenInstitutionalBankForm2'
-        sm = self.manager
-        lender_screen = LenderScreenIndividualBankForm2(name='LenderScreenIndividualBankForm2')
-        sm.add_widget(lender_screen)
-        sm.transition.direction = 'left'  # Set the transition direction explicitly
-        sm.current = 'LenderScreenIndividualBankForm2'
-
-    def show_validation_error(self, error_message):
-        dialog = MDDialog(
-            title="Validation Error",
-            text=error_message,
-            size_hint=(0.8, None),
-            height=dp(200),
-            buttons=[
-                MDRectangleFlatButton(
-                    text="OK",
-                    text_color=(0.043, 0.145, 0.278, 1),
-                    on_release=lambda x: dialog.dismiss()
-                )
-            ]
-        )
-        dialog.open()
+    # def add_data(self, account_holder_name, account_type, account_number, bank_name):
+    #     modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
+    #
+    #     # Create MDLabel with white text color, increased font size, and bold text
+    #     loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
+    #                             theme_text_color="Custom", text_color=[1, 1, 1, 1],
+    #                             font_size="50sp", bold=True)
+    #
+    #     # Set initial y-position off-screen
+    #     loading_label.y = -loading_label.height
+    #
+    #     modal_view.add_widget(loading_label)
+    #     modal_view.open()
+    #
+    #     # Perform the animation
+    #     self.animate_loading_text(loading_label, modal_view.height)
+    #
+    #     # Perform the actual action (e.g., fetching loan requests)
+    #     # You can replace the sleep with your actual logic
+    #     Clock.schedule_once(
+    #         lambda dt: self.perform_data_addition_action4(account_holder_name, account_type, account_number, bank_name,
+    #                                                       modal_view), 2)
+    #
+    # def perform_data_addition_action4(self, account_holder_name, account_type, account_number, bank_name, modal_view):
+    #     modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
+    #     modal_view.dismiss()
+    #
+    #     # Check for missing fields
+    #     if not all([account_holder_name, account_type, account_number, bank_name]):
+    #         # Display a validation error dialog
+    #         self.show_validation_error("Please fill in all fields.")
+    #         return  # Prevent further execution if any field is missing
+    #     if not re.match(r'^[a-zA-Z]{3,}$', account_holder_name) or not account_holder_name[0].isupper():
+    #         self.show_validation_error('Enter a valid account name and first letter should be capital')
+    #         return
+    #     if account_type not in account_type == 'Select Account Type':
+    #         self.show_validation_error('Enter a valid account type')
+    #         return
+    #     if len(account_number) < 3 or not account_number.isdigit():
+    #         self.show_validation_error('Enter a valid account number')
+    #         return
+    #     if not re.match(r'^[a-zA-Z]{3,}$', bank_name):
+    #         self.show_validation_error('Enter a valid bank name')
+    #         return
+    #     cursor.execute('select * from fin_users')
+    #     rows = cursor.fetchall()
+    #     row_id_list = []
+    #     status = []
+    #     email_list = []
+    #     for row in rows:
+    #         row_id_list.append(row[0])
+    #         status.append(row[-1])
+    #         email_list.append(row[2])
+    #     if 'logged' in status:
+    #         log_index = status.index('logged')
+    #
+    #         cursor.execute(
+    #             "UPDATE fin_registration_table SET account_holder_name = ?, account_type = ?, account_number = ?, bank_name = ? WHERE customer_id = ?",
+    #             (account_holder_name, account_type, account_number, bank_name, row_id_list[log_index]))
+    #         conn.commit()
+    #     else:
+    #         # Handle the case where the user is not logged in
+    #         print("User is not logged in.")
+    #     data = app_tables.fin_user_profile.search()
+    #     id_list = []
+    #     for i in data:
+    #         id_list.append(i['email_user'])
+    #     user_email = anvil.server.call('another_method')
+    #     if user_email in id_list:
+    #         index = id_list.index(user_email)
+    #         data[index]['account_name'] = account_holder_name
+    #         data[index]['account_type'] = account_type
+    #         data[index]['account_number'] = account_number
+    #         data[index]['bank_name'] = bank_name
+    #     else:
+    #         print('email not valid')
+    #
+    #     # self.manager.current = 'LenderScreenInstitutionalBankForm2'
+    #     sm = self.manager
+    #     lender_screen = LenderScreenIndividualBankForm1(name='LenderScreenIndividualBankForm1')
+    #     sm.add_widget(lender_screen)
+    #     sm.transition.direction = 'left'  # Set the transition direction explicitly
+    #     sm.current = 'LenderScreenIndividualBankForm1'
+    #
+    # def show_validation_error(self, error_message):
+    #     dialog = MDDialog(
+    #         title="Validation Error",
+    #         text=error_message,
+    #         size_hint=(0.8, None),
+    #         height=dp(200),
+    #         buttons=[
+    #             MDRectangleFlatButton(
+    #                 text="OK",
+    #                 text_color=(0.043, 0.145, 0.278, 1),
+    #                 on_release=lambda x: dialog.dismiss()
+    #             )
+    #         ]
+    #     )
+    #     dialog.open()
 
     def go_to_dashboard(self):
         self.manager.current = 'DashScreen'
@@ -9122,9 +9368,9 @@ class LenderScreenIndividualBankForm1(Screen):
         self.manager.current = 'LenderScreen7'
 
 
-class LenderScreenIndividualBankForm2(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+# class LenderScreenIndividualBankForm2(Screen):
+#     def __init__(self, **kwargs):
+#         super().__init__(**kwargs)
         self.check = None
 
     def on_checkbox_active(self, checkbox, value):
@@ -9144,7 +9390,7 @@ class LenderScreenIndividualBankForm2(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def go_to_lender_dashboard(self, bank_id, branch_name):
+    def go_to_lender_dashboard(self, bank_id, branch_name,account_holder_name, account_type, account_number, bank_name):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -9164,14 +9410,14 @@ class LenderScreenIndividualBankForm2(Screen):
         # Perform the actual action (e.g., fetching loan requests)
         # You can replace the sleep with your actual logic
         Clock.schedule_once(
-            lambda dt: self.perform_data_addition_action4(bank_id, branch_name, modal_view), 2)
+            lambda dt: self.perform_data_addition_action4(bank_id, branch_name,account_holder_name, account_type, account_number, bank_name, modal_view), 2)
 
-    def perform_data_addition_action4(self, bank_id, branch_name, modal_view):
+    def perform_data_addition_action4(self, bank_id, branch_name,account_holder_name, account_type, account_number, bank_name, modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
 
         # Check for missing fields
-        if not all([bank_id, branch_name]):
+        if not all([bank_id, branch_name,account_holder_name, account_type, account_number, bank_name]):
             # Display a validation error dialog
             self.show_validation_error("Please fill in all fields.")
             return  # Prevent further execution if any field is missing
@@ -9181,6 +9427,18 @@ class LenderScreenIndividualBankForm2(Screen):
             return
         if not branch_name.isalpha() or len(branch_name) < 3:
             self.show_validation_error('Enter a valid branch name')
+            return
+        if not re.match(r'^[a-zA-Z]{3,}$', account_holder_name) or not account_holder_name[0].isupper():
+            self.show_validation_error('Enter a valid account name and first letter should be capital')
+            return
+        if account_type not in account_type == 'Select Account Type':
+            self.show_validation_error('Enter a valid account type')
+            return
+        if len(account_number) < 3 or not account_number.isdigit():
+            self.show_validation_error('Enter a valid account number')
+            return
+        if not re.match(r'^[a-zA-Z]{3,}$', bank_name):
+            self.show_validation_error('Enter a valid bank name')
             return
         if self.check != True:
             self.show_validation_error('Select The Terms and Conditions')
@@ -9199,8 +9457,8 @@ class LenderScreenIndividualBankForm2(Screen):
             log_index = status.index('logged')
 
             cursor.execute(
-                "UPDATE fin_registration_table SET bank_id = ?, branch_name = ?, user_type = ? WHERE customer_id = ?",
-                (bank_id, branch_name, b, row_id_list[log_index]))
+                "UPDATE fin_registration_table SET bank_id = ?, branch_name = ?,account_holder_name = ?, account_type = ?, account_number = ?, bank_name = ?, user_type = ? WHERE customer_id = ?",
+                (bank_id, branch_name,account_holder_name, account_type, account_number, bank_name, b, row_id_list[log_index]))
             conn.commit()
         else:
             # Handle the case where the user is not logged in
@@ -9236,6 +9494,10 @@ class LenderScreenIndividualBankForm2(Screen):
             index = id_list.index(user_email)
             data[index]['bank_id'] = bank_id
             data[index]['account_bank_branch'] = branch_name
+            data[index]['account_name'] = account_holder_name
+            data[index]['account_type'] = account_type
+            data[index]['account_number'] = account_number
+            data[index]['bank_name'] = bank_name
             data[index]['usertype'] = b
             data[index]['registration_approve'] = True
             data[index]['last_confirm'] = True
@@ -9265,29 +9527,15 @@ class LenderScreenIndividualBankForm2(Screen):
         sm.current = 'LenderDashboard'
 
     def save_user_info(self, email, b):
-        user_data = {
-            'email': email,
-            'logged_status': True,
-            'user_type': b
-        }
+        with open("emails.json", "r") as file:
+            data = json.load(file)
 
-        # Check if the emails.json file exists and load data, or initialize as an empty dict
-        if os.path.exists("emails.json"):
-            with open("emails.json", "r") as file:
-                try:
-                    data = json.load(file)
-                except json.JSONDecodeError:
-                    data = {}
-        else:
-            data = {}
-
-        data[email] = user_data
-
-        # Write back the updated data to emails.json
+        # Update or create entry for the current user
+        data[email] = {"user_type": b, "logged_status": True}
+        print(data)
+        # Write updated data back to the file
         with open("emails.json", "w") as file:
-            json.dump(data, file, indent=4)
-
-
+            json.dump(data, file)
     def show_validation_error(self, error_message):
         dialog = MDDialog(
             title="Validation Error",
@@ -9318,24 +9566,30 @@ class LenderScreenIndividualBankForm2(Screen):
         )
         dialog.open()
 
-    def go_to_dashboard(self):
-        self.manager.current = 'DashScreen'
+    # def go_to_dashboard(self):
+    #     self.manager.current = 'DashScreen'
+    #
+    # def on_pre_enter(self):
+    #     Window.bind(on_keyboard=self.on_back_button)
+    #
+    # def on_pre_leave(self):
+    #     Window.unbind(on_keyboard=self.on_back_button)
+    #
+    # def on_back_button(self, instance, key, scancode, codepoint, modifier):
+    #     if key == 27:
+    #         self.go_back()
+    #         return True
+    #     return False
+    #
+    # def go_back(self):
+    #     self.manager.transition = SlideTransition(direction='right')
+    #     self.manager.current = 'LenderScreenIndividualBankForm1'
 
-    def on_pre_enter(self):
-        Window.bind(on_keyboard=self.on_back_button)
 
-    def on_pre_leave(self):
-        Window.unbind(on_keyboard=self.on_back_button)
+from kivy.uix.spinner import SpinnerOption
 
-    def on_back_button(self, instance, key, scancode, codepoint, modifier):
-        if key == 27:
-            self.go_back()
-            return True
-        return False
-
-    def go_back(self):
-        self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'LenderScreenIndividualBankForm1'
+class CustomSpinnerOption(SpinnerOption):
+    pass
 
 from kivy.uix.spinner import SpinnerOption
 class CustomSpinnerOption(SpinnerOption):

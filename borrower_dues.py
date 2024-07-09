@@ -789,8 +789,8 @@ class BorrowerDuesScreen(Screen):
             processing_fee = round(total_pro_fee_amount[index] / tenure[index], 2)
         elif emi_pay_type[index].strip() == 'Three Months':
             processing_fee = round(total_pro_fee_amount[index] / 3, 2)
-        elif emi_pay_type[index].strip() == ' Six Months':
-            processing_fee = round(total_pro_fee_amount[index] / 6, 2)
+        elif emi_pay_type[index].strip() == 'Six Months':
+            processing_fee = round(total_pro_fee_amount[index] / (tenure[index]//6), 2)
         elif emi_pay_type[index].strip() == 'One Time':
             processing_fee = round(total_pro_fee_amount[index], 2)
             print(processing_fee)
@@ -822,7 +822,7 @@ class BorrowerDuesScreen(Screen):
             print(days_left)
             late_fee = None
             for i in range(a):
-                if days_left > min_days[i] and days_left <= max_days[i]:
+                if days_left >= min_days[i] and days_left <= max_days[i]:
                     late_fee = date_type[i]
                     if days_left > min_days[i]:
                         days_left = (today_date - shechule_date[value]).days - (min_days[i] + 1)
@@ -913,7 +913,7 @@ class BorrowerDuesScreen(Screen):
                     # interest_amount = round(loan_beginning * (interest[index] / 100) / 12)
                     # principal_amount = emi_amount[index] - interest_amount
 
-                    self.ids.total_amount.text = str(round(float(remain_am[last_index]), 2))
+                    self.ids.total_amount.text = str(round(float(remain_am[last_index] + float(self.ids.extra_amount.text)), 2))
 
             if value not in emi_loan_id:
                 if emi_pay_type[index].strip() == 'Six Months' and tenure[index] > 6 and tenure[index] < 12:
@@ -929,7 +929,7 @@ class BorrowerDuesScreen(Screen):
                     # i = monthly_emi[index] / 6
                     # emi = i * r
                     # print(monthly_emi[index], emi)
-                    self.ids.total_amount.text = str(round(float(remain_am[last_index]), 2))
+                    self.ids.total_amount.text = str(round(float(remain_am[last_index] + float(self.ids.extra_amount.text)), 2))
 
         elif loan_status[index] == "extension":
             emi_number = 0
@@ -980,7 +980,7 @@ class BorrowerDuesScreen(Screen):
                 print(days_left)
                 late_fee = None
                 for i in range(a):
-                    if days_left > min_days[i] and days_left <= max_days[i]:
+                    if days_left >= min_days[i] and days_left <= max_days[i]:
                         late_fee = date_type[i]
                         if days_left > min_days[i]:
                             days_left = (today_date - shechule_date[value]).days - (min_days[i] + 1)
@@ -1081,7 +1081,7 @@ class BorrowerDuesScreen(Screen):
                 print(days_left)
                 late_fee = None
                 for i in range(a):
-                    if days_left > min_days[i] and days_left <= max_days[i]:
+                    if days_left >= min_days[i] and days_left <= max_days[i]:
                         late_fee = date_type[i]
                         if days_left > min_days[i]:
                             days_left = (today_date - shechule_date[value]).days - (min_days[i] + 1)
@@ -1322,8 +1322,15 @@ class BorrowerDuesScreen(Screen):
         print(wallet[b_index]['wallet_amount'])
         print(total)
         print(b_index)
-        processing_fee = total_pro_fee_amount[index] / float(tenure)
-        print(processing_fee, extra_amount)
+        processing_fee = 0
+        if emi_type_pay[index].strip() == 'Monthly':
+            processing_fee = round(total_pro_fee_amount[index] / float(tenure), 2)
+        elif emi_type_pay[index].strip() == 'Three Months':
+            processing_fee = round(total_pro_fee_amount[index] / 3, 2)
+        elif emi_type_pay[index].strip() == 'Six Months':
+            processing_fee = round(total_pro_fee_amount[index] / (tenure//6), 2)
+        elif emi_type_pay[index].strip() == 'One Time':
+            processing_fee = round(total_pro_fee_amount[index], 2)
         extend_data = app_tables.fin_extends_loan.search()
         extend_loan_id = []
         new_emi = []
@@ -1404,6 +1411,7 @@ class BorrowerDuesScreen(Screen):
                 if re_ten == 1:
                     re_ten = 0
                     data1[index]['loan_updated_status'] = 'closed'
+                    remaining_amount = 0
                 else:
                     re_ten -= 1
                 print(re_ten)
@@ -2026,8 +2034,18 @@ class PartPayment(Screen):
         emi_amount1 = 0
         new_emi_amount = 0
 
-        processing_fee = (total_pro_fee_amount[index] / tenure[index])
-        print(processing_fee)
+
+
+        processing_fee = 0
+        if emi_pay_type[index].strip() == 'Monthly':
+            processing_fee = round(total_pro_fee_amount[index] / tenure[index], 2)
+        elif emi_pay_type[index].strip() == 'Three Months':
+            processing_fee = round(total_pro_fee_amount[index] / 3, 2)
+        elif emi_pay_type[index].strip() == 'Six Months':
+            processing_fee = round(total_pro_fee_amount[index] / (tenure[index]//6), 2)
+        elif emi_pay_type[index].strip() == 'One Time':
+            processing_fee = round(total_pro_fee_amount[index], 2)
+            print(processing_fee)
 
         if loan_status[index] == "disbursed":
             part_days_left = 0
@@ -2062,7 +2080,7 @@ class PartPayment(Screen):
             for i in range(a):
                 print(days_left > min_days[i] and days_left <= max_days[i])
                 print(days_left, min_days[i], max_days[i])
-                if days_left > min_days[i] and days_left <= max_days[i]:
+                if days_left >= min_days[i] and days_left <= max_days[i]:
                     late_fee = date_type[i]
                     if days_left > min_days[i]:
                         days_left = (today_date - shechule_date[value]).days - (min_days[i] + 1)
@@ -2490,7 +2508,7 @@ class PartPayment(Screen):
                 late_fee = None
                 part_days_left = 0
                 for i in range(a):
-                    if days_left > min_days[i] and days_left <= max_days[i]:
+                    if days_left >= min_days[i] and days_left <= max_days[i]:
                         late_fee = date_type[i]
                         if days_left > min_days[i]:
                             days_left = (today_date - shechule_date[value]).days - (min_days[i] + 1)
@@ -2906,7 +2924,7 @@ class PartPayment(Screen):
                 late_fee = None
                 part_days_left = 0
                 for i in range(a):
-                    if days_left > min_days[i] and days_left <= max_days[i]:
+                    if days_left >= min_days[i] and days_left <= max_days[i]:
                         late_fee = date_type[i]
                         if days_left > min_days[i]:
                             days_left = (today_date - shechule_date[value]).days - (min_days[i] + 1)
@@ -3422,8 +3440,17 @@ class PartPayment(Screen):
             if tenure:
                 monthly_lender_returns = lender_returns / (tenure_months[index] / tenure_months[index])
 
-        processing_fee = (total_pro_fee_amount[index] / float(tenure))
-        print(processing_fee)
+        processing_fee = 0
+        if emi_type_pay[index].strip() == 'Monthly':
+            processing_fee = round(total_pro_fee_amount[index] / float(tenure), 2)
+        elif emi_type_pay[index].strip() == 'Three Months':
+            processing_fee = round(total_pro_fee_amount[index] / 3, 2)
+        elif emi_type_pay[index].strip() == 'Six Months':
+            processing_fee = round(total_pro_fee_amount[index] / (tenure[index]//6), 2)
+        elif emi_type_pay[index].strip() == 'One Time':
+            processing_fee = round(total_pro_fee_amount[index], 2)
+
+            print(processing_fee)
         last_index = 0
         if value not in emi_loan_id:
             emi_number = 1
@@ -3569,7 +3596,12 @@ class PartPayment(Screen):
                     data1[index]['remaining_amount'] = float(remaining_amount)
                 else:
                     data1[index]['remaining_amount'] = float(remaining_amount)
-                data1[index]['total_amount_paid'] += float(pay)
+
+                if data1[index]['total_amount_paid'] == None:
+                    data1[index]['total_amount_paid'] = 0
+                    data1[index]['total_amount_paid'] += float(pay)
+                else:
+                    data1[index]['total_amount_paid'] += float(pay)
                 anvil.server.call('loan_text', None)
                 sm = self.manager
                 wallet_screen = LastScreenWallet(name='LastScreenWallet')
@@ -3724,6 +3756,7 @@ class PartPayment(Screen):
                         re_ten = 0
                         remain_amount = 0
                         data1[index]['loan_updated_status'] = 'closed'
+                        remaining_amount = 0
                     else:
                         re_ten -= 1
                     print(re_ten)
@@ -3737,6 +3770,7 @@ class PartPayment(Screen):
                         re_ten = 0
                         data1[index]['loan_updated_status'] = 'closed'
                         remain_amount = 0
+
                     else:
                         re_ten -= 3
                     print(re_ten)
@@ -3904,7 +3938,7 @@ class DuesScreen(Screen):
         if not data:
             print("No data found for email:", email)
             return
-
+        photo_texture = None
         for row in data:
             if row['user_photo']:
                 image_data = row['user_photo'].get_bytes()

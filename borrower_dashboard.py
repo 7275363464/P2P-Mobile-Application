@@ -309,7 +309,7 @@ user_helpers = '''
                                                 halign: "left"
 
                                             MDLabel:
-                                                id: product_name
+                                                id: product
                                                 text: "TVS"
                                                 font_family: "Arial"
                                                 halign: "left"
@@ -7825,7 +7825,7 @@ class DashboardScreen(Screen):
                 print(c)
         print(index_list)
         if len(index_list) < 1:
-            self.ids.product_name = ''
+            self.ids.product = ''
             self.ids.amount.text = ''
             self.ids.interest.text = ''
             self.ids.tenure.text = ''
@@ -7834,7 +7834,7 @@ class DashboardScreen(Screen):
         else:
             a = index_list[-1]
             print(a)
-            self.ids.product_name.text = str(product_name[a])
+            self.ids.product.text = str(product_name[a])
             self.ids.amount.text = "Rs. " + str(round(loan_amount[a], 2))
             self.ids.interest.text = str(interest_rate[a]) + "%"
             self.ids.tenure.text = str(int(tenure[a])) + ' Months'
@@ -8187,7 +8187,7 @@ class DashboardScreen(Screen):
                 file.truncate()
 
         # Switch to MainScreen
-        self.manager.current = 'MainScreen'
+        self.manager.current = 'prelogin'
 
     def go_to_account(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])

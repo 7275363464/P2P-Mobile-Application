@@ -62,6 +62,18 @@ import base64
 import json
 
 from kivymd.uix.textfield import MDTextField
+from kivymd.uix.menu import MDDropdownMenu
+from kivy.clock import Clock
+from kivymd.uix.list import OneLineIconListItem, IconLeftWidget
+from kivy.properties import StringProperty
+import anvil
+from anvil.tables import app_tables
+from io import BytesIO
+import base64
+from kivy.core.image import Image as CoreImage
+from anvil._server import LazyMedia
+import tempfile
+from kivy.uix.image import AsyncImage
 
 from borrower_dashboard import DashboardScreen
 
@@ -2868,6 +2880,9 @@ Borrower = '''
 <CustomSpinnerOption@SpinnerOption>:
     background_color:0, 0, 1, 1  
     color: 1, 1, 1, 1
+<IconListItem>
+    IconLeftWidget:
+        icon: root.icon 
 <BorrowerScreen15>:
     MDBoxLayout:
         orientation: 'vertical'
@@ -2877,7 +2892,7 @@ Borrower = '''
             elevation: 2
             pos_hint: {'top': 1}
             left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'BorrowerScreen7')]]
-            right_action_items: [["icon8.png", lambda x: app.root.current == 'MainScreen']]
+            right_action_items: [["icon8.png", lambda x: root.account()]]
             title_align: 'center'
             md_bg_color: 0.043, 0.145, 0.278, 1
         ScrollView:
@@ -2898,7 +2913,7 @@ Borrower = '''
                     text: ''
                     halign: 'center'
                     size_hint_y: None
-                    height: dp(10)
+                    height: dp(0)
 
                 MDLabel:
                     text: "Select Marital Status Type:"
@@ -2965,7 +2980,7 @@ Borrower = '''
                     size_hint_y: None
                     height: self.minimum_height
                     opacity: 1
-                    spacing: dp(18)
+                    spacing: dp(22)
 
 
                 GridLayout:
@@ -8540,6 +8555,8 @@ class BorrowerScreen13(Screen):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'BorrowerScreen12'
 
+class IconListItem(OneLineIconListItem):
+    icon = StringProperty()
 
 class BorrowerScreen15(Screen):
     def __init__(self, **kwargs):
@@ -8560,12 +8577,16 @@ class BorrowerScreen15(Screen):
             self.ids.marital_status_id.values = ['Select Marital Status']
 
         self.update_top_bar_image()
+        Clock.schedule_once(self.setup_menu, 0.5)  # Schedule menu setup after a delay
 
     def update_top_bar_image(self):
-        log_email = anvil.server.call('another_method')
-        profile = app_tables.fin_user_profile.search()
-        print(log_email)
+        # Replace with your Anvil server call to fetch email
+        log_email = "mamidalasai3469@gmail.com"
 
+        # Replace with your Anvil table search method to fetch profile data
+        profile = app_tables.fin_user_profile.search()
+
+        # Initialize lists to store profile data
         email_user = []
         name_list = []
         investment = []
@@ -8575,6 +8596,7 @@ class BorrowerScreen15(Screen):
         emp_type = []
         profile_list = []
 
+        # Extract data from the profile list
         for i in profile:
             email_user.append(i['email_user'])
             name_list.append(i['full_name'])
@@ -8583,35 +8605,90 @@ class BorrowerScreen15(Screen):
             p_customer_id.append(i['customer_id'])
             ascend_score.append(i['ascend_value'])
             emp_type.append(i['profession'])
-            profile_list.append(i['user_photo'])
+            profile_list.append(i['user_photo'])  # Assuming 'user_photo' is the key for the photo
 
-        log_index = 0
-        if log_email in email_user:
-            log_index = email_user.index(log_email)
+        # Find the index of log_email in email_user list
+        log_index = email_user.index(log_email) if log_email in email_user else 0
 
         top_bar = self.ids.bar
 
-        if profile_list[log_index] != None:
-            image_data = profile_list[log_index].get_bytes()
-            if isinstance(image_data, bytes):
-                try:
+        if profile_list[log_index] is not None:
+            image_data = profile_list[log_index]
+            try:
+                # Load image data into CoreImage texture
+                print(isinstance(image_data, bytes), isinstance(image_data, str), image_data)
+                if isinstance(image_data, bytes):
                     profile_texture_io = BytesIO(image_data)
-                    photo_texture = CoreImage(profile_texture_io, ext='png').texture
-                    top_bar.right_action_items = [[str(photo_texture), lambda x: setattr(self.logout())]]
-                except Exception as e:
-                    print(f"Error processing image for customer {p_customer_id[log_index]}: {e}")
-            else:
-                try:
+                elif isinstance(image_data, str):
                     image_data_binary = base64.b64decode(image_data)
                     profile_texture_io = BytesIO(image_data_binary)
-                    photo_texture = CoreImage(profile_texture_io, ext='png').texture
-                    top_bar.right_action_items = [[str(photo_texture), lambda x: setattr(self.logout())]]
-                except base64.binascii.Error as e:
-                    print(f"Base64 decoding error for customer {p_customer_id[log_index]}: {e}")
-                except Exception as e:
-                    print(f"Error processing image for customer {p_customer_id[log_index]}: {e}")
+                elif isinstance(image_data, LazyMedia):
+                    image_data_bytes = image_data.get_bytes()
+                    profile_texture_io = BytesIO(image_data_bytes)
+                else:
+                    raise ValueError("Unsupported image data type")
+
+                # Create CoreImage texture
+                photo_texture = CoreImage(profile_texture_io, ext='png').texture
+
+                # Save the texture to a temporary file
+                with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as temp_file:
+                    temp_file.write(profile_texture_io.getvalue())
+                    temp_file_path = temp_file.name
+
+                # Update right_action_items with the temp file path
+                top_bar.right_action_items = [
+                    [temp_file_path, lambda x: self.account()]
+                ]
+
+            except Exception as e:
+                print(f"Error loading photo texture: {e}")
+
         else:
-            print('photo is not there')
+            # No profile picture available, set a default image or action
+            top_bar.right_action_items = [
+                ['icon8.png', lambda x: self.account()]
+            ]
+
+    def setup_menu(self, *args):
+        menu_items = [
+            {
+                "text": "Profile",
+                "viewclass": "IconListItem",
+                "icon": "account-circle",
+                "on_release": lambda x="Profile": self.menu_callback(x),
+            },
+            {
+                "viewclass": "IconListItem",
+                "text": "Logout",
+                "icon": "logout",
+                "on_release": lambda x="Logout": self.menu_callback(x),
+            },
+        ]
+        self.menu = MDDropdownMenu(
+            caller=self.ids.bar.ids.right_actions,
+            items=menu_items,
+            position="bottom",
+            width_mult=3,
+        )
+
+    def menu_callback(self, item):
+        print(f"Menu item clicked: {item}")
+
+    def account(self):
+        self.menu.open()
+
+    def update_details(self, marital_status_id):
+        if marital_status_id == "Married":
+            self.ids.relation_name.values = ["Father", "Mother", "Spouse", "Others"]
+        else:
+            self.ids.relation_name.values = ["Father", "Mother", "Others"]
+
+    def update_rect(self, instance, value):
+        instance.canvas.before.clear()
+        with instance.canvas.before:
+            Color(0, 0, 0, 1)  # Set the color to black with full opacity
+            Line(width=0.7, rectangle=(instance.x, instance.y, instance.width, instance.height))
 
     def logout(self):
         # Implement logout functionality here
@@ -8633,13 +8710,8 @@ class BorrowerScreen15(Screen):
                 file.truncate()
 
         # Switch to MainScreen
-        self.manager.current = 'MainScreen'
-
-    def update_details(self, marital_status_id):
-        if marital_status_id == "Married":
-            self.ids.relation_name.values = ["Father", "Mother", "Spouse", "Others"]
-        else:
-            self.ids.relation_name.values = ["Father", "Mother", "Others"]
+        self.manager.current = 'prelogin'
+        self.menu.dismiss()
 
     def update_person_details_visibility(self, relation):
         # Remove any existing spouse details box
@@ -8649,23 +8721,23 @@ class BorrowerScreen15(Screen):
             spouse_details = self.ids.box
 
             self.spouse_name = MDTextField(id='spouse_name', hint_text='Enter Spouse Name *', multiline=False,
-                                       helper_text_mode='on_focus', font_size=15, mode= "rectangle")
+                                           helper_text_mode='on_focus', font_size=15, mode="rectangle",
+                                           radius=[0, 0, 0, 0])
             self.spouse_name.bind(text=self.spouse_name_validation)
             spouse_details.add_widget(self.spouse_name)
 
             self.spouse_date_textfield = MDTextField(id='spouse_date_textfield', hint_text='Enter Marriage Date *',
-                                                helper_text_mode='on_focus',
-                                                input_type='number',
-                                                font_size=15, mode= "rectangle")
+                                                     helper_text_mode='on_focus',
+                                                     input_type='number',
+                                                     font_size=15, mode="rectangle")
             self.spouse_date_textfield.bind(text=self.spouse_date_validation)
             spouse_details.add_widget(self.spouse_date_textfield)
 
             self.spouse_mobile = MDTextField(id='spouse_mobile', hint_text='Enter Spouse Mobile No *', multiline=False,
-                                        helper_text_mode='on_focus',
-                                        input_type='number', font_size=15, mode= "rectangle")
+                                             helper_text_mode='on_focus',
+                                             input_type='number', font_size=15, mode="rectangle")
             self.spouse_mobile.bind(text=self.spouse_mobile_validation)
             spouse_details.add_widget(self.spouse_mobile)
-
 
             spouse_profession_label = MDLabel(text='Spouse Profession Type:', halign='left', font_size=15,
                                               font_name='Roboto-Bold', size_hint_y=None, height=dp(20))
@@ -8681,7 +8753,7 @@ class BorrowerScreen15(Screen):
                 background_normal='',
                 color=(0, 0, 0, 1),
                 values=['Nothing'],
-                option_cls= 'CustomSpinnerOption'
+                option_cls='CustomSpinnerOption'
 
             )
             self.spouse_profession.bind(size=self.update_rect, pos=self.update_rect)
@@ -8689,56 +8761,74 @@ class BorrowerScreen15(Screen):
             # Configure canvas for border
             self.spouse_profession.text_size = (self.spouse_profession.width - dp(20), None)
 
-
             with self.spouse_profession.canvas.before:
                 Color(0, 0, 0, 1)  # Set the color to black with full opacity
-                Line(width=0.7, rectangle=(self.spouse_profession.x, self.spouse_profession.y, self.spouse_profession.width, self.spouse_profession.height))
+                Line(width=0.7, rectangle=(
+                self.spouse_profession.x, self.spouse_profession.y, self.spouse_profession.width,
+                self.spouse_profession.height))
 
             spouse_details.add_widget(self.spouse_profession)
 
             self.spouse_company_name = MDTextField(id='spouse_company_name', hint_text='Enter Spouse Company Name *',
-                                              multiline=False,
-                                              helper_text_mode='on_focus', font_size=15, mode= "rectangle")
+                                                   multiline=False,
+                                                   helper_text_mode='on_focus', font_size=15, mode="rectangle")
+            self.spouse_company_name.bind(text=self.spouse_company_name_validation)
             spouse_details.add_widget(self.spouse_company_name)
 
             self.spouse_annual_salary = MDTextField(id='spouse_annual_salary', hint_text='Enter Annual Salary *',
-                                               multiline=False,
-                                               helper_text_mode='on_focus', input_type='number', font_size=15, mode= "rectangle")
+                                                    multiline=False,
+                                                    helper_text_mode='on_focus', input_type='number', font_size=15,
+                                                    mode="rectangle")
+            self.spouse_annual_salary.bind(text=self.spouse_annual_salary_validation)
             spouse_details.add_widget(self.spouse_annual_salary)
+
+            self.error_msg = MDLabel(text='', halign='left', font_size=15,
+                                     font_name='Roboto-Bold', size_hint_y=None, height=dp(20),
+                                     theme_text_color="Custom", text_color='red')
+            spouse_details.add_widget(self.error_msg)
 
         # Add other person details widgets based on selected relation
         elif relation == "Father" or relation == "Mother":
             # Add details for father
             person_details_box1 = self.ids.box
 
-            self.person_name = MDTextField(id='person_name', hint_text='Enter Full Name *', multiline=False, helper_text_mode='on_focus',
-                                    halign='left', font_size=15, mode='rectangle')
+            self.person_name = MDTextField(id='person_name', hint_text='Enter Full Name *', multiline=False,
+                                           helper_text_mode='on_focus',
+                                           halign='left', font_size=15, mode='rectangle')
             self.person_name.bind(text=self.person_name_validtion)
             person_details_box1.add_widget(self.person_name)
 
             self.person_dob = MDTextField(id='person_dob', hint_text='Enter Date Of Birth *',
-                                   multiline=False, helper_text_mode='on_focus', halign='left', input_type='number',
-                                   font_size=15, mode='rectangle')
+                                          multiline=False, helper_text_mode='on_focus', halign='left',
+                                          input_type='number',
+                                          font_size=15, mode='rectangle')
             self.person_dob.bind(text=self.person_dob_validtion)
             person_details_box1.add_widget(self.person_dob)
 
             self.person_ph_no = MDTextField(id='person_ph_no', hint_text='Enter Phone No *',
-                                     helper_text_mode='on_focus', halign='left', input_type='number', font_size=15, mode='rectangle')
+                                            helper_text_mode='on_focus', halign='left', input_type='number',
+                                            font_size=15, mode='rectangle')
             self.person_ph_no.bind(text=self.person_ph_no_validtion)
             person_details_box1.add_widget(self.person_ph_no)
 
-            self.person_profession = MDTextField(id='person_profession', hint_text='Enter Profession *', multiline=False,
-                                          helper_text_mode='on_focus', font_size=15, mode='rectangle')
+            self.person_profession = MDTextField(id='person_profession', hint_text='Enter Profession *',
+                                                 multiline=False,
+                                                 helper_text_mode='on_focus', font_size=15, mode='rectangle')
             self.person_profession.bind(text=self.person_profession_validtion)
             person_details_box1.add_widget(self.person_profession)
+            self.error_msg = MDLabel(text='', halign='left', font_size=15,
+                                     font_name='Roboto-Bold', size_hint_y=None, height=dp(20),
+                                     theme_text_color="Custom", text_color='red')
+            person_details_box1.add_widget(self.error_msg)
 
         elif relation == "Others":
             # Add details for other relations
             person_details_box1 = self.ids.box
 
             self.relation_name1 = MDTextField(id='relation_name1', hint_text='How is the person related to you',
-                                         multiline=False,
-                                         helper_text_mode='on_focus', halign='left', font_size=15, mode='rectangle')
+                                              multiline=False,
+                                              helper_text_mode='on_focus', halign='left', font_size=15,
+                                              mode='rectangle')
             self.relation_name1.bind(text=self.relation_name1_validation)
             person_details_box1.add_widget(self.relation_name1)
 
@@ -8766,9 +8856,12 @@ class BorrowerScreen15(Screen):
                                                  helper_text_mode='on_focus', font_size=15, mode='rectangle')
             self.person_profession.bind(text=self.person_profession_validtion)
             person_details_box1.add_widget(self.person_profession)
+            self.error_msg = MDLabel(text='', halign='left', font_size=15,
+                                     font_name='Roboto-Bold', size_hint_y=None, height=dp(20),
+                                     theme_text_color="Custom", text_color='red')
+            person_details_box1.add_widget(self.error_msg)
 
         # Add widgets for other relations as needed
-
     def update_rect(self, instance, value):
         instance.canvas.before.clear()
         with instance.canvas.before:
@@ -8776,9 +8869,9 @@ class BorrowerScreen15(Screen):
             Line(width=0.7, rectangle=(instance.x, instance.y, instance.width, instance.height))
 
     def spouse_name_validation(self, instance, value):
-        if len(value) < 3:
+        if value.isdigit() or len(value) < 3:
             instance.error = True
-            self.spouse_name.helper_text = 'You Must Enter Correct * Values'
+            self.spouse_name.helper_text = 'Enter Correct Name'
             self.spouse_name._helper_text_color = 'red'
             return
         else:
@@ -8788,7 +8881,7 @@ class BorrowerScreen15(Screen):
     def spouse_mobile_validation(self, instance, value):
         if not value.isdigit() or len(value) != 10:
             instance.error = True
-            self.spouse_mobile.helper_text = 'You Must Enter Correct * Values'
+            self.spouse_mobile.helper_text = 'Enter Correct Number like 10 Digits'
             self.spouse_mobile._helper_text_color = 'red'
             return
         else:
@@ -8802,7 +8895,7 @@ class BorrowerScreen15(Screen):
             today = datetime.now().date()
             if dob > today:
                 instance.error = True
-                self.spouse_date_textfield.helper_text = 'You Must Enter Correct * Values'
+                self.spouse_date_textfield.helper_text = ' Enter Correct Date Must be greater than today'
                 self.spouse_date_textfield._helper_text_color = 'red'
                 return
             else:
@@ -8810,14 +8903,34 @@ class BorrowerScreen15(Screen):
                 self.spouse_date_textfield.helper_text = ''
         except ValueError:
             instance.error = True
-            self.spouse_date_textfield.helper_text = 'You Must Enter Correct * Values'
+            self.spouse_date_textfield.helper_text = 'Enter Correct Date like YYYY-MM_DD'
             self.spouse_date_textfield._helper_text_color = 'red'
             return
 
-    def person_name_validtion(self, instance, value):
-        if len(value) < 3:
+    def spouse_company_name_validation(self, instance, value):
+        if value.isdigit() or len(value) < 3:
             instance.error = True
-            self.person_name.helper_text = 'You Must Enter Correct * Values'
+            self.spouse_company_name.helper_text = 'Enter Correct Name'
+            self.spouse_company_name._helper_text_color = 'red'
+            return
+        else:
+            instance.error = False
+            self.spouse_company_name.helper_text = ''
+
+    def spouse_annual_salary_validation(self, instance, value):
+        if not value.isdigit() or len(value) < 3:
+            instance.error = True
+            self.spouse_annual_salary.helper_text = 'Enter Correct Annual Salary'
+            self.spouse_annual_salary._helper_text_color = 'red'
+            return
+        else:
+            instance.error = False
+            self.spouse_company_name.helper_text = ''
+
+    def person_name_validtion(self, instance, value):
+        if value.isdigit() or len(value) < 3:
+            instance.error = True
+            self.person_name.helper_text = 'Enter Correct Name'
             self.person_name._helper_text_color = 'red'
             return
         else:
@@ -8827,7 +8940,7 @@ class BorrowerScreen15(Screen):
     def person_ph_no_validtion(self, instance, value):
         if not value.isdigit() or len(value) != 10:
             instance.error = True
-            self.person_ph_no.helper_text = 'You Must Enter Correct * Values'
+            self.person_ph_no.helper_text = 'Enter Correct Phone Number'
             self.person_dob._helper_text_color = 'red'
             return
         else:
@@ -8840,8 +8953,8 @@ class BorrowerScreen15(Screen):
             age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
             if age < 18:
                 instance.error = True
-                self.person_ph_no.helper_text = 'You Must Enter Correct * Values'
-                self.person_ph_no._helper_text_color = 'red'
+                self.person_dob.helper_text = 'Enter Correct Date Must Greater than 18'
+                self.person_dob._helper_text_color = 'red'
                 return
             else:
                 self.person_dob.helper_text = ''
@@ -8849,14 +8962,14 @@ class BorrowerScreen15(Screen):
 
         except ValueError:
             instance.error = True
-            self.person_ph_no.helper_text = 'You Must Enter Correct * Values'
-            self.person_ph_no._helper_text_color = 'red'
+            self.person_dob.helper_text = 'Enter Correct Date like YYYY-MM-DD'
+            self.person_dob._helper_text_color = 'red'
             return
 
     def person_profession_validtion(self, instance, value):
-        if len(value) < 3:
+        if value.isdigit() or len(value) < 3:
             instance.error = True
-            self.person_profession.helper_text = 'You Must Enter Correct * Values'
+            self.person_profession.helper_text = 'Enter Correct Profession'
             self.person_profession._helper_text_color = 'red'
             return
         else:
@@ -8864,9 +8977,9 @@ class BorrowerScreen15(Screen):
             instance.error = False
 
     def relation_name1_validation(self, instance, value):
-        if len(value) < 3:
+        if value.isdigit() or len(value) < 3:
             instance.error = True
-            self.relation_name1.helper_text = 'You Must Enter Correct * Values'
+            self.relation_name1.helper_text = 'Enter Correct Relation Name'
             self.relation_name1._helper_text_color = 'red'
             return
         else:
@@ -8934,93 +9047,99 @@ class BorrowerScreen15(Screen):
             person_dob = self.person_dob.text
             person_ph_no = self.person_ph_no.text
             person_proffession = self.person_profession.text
-            if not all([relation_name, person_name, person_dob, person_ph_no, person_proffession]):
-                self.person_name.helper_text = 'You Must Enter Correct * Values'
-                self.person_name._helper_text_color = 'red'
-                self.person_dob.helper_text = 'You Must Enter Correct * Values'
-                self.person_dob._helper_text_color = 'red'
-                self.person_ph_no.helper_text = 'You Must Enter Correct * Values'
-                self.person_ph_no._helper_text_color = 'red'
-                self.person_profession.helper_text = 'You Must Enter Correct * Values'
-                self.person_profession._helper_text_color = 'red'
-                return
+            if not all([ person_name, person_dob, person_ph_no, person_proffession]):
+                self.error_msg.text = 'Please Fill All Mandatory * Values'
+                self.person_name.error = True
+                self.person_dob.error = True
+                self.person_ph_no.error = True
+                self.person_profession.error = True
+            else:
+                self.error_msg.text = ''
             if len(self.person_name.text) < 3:
-                self.person_name.helper_text = 'You Must Enter Correct * Values'
+                self.person_name.helper_text = ''
                 self.person_name._helper_text_color = 'red'
-                return
+                self.person_name.error = True
 
             try:
                 dob = datetime.strptime(person_dob, "%Y-%m-%d")
                 today = datetime.now()
                 age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
                 if age < 18:
-                    self.person_ph_no.helper_text = 'You Must Enter Correct * Values'
-                    self.person_ph_no._helper_text_color = 'red'
+                    self.person_dob.helper_text = ''
+                    self.person_dob._helper_text_color = 'red'
+                    self.person_dob.error = True
                     return
                 else:
-                    self.person_ph_no.helper_text = ''
+                    self.person_dob.helper_text = ''
 
             except ValueError:
-                self.person_ph_no.helper_text = 'You Must Enter Correct * Values'
-                self.person_ph_no._helper_text_color = 'red'
+                self.person_dob.helper_text = ''
+                self.person_dob._helper_text_color = 'red'
+                self.person_dob.error = True
                 return
 
             if len(self.person_ph_no.text) != 10 and not self.person_dob.text.isdigit():
-                self.person_ph_no.helper_text = 'You Must Enter Correct * Values'
+                self.person_ph_no.helper_text = ''
                 self.person_ph_no._helper_text_color = 'red'
+                self.person_ph_no.error = True
                 return
 
             if len(self.person_profession.text) < 3:
-                self.person_profession.helper_text = 'You Must Enter Correct * Values'
+                self.person_profession.helper_text = ''
                 self.person_profession._helper_text_color = 'red'
+                self.person_profession.error = True
                 return
+
         elif relation_name == 'Others':
             person_name = self.person_name.text
             person_dob = self.person_dob.text
             person_ph_no = self.person_ph_no.text
             person_proffession = self.person_profession.text
-            if not all([relation_name, person_name, person_dob, person_ph_no, person_proffession]):
-                self.person_name.helper_text = 'You Must Enter Correct * Values'
-                self.person_name._helper_text_color = 'red'
-                self.person_dob.helper_text = 'You Must Enter Correct * Values'
-                self.person_dob._helper_text_color = 'red'
-                self.person_ph_no.helper_text = 'You Must Enter Correct * Values'
-                self.person_ph_no._helper_text_color = 'red'
-                self.person_profession.helper_text = 'You Must Enter Correct * Values'
-                self.person_profession._helper_text_color = 'red'
-                return
-            if len(self.relation_name1.text) < 3:
-                self.relation_name1.helper_text = 'You Must Enter Correct * Values'
-                self.relation_name1._helper_text_color = 'red'
-                return
+            relation_name1 = self.relation_name1.text
+            if not all([relation_name1, person_name, person_dob, person_ph_no, person_proffession]):
+                self.error_msg.text = 'Please Fill All Mandatory * Values'
+                self.person_name.error = True
+                self.person_dob.error = True
+                self.person_ph_no.error = True
+                self.person_profession.error = True
+                self.relation_name1.error = True
+            else:
+                self.error_msg.text = ''
             if len(self.person_name.text) < 3:
-                self.person_name.helper_text = 'You Must Enter Correct * Values'
+                self.person_name.helper_text = ''
                 self.person_name._helper_text_color = 'red'
-                return
+                self.person_name.error = True
 
-            if len(self.person_dob.text) != 10 and not self.person_dob.text.isdigit():
-                self.person_dob.helper_text = 'You Must Enter Correct * Values'
-                self.person_dob._helper_text_color = 'red'
-                return
             try:
-                dob = datetime.strptime(self.person_dob.text, "%Y-%m-%d").date()  # Convert to date object
-                today = datetime.now().date()
-                if dob > today:
-                    self.show_validation_error("Spouse's marriage date must be less than today's date.")
+                dob = datetime.strptime(person_dob, "%Y-%m-%d")
+                today = datetime.now()
+                age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+                if age < 18:
+                    self.person_dob.helper_text = ''
+                    self.person_dob._helper_text_color = 'red'
+                    self.person_dob.error = True
                     return
+                else:
+                    self.person_dob.helper_text = ''
+
             except ValueError:
-                self.show_validation_error("Please enter a valid Marriage Date in format YYYY-MM-DD")
+                self.person_dob.helper_text = ''
+                self.person_dob._helper_text_color = 'red'
+                self.person_dob.error = True
                 return
 
             if len(self.person_ph_no.text) != 10 and not self.person_dob.text.isdigit():
-                self.person_ph_no.helper_text = 'You Must Enter Correct * Values'
+                self.person_ph_no.helper_text = ''
                 self.person_ph_no._helper_text_color = 'red'
+                self.person_ph_no.error = True
                 return
 
             if len(self.person_profession.text) < 3:
-                self.person_profession.helper_text = 'You Must Enter Correct * Values'
+                self.person_profession.helper_text = ''
                 self.person_profession._helper_text_color = 'red'
+                self.person_profession.error = True
                 return
+
 
         elif relation_name == 'Spouse':
             spouse_name = self.spouse_name.text
@@ -9029,50 +9148,50 @@ class BorrowerScreen15(Screen):
             spouse_company_name = self.spouse_company_name.text
             spouse_company_address = self.spouse_profession.text
             spouse_annual_salary = self.spouse_annual_salary.text
-            if not all([relation_name, spouse_name, spouse_date_textfield, spouse_mobile, spouse_company_name, spouse_company_address, spouse_annual_salary]):
-                self.spouse_name.helper_text = 'You Must Enter Correct * Values'
-                self.spouse_name._helper_text_color = 'red'
-                self.spouse_mobile.helper_text = 'You Must Enter Correct * Values'
-                self.spouse_mobile._helper_text_color = 'red'
-                self.spouse_company_name.helper_text = 'You Must Enter Correct * Values'
-                self.spouse_company_name._helper_text_color = 'red'
-                self.spouse_annual_salary.helper_text = 'You Must Enter Correct * Values'
-                self.spouse_annual_salary._helper_text_color = 'red'
-                self.spouse_date_textfield.helper_text = 'You Must Enter Correct * Values'
-                self.spouse_date_textfield._helper_text_color = 'red'
-                self.spouse_profession.helper_text = 'You Must Enter Correct * Values'
-                self.spouse_annual_salary._helper_text_color = 'red'
+            if not all([spouse_name, spouse_date_textfield, spouse_mobile, spouse_company_name, spouse_company_address, spouse_annual_salary]):
+                self.error_msg.text = 'Please Fill All Mandatory * Values'
+                self.spouse_name.error = True
+                self.spouse_date_textfield.error = True
+                self.spouse_mobile.error = True
+                self.spouse_company_name.error = True
+                self.spouse_annual_salary.error = True
+            else:
+                self.error_msg.text = ''
+
             if len(self.spouse_name.text) < 3:
-                self.spouse_name.helper_text = 'You Must Enter Correct * Values'
+                self.spouse_name.helper_text = ''
                 self.spouse_name._helper_text_color = 'red'
+                self.spouse_name.error = True
                 return
             if len(self.spouse_mobile.text) != 10 and not self.spouse_mobile.text.isdigit():
-                self.spouse_mobile.helper_text = 'You Must Enter Correct * Values'
+                self.spouse_mobile.helper_text = ''
                 self.spouse_mobile._helper_text_color = 'red'
+                self.spouse_mobile.error = True
                 return
             try:
                 dob = datetime.strptime(self.spouse_date_textfield.text, "%Y-%m-%d").date()  # Convert to date object
                 today = datetime.now().date()
                 if dob > today:
-                    self.spouse_date_textfield.error = True
-                    self.spouse_date_textfield.helper_text = 'You Must Enter Correct * Values'
+                    self.spouse_date_textfield.helper_text = ''
                     self.spouse_date_textfield._helper_text_color = 'red'
+                    self.spouse_date_textfield.error = True
                     return
                 else:
-                    self.spouse_date_textfield.error = False
                     self.spouse_date_textfield.helper_text = ''
             except ValueError:
-                self.instance.error = True
-                self.spouse_date_textfield.helper_text = 'You Must Enter Correct * Values'
+                self.spouse_date_textfield.helper_text = ''
                 self.spouse_date_textfield._helper_text_color = 'red'
+                self.spouse_date_textfield.error = True
                 return
             if len(self.spouse_company_name.text) < 3:
-                self.spouse_company_name.helper_text = 'You Must Enter Correct * Values'
+                self.spouse_company_name.helper_text = ''
                 self.spouse_company_name._helper_text_color = 'red'
+                self.spouse_company_name.error = True
                 return
             if len(self.spouse_annual_salary.text) != 10 and not self.spouse_annual_salary.text.isdigit():
-                self.spouse_annual_salary.helper_text = 'You Must Enter Correct * Values'
+                self.spouse_annual_salary.helper_text = ''
                 self.spouse_annual_salary._helper_text_color = 'red'
+                self.spouse_annual_salary.error = True
                 return
 
         cursor.execute('select * from fin_users')
@@ -9102,26 +9221,13 @@ class BorrowerScreen15(Screen):
         else:
             print('email not found')
 
-        if self.profession_type == "Married" and self.ids.relation_name.text == "Spouse":
+        if self.ids.marital_status_id.text == "Married" and self.ids.relation_name.text == "Spouse":
             spouse_name = self.spouse_name.text
             spouse_date_textfield = self.spouse_date_textfield.text
             spouse_mobile = self.spouse_mobile.text
             spouse_company_name = self.spouse_company_name.text
             spouse_company_address = self.spouse_profession.text
             spouse_annual_salary = self.spouse_annual_salary.text
-            spinner_data2 = app_tables.fin_spouse_profession.search()
-            data_list2 = []
-            for i in spinner_data2:
-                data_list2.append(i['spouse_profession'])
-            self.unique_list2 = []
-            for i in data_list2:
-                if i not in self.unique_list2:
-                    self.unique_list2.append(i)
-            print(self.unique_list2)
-            if len(self.unique_list2) >= 1:
-                self.spouse_profession.values = ['Select Spouse Profession Type'] + self.unique_list2
-            else:
-                self.spouse_profession.values = ['Select Spouse Profession Type']
 
             cursor.execute('select * from fin_users')
             rows = cursor.fetchall()

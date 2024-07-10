@@ -33,7 +33,7 @@ from login import OTPScreen, PreLoginScreen
 from new_loan_request import NewloanScreen
 from signup import SignupScreen, EmailOTPScreen
 
-anvil.server.connect("server_UZIZ2X7JH2VWL7MZUF3E7H2W-Z4NNV2LPHIX6BAPW")
+anvil.server.connect("server_MMDT5BC6JQJX7LA72XRFWMCS-VDS6LDYSOGBPZ3DB")
 
 
 class MyApp(MDApp):
@@ -592,15 +592,62 @@ class MyApp(MDApp):
         approval_date = app_tables.fin_approval_days.search()
         today_date = datetime.now(tz=utc).date()
         foreclose = app_tables.fin_foreclosure.search()
+        data = app_tables.fin_loan_details.search()
+        emi = app_tables.fin_emi_table.search()
+        log_email = anvil.server.call('another_method')
+        profile = app_tables.fin_user_profile.search()
+        email_user = []
+        customer_id = []
+
+        for i in profile:
+            email_user.append(i['email_user'])
+            customer_id.append(i['customer_id'])
+        if log_email in email_user:
+            email_index = email_user.index(log_email)
+
+        loan_id = []
+        loan_tenure = []
+        loan_customer_id = []
+
+        for i in data:
+            loan_id.append(i['loan_id'])
+            loan_tenure.append(i['tenure'])
+            loan_customer_id.append(i['borrower_customer_id'])
+
+        if customer_id in loan_customer_id:
+            cos = loan_customer_id.index(customer_id)
 
         requested_on = []
         extend_status = []
+        loan_extend_id = []
+        loan_rx_mon_tenure = []
 
         s = 0
         for i in extend:
             s += 1
             requested_on.append(i['extension_request_date'])
             extend_status.append(i['status'])
+            loan_extend_id.append(i['loan_id'])
+            loan_rx_mon_tenure.append(i['total_extension_months'])
+
+        ext_lan = 0
+        if loan_id in loan_extend_id:
+            ext_lan = loan_extend_id.index(loan_id)
+
+        emi_loan_id1 = []
+        emi_remaining_tenure1 = []
+        for i in emi:
+            emi_loan_id1.append(i['loan_id'])
+            emi_remaining_tenure1.append(i['remaining_tenure'])
+
+        last_index = 0
+        if loan_id not in emi_loan_id1:
+            emi_number = 1
+        else:
+            last_index = len(emi_loan_id1) - 1 - emi_loan_id1[::-1].index(loan_id)
+
+        #extend_mon = emi_remaining_tenure1[last_index] + loan_rx_mon_tenure[ext_lan]
+        #tenure_month = loan_tenure[index1] + loan_rx_mon_tenure[ext_lan]
 
         for_request_time = []
         foreclose_status = []
@@ -629,6 +676,14 @@ class MyApp(MDApp):
             a += 1
             if extend_status[i] == "under process" and requested_on != None :
                 if ((today_date - requested_on[i].date()).days) >= app_date[index]:
+                    if loan_extend_id[i] in emi_loan_id1:
+                        last_index = len(emi_loan_id1) - 1 - emi_loan_id1[::-1].index(loan_extend_id[i])
+                        emi[last_index]['remaining_tenure'] += loan_rx_mon_tenure[ext_lan]
+
+                    if loan_extend_id[i] in loan_id:
+                        tenure_index = loan_id.index(loan_extend_id[i])
+                        data[tenure_index]['tenure'] += loan_rx_mon_tenure[ext_lan]
+
                     extend[i]["status"] = "approved"
 
         y = -1

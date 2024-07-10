@@ -1455,21 +1455,24 @@ class ViewProfileE(Screen):
         email_user = self.email_user()
         data = app_tables.fin_loan_details.search()
         extend_ten = app_tables.fin_extends_loan.search()
+        emi = app_tables.fin_emi_table.search()
         lender_cos_id = []
         lender_email = []
         lender_name = []
         product_name = []
         loan_tenure = []
+        loan_id_loan = []
 
         for i in data:
+            loan_id_loan.append(i['loan_id'])
             lender_cos_id.append(i['lender_customer_id'])
             lender_email.append(i['lender_email_id'])
             lender_name.append(i['lender_full_name'])
             product_name.append(i['product_name'])
             loan_tenure.append(i['tenure'])
         index1 = 0
-        if loan_id in data:
-            index1 = loan_id.index(loan_id)
+        if loan_id in loan_id_loan:
+            index1 = loan_id_loan.index(loan_id)
         loan_idlist = [i['loan_id'] for i in data]
         profile_customer_id = []
         profile_email = []
@@ -1478,6 +1481,18 @@ class ViewProfileE(Screen):
             profile_customer_id.append(i['customer_id'])
             profile_email.append(i['email_user'])
             profile_name.append(i['full_name'])
+
+        emi_loan_id1 = []
+        emi_remaining_tenure1 = []
+        for i in emi:
+            emi_loan_id1.append(i['loan_id'])
+            emi_remaining_tenure1.append(i['remaining_tenure'])
+
+        last_index = 0
+        if loan_id not in emi_loan_id1:
+            emi_number = 1
+        else:
+            last_index = len(emi_loan_id1) - 1 - emi_loan_id1[::-1].index(loan_id)
 
         loan_extend_id = []
         loan_rx_mon_tenure = []
@@ -1489,6 +1504,8 @@ class ViewProfileE(Screen):
             ext_lan = loan_extend_id.index(loan_id)
             print(loan_rx_mon_tenure[ext_lan], loan_tenure[index1], self.loan_id)
 
+        extend_mon = emi_remaining_tenure1[last_index] + loan_rx_mon_tenure[ext_lan]
+        tenure_month = loan_tenure[index1] + loan_rx_mon_tenure[ext_lan]
         email_index = 0
         if email_user in profile_email:
             email_index = profile_email.index(email_user)
@@ -1512,7 +1529,8 @@ class ViewProfileE(Screen):
 
             for loan_id in loan_records:
                 data[index1]['loan_updated_status'] = 'extension'
-                data[index1]['tenure'] += loan_rx_mon_tenure[ext_lan]
+                data[index1]['tenure'] = tenure_month
+                emi[last_index]['remaining_tenure'] = extend_mon
                 print(data[index1]['loan_updated_status'])
                 loan_id.update()
 

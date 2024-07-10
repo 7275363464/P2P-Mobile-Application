@@ -30,9 +30,10 @@ from dashboard import DashScreen
 
 from lender_dashboard import LenderDashboard
 from login import OTPScreen, PreLoginScreen
+from new_loan_request import NewloanScreen
 from signup import SignupScreen, EmailOTPScreen
 
-anvil.server.connect("server_MMDT5BC6JQJX7LA72XRFWMCS-VDS6LDYSOGBPZ3DB")
+anvil.server.connect("server_UZIZ2X7JH2VWL7MZUF3E7H2W-Z4NNV2LPHIX6BAPW")
 
 
 class MyApp(MDApp):
@@ -86,7 +87,7 @@ class MyApp(MDApp):
         login_screen.ids.disable_otp.disabled = False
         login_screen.ids.verify_otp.opacity = 1
         login_screen.ids.verify_otp.disabled = False
-        #login_screen.ids.login_with_otp.opacity = 0
+
         login_screen.ids.login_with_otp.disabled = True
         if user_input:
             self.send_otp(signup=False)
@@ -250,7 +251,7 @@ class MyApp(MDApp):
     def update_email_verification_status(self, email):
         try:
             # Connect to Anvil server
-            anvil.server.connect("server_73YYSLJ5XYD2RR7P45E53KL4-MQV73PHHFFCHO4HD")
+            anvil.server.connect("server_UZIZ2X7JH2VWL7MZUF3E7H2W-Z4NNV2LPHIX6BAPW")
 
             # Check if the email already exists in the table
             user = app_tables.users.get(email=email)
@@ -544,11 +545,11 @@ class MyApp(MDApp):
         if emi_type:
             emi_type_list = emi_type[0]['emi_payment'].split(',')  # Split the emi_type string by commas
             # Update the Spinner with filtered product names
-            spinner = self.root.get_screen('NewloanScreen1').ids.group_id4
+            spinner = self.root.get_screen('NewloanScreen').ids.group_id4
             spinner.values = emi_type_list
         else:
             # Clear the Spinner if no emi_type is found
-            self.root.get_screen('NewloanScreen1').ids.group_id4.values = []
+            self.root.get_screen('NewloanScreen').ids.group_id4.values = []
 
     def fetch_product_description(self):
         # Get the selected product name
@@ -564,10 +565,16 @@ class MyApp(MDApp):
                 # Check if product_description is not None before updating the label
                 if product_description is not None:
                     # Update the product description label with the fetched description
-                    self.root.get_screen('NewloanScreen').ids.product_description.text = product_description
+                    self.root.get_screen('NewloanScreen').ids.product_description.text = f" Discription: {product_description}"
+                    self.root.get_screen('NewloanScreen').ids.loan_box.opacity = 1
+                    self.root.get_screen('NewloanScreen').ids.loan_box.disabled = False
+                    #self.root.get_screen('NewloanScreen').ids.loan_box.height = dp(350)
                 else:
                     # Set a default message when product_description is None
                     self.root.get_screen('NewloanScreen').ids.product_description.text = "No description available"
+            else:
+                # Clear the product description label if no product is found
+                self.root.get_screen('NewloanScreen').ids.product_description.text = ""
         else:
             # Clear the product description label if no product is found
             self.root.get_screen('NewloanScreen').ids.product_description.text = ""
@@ -585,34 +592,15 @@ class MyApp(MDApp):
         approval_date = app_tables.fin_approval_days.search()
         today_date = datetime.now(tz=utc).date()
         foreclose = app_tables.fin_foreclosure.search()
-        data = app_tables.fin_loan_details.search()
-        loan_id = []
-        loan_tenure = []
-
-        for i in data:
-            loan_id.append(i['loan_id'])
-            loan_tenure.append(i['tenure'])
-        index1 = 0
-        if loan_id in data:
-            index1 = loan_id.index(loan_id)
 
         requested_on = []
         extend_status = []
-        loan_extend_id = []
-        loan_rx_mon_tenure = []
 
         s = 0
         for i in extend:
             s += 1
             requested_on.append(i['extension_request_date'])
             extend_status.append(i['status'])
-            loan_extend_id.append(i['loan_id'])
-            loan_rx_mon_tenure.append(i['total_extension_months'])
-
-        ext_lan = 0
-        if loan_id in loan_extend_id:
-            ext_lan = loan_extend_id.index(loan_id)
-            print(loan_rx_mon_tenure[ext_lan], loan_tenure[index1])
 
         for_request_time = []
         foreclose_status = []
@@ -641,7 +629,6 @@ class MyApp(MDApp):
             a += 1
             if extend_status[i] == "under process" and requested_on != None :
                 if ((today_date - requested_on[i].date()).days) >= app_date[index]:
-                    data[index1]['tenure'] += loan_rx_mon_tenure[ext_lan]
                     extend[i]["status"] = "approved"
 
         y = -1

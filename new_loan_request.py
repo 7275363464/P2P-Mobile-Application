@@ -39,6 +39,7 @@ user_helpers2 = """
 
 <WindowManager>:
     NewloanScreen:
+    
     NewloanScreen2:
     NewloanScreen3:
     MenuScreen:
@@ -46,6 +47,9 @@ user_helpers2 = """
     PaymentDetailsScreen:
         name: 'payment_details'
 
+<CustomSpinnerOption@SpinnerOption>:
+    background_color:0, 0, 1, 1  
+    color: 1, 1, 1, 1
 
 <NewloanScreen>:
     name: 'NewloanScreen' 
@@ -67,69 +71,63 @@ user_helpers2 = """
             BoxLayout:
                 orientation: "vertical"
                 padding:dp(10)
-                spacing:dp(20)
+                spacing:dp(15)
                 size_hint_y: None
                 height: self.minimum_height
-                BoxLayout:
-                    orientation: "vertical"
-                    padding:dp(10)
-                    spacing:dp(0)
-                    size_hint_y:None
-                    height:dp(80)
-    
-                    Image:
-                        source:"logo1.png"
-                        size_hint:None,None
-                        size:"100dp","100dp"
-                        pos_hint: {'center_x': 0.5, 'center_y': 1.5}
-                        
-                    MDLabel:
-                        text: "  Experience Hassle-Free Borrowing  " 
-                        font_size:dp(15)
-                        halign:"center"
-                        bold:True
-                        size_hint_y:None
-                        height:dp(-10)
-                        underline:True
-                        italic:True
-                        pos_hint: {'center_x': 0.5, 'center_y': 1}
 
-                MDGridLayout:
-                    cols: 2
-                    padding: dp(25)
-                    spacing: dp(10)
-                    MDLabel:
-                        text: "Credit Limit" 
-                        color:0.031, 0.463, 0.91, 1
-                        bold:True
-                        size_hint_y:None
-                        height:dp(50)
-                        halign: "left"
-                        font_size:dp(23)
-                    MDLabel:
-                        id: credit_limit        
-                        text: " " 
-                        size_hint_y:None
-                        height:dp(50)
-                        halign: "left"
-                        font_size:dp(20)
-                
-                MDLabel:
-                    text: " " 
-                    size_hint_y:None
-                    height:dp(5)
-                
-                MDGridLayout:
-                    cols: 2
+                MDCard:
+                    id: card
+                    orientation: 'vertical'
+                    size_hint: 1, None
+                    height: dp(70)
+                    padding: dp(15)
+                    spacing: dp(3)
+                    elevation: 0.4
 
-                    padding: dp(25)
-                    spacing: dp(20)
+
+                    MDGridLayout:
+                        cols: 2
+                        padding: dp(25)
+                        spacing: dp(10)
+                        MDLabel:
+                            text: "Credit Limit" 
+                            color:0.031, 0.463, 0.91, 1
+                            bold:True
+                            size_hint_y:None
+                            height:dp(0)
+                            halign: "left"
+                            font_size:dp(23)
+                        MDLabel:
+                            id: credit_limit        
+                            text: " " 
+                            size_hint_y:None
+                            height:dp(0)
+                            halign: "left"
+                            font_size:dp(20)
+
+
+
+                MDBoxLayout:
+                    id:loan_box1
+                    orientation: 'vertical'
+                    spacing: dp(-2)
+                    padding: dp(30)
+                    size_hint_y: None  # Ensure the layout fits within the ScrollView
+                    height: self.minimum_height  # Dynamically adjust the height
+                    canvas:
+                        Color:
+                            rgba: 174/255, 214/255, 241/255, 1 # Dull background color
+                        Line:
+                            width: 0.7  # Border width
+                            rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+
+
                     MDLabel:
                         font_size: dp(16)
-                        text: "Product Group"
+                        text: "Product Group:"
                         bold: True
                         size_hint_y:None
-                        height:dp(50)
+                        height:dp(40)
                         halign: "left"
 
                     Spinner:
@@ -137,41 +135,35 @@ user_helpers2 = """
                         text: "Select Group"
                         width: dp(200)
                         multiline: False
-                        size_hint: None, None
+                        size_hint: 1, None
                         pos_hint: {'center_x':0.5, 'center_y':0.5}
-                        size: "180dp", "45dp"
-                        height:dp(50)
-                        halign: "center"
-                        background_color: 1, 1, 1, 0
+                        halign: "left"
+                        font_size: "15dp"
+                        height: "47dp"
+                        width: dp(200)
+
+                        halign:"left"
+                        background_normal: ''
                         color: 0, 0, 0, 1
+                        option_cls: 'CustomSpinnerOption'  # Custom class for options
                         canvas.before:
                             Color:
-                                rgba: 0, 0, 0, 1
+                                rgba: 0, 0, 0, 1  
                             Line:
-                                width: 0.25
-                                rounded_rectangle: (self.x, self.y, self.width, self.height, 0)
-
+                                width: 0.7
+                                rectangle: (self.x, self.y, self.width, self.height)
                         on_press: app.fetch_product_groups()
                         text_size: self.width - dp(20), None
-                MDLabel:
-                    text:""
-                MDLabel:
-                    text: " " 
-                    size_hint_y:None
-                    height:dp(5)
 
 
-                MDGridLayout:
-                    cols: 2
 
-                    padding: dp(25)
-                    spacing: dp(20)
+
                     MDLabel:
                         font_size:dp(16)
-                        text: "Product Categories"
+                        text: "Product Categories:"
                         bold: True
                         size_hint_y:None
-                        height:dp(50)
+                        height:dp(40)
                         halign: "left"
 
                     Spinner:
@@ -179,95 +171,73 @@ user_helpers2 = """
                         text: "Select Categories"
                         width: dp(200)
                         multiline: False
-                        size_hint: None, None
-                        size: "180dp", "45dp"
+                        size_hint: 1, None
+
                         height:dp(50)
-                        halign: "center"
+                        halign:"left"
                         pos_hint: {'center_x':0.5, 'center_y':0.5}
 
-                        background_color: 1, 1, 1, 0
+                        background_normal: ''
                         color: 0, 0, 0, 1
+                        option_cls: 'CustomSpinnerOption'  # Custom class for options
                         canvas.before:
                             Color:
-                                rgba: 0, 0, 0, 1
+                                rgba: 0, 0, 0, 1  
                             Line:
-                                width: 0.25
-                                rounded_rectangle: (self.x, self.y, self.width, self.height, 0)
-
+                                width: 0.7
+                                rectangle: (self.x, self.y, self.width, self.height)
                         on_press: app.fetch_product_categories()
                         text_size: self.width - dp(20), None
-                        disabled: not group_id1.text or group_id1.text == 'Select Group'
-                MDLabel:
-                    text:""
-                MDLabel:
-                    text: " " 
-                    size_hint_y:None
-                    height:dp(5)
 
 
 
-                MDGridLayout:
-                    cols: 2
-
-                    padding: dp(25)
-                    spacing: dp(20)
                     MDLabel:
                         font_size:dp(16)
-                        text: "Product Name"
+                        text: "Product Name:"
                         bold: True
                         size_hint_y:None
-                        height:dp(50)
+                        height:dp(40)
                         halign: "left"
                     Spinner:
                         id: group_id3
                         text: "Select product name"
                         width: dp(500)
                         multiline: False
-                        size_hint: None, None
-
-                        halign: "center"
+                        size_hint: 1, None
+                        height:dp(50)
+                        halign:"left"
                         pos_hint: {'center_x':0.5, 'center_y':0.5}
                         size: "180dp", "45dp"
                         height:dp(50)
-                        background_color: 1, 1, 1, 0
+                        background_normal: ''
                         color: 0, 0, 0, 1
+                        option_cls: 'CustomSpinnerOption'  # Custom class for options
                         canvas.before:
                             Color:
-                                rgba: 0, 0, 0, 1
+                                rgba: 0, 0, 0, 1  
                             Line:
-                                width: 0.25
-                                rounded_rectangle: (self.x, self.y, self.width, self.height, 0)
-
+                                width: 0.7
+                                rectangle: (self.x, self.y, self.width, self.height)
                         on_press: app.fetch_product_name()
                         text_size: self.width - dp(20), None
-                        disabled: not group_id2.text or group_id2.text == 'Select Categories'
+
                         on_text: app.fetch_product_description()
-                MDLabel:
-                    text: " " 
-                    size_hint_y:None
-                    height:dp(5)  
-                
 
-                BoxLayout:
-                    id:loan_box
-                    opacity:0
-                    size_hint_y:None
-                    height:dp(375)
-                    orientation: "vertical"
-
-                    MDLabel:
-                        text: " " 
+                    MDBoxLayout:
+                        id:loan_box
+                        opacity:0
+                        orientation: 'vertical'
                         size_hint_y:None
-                        height:dp(14) 
-                    MDGridLayout:
-                        cols: 2
-                        padding: dp(25)
-                        spacing: dp(10)
+                        height:dp(400)
+
+
+
+
                         MDLabel:
-                            text: "Loan Amount"
+                            text: "Loan Amount:"
                             bold: True
                             size_hint_y:None
-                            height:dp(50)
+                            height:dp(30)
                             halign: "left"
 
                         MDTextField:
@@ -276,36 +246,28 @@ user_helpers2 = """
                             multiline: False
                             mode:"rectangle"
                             hint_text: " Enter amount"
-                            size_hint: None, None
+                            size_hint: 1, None
+
                             halign:"left"
-                            height:dp(40)
+                            height:dp(30)
                             input_type: 'number'  
                             radius: [dp(0), dp(0), dp(0), dp(0)]
                             on_touch_down: root.on_amount_touch_down()
-                            size: "180dp", "35dp"
-                            size_hint: None,None
-
                             on_text: root.validate_amount(text_input1,self.text)
                             background_color: 1, 1, 1, 0 
                             color: 0, 0, 0, 1
-                            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                             helper_text: ""
-                    MDLabel:
-                        text: " " 
-                        size_hint_y:None
-                        height:dp(38)  
-                    
-                    MDGridLayout:
-                        cols: 2
-                        padding: dp(25)
-                        spacing: dp(10)
+
+
+
 
                         MDLabel:
-                            text: "Tenure (Months)"
+                            text: "Tenure (Months):"
                             font_size:dp(16)
                             bold:True
                             size_hint_y:None
-                            height:dp(50)
+                            height:dp(40)
                             halign: "left"
 
                         MDTextField:
@@ -322,27 +284,18 @@ user_helpers2 = """
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                             helper_text: ""
                             helper_text_mode: "on_error"
-                            size_hint: None, None
-                            size: "180dp", "35dp"
+                            size_hint: 1, None
+                            height:dp(30)
                             background_color: 1, 1, 1, 0 
                             color: 0, 0, 0, 1
 
-                    MDLabel:
-                        id: max_tenure 
-                        color:1,1,1,1      
-                        text: "" 
-                        font_size:dp(1)
-                    MDLabel:
-                        size_hint_y:None
-                        height:dp(5)  
-                   
-                    MDGridLayout:
-                        cols: 2
-                        padding: dp(25)
-                        spacing: dp(20)
+
+
+
+
                         MDLabel:
                             font_size: dp(16)
-                            text: "EMI Type"
+                            text: "EMI Type:"
                             bold: True
                             size_hint_y:None
                             height:dp(50)
@@ -355,70 +308,63 @@ user_helpers2 = """
                             multiline: False
                             halign:"left"
                             pos_hint: {'center_x':0.5, 'center_y':0.5}
-                            size_hint: None, None
-                            size: "180dp", "45dp"
+                            size_hint: 1, None
+
                             height:dp(50)
-                            background_color: 1, 1, 1, 0
+                            background_normal: ''
                             color: 0, 0, 0, 1
+                            option_cls: 'CustomSpinnerOption'  # Custom class for options
                             canvas.before:
                                 Color:
-                                    rgba: 0, 0, 0, 1
+                                    rgba: 0, 0, 0, 1  
                                 Line:
-                                    width: 0.25
-                                    rounded_rectangle: (self.x, self.y, self.width, self.height, 0)
-
+                                    width: 0.7
+                                    rectangle: (self.x, self.y, self.width, self.height)
                             on_press: app.fetch_emi_type()
                             text_size: self.width - dp(20), None
                             disabled: not group_id4.text or group_id4.text == 'Select Categories'
 
-                    MDLabel:
-                        id: min_tenure 
-                        color:1,1,1,1      
-                        text: "" 
-                        font_size:dp(1)
-                    MDLabel:
-                        text: " " 
-                        size_hint_y:None
-                        height:dp(36)  
-                    MDLabel:
-                        id: product_description
-                        text: " "
-                        font_size: dp(11)
-                        size_hint_y: None
-                        halign: "center"
-                        padding: [dp(5), dp(5)]
-                        height: self.texture_size[1] + dp(20) if self.text else 0 # Adjust height to fit content
-                        canvas.before:
+                        MDLabel:
+                            id: min_tenure 
+                            color:1,1,1,1      
+                            text: "" 
+                            font_size:dp(1)
+                            size_hint_y:None
+                            height:dp(15)
 
-                            RoundedRectangle:
-                                size: self.size
-                                pos: self.pos
-                                radius: [15, 15, 15, 15]  # Adjust radius for rounded corners
+                        MDLabel:
+                            id: product_description
+                            text: " "
+                            font_size: dp(11)
+                            size_hint_y: None
+                            halign: "center"
+                            padding: [dp(5), dp(5)]
+                            height: self.texture_size[1] + dp(20) if self.text else 0 # Adjust height to fit content
+                            canvas.before:
 
-                            Line:
-                                width: 0.3
-                                rectangle: (self.x, self.y, self.width, self.height)
-                    MDLabel:
-                        text: " "
-                        size_hint_y:None
-                        height:dp(15) 
-                    
+                                RoundedRectangle:
+                                    size: self.size
+                                    pos: self.pos
+                                    radius: [15, 15, 15, 15]  # Adjust radius for rounded corners
 
-                    MDRaisedButton:
-                        text: "Next"
-                        md_bg_color: 0.043, 0.145, 0.278, 1
-                        on_release: root.go_to_newloan_screen1()
-                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        size_hint:0.4, None  
-                        font_name:"Roboto-Bold"
+                                Line:
+                                    width: 0.3
+                                    rectangle: (self.x, self.y, self.width, self.height)
 
-                
-                    
 
-                MDLabel:
-                    text: " "  
-                MDLabel:
-                    text: " "
+                        MDRectangleFlatButton:
+                            text: "Next"
+                            md_bg_color: 0.043, 0.145, 0.278, 1
+                            on_release: root.go_to_newloan_screen1()
+                            md_bg_color: 0.043, 0.145, 0.278, 1
+                            pos_hint: {'right': 1, 'y': 0.5}
+                            text_color: 1, 1, 1, 1
+                            size_hint: 1, None
+                            height: "50dp"
+                            font_name: "Roboto-Bold"
+
+
+
 <NewloanScreen2>:
     BoxLayout:
         orientation: 'vertical'
@@ -441,7 +387,7 @@ user_helpers2 = """
                 spacing:dp(10)
                 size_hint_y: None
                 height: self.minimum_height
-                
+
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -449,7 +395,7 @@ user_helpers2 = """
                     padding: dp(20)
                     size_hint_y: None
                     height: dp(730)
-        
+
                     canvas.before:
                         Color:
                             rgba: 230/255, 245/255, 255/255, 1 
@@ -458,7 +404,7 @@ user_helpers2 = """
                             size: self.size
                             # radius: [5, 5, 5, 5]
                             source: "background.jpg"
-        
+
                     MDGridLayout:
                         cols: 2
                         MDLabel:
@@ -467,7 +413,7 @@ user_helpers2 = """
                             height:dp(50)
                             bold: True
                             halign: "left"
-        
+
                         MDLabel:
                             id: product_name
                             text: ""
@@ -496,11 +442,11 @@ user_helpers2 = """
                             halign: "left"
                             theme_text_color: 'Custom'  
                             text_color: 140/255, 140/255, 140/255, 1
-        
-        
+
+
                     MDGridLayout:
                         cols: 2
-        
+
                         MDLabel:
                             id: total_interest_label
                             text: ""  # Default text, will be updated dynamically
@@ -508,7 +454,7 @@ user_helpers2 = """
                             height: dp(50)
                             bold: True
                             halign: "left"
-        
+
                         MDLabel:
                             id: total_interest_amount
                             text: ""
@@ -519,10 +465,10 @@ user_helpers2 = """
                             halign: "left"
                             theme_text_color: 'Custom'
                             text_color: 140/255, 140/255, 140/255, 1
-        
+
                     MDGridLayout:
                         cols: 2
-        
+
                         MDLabel:
                             id: total_processing_label
                             text: ""  # Default text, will be updated dynamically
@@ -530,7 +476,7 @@ user_helpers2 = """
                             height: dp(50)
                             bold: True
                             halign: "left"
-        
+
                         MDLabel:
                             id: total_processing_fee_amount
                             size_hint_y: None
@@ -540,8 +486,8 @@ user_helpers2 = """
                             font_size: dp(20)
                             theme_text_color: 'Custom'
                             text_color: 140/255, 140/255, 140/255, 1
-        
-        
+
+
                     MDGridLayout:
                         cols: 2
                         MDLabel:
@@ -550,7 +496,7 @@ user_helpers2 = """
                             height:dp(50)
                             bold: True
                             halign: "left"
-        
+
                         MDLabel:
                             id: emi_type
                             text: ""
@@ -569,7 +515,7 @@ user_helpers2 = """
                             height:dp(50)
                             bold: True
                             halign: "left"
-        
+
                         MDLabel:
                             id: emi_tenure
                             text: ""
@@ -580,7 +526,7 @@ user_helpers2 = """
                             halign: "left"
                             theme_text_color: 'Custom'  
                             text_color: 140/255, 140/255, 140/255, 1              
-        
+
                     MDGridLayout:
                         cols: 2
                         MDLabel:
@@ -589,7 +535,7 @@ user_helpers2 = """
                             height:dp(50)
                             bold: True
                             halign: "left"
-        
+
                         MDLabel:
                             id: monthly_emi
                             text: "interest"
@@ -608,7 +554,7 @@ user_helpers2 = """
                             height:dp(50)
                             bold: True
                             halign: "left"
-        
+
                         MDLabel:
                             id: foreclosure
                             text: ""
@@ -627,7 +573,7 @@ user_helpers2 = """
                             height:dp(50)
                             bold: True
                             halign: "left"
-        
+
                         MDLabel:
                             id: total
                             text: "interest"
@@ -638,23 +584,24 @@ user_helpers2 = """
                             halign: "left"
                             theme_text_color: 'Custom'  
                             text_color: 140/255, 140/255, 140/255, 1
+
                     MDGridLayout:
                         cols: 1
                         size_hint_y: None
                         height: self.minimum_height
-        
+
                         MDBoxLayout:
                             size_hint_y: None
                             height: dp(50)
-        
+
                             spacing: 10
-        
+
                             MDLabel:
                                 text: "Payment Details"
                                 font_size: dp(16)
                                 bold: True
                                 halign: "left"
-        
+
                             Button:
                                 text: 'View Payment Details here'
                                 background_color: 0, 0, 0, 0
@@ -664,7 +611,32 @@ user_helpers2 = """
                                 size: self.texture_size
                                 halign: "left"
                                 pos_hint: {'center_y': 0.5}
-                                on_release: root.go_to_menu_screen()           
+                                on_release: root.go_to_menu_screen()
+
+
+                    MDBoxLayout:
+                        orientation:"horizontal"
+                        size_hint_y: None
+                        height: dp(50)
+                        width:dp(300)
+                        size_hint_x:None
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        spacing:dp(-10)
+
+                        MDIconButton:
+                            icon: "information-outline"
+                            icon_size: dp(14)
+                            pos_hint: {"center_y": .5}
+
+                        MDLabel:
+                            text: " The processing fees are added when you pay the total amount via EMI" 
+                            color: 126/255, 126/255, 126/255, 1
+                            font_size: '9sp'
+                            size_hint: 2, None
+                            size: self.texture_size
+                            halign: "left"
+                            pos_hint: {'center_y': 0.5}
+
                 MDLabel:
                     text: " " 
                     size_hint_y:None
@@ -863,7 +835,7 @@ user_helpers2 = """
                     size_hint_x: None
                     width: dp(150)
 
-                
+
 
                 MDLabel:
                     text: "Ending Balance"
@@ -910,8 +882,6 @@ class NewloanScreen(Screen):
             self.ids.credit_limit.text = str(self.credit_limit)
         except Exception as e:
             print(f"Error: {e}")
-
-
 
     def on_pre_leave(self):
         Window.unbind(on_keyboard=self.on_back_button)
@@ -1427,13 +1397,14 @@ class MenuScreen(Screen):
             self.calculate_six_months_payment()
         else:
             print("Invalid EMI type")
+
     def calculate_schedule(self):
         container = self.ids.container
         container.clear_widgets()
 
         header_texts = [
             "Emi Number", "Beginning Balance", "Principal", "Interest",
-            "Processing Fee", "Total Emi Payment",  "Ending Balance"
+            "Processing Fee", "Total Emi Payment", "Ending Balance"
         ]
 
         # Add header labels
@@ -1620,7 +1591,6 @@ class MenuScreen(Screen):
 
             beginning_balance = ending_balance
             loan_amount_beginning_balance = loan_amount_ending_balance
-
 
     def calculate_six_months_payment(self):
         container = self.ids.container

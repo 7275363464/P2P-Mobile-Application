@@ -630,7 +630,7 @@ KV = '''
             title: "P2P LENDING"
             elevation: 2
             pos_hint: {'top': 1}
-            left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen4')]]
+            left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen3')]]
             right_action_items: [['home', lambda x: root.go_to_dashboard()]]
             title_align: 'center'  # Center-align the title
             md_bg_color: 0.043, 0.145, 0.278, 1
@@ -799,7 +799,7 @@ KV = '''
                         padding: [0, "30dp", 0, 0]
                         MDRectangleFlatButton:
                             text: "Next"
-                            on_release: root.go_to_lender_screen4()
+                            on_release: root.go_to_lender_screen_10()
                             md_bg_color: 0.043, 0.145, 0.278, 1
                             pos_hint: {'right': 1, 'y': 0.5}
                             text_color: 1, 1, 1, 1
@@ -959,7 +959,7 @@ KV = '''
                         padding: [0, "30dp", 0, 0]
                         MDRectangleFlatButton:
                             text: "Next"
-                            on_release: root.go_to_lender_screen4()
+                            on_release: root.go_to_lender_screen_11()
                             md_bg_color: 0.043, 0.145, 0.278, 1
                             pos_hint: {'right': 1, 'y': 0.5}
                             text_color: 1, 1, 1, 1
@@ -1171,7 +1171,7 @@ KV = '''
                         padding: [0, "30dp", 0, 0]
                         MDRectangleFlatButton:
                             text: "Next"
-                            on_release: root.go_to_lender_screen4()
+                            on_release: root.go_to_lender_screen_btech()
                             md_bg_color: 0.043, 0.145, 0.278, 1
                             pos_hint: {'right': 1, 'y': 0.5}
                             text_color: 1, 1, 1, 1
@@ -1442,7 +1442,7 @@ KV = '''
                         padding: [0, "30dp", 0, 0]
                         MDRectangleFlatButton:
                             text: "Next"
-                            on_release: root.go_to_lender_screen4()
+                            on_release: root.go_to_lender_screen_mas()
                             md_bg_color: 0.043, 0.145, 0.278, 1
                             pos_hint: {'right': 1, 'y': 0.5}
                             text_color: 1, 1, 1, 1
@@ -1736,7 +1736,7 @@ KV = '''
                         padding: [0, "30dp", 0, 0]
                         MDRectangleFlatButton:
                             text: "Next"
-                            on_release: root.go_to_lender_screen4()
+                            on_release: root.go_to_lender_screen_phd()
                             md_bg_color: 0.043, 0.145, 0.278, 1
                             pos_hint: {'right': 1, 'y': 0.5}
                             text_color: 1, 1, 1, 1
@@ -3640,7 +3640,7 @@ KV = '''
         ScrollView:
             MDBoxLayout:
                 orientation: 'vertical'
-                spacing: dp(5)
+                spacing: dp(9)
                 padding: dp(10)
                 size_hint_y: None
                 height: self.minimum_height 
@@ -3666,6 +3666,7 @@ KV = '''
                         font_name: "Roboto-Bold"
                     MDTextField:
                         id: account_holder_name
+                        on_text: root.validate_zip_code_text(self)
                         hint_text: 'Enter account holder name '
                         multiline: False
                         helper_text_mode: 'on_focus'
@@ -3708,6 +3709,7 @@ KV = '''
                             
                     MDTextField:
                         id: account_number
+                        on_text: root.validate_zip_code(self)
                         hint_text: 'Enter account number '
                         multiline: False
                         helper_text_mode: 'on_focus'
@@ -3722,6 +3724,7 @@ KV = '''
         
                     MDTextField:
                         id: bank_name
+                        on_text: root.validate_zip_code_text(self)
                         hint_text: 'Enter bank name '
                         multiline: False
                         helper_text_mode: 'on_focus'
@@ -3764,6 +3767,7 @@ KV = '''
                     MDTextField:
                         id: ifsc_code
                         hint_text: 'Enter Bank ID '
+                        on_text: root.validate_zip_code_numchar(self)
                         multiline: False
                         helper_text_mode: 'on_focus'
                         size_hint_y:None
@@ -3776,6 +3780,7 @@ KV = '''
         
                     MDTextField:
                         id: branch_name
+                        on_text: root.validate_zip_code_text(self)
                         hint_text: 'Enter branch name'
                         hint_text_mode: 'on_focus'
                         multiline: False
@@ -3863,6 +3868,11 @@ class LenderScreen(Screen):
         else:
             print('email not found')
 
+    def validate_image_loaded(self, image_label):
+        if not image_label.source or 'error.png' in image_label.source:  # Adjust 'error.png' as per your placeholder image
+            return False
+        return True
+
 
     def on_aadhar_number_text(self, text):
         upload_icon = self.ids.upload_icon2
@@ -3922,6 +3932,22 @@ class LenderScreen(Screen):
         modal_view.dismiss()
 
         validation_errors = []
+
+        if not self.validate_image_loaded(self.ids.image_label1):
+            validation_errors.append((self.ids.image_label1, "Image not loaded."))
+            self.show_validation_error("Please Upload Profile Pic.")
+        elif not self.validate_image_loaded(self.ids.image_label2):
+            validation_errors.append((self.ids.image_label1, "Image not loaded."))
+            self.show_validation_error("Please Upload Gov ID1.")
+        elif not self.validate_image_loaded(self.ids.image_label3):
+            validation_errors.append((self.ids.image_label1, "Image not loaded."))
+            self.show_validation_error("Please Upload Gov ID2.")
+        elif not self.validate_image_loaded(self.ids.image_label3) and self.validate_image_loaded(
+                self.ids.image_label2) and self.validate_image_loaded(self.ids.image_label3):
+            validation_errors.append((self.ids.image_label1, "Image not loaded."))
+            self.show_validation_error("Please Upload all Images.")
+        else:
+            pass
 
         # Check for mandatory fields
         if not name:
@@ -4516,6 +4542,11 @@ class LenderScreen5(Screen):
         self.ids.box_masters.opacity = 0
         self.ids.box_phd.opacity = 0
 
+    def validate_image_loaded(self, image_label):
+        if not image_label.source or 'error.png' in image_label.source:  # Adjust 'error.png' as per your placeholder image
+            return False
+        return True
+
     def on_image_click(self, instance, touch):
         if instance.collide_point(*touch.pos):
             self.show_image_popup(instance.source)
@@ -4949,7 +4980,7 @@ class LenderScreen5(Screen):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'LenderScreen5'
 
-    def go_to_lender_screen4(self):
+    def go_to_lender_screen_10(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -4977,14 +5008,19 @@ class LenderScreen5(Screen):
         # Get the existing ScreenManager
         sm = self.manager
 
-        # Create a new instance of the LoginScreen
-        lender_screen4 = LenderScreen6(name='LenderScreen6')
+        validation_errors = []
 
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(lender_screen4)
+        if validation_errors:
+            self.show_validation_errors(validation_errors)
+            return
 
-        # Switch to the LoginScreen
-        sm.current = 'LenderScreen6'
+        if not self.validate_image_loaded(self.ids.image_label1):
+            validation_errors.append((self.ids.image_label1, "Image not loaded."))
+            self.show_validation_error("Please Upload 10th Certificate.")
+        else:
+            lender_screen4 = LenderScreen6(name='LenderScreen6')
+            sm.add_widget(lender_screen4)
+            sm.current = 'LenderScreen6'
 
 #===============================================================================
 # class LenderScreen_Edu_Intermediate(Screen):
@@ -5230,7 +5266,7 @@ class LenderScreen5(Screen):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'LenderScreen5'
 
-    def go_to_lender_screen4(self):
+    def go_to_lender_screen_11(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -5258,14 +5294,23 @@ class LenderScreen5(Screen):
         # Get the existing ScreenManager
         sm = self.manager
 
+        validation_errors = []
+
+        if validation_errors:
+            self.show_validation_errors(validation_errors)
+            return
+
+        if not self.validate_image_loaded(self.ids.image_label2):
+            validation_errors.append((self.ids.image_label2, "Image not loaded."))
+            self.show_validation_error("Please Upload 10th Certificates.")
         # Create a new instance of the LoginScreen
-        lender_screen4 = LenderScreen6(name='LenderScreen6')
-
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(lender_screen4)
-
-        # Switch to the LoginScreen
-        sm.current = 'LenderScreen6'
+        elif not self.validate_image_loaded(self.ids.image_label3):
+            validation_errors.append((self.ids.image_label3, "Image not loaded."))
+            self.show_validation_error("Please Upload 11th Certificates.")
+        else:
+            lender_screen4 = LenderScreen6(name='LenderScreen6')
+            sm.add_widget(lender_screen4)
+            sm.current = 'LenderScreen6'
 
 # ================================================================================
 # class LenderScreen_Edu_Bachelors(Screen):
@@ -5590,7 +5635,7 @@ class LenderScreen5(Screen):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'LenderScreen5'
 
-    def go_to_lender_screen4(self):
+    def go_to_lender_screen_btech(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -5618,14 +5663,26 @@ class LenderScreen5(Screen):
         # Get the existing ScreenManager
         sm = self.manager
 
+        validation_errors = []
+
+        if validation_errors:
+            self.show_validation_errors(validation_errors)
+            return
+
         # Create a new instance of the LoginScreen
-        lender_screen4 = LenderScreen6(name='LenderScreen6')
-
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(lender_screen4)
-
-        # Switch to the LoginScreen
-        sm.current = 'LenderScreen6'
+        if not self.validate_image_loaded(self.ids.image_label4):
+            validation_errors.append((self.ids.image_label4, "Image not loaded."))
+            self.show_validation_error("Please Upload 10 Certificates.")
+        elif not self.validate_image_loaded(self.ids.image_label5):
+            validation_errors.append((self.ids.image_label5, "Image not loaded."))
+            self.show_validation_error("Please Upload 11 Certificates.")
+        elif not self.validate_image_loaded(self.ids.image_label6):
+            validation_errors.append((self.ids.image_label6, "Image not loaded."))
+            self.show_validation_error("Please Upload B.tech Certificates.")
+        else:
+            lender_screen4 = LenderScreen6(name='LenderScreen6')
+            sm.add_widget(lender_screen4)
+            sm.current = 'LenderScreen6'
 
 #========================================================================
 # class LenderScreen_Edu_Masters(Screen):
@@ -6020,7 +6077,7 @@ class LenderScreen5(Screen):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'LenderScreen5'
 
-    def go_to_lender_screen4(self):
+    def go_to_lender_screen_mas(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -6039,26 +6096,41 @@ class LenderScreen5(Screen):
 
         # Perform the actual action (e.g., fetching loan requests)
         # You can replace the sleep with your actual logic
-        Clock.schedule_once(lambda dt: self.perform_masters_action(modal_view), 2)
+        Clock.schedule_once(lambda dt: self.perform_masters_action_mas(modal_view), 2)
 
     def refresh(self):
         pass
 
-    def perform_masters_action(self, modal_view):
+    def perform_masters_action_mas(self, modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         # Close the modal view after performing the action
         modal_view.dismiss()
         # Get the existing ScreenManager
         sm = self.manager
 
+        validation_errors = []
+
+        if validation_errors:
+            self.show_validation_errors(validation_errors)
+            return
+
         # Create a new instance of the LoginScreen
-        lender_screen4 = LenderScreen6(name='LenderScreen6')
-
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(lender_screen4)
-
-        # Switch to the LoginScreen
-        sm.current = 'LenderScreen6'
+        if not self.validate_image_loaded(self.ids.image_label7):
+            validation_errors.append((self.ids.image_label7, "Image not loaded."))
+            self.show_validation_error("Please Upload 10th Certificate.")
+        elif not self.validate_image_loaded(self.ids.image_label8):
+            validation_errors.append((self.ids.image_label8, "Image not loaded."))
+            self.show_validation_error("Please Upload 11th Certificate.")
+        elif not self.validate_image_loaded(self.ids.image_label9):
+            validation_errors.append((self.ids.image_label9, "Image not loaded."))
+            self.show_validation_error("Please Upload B.tech Certificate.")
+        elif not self.validate_image_loaded(self.ids.image_label10):
+            validation_errors.append((self.ids.image_label10, "Image not loaded."))
+            self.show_validation_error("Please Upload Mtech Certificate.")
+        else:
+            lender_screen4 = LenderScreen6(name='LenderScreen6')
+            sm.add_widget(lender_screen4)
+            sm.current = 'LenderScreen6'
 
 #=====================================================================
 # class LenderScreen_Edu_PHD(Screen):
@@ -6448,7 +6520,7 @@ class LenderScreen5(Screen):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'LenderScreen5'
 
-    def go_to_lender_screen4(self):
+    def go_to_lender_screen_phd(self):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -6467,23 +6539,40 @@ class LenderScreen5(Screen):
 
         # Perform the actual action (e.g., fetching loan requests)
         # You can replace the sleep with your actual logic
-        Clock.schedule_once(lambda dt: self.perform_phd_action(modal_view), 2)
+        Clock.schedule_once(lambda dt: self.perform_phd_action_phd(modal_view), 2)
 
-    def perform_phd_action(self, modal_view):
+    def perform_phd_action_phd(self, modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         # Close the modal view after performing the action
         modal_view.dismiss()
         # Get the existing ScreenManager
         sm = self.manager
 
-        # Create a new instance of the LoginScreen
-        lender_screen4 = LenderScreen6(name='LenderScreen6')
+        validation_errors = []
 
-        # Add the LoginScreen to the existing ScreenManager
-        sm.add_widget(lender_screen4)
+        if validation_errors:
+            self.show_validation_errors(validation_errors)
+            return
 
-        # Switch to the LoginScreen
-        sm.current = 'LenderScreen6'
+        if not self.validate_image_loaded(self.ids.image_label11):
+            validation_errors.append((self.ids.image_label11, "Image not loaded."))
+            self.show_validation_error("Please Upload 10th Certificate.")
+        elif not self.validate_image_loaded(self.ids.image_label12):
+            validation_errors.append((self.ids.image_label12, "Image not loaded."))
+            self.show_validation_error("Please Upload 11th Certificate.")
+        elif not self.validate_image_loaded(self.ids.image_label13):
+            validation_errors.append((self.ids.image_label13, "Image not loaded."))
+            self.show_validation_error("Please Upload B.Tech Certificate.")
+        elif not self.validate_image_loaded(self.ids.image_label14):
+            validation_errors.append((self.ids.image_label14, "Image not loaded."))
+            self.show_validation_error("Please Upload Masters Certificate.")
+        elif not self.validate_image_loaded(self.ids.image_label15):
+            validation_errors.append((self.ids.image_label15, "Image not loaded."))
+            self.show_validation_error("Please Upload PHD Certificate.")
+        else:
+            lender_screen4 = LenderScreen6(name='LenderScreen6')
+            sm.add_widget(lender_screen4)
+            sm.current = 'LenderScreen6'
 
 
 class LenderScreen6(Screen):
@@ -9236,6 +9325,42 @@ class LenderScreenIndividualBankForm1(Screen):
             self.ids.account_type.values = unique_list
         else:
             self.ids.account_type.values = ['Select Account Type']
+
+    def validate_zip_code(self, zip_code):
+        zip_code_text = zip_code.text
+
+        # Check if the input contains only numeric characters
+        if not zip_code_text.isdigit():
+            zip_code.helper_text = "Should contain only numbers"
+            zip_code.error = True
+        else:
+            zip_code.helper_text = ""
+            zip_code.error = False
+
+    def validate_zip_code_text(self, zip_code):
+        zip_code_text = zip_code.text
+
+        # Check if the input contains only alphabetic characters
+        if not zip_code_text.isalpha():
+            zip_code.helper_text = "Should contain only alphabetic characters"
+            zip_code.error = True
+        else:
+            zip_code.helper_text = ""
+            zip_code.error = False
+
+    def validate_zip_code_numchar(self, zip_code):
+        zip_code_text = zip_code.text
+
+        # Check if the input contains both alphabetic characters and numeric digits
+        has_alpha = any(char.isalpha() for char in zip_code_text)
+        has_digit = any(char.isdigit() for char in zip_code_text)
+
+        if has_alpha and has_digit:
+            zip_code.helper_text = ""
+            zip_code.error = False
+        else:
+            zip_code.helper_text = "Should contain both alphabetic characters and numeric digits"
+            zip_code.error = True
 
     # def animate_loading_text(self, loading_label, modal_height):
     #     # Define the animation to move the label vertically

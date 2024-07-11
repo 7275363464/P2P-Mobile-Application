@@ -508,7 +508,7 @@ user_helpers = '''
 
                         MDNavigationDrawerItem
                             icon: "newspaper"
-                            text: "New Loan Requests"
+                            text: "Apply Loan"
                             icon_color: "#23639e"
                             on_release: root.go_to_newloan_screen()
                         MDNavigationDrawerDivider:

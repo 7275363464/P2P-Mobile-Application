@@ -3,7 +3,7 @@ import os
 import json
 import base64
 
-from Crypto.SelfTest.Cipher.test_CBC import file_name
+# from Crypto.SelfTest.Cipher.test_CBC import file_name
 from kivy.properties import BooleanProperty
 from kivy.uix.button import Button
 from anvil import media
@@ -120,14 +120,12 @@ KV = '''
                     font_size: "20dp"
                     font_name: "Roboto-Bold"
                     size_hint_y: None
-                    height: dp(50)
+                    height: dp(10)
                 
                 MDTextField:
                     id: username
                     hint_text: ' Enter Full Name *'
-                    helper_text: "Enter Valid Name"
                     multiline: False
-                    helper_text_mode: 'on_focus'
                     halign: 'left'
                     font_size: "15dp"
                     theme_text_color: "Custom"
@@ -216,6 +214,7 @@ KV = '''
                     line_color_normal: 0, 0, 0, 1  # Red color for the line when not focused
                     line_color_focus: 0, 0, 0, 1
                     radius: [0, 0, 0,0]
+                    on_text: root.validate_mobile(self)
                     mode: "rectangle"
     
                 MDTextField:
@@ -227,10 +226,13 @@ KV = '''
                     hint_text_color_normal: 0, 0, 0, 1
                     text_color_normal: 0, 0, 0, 1
                     helper_text_color_normal: 0, 0, 0, 1
-                    line_color_normal: 0, 0, 0, 1  # Red color for the line when not focused
-                    line_color_focus: 0, 0, 0, 1
+                    helper_text:''
+                    helper_text_mode:'on_error'
                     radius: [0, 0, 0,0]
                     mode: "rectangle"
+                    line_color_normal: 0, 0, 0, 1  # Red color for the line when not focused
+                    line_color_focus: 0, 0, 0, 1
+                    on_text: root.check_alternate_email(self)
     
     
                 MDBoxLayout:
@@ -261,7 +263,7 @@ KV = '''
     
                     MDLabel:
                         id: upload_label1
-                        text: 'Upload Profile Photo'
+                        text: 'Upload Profile Photo *'
                         halign: 'left'
                         theme_text_color: "Custom"
                         text_color: 0, 0, 0, 1  # Black text color
@@ -332,7 +334,7 @@ KV = '''
     
                     MDLabel:
                         id: upload_label2
-                        text: 'Upload Govt ID1'
+                        text: 'Upload Govt ID1 *'
                         halign: 'left'
                         theme_text_color: "Custom"
                         text_color: 0, 0, 0, 1  # Black text color
@@ -402,7 +404,7 @@ KV = '''
     
                     MDLabel:
                         id: upload_label3
-                        text: 'Upload Govt ID2'
+                        text: 'Upload Govt ID2 *'
                         halign: 'left'
                         theme_text_color: "Custom"
                         text_color: 0, 0, 0, 1  # Black text color
@@ -422,7 +424,15 @@ KV = '''
                         valign: 'middle'  # Align the label text vertically in the center
                         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                         on_touch_down: root.on_image_click(self, args[1])
-    
+                MDLabel:
+                    text: 'Please fill * mandatory details'
+                    halign: 'left'
+                    theme_text_color: "Custom"
+                    text_color: 1, 0, 0, 1  # Black text color
+                    size_hint_y: None
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 MDRectangleFlatButton:
                     text: "Next"
                     on_release: root.add_data(username.text, spinner_id.text, date_textfield.text, mobile_number.text, alternate_email.text,aadhar_number.text, pan_number.text)                                   
@@ -450,8 +460,8 @@ KV = '''
         MDScrollView:
             MDBoxLayout:
                 orientation: 'vertical'
-                spacing: dp(18)
-                padding: dp(50)
+                spacing: dp(15)
+                padding: dp(30)
                 size_hint_y: None
                 height: self.minimum_height
        
@@ -459,15 +469,17 @@ KV = '''
                     text: 'Lender Registration Form'
                     halign: 'center'
                     font_size: "20dp"
+                    height: dp(10)
                     font_name: "Roboto-Bold"
                 MDLabel:
                     text: 'Address Information'
-                    halign: 'center'
+                    halign: 'left'
+                    height: dp(20)
                     bold: True
 
                 MDTextField:
                     id: street_address1
-                    hint_text: 'Enter Street Address1'
+                    hint_text: 'Enter Street Address1 *'
                     multiline: False
                     size_hint_y: None
                     height: self.minimum_height
@@ -478,11 +490,13 @@ KV = '''
                     helper_text_color_normal: "black"
                     font_size: "15dp"
                     mode: "rectangle"
+                    line_color_normal: 0, 0, 0, 1  # Red color for the line when not focused
+                    line_color_focus: 0, 0, 0, 1
                     radius: [0, 0, 0,0]
 
                 MDTextField:
                     id: street_address2
-                    hint_text: 'Enter Street Address2'
+                    hint_text: 'Enter Street Address2 *'
                     multiline: False
                     size_hint_y: None
                     height: self.minimum_height
@@ -499,7 +513,7 @@ KV = '''
 
                 Spinner:
                     id: spinner_id1
-                    text: "Select Present Address"
+                    text: "Select Present Address *"
                     multiline: False
                     size_hint: 1, None
                     halign: "left"
@@ -521,7 +535,7 @@ KV = '''
 
                 Spinner:
                     id: spinner_id2
-                    text: "Select Staying Address"
+                    text: "Select Staying Address *"
                     helper_text: "How Long You Are Staying At This Address"
                     multiline: False
                     size_hint: 1, None
@@ -543,7 +557,7 @@ KV = '''
 
                 MDTextField:
                     id: city
-                    hint_text: 'Enter City Name'
+                    hint_text: 'Enter City Name *'
                     multiline: False
                     size_hint_y: None
                     height: self.minimum_height
@@ -561,7 +575,7 @@ KV = '''
 
                 MDTextField:
                     id: zip_code
-                    hint_text: 'Enter postal/zipcode'
+                    hint_text: 'Enter postal/zipcode *'
                     multiline: False
                     size_hint_y: None
                     height: self.minimum_height
@@ -576,11 +590,12 @@ KV = '''
                     line_color_normal: 0, 0, 0, 1  # Red color for the line when not focused
                     line_color_focus: 0, 0, 0, 1
                     mode: "rectangle"
+                    on_text: root.validate_zip_code(self) 
                     radius: [0, 0, 0,0]
 
                 MDTextField:
                     id: state
-                    hint_text: 'Enter State Name'
+                    hint_text: 'Enter State Name *'
                     multiline: False
                     size_hint_y: None
                     height: self.minimum_height
@@ -597,7 +612,7 @@ KV = '''
 
                 MDTextField:
                     id: country
-                    hint_text: 'Enter Country Name'
+                    hint_text: 'Enter Country Name *'
                     multiline: False
                     size_hint_y: None
                     height: self.minimum_height
@@ -611,7 +626,17 @@ KV = '''
                     line_color_focus: 0, 0, 0, 1
                     mode: "rectangle"
                     radius: [0, 0, 0,0]
-
+                
+                MDLabel:
+                    text: 'Please fill * mandatory details'
+                    halign: 'left'
+                    theme_text_color: "Custom"
+                    text_color: 1, 0, 0, 1  # Black text color
+                    size_hint_y: None
+                    height: dp(36)
+                    valign: 'middle'  # Align the label text vertically in the center
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    
                 MDRectangleFlatButton:
                     text: "Next"
                     on_release: root.add_data(street_address1.text, street_address2.text, spinner_id1.text, spinner_id2.text, city.text, zip_code.text, state.text, country.text)
@@ -3921,20 +3946,21 @@ class LenderScreen(Screen):
 
         # Check for mandatory fields
         if not name:
-            validation_errors.append((self.ids.username, "Please fill the * mandatory details."))
+            validation_errors.append((self.ids.username, ""))
         if not date:
             validation_errors.append(
-                (self.ids.date_textfield, "Please fill the * mandatory details."))  # Corrected to date_textfield
+                (self.ids.date_textfield, ""))  # Corrected to date_textfield
         if not gender:
-            validation_errors.append((self.ids.spinner_id, "Please fill the * mandatory details."))
+            validation_errors.append((self.ids.spinner_id, ""))
         if not mobile_number:
-            validation_errors.append((self.ids.mobile_number, "Please fill the * mandatory details."))
+            validation_errors.append((self.ids.mobile_number, ""))
         if not alternate_email:
-            validation_errors.append((self.ids.alternate_email, "Please fill the * mandatory details."))
+            validation_errors.append((self.ids.alternate_email, ""))
         if not aadhar_number:
-            validation_errors.append((self.ids.aadhar_number, "Please fill the * mandatory details."))
+            validation_errors.append((self.ids.aadhar_number, ""))
+
         if not pan_number:
-            validation_errors.append((self.ids.pan_number, "Please fill the * mandatory details."))
+            validation_errors.append((self.ids.pan_number, ""))
 
         if validation_errors:
             self.show_validation_errors(validation_errors)
@@ -3943,24 +3969,23 @@ class LenderScreen(Screen):
         # Validate mobile number
         if not re.match(r'^\d{10}$|^\d{12}$', mobile_number):
             validation_errors.append(
-                (self.ids.mobile_number, "Please enter a valid 10-digit or 12-digit mobile number."))
+                (self.ids.mobile_number, ""))
 
         # Validate email
         if not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', alternate_email):
-            validation_errors.append((self.ids.alternate_email, "Please enter a valid email address."))
+            validation_errors.append((self.ids.alternate_email, ""))
 
         # Validate date of birth
         try:
-            dob = datetime.strptime(date, '%Y-%m-%d')
-            today = datetime.today()
+            dob = datetime.strptime(date, "%Y-%m-%d")
+            today = datetime.now()
             age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
             if age < 18:
-                validation_errors.append((self.ids.date_textfield, "You must be at least 18 years old to register."))
-        except ValueError:
-            validation_errors.append((self.ids.date_textfield, "Invalid date format. Please use YYYY-MM-DD."))
+                self.show_validation_error("Enter a Valid Date of Birth Age must be Greater Than 18")
+                return
 
-        if validation_errors:
-            self.show_validation_errors(validation_errors)
+        except ValueError:
+            self.show_validation_error("Please enter a valid date of birth in the format YYYY-MM-DD")
             return
 
         # Fetch user data
@@ -4015,11 +4040,44 @@ class LenderScreen(Screen):
             widget.helper_text_color = (1, 0, 0, 1)
             widget.helper_text = error_message
             widget.helper_text_mode = "on_error"
-            if isinstance(widget, MDTextField):
-                widget.line_color_normal = (1, 0, 0, 1)  # Red color for the line when not focused
-                widget.line_color_focus = (1, 0, 0, 1)
+            if isinstance(widget, MDCheckbox):
+                widget.line_color_normal = (1, 0, 0, 1)
             if isinstance(widget, MDCheckbox):
                 widget.theme_text_color = 'Error'
+
+    def check_alternate_email(self, alternate_email):
+        alternate_email_text = alternate_email.text
+
+        # Regular expression for validating an email
+        email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+
+        # Check the alternate email field
+
+        if not re.match(email_regex, alternate_email_text):
+            alternate_email.helper_text = "Invalid email format"
+            alternate_email.error = True
+        else:
+            alternate_email.helper_text = ""
+            alternate_email.line_color_normal = (0, 0, 0, 1)
+            alternate_email.error = False
+
+    def validate_mobile(self, mobile_number):
+        mobile_number_text = mobile_number.text
+
+        # Regular expression for validating a mobile number
+        # This example assumes a 10-digit number format, adjust it according to your requirements
+        mobile_regex = r'^\d{10}$'
+
+        # Check the mobile number field
+        if not mobile_number_text:
+            mobile_number.helper_text = "Mobile number cannot be empty"
+            mobile_number.error = True
+        elif not re.match(mobile_regex, mobile_number_text):
+            mobile_number.helper_text = "Format should contain 10 numbers"
+            mobile_number.error = True
+        else:
+            mobile_number.helper_text = ""
+            mobile_number.error = False
 
     def get_email(self):
         return anvil.server.call('another_method')
@@ -4396,22 +4454,29 @@ class LenderScreen3(Screen):
 
         validation_errors = []
         # Check for missing fields
+
+        if spinner_id1 not in spinner_id1 == 'Select Present Address':
+            self.show_validation_errors('Select Present Address')
+            return
+        elif spinner_id2 not in spinner_id2 == 'Select Staying Address':
+            self.show_validation_errors('Select Duration at Address')
+            return
         if not street_address1:
-            validation_errors.append((self.ids.street_address1, "Please fill the * mandatory details."))
+            validation_errors.append((self.ids.street_address1, ""))
         if not street_address2:
-            validation_errors.append((self.ids.street_address2, "Please fill the * mandatory details."))
+            validation_errors.append((self.ids.street_address2, ""))
         if not spinner_id1:
-            validation_errors.append((self.ids.spinner_id1, "Please fill the * mandatory details."))
+            validation_errors.append((self.ids.spinner_id1, ""))
         if not spinner_id2:
-            validation_errors.append((self.ids.spinner_id2, "Please fill the * mandatory details."))
+            validation_errors.append((self.ids.spinner_id2, ""))
         if not city:
-            validation_errors.append((self.ids.city, "Please fill the * mandatory details."))
+            validation_errors.append((self.ids.city, ""))
         if not zip_code:
-            validation_errors.append((self.ids.zip_code, "Please fill the * mandatory details."))
+            validation_errors.append((self.ids.zip_code, ""))
         if not state:
-            validation_errors.append((self.ids.state, "Please fill the * mandatory details."))
+            validation_errors.append((self.ids.state, ""))
         if not country:
-            validation_errors.append((self.ids.country, "Please fill the * mandatory details."))
+            validation_errors.append((self.ids.country, ""))
         if validation_errors:
             self.show_validation_error(validation_errors)
             return
@@ -4457,18 +4522,53 @@ class LenderScreen3(Screen):
         # Change keyboard mode to numeric when the mobile number text input is touched
         self.ids.zip_code.input_type = 'number'
 
+    # def show_validation_errors(self, validation_errors):
+    #     for widget, error_message in validation_errors:
+    #         widget.error = True
+    #         widget.helper_text_color = (1, 0, 0, 1)
+    #         widget.helper_text = error_message
+    #         widget.helper_text_mode = "on_error"
+    #         if isinstance(widget, MDCheckbox):
+    #             widget.line_color_normal = (1, 0, 0, 1)
+    #         if isinstance(widget, MDCheckbox):
+    #             widget.line_color_normal = 'Error'
+    def validate_zip_code(self, zip_code):
+        zip_code_text = zip_code.text
+
+        # Check if the input contains only numeric characters
+        if not zip_code_text.isdigit():
+            zip_code.helper_text = "ZIP Code should contain only numbers"
+            zip_code.error = True
+        else:
+            zip_code.helper_text = ""
+            zip_code.error = False
+
     def show_validation_error(self, validation_errors):
         for widget, error_message in validation_errors:
             widget.error = True
             widget.helper_text_color = (1, 0, 0, 1)
             widget.helper_text = error_message
             widget.helper_text_mode = "on_error"
-            if isinstance(widget, MDTextField):
-                widget.line_color_normal = (1, 0, 0, 1)  # Red color for the line when not focused
-                widget.line_color_focus = (1, 0, 0, 1)
+            if isinstance(widget, MDCheckbox):
+                widget.line_color_normal = (1, 0, 0, 1)
             if isinstance(widget, MDCheckbox):
                 widget.theme_text_color = 'Error'
 
+    def show_validation_errors(self, error_message):
+        dialog = MDDialog(
+            title="Validation Error",
+            text=error_message,
+            size_hint=(0.8, None),
+            height=dp(200),
+            buttons=[
+                MDRectangleFlatButton(
+                    text="OK",
+                    text_color=(0.043, 0.145, 0.278, 1),
+                    on_release=lambda x: dialog.dismiss()
+                )
+            ]
+        )
+        dialog.open()
     def go_to_dashboard(self):
         self.manager.current = 'DashScreen'
 

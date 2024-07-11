@@ -492,14 +492,7 @@ Borrower = '''
                     padding: dp(10)
                     size_hint_y: None
                     height: dp(180)
-                    # md_bg_color: 253/255, 254/255, 254/255, 1
-                    # canvas:
-                    #     Color:
-                    #         rgba: 174/255, 214/255, 241/255, 1  # Dull background color
-                    #     Line:
-                    #         width: 0.7  # Border width
-                    #         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-        
+                   
                     MDLabel:
                         text: 'Borrower Registration Form'
                         halign: 'center'
@@ -516,14 +509,7 @@ Borrower = '''
                         halign: 'left'
                         font_size: "15dp"
                         font_name: "Roboto-Bold"
-                    # MDBoxLayout:
-                    #     orientation: 'horizontal'
-                    #     canvas.before:
-                    #         Color:
-                    #             rgba: 0.5, 0.5, 0.5, 1
-                    #         Line:
-                    #             rectangle: self.x, self.y, self.width, self.height
-                    #             width: 0.7
+                    
                     Spinner:
                         id: spinner_id
                         text: "Select Education Details"
@@ -544,15 +530,7 @@ Borrower = '''
                             Line:
                                 rectangle: self.x, self.y, self.width, self.height
                                 width: 0.7
-                                    
-                        # MDIconButton:
-                        #     icon: 'downarrow'
-                        #     theme_text_color: "Custom"
-                        #     text_color: 0, 0, 0, 1  # Black text color
-                        #     size_hint_x: None
-                        #     width: dp(24)
-        
-        
+                       
                 # 10th details
                 MDBoxLayout:
                     id: box_10th
@@ -561,18 +539,9 @@ Borrower = '''
                     padding: dp(10)
                     size_hint_y: None
                     height: dp(220)
-                    # md_bg_color: 253/255, 254/255, 254/255, 1
-                    # 
-                    # canvas:
-                    #     Color:
-                    #         rgba: 174/255, 214/255, 241/255, 1  # Dull background color
-                    #     Line:
-                    #         width: 0.7  # Border width
-                    #         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-        
-        
+                    
                     MDLabel:
-                        text: "Upload 10th class certificate"
+                        text: "Upload 10th class certificate *"
                         halign: 'left'
                         bold: True
                         size_hint_y: None
@@ -646,25 +615,9 @@ Borrower = '''
                     padding: dp(10)
                     size_hint_y: None
                     height: dp(280)
-                    # md_bg_color: 253/255, 254/255, 254/255, 1
-                    # # opacity: 1 if root.show_edu_PUC else 0  # Control visibility
-                    # # disabled: not root.show_edu_PUC  # Disable when not visible
-                    # canvas:
-                    #     Color:
-                    #         rgba: 174/255, 214/255, 241/255, 1  # Dull background color
-                    #     Line:
-                    #         width: 0.7  # Border width
-                    #         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-        
-                    # MDLabel:
-                    #     text: 'Intermediate/PUC Education Details '
-                    #     halign: 'center'
-                    #     size_hint_y: None
-                    #     height: dp(20)
-                    #     bold: True
-        
+                   
                     MDLabel:
-                        text: "Upload 10th class certificate"
+                        text: "Upload 10th class certificate *"
                         halign: 'left'
                         bold: True
                         size_hint_y: None
@@ -717,7 +670,7 @@ Borrower = '''
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                             
                     MDLabel:
-                        text: "Upload Intermediate/PUC"
+                        text: "Upload Intermediate/PUC *"
                         halign: 'left'
                         bold: True
         
@@ -789,30 +742,9 @@ Borrower = '''
                     padding: dp(10)
                     size_hint_y: None
                     height: dp(400)
-                    # md_bg_color: 253/255, 254/255, 254/255, 1
-                    # # opacity: 1 if root.show_edu_Bach else 0  # Control visibility
-                    # # disabled: not root.show_edu_Bach  # Disable when not visible
-                    # canvas:
-                    #     Color:
-                    #         rgba: 174/255, 214/255, 241/255, 1  # Dull background color
-                    #     Line:
-                    #         width: 0.7  # Border width
-                    #         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-                    # MDLabel:
-                    #     text: 'Bachelors Education Details '
-                    #     halign: 'center'
-                    #     size_hint_y: None
-                    #     height: dp(20)
-                    #     bold: True
-                        
-                    # MDBoxLayout:
-                    #     orientation: "vertical"
-                    #     size_hint: None, None
-                    #     size: "280dp", "480dp"
-                    #     pos_hint: {"center_x": 0.5}
-                
+                  
                     MDLabel:
-                        text: "Upload 10th class Certificate"
+                        text: "Upload 10th class Certificate *"
                         halign: 'left'
                         bold: True
                                             
@@ -864,7 +796,7 @@ Borrower = '''
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                                 
                     MDLabel:
-                        text: "Upload Intermediate/PUC Certificate"
+                        text: "Upload Intermediate/PUC Certificate *"
                         halign: 'left'
                         bold: True
                 
@@ -915,7 +847,7 @@ Borrower = '''
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     
                     MDLabel:
-                        text: "Upload Bachelors Certificate"
+                        text: "Upload Bachelors Certificate *"
                         halign: 'left'
                         bold: True
                 
@@ -985,28 +917,9 @@ Borrower = '''
                     padding: dp(10)
                     size_hint_y: None
                     height: dp(480)
-                    # md_bg_color: 253/255, 254/255, 254/255, 1
-                    # # opacity: 1 if root.show_edu_master else 0  # Control visibility
-                    # # disabled: not root.show_edu_master  # Disable when not visible
-                    # canvas:
-                    #     Color:
-                    #         rgba: 174/255, 214/255, 241/255, 1  # Dull background color
-                    #     Line:
-                    #         width: 0.7  # Border width
-                    #         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)               
                     
-                    # MDCard:
-                    #     orientation: "vertical"
-                    #     size_hint: None, None
-                    #     size: "280dp", "480dp"
-                    #     pos_hint: {"center_x": 0.5, "center_y": 0.5}
-            
-                    # MDLabel:
-                    #     text: 'Masters Education Details'
-                    #     halign: 'center'
-                    #     bold: True
                     MDLabel:
-                        text: "Upload 10th class Certificate"
+                        text: "Upload 10th class Certificate *"
                         halign: 'left'
                         bold: True
         
@@ -1057,7 +970,7 @@ Borrower = '''
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         
                     MDLabel:
-                        text: "Upload Intermediate/PUC Certificate"
+                        text: "Upload Intermediate/PUC Certificate *"
                         halign: 'left'
                         bold: True
         
@@ -1108,7 +1021,7 @@ Borrower = '''
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                             
                     MDLabel:
-                        text: "Upload Bachelors Certificate"
+                        text: "Upload Bachelors Certificate *"
                         halign: 'left'
                         bold: True
         
@@ -1159,7 +1072,7 @@ Borrower = '''
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                             
                     MDLabel:
-                        text: "Upload Masters Certificate"
+                        text: "Upload Masters Certificate *"
                         halign: 'left'
                         bold: True
         
@@ -1230,28 +1143,9 @@ Borrower = '''
                     padding: dp(10)
                     size_hint_y: None
                     height: dp(600)
-                    # md_bg_color: 253/255, 254/255, 254/255, 1
-                    # # opacity: 1 if root.show_edu_PHD else 0  # Control visibility
-                    # # disabled: not root.show_edu_PHD  # Disable when not visible
-                    # canvas:
-                    #     Color:
-                    #         rgba: 174/255, 214/255, 241/255, 1  # Dull background color
-                    #     Line:
-                    #         width: 0.7  # Border width
-                    #         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)               
-                    # MDCard:
-                    #     orientation: "vertical"
-                    #     size_hint: None, None
-                    #     size: "280dp", "550dp"
-                    #     pos_hint: {"center_x": 0.5, "center_y": 0.5}
-            
-                    # MDLabel:
-                    #     text: 'PHD Education Details'
-                    #     halign: 'center'
-                    #     bold: True
         
                     MDLabel:
-                        text: "Upload 10th Class Certificate"
+                        text: "Upload 10th Class Certificate *"
                         halign: 'left'
                         bold: True
         
@@ -1302,7 +1196,7 @@ Borrower = '''
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     
                     MDLabel:
-                        text: "Upload Intermediate/PUC Certificate"
+                        text: "Upload Intermediate/PUC Certificate *"
                         halign: 'left'
                         bold: True
         
@@ -1353,7 +1247,7 @@ Borrower = '''
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         
                     MDLabel:
-                        text: "Upload Bachelors Certificate"
+                        text: "Upload Bachelors Certificate *"
                         halign: 'left'
                         bold: True
         
@@ -1404,7 +1298,7 @@ Borrower = '''
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         
                     MDLabel:
-                        text: "Upload Masters Certificate"
+                        text: "Upload Masters Certificate *"
                         halign: 'left'
                         bold: True
         
@@ -1455,7 +1349,7 @@ Borrower = '''
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         
                     MDLabel:
-                        text: "Upload PHD Certificate"
+                        text: "Upload PHD Certificate *"
                         halign: 'left'
                         bold: True
         
@@ -3222,23 +3116,16 @@ Borrower = '''
         MDScrollView:
             MDBoxLayout:
                 orientation: 'vertical'
-                spacing: dp(9)
+                spacing: dp(10)
                 padding: dp(10)
                 size_hint_y: None
                 height: self.minimum_height        
                 MDBoxLayout:
                     orientation: 'vertical'
-                    spacing: dp(5)
+                    spacing: dp(15)
                     padding: dp(10)
                     size_hint_y: None
-                    height: dp(570)
-                    # md_bg_color:253/255, 254/255, 254/255, 1
-                    # canvas:
-                    #     Color:
-                    #         rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                    #     Line:
-                    #         width: 0.7  # Border width
-                    #         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+                    height: dp(600)
         
                     MDLabel:
                         text: 'Applicant Bank Details'
@@ -3260,37 +3147,33 @@ Borrower = '''
                         mode: "rectangle"
                         radius: [0, 0, 0, 0]  # Makes the corners square
         
-                    MDLabel:
-                        text:"Select YourAccount Type:"
-                        halign: 'left'
-                        font_size: "15dp"
-                        height:"40dp"
-                        font_name: "Roboto-Bold"
-                        
-                    Spinner:
-                        id: account_type_id
-                        text: "Select Account Type"
-                        font_size: "15dp"
-                        multiline: False
-                        size_hint: 1 , None
-                        width: dp(200)
-                        text_size: self.width - dp(20), None
-                        height:"40dp"
-                        background_color: 0,0,0,0
-                        option_cls: 'CustomSpinnerOption'
-                        background_normal:''
-                        color: 0, 0, 0, 1
-                        canvas.before:
-                            Color:
-                                rgba: 0, 0, 0, 1  
-                            Line:
-                                rectangle: self.x, self.y, self.width, self.height
-                                width: 0.7
-        
+                    MDBoxLayout:
+                        size_hint_y:None
+                        height:"50dp"
+                        Spinner:
+                            id: account_type_id
+                            text: "Select Account Type"
+                            font_size: "15dp"
+                            multiline: False
+                            size_hint: 1 , None
+                            width: dp(200)
+                            text_size: self.width - dp(20), None
+                            height: "40dp"
+                            background_color: 0,0,0,0
+                            option_cls: 'CustomSpinnerOption'
+                            background_normal:''
+                            color: 0, 0, 0, 1
+                            canvas.before:
+                                Color:
+                                    rgba: 0, 0, 0, 1  
+                                Line:
+                                    rectangle: self.x, self.y, self.width, self.height
+                                    width: 0.7
+            
         
                     MDTextField:
                         id: account_number
-                        hint_text: 'Enter Account number '
+                        hint_text: 'Enter Account number *'
                         on_text: root.validate_zip_code(self)
                         multiline: False
                         helper_text_mode: 'on_focus'
@@ -3307,7 +3190,7 @@ Borrower = '''
                     MDTextField:
                         id: bank_name
                         on_text: root.validate_zip_code_text(self)
-                        hint_text: 'Enter Bank Name '
+                        hint_text: 'Enter Bank Name *'
                         multiline: False
                         helper_text_mode: 'on_focus'
                         size_hint_y:None
@@ -3319,24 +3202,10 @@ Borrower = '''
                         mode: "rectangle"
                         radius: [0, 0, 0, 0]  # Makes the corners square
         
-                # MDBoxLayout:
-                #     orientation: 'vertical'
-                #     spacing: dp(10)
-                #     padding: dp(30)
-                #     size_hint_y: None
-                #     height: dp(300)
-                #     md_bg_color:253/255, 254/255, 254/255, 1
-                #     canvas:
-                #         Color:
-                #             rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                #         Line:
-                #             width: 0.7  # Border width
-                #             rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-        
                     MDTextField:
                         id: ifsc_code
                         on_text: root.validate_zip_code_numchar(self)
-                        hint_text: 'Enter Bank ID '
+                        hint_text: 'Enter Ifsc_code *'
                         multiline: False
                         helper_text_mode: 'on_focus'
                         size_hint_y:None
@@ -3351,7 +3220,7 @@ Borrower = '''
                     MDTextField:
                         id: branch_name
                         on_text: root.validate_zip_code_text(self)
-                        hint_text: 'Enter Branch Name'
+                        hint_text: 'Enter Branch Name *'
                         hint_text_mode: 'on_focus'
                         multiline: False
                         halign: 'left'
@@ -3367,8 +3236,8 @@ Borrower = '''
                     BoxLayout:
                         orientation: 'horizontal'
                         size_hint_y: None
-                        height: "29dp"
-                        spacing:dp(5)
+                        height: "32dp"
+                        spacing:dp(10)
                         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                         MDCheckbox:
                             id: check
@@ -3385,12 +3254,16 @@ Borrower = '''
                             halign: "left"
                             valign: "center"
                             on_touch_down: app.root.get_screen("BorrowerScreen18").show_terms_dialog() if self.collide_point(*args[1].pos) else None
-        
+                    MDLabel:
+                        id: error_message
+                        text: "Pleas fill all details! *"
+                        size: "30dp", "30dp"
+                        theme_text_color: "Custom"
+                        text_color: 150, 0, 0, 1
+                        halign: "left"
                     GridLayout:
                         cols: 1
-                        spacing:dp(30)
-                        spacing:dp(30)
-        
+                        spacing:dp(30)        
                         MDRaisedButton:
                             text: "Submit"
                             on_release: root.go_to_borrower_dashboard(ifsc_code.text, branch_name.text, account_holder_name.text, account_type_id.text, account_number.text, bank_name.text)
@@ -3400,6 +3273,7 @@ Borrower = '''
                             size_hint: 1, None
                             height: "50dp"
                             font_name: "Roboto-Bold"
+                            disabled: root.all_fields_filled
 <BorrowerScreen20>:
     MDTopAppBar:
         title: "P2P LENDING"
@@ -4751,6 +4625,7 @@ class BorrowerScreen(Screen):
 
 class BorrowerScreen3(Screen):
     MAX_IMAGE_SIZE_MB = 2
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         spinner_data = app_tables.fin_borrower_qualification.search()
@@ -4800,37 +4675,6 @@ class BorrowerScreen3(Screen):
     def close_popup(self, instance):
         self.popup.dismiss()
 
-    # def animate_loading_text(self):
-    #     # def animate_loading_text(self, loading_label, modal_height):
-    #     # Define the animation to move the label vertically
-    #     anim = Animation(y=modal_height - loading_label.height, duration=1) + \
-    #            Animation(y=0, duration=1)
-    #     # Loop the animation
-    #     anim.repeat = True
-    #     anim.bind(on_complete=lambda *args: self.animate_loading_text(loading_label, modal_height))
-    #     anim.start(loading_label)
-    #     # Store the animation object
-    #     loading_label.animation = anim  # Store the animation object in a custom attribute
-    # def update_education_details(self, id):
-    #     # modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
-    #
-    #     # Create MDLabel with white text color, increased font size, and bold text
-    #     # loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
-    #     #                         theme_text_color="Custom", text_color=[1, 1, 1, 1],
-    #     #                         font_size="50sp", bold=True)
-    #
-    #     # Set initial y-position off-screen
-    #     # loading_label.y = -loading_label.height
-    #     #
-    #     # modal_view.add_widget(loading_label)
-    #     # modal_view.open()
-    #
-    #     # Perform the animation
-    #     # self.animate_loading_text(loading_label, modal_view.height)
-    #
-    #     # Perform the actual action (e.g., fetching loan requests)
-    #     # You can replace the sleep with your actual logic
-    #     Clock.schedule_once(lambda dt: self.perform_data_addition_action(id))
     def update_education_details(self, id):
         # modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         # modal_view.dismiss()
@@ -4920,8 +4764,6 @@ class BorrowerScreen3(Screen):
                 height += box.height
         self.height = height
 
-
-
     def show_validation_error(self, error_message):
         dialog = MDDialog(
             title="Validation Error",
@@ -4937,6 +4779,7 @@ class BorrowerScreen3(Screen):
             ]
         )
         dialog.open()
+
     # def go_to_borrower_screen(self):
     #     modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
     #
@@ -4974,8 +4817,6 @@ class BorrowerScreen3(Screen):
     #     # Switch to the LoginScreen
     #     sm.current = 'BorrowerScreen7'
 
-
-
     def go_to_dashboard(self):
         self.manager.current = 'DashScreen'
 
@@ -4994,9 +4835,10 @@ class BorrowerScreen3(Screen):
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'BorrowerScreen2'
-#     # ================================================================================================================================
-#     # 10th class
-#
+
+    #     # ================================================================================================================================
+    #     # 10th class
+    #
     def check_and_open_file_manager1(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
                                          "image_label1", self.upload_image)
@@ -5041,7 +4883,6 @@ class BorrowerScreen3(Screen):
                 mime_type = 'image/png' if file_extension == '.png' else 'image/jpeg'
             elif file_extension == '.pdf':
                 mime_type = 'application/pdf'
-
 
             user_photo_media = media.from_file(file_path, mime_type=mime_type)
             email = self.get_email()
@@ -5200,10 +5041,10 @@ class BorrowerScreen3(Screen):
             sm.add_widget(borrower_screen)
             sm.current = 'BorrowerScreen7'
 
-#
-#     #     ==================================================================================
-# #     PUC, intermediate
-#
+    #
+    #     #     ==================================================================================
+    # #     PUC, intermediate
+    #
     def upload_image1(self, file_path):
         try:
             if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
@@ -5441,14 +5282,14 @@ class BorrowerScreen3(Screen):
         # Create a new instance of the LoginScreen
         elif not self.validate_image_loaded(self.ids.image_label3):
             validation_errors.append((self.ids.image_label3, "Image not loaded."))
-            self.show_validation_error("Please Upload 11th Certificates.")
+            self.show_validation_error("Please Upload 12th Certificates.")
         else:
             borrower_screen = BorrowerScreen7(name='BorrowerScreen7')
             sm.add_widget(borrower_screen)
             sm.current = 'BorrowerScreen7'
 
     # # ======================================================================================================================
-# #     bachelors degree
+    # #     bachelors degree
     def upload_image3(self, file_path):
         try:
             if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
@@ -5756,20 +5597,21 @@ class BorrowerScreen3(Screen):
         # Create a new instance of the LoginScreen
         if not self.validate_image_loaded(self.ids.image_label4):
             validation_errors.append((self.ids.image_label4, "Image not loaded."))
-            self.show_validation_error("Please Upload 10 Certificates.")
+            self.show_validation_error("Please Upload 10th Certificates.")
         elif not self.validate_image_loaded(self.ids.image_label5):
             validation_errors.append((self.ids.image_label5, "Image not loaded."))
-            self.show_validation_error("Please Upload 11 Certificates.")
+            self.show_validation_error("Please Upload 12th Certificates.")
         elif not self.validate_image_loaded(self.ids.image_label6):
             validation_errors.append((self.ids.image_label6, "Image not loaded."))
-            self.show_validation_error("Please Upload B.tech Certificates.")
+            self.show_validation_error("Please Upload Bachelor's degree Certificates.")
         else:
             borrower_screen = BorrowerScreen7(name='BorrowerScreen7')
             sm.add_widget(borrower_screen)
             sm.current = 'BorrowerScreen7'
-#
-# # ======================================================================
-# #     masters degree
+
+    #
+    # # ======================================================================
+    # #     masters degree
     def upload_image6(self, file_path):
         try:
             if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
@@ -6132,25 +5974,23 @@ class BorrowerScreen3(Screen):
             self.show_validation_error("Please Upload 10th Certificate.")
         elif not self.validate_image_loaded(self.ids.image_label8):
             validation_errors.append((self.ids.image_label8, "Image not loaded."))
-            self.show_validation_error("Please Upload 11th Certificate.")
+            self.show_validation_error("Please Upload 12th Certificate.")
         elif not self.validate_image_loaded(self.ids.image_label9):
             validation_errors.append((self.ids.image_label9, "Image not loaded."))
-            self.show_validation_error("Please Upload B.tech Certificate.")
+            self.show_validation_error("Please Upload Bachelor's degree Certificates.")
         elif not self.validate_image_loaded(self.ids.image_label10):
             validation_errors.append((self.ids.image_label10, "Image not loaded."))
-            self.show_validation_error("Please Upload Mtech Certificate.")
+            self.show_validation_error("Please Upload Master's Certificate.")
         else:
             borrower_screen = BorrowerScreen7(name='BorrowerScreen7')
             sm.add_widget(borrower_screen)
             sm.current = 'BorrowerScreen7'
 
-
-# =====================================================================
-#     PHDegree
+    # =====================================================================
+    #     PHDegree
     def check_and_open_file_manager11(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
                                          "image_label11", self.upload_image10)
-
 
     def check_and_open_file_manager12(self):
         self.check_and_open_file_manager("upload_icon2", "upload_label2", "selected_file_label2", "selected_image2",
@@ -6363,6 +6203,7 @@ class BorrowerScreen3(Screen):
 
         except Exception as e:
             print(f"Error uploading image: {e}")
+
     def show_validation_error(self, error_message):
         dialog = MDDialog(
             title="Validation Error",
@@ -6378,6 +6219,7 @@ class BorrowerScreen3(Screen):
             ]
         )
         dialog.open()
+
     def get_email(self):
         return anvil.server.call('another_method')
 
@@ -6552,13 +6394,13 @@ class BorrowerScreen3(Screen):
             self.show_validation_error("Please Upload 10th Certificate.")
         elif not self.validate_image_loaded(self.ids.image_label12):
             validation_errors.append((self.ids.image_label12, "Image not loaded."))
-            self.show_validation_error("Please Upload 11th Certificate.")
+            self.show_validation_error("Please Upload 12th Certificate.")
         elif not self.validate_image_loaded(self.ids.image_label13):
             validation_errors.append((self.ids.image_label13, "Image not loaded."))
-            self.show_validation_error("Please Upload B.Tech Certificate.")
+            self.show_validation_error("Please Upload Bachelor's degree Certificates.")
         elif not self.validate_image_loaded(self.ids.image_label14):
             validation_errors.append((self.ids.image_label14, "Image not loaded."))
-            self.show_validation_error("Please Upload Masters Certificate.")
+            self.show_validation_error("Please Upload Master's Certificate.")
         elif not self.validate_image_loaded(self.ids.image_label15):
             validation_errors.append((self.ids.image_label15, "Image not loaded."))
             self.show_validation_error("Please Upload PHD Certificate.")
@@ -9695,6 +9537,7 @@ class BorrowerScreen17(Screen):
 
 
 class BorrowerScreen18(Screen):
+    all_fields_filled = BooleanProperty(True)
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         spinner_data = app_tables.fin_borrower_account_type.search()
@@ -9711,111 +9554,7 @@ class BorrowerScreen18(Screen):
         else:
             self.ids.account_type_id.values = ['Select Account Type']
 
-    # def animate_loading_text(self, loading_label, modal_height):
-    #     # Define the animation to move the label vertically
-    #     anim = Animation(y=modal_height - loading_label.height, duration=1) + \
-    #            Animation(y=0, duration=1)
-    #     # Loop the animation
-    #     anim.repeat = True
-    #     anim.bind(on_complete=lambda *args: self.animate_loading_text(loading_label, modal_height))
-    #     anim.start(loading_label)
-    #     # Store the animation object
-    #     loading_label.animation = anim  # Store the animation object in a custom attribute
-
-    # def add_data(self, account_holder_name, account_type, account_number, bank_name):
-    #     modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
-    #
-    #     # Create MDLabel with white text color, increased font size, and bold text
-    #     loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
-    #                             theme_text_color="Custom", text_color=[1, 1, 1, 1],
-    #                             font_size="50sp", bold=True)
-    #
-    #     # Set initial y-position off-screen
-    #     loading_label.y = -loading_label.height
-    #
-    #     modal_view.add_widget(loading_label)
-    #     modal_view.open()
-    #
-    #     # Perform the animation
-    #     self.animate_loading_text(loading_label, modal_view.height)
-    #
-    #     # Perform the actual action (e.g., fetching loan requests)
-    #     # You can replace the sleep with your actual logic
-    #     Clock.schedule_once(
-    #         lambda dt: self.perform_data_addition_action(account_holder_name, account_type, account_number, bank_name,
-    #                                                      modal_view), 2)
-
-    # def perform_data_addition_action(self, account_holder_name, account_type, account_number, bank_name, modal_view):
-    #     modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
-    #     modal_view.dismiss()
-    #
-    #     if not all([account_holder_name, account_type, account_number, bank_name]):
-    #         # Display a validation error dialog
-    #         self.show_validation_error("Please fill in all fields.")
-    #         return  # Prevent further execution if any field is missing
-    #     if len(account_holder_name) < 3 or not account_holder_name[0].isupper() or account_holder_name.isdigit():
-    #         self.show_validation_error('Enter a valid account name first letter should be capital')
-    #         return
-    #     if account_type not in self.unique_list:
-    #         self.show_validation_error('Enter a valid account type')
-    #         return
-    #     if len(account_number) < 3 or not account_number.isdigit():
-    #         self.show_validation_error('Enter a valid account number')
-    #         return
-    #     if len(bank_name) < 3:
-    #         self.show_validation_error('Enter a valid bank name')
-    #         return
-    #
-    #     cursor.execute('select * from fin_users')
-    #     rows = cursor.fetchall()
-    #     row_id_list = []
-    #     status = []
-    #     for row in rows:
-    #         row_id_list.append(row[0])
-    #         status.append(row[-1])
-    #
-    #     if 'logged' in status:
-    #         log_index = status.index('logged')
-    #         cursor.execute(
-    #             "UPDATE fin_registration_table SET account_holder_name = ?, account_type = ?, account_number = ?, bank_name = ? WHERE customer_id = ?",
-    #             (account_holder_name, account_type, account_number, bank_name, row_id_list[log_index]))
-    #         conn.commit()
-    #     else:
-    #         print('User is not logged in.')
-    #
-    #     data = app_tables.fin_user_profile.search()
-    #     id_list = [i['email_user'] for i in data]
-    #     user_email = anvil.server.call('another_method')
-    #     if user_email in id_list:
-    #         index = id_list.index(user_email)
-    #         data[index]['account_name'] = account_holder_name
-    #         data[index]['account_type'] = account_type
-    #         data[index]['account_number'] = account_number
-    #         data[index]['bank_name'] = bank_name
-    #     else:
-    #         print('email not valid')
-    #
-    #     sm = self.manager
-    #     borrower_screen = BorrowerScreen19(name='BorrowerScreen19')
-    #     sm.add_widget(borrower_screen)
-    #     sm.transition.direction = 'left'  # Set the transition direction explicitly
-    #     sm.current = 'BorrowerScreen19'
-    #
-    # def show_validation_error(self, error_message):
-    #     dialog = MDDialog(
-    #         title="Validation Error",
-    #         text=error_message,
-    #         size_hint=(0.8, None),
-    #         height=dp(200),
-    #         buttons=[
-    #             MDRectangleFlatButton(
-    #                 text="OK",
-    #                 text_color=(0.043, 0.145, 0.278, 1),
-    #                 on_release=lambda x: dialog.dismiss()
-    #             )
-    #         ]
-    #     )
-    #     dialog.open()
+        self.check = None
 
     def validate_zip_code(self, zip_code):
         zip_code_text = zip_code.text
@@ -9850,7 +9589,7 @@ class BorrowerScreen18(Screen):
             zip_code.helper_text = ""
             zip_code.error = False
         else:
-            zip_code.helper_text = "Should contain both alphabetic characters and numeric digits"
+            zip_code.helper_text = "Should Contain characters and numbers."
             zip_code.error = True
 
     def go_to_dashboard(self):
@@ -9872,15 +9611,17 @@ class BorrowerScreen18(Screen):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'BorrowerScreen20'
 
-
-# class BorrowerScreen19(Screen):
-#     def __init__(self, **kwargs):
-#         super().__init__(**kwargs)
-        self.check = None
-
     def on_checkbox_active(self, checkbox, value):
         if value:
             self.check = True
+            self.all_fields_filled = not all([
+                self.ids.ifsc_code.text,
+                self.ids.branch_name.text,
+                self.ids.account_holder_name.text,
+                self.ids.account_type_id.text,
+                self.ids.account_number.text,
+                self.ids.bank_name.text
+            ])
         else:
             self.check = False
 
@@ -10101,25 +9842,6 @@ class BorrowerScreen18(Screen):
             ]
         )
         dialog.open()
-
-    # def go_to_dashboard(self):
-    #     self.manager.current = 'DashScreen'
-    #
-    # def on_pre_enter(self):
-    #     Window.bind(on_keyboard=self.on_back_button)
-    #
-    # def on_pre_leave(self):
-    #     Window.unbind(on_keyboard=self.on_back_button)
-    #
-    # def on_back_button(self, instance, key, scancode, codepoint, modifier):
-    #     if key == 27:
-    #         self.go_back()
-    #         return True
-    #     return False
-    #
-    # def go_back(self):
-    #     self.manager.transition = SlideTransition(direction='right')
-    #     self.manager.current = 'BorrowerScreen18'
 
 
 class BorrowerScreen20(Screen):

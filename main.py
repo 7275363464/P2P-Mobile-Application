@@ -621,6 +621,7 @@ class MyApp(MDApp):
         extend_status = []
         loan_extend_id = []
         loan_rx_mon_tenure = []
+        new_emi1 = []
 
         s = 0
         for i in extend:
@@ -629,6 +630,7 @@ class MyApp(MDApp):
             extend_status.append(i['status'])
             loan_extend_id.append(i['loan_id'])
             loan_rx_mon_tenure.append(i['total_extension_months'])
+            new_emi1.append(i['new_emi'])
 
         ext_lan = 0
         if loan_id in loan_extend_id:
@@ -683,6 +685,8 @@ class MyApp(MDApp):
                     if loan_extend_id[i] in loan_id:
                         tenure_index = loan_id.index(loan_extend_id[i])
                         data[tenure_index]['tenure'] += loan_rx_mon_tenure[ext_lan]
+                        data[tenure_index]['monthly_emi'] = new_emi1[ext_lan]
+
 
                     extend[i]["status"] = "approved"
 

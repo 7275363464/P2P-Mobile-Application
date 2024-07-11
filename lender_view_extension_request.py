@@ -1496,9 +1496,11 @@ class ViewProfileE(Screen):
 
         loan_extend_id = []
         loan_rx_mon_tenure = []
+        new_emi1 = []
         for i in extend_ten:
             loan_extend_id.append(i['loan_id'])
             loan_rx_mon_tenure.append(i['total_extension_months'])
+            new_emi1.append(i['monthly_emi'])
         ext_lan = 0
         if loan_id in loan_extend_id:
             ext_lan = loan_extend_id.index(loan_id)
@@ -1530,6 +1532,7 @@ class ViewProfileE(Screen):
             for loan_id in loan_records:
                 data[index1]['loan_updated_status'] = 'extension'
                 data[index1]['tenure'] = tenure_month
+                data[index1]['monthly_emi'] = new_emi1[ext_lan]
                 emi[last_index]['remaining_tenure'] = extend_mon
                 print(data[index1]['loan_updated_status'])
                 loan_id.update()

@@ -26,6 +26,7 @@ import anvil.server
 from anvil.tables import app_tables
 
 from borrower_dashboard import DashboardScreen
+from chatbot import ChatBotScreen
 from dashboard import DashScreen
 
 from lender_dashboard import LenderDashboard
@@ -33,7 +34,7 @@ from login import OTPScreen, PreLoginScreen
 from new_loan_request import NewloanScreen
 from signup import SignupScreen, EmailOTPScreen
 
-anvil.server.connect("server_MMDT5BC6JQJX7LA72XRFWMCS-VDS6LDYSOGBPZ3DB")
+anvil.server.connect("server_ICVO6RJCL6BCD7JT3ASVXABB-DVKXHXN3FMGIYIJX")
 
 
 class MyApp(MDApp):
@@ -51,10 +52,12 @@ class MyApp(MDApp):
         otp_screen = OTPScreen(name='otp')
         signup_screen = SignupScreen(name='SignupScreen')
         email_otp_screen = EmailOTPScreen(name='email_otp')
+        chatbot_screen = ChatBotScreen(name ="ChatBotScreen")
         self.sm.add_widget(main_screen)
         self.sm.add_widget(otp_screen)
         self.sm.add_widget(signup_screen)
         self.sm.add_widget(email_otp_screen)
+        self.sm.add_widget(chatbot_screen)
 
         return self.sm
 

@@ -18,7 +18,7 @@ from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
 from kivymd.uix.list import ThreeLineAvatarIconListItem, IconLeftWidget, TwoLineListItem
 from kivy.utils import get_color_from_hex
-from kivy.metrics import sp
+from kivy.metrics import sp, dp
 from io import BytesIO
 from kivy.core.image import Image as CoreImage
 import base64
@@ -28,6 +28,8 @@ from datetime import datetime
 import logging
 import time
 from num2words import num2words  # Library to convert numbers to words
+
+from borrower_application_tracker import CircularImage
 
 if platform == 'android':
     from kivy.uix.button import Button
@@ -55,10 +57,10 @@ view_transaction_history = '''
             MDBoxLayout:
                 id: container2
                 orientation: 'vertical'
-                padding: dp(30)
-                spacing: dp(10)
+                padding: dp(10)
+                spacing: dp(1)
                 size_hint_y: None
-                height: self.minimum_height
+                height: dp(100)
                 width: self.minimum_width
                 adaptive_size: True
 
@@ -305,38 +307,53 @@ class LineSeparator(Widget):
 
         with self.canvas.before:
             Color(0.5, 0.5, 0.5, 1)  # Adjust color as needed (RGBA format)
-            self.line = Line(points=[0, 0, 1000, 0], width=1)  # Adjust width as needed
+            self.line = Line(points=[0, 0, 1000, 0], width=0.5)  # Adjust width as needed
 
     def on_size(self, *args):
         self.line.points = [self.padding_left, self.y, self.width + self.x, self.y]
 
 
+from kivy.properties import NumericProperty
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.label import MDLabel
+from kivy.utils import get_color_from_hex
+
+
 class CustomTwoLineListItem(MDBoxLayout):
+    name_font_size = NumericProperty('14sp')
+    amount_font_size = NumericProperty('14sp')
+    transaction_font_size = NumericProperty('6sp')
+    status_font_size = NumericProperty('6sp')
+
     def __init__(self, text, secondary_text, amount_text, status_text, transaction_id, **kwargs):
-        super().__init__(orientation='vertical', spacing=5, padding=5, **kwargs)
+        super().__init__(orientation='vertical', spacing=-5, padding=5, **kwargs)
         self.transaction_id = transaction_id
         # Define colors
         transaction_color = get_color_from_hex('#808080')  # Cement color
 
         # First line with name and amount
-        first_line_layout = MDBoxLayout(orientation='horizontal', spacing=10)
+        first_line_layout = MDBoxLayout(orientation='horizontal', spacing=15)
 
         name_label = MDLabel(
             text=text,
-            size_hint_x=0.8,
+            size_hint=(None, None),
+            size=(250, 40),  # Fixed size
             halign='left',
             valign='middle',
-            bold=True,
-            font_style='H5'  # Use MDLabel's font style for bold text
+            font_size='20sp',
+            font_style='H6'  # Use MDLabel's font style for bold text
         )
+
         amount_label = MDLabel(
             text=amount_text,
-            size_hint_x=0.2,
+            size_hint=(None, None),
+            size=(125, 40),  # Fixed size
             halign='right',
             valign='middle',
-            bold=True,
-            font_size='14sp'
-            # Use MDLabel's font style for bold text
+            markup=True,
+            font_size='20sp',
+            font_style='Subtitle2',  # You can adjust font style as needed
+            theme_text_color='Primary'
         )
 
         first_line_layout.add_widget(name_label)
@@ -347,20 +364,24 @@ class CustomTwoLineListItem(MDBoxLayout):
 
         transaction_label = MDLabel(
             text=secondary_text,
-            size_hint_x=0.8,
+            size_hint=(None, None),
+            size=(250, 40),  # Fixed size
             halign='left',
             valign='middle',
+            font_size='13sp',  # Smaller font size
+            font_style='Caption',  # You can adjust font style as needed
             theme_text_color='Custom',
-            text_color=transaction_color,
-            font_size='13sp'  # Use MDLabel's font style for regular text
+            text_color=transaction_color
         )
 
         status_label = MDLabel(
             text=status_text,
-            size_hint_x=0.2,
+            size_hint=(None, None),
+            size=(125, 40),  # Fixed size
             halign='right',
             valign='middle',
-            font_style='H6'  # Use MDLabel's font style for regular text
+            font_size='20sp',
+            font_style='Subtitle2'  # Use MDLabel's font style for regular text
         )
 
         if status_text.lower() == 'success':
@@ -369,7 +390,6 @@ class CustomTwoLineListItem(MDBoxLayout):
         elif status_text.lower() == 'fail':
             status_label.theme_text_color = 'Custom'
             status_label.text_color = (1, 0, 0, 1)  # Red color for fail
-
         second_line_layout.add_widget(transaction_label)
         second_line_layout.add_widget(status_label)
 
@@ -456,8 +476,7 @@ class TransactionBH(Screen):
                 other_name = "Unknown"
                 logging.warning(f"Other email {other_email} not found in pro_email_id")
 
-            main_layout = BoxLayout(orientation='horizontal', size_hint=(None, None), size=("520dp", "80dp"))
-            image_layout = BoxLayout(orientation='vertical', size_hint_x=None, width="50dp", padding="5dp")
+            main_layout = BoxLayout(orientation='horizontal', size_hint=(None, None),spacing=dp(-5), size=("350dp", "80dp"))
 
             image_data_start = time.time()
             image_data = self.get_user_photo(other_email)
@@ -465,9 +484,11 @@ class TransactionBH(Screen):
 
             image_widget_start = time.time()
             image = self.get_image_widget(image_data)
-            print(f"Image widget created for {other_email} in {time.time() - image_widget_start:.2f} seconds")
+            circular_image = CircularImage1(texture=image.texture, )
+            # Adjust position using pos_hint
+            circular_image.pos_hint = {'center_x': 0.5, 'center_y': 0.5}
 
-            image_layout.add_widget(image)
+            print(f"Image widget created for {other_email} in {time.time() - image_widget_start:.2f} seconds")
 
             info_layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
             transaction_time = transaction_time_stamp[i].strftime("%I:%M %p, %d-%m-%Y")
@@ -492,7 +513,7 @@ class TransactionBH(Screen):
             item.amount = amount[i]  # Adding amount to the item
             item.bind(on_touch_down=self.on_transaction_click)
             info_layout.add_widget(item)
-            main_layout.add_widget(image_layout)
+            main_layout.add_widget(circular_image)
             main_layout.add_widget(info_layout)
 
             self.ids.container2.add_widget(main_layout)
@@ -516,13 +537,11 @@ class TransactionBH(Screen):
                 image_data = image_data.get_bytes()
                 profile_texture_io = BytesIO(image_data)
                 photo_texture = CoreImage(profile_texture_io, ext='png').texture
-                image = Image(texture=photo_texture, size_hint_x=None, height="50dp", width="50dp")
-                return image
+                return Image(texture=photo_texture, size_hint_x=None, height="50dp", width="50dp")
             except Exception as e:
                 logging.error(f"Error loading image: {e}")
         # If no image data or error loading, return a default image
-        default_image = Image(source='img.png', size_hint_x=None, height="50dp", width="50dp")
-        return default_image
+        return Image(source='img.png', size_hint_x=None, height="50dp", width="50dp")
 
     def on_transaction_click(self, instance, touch):
         if instance.collide_point(*touch.pos):
@@ -779,3 +798,35 @@ class ViewProfileScreenBTH(Screen):
 
 class MyScreenManager(ScreenManager):
     pass
+
+
+from kivy.graphics import Ellipse, StencilPush, StencilUse, StencilUnUse, StencilPop
+
+
+class CircularImage1(Image):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.size_hint = (None, None)
+        self.size = ("60dp", "48dp")  # Initial size of the image
+        self.bind(pos=self.update_shape, size=self.update_shape)
+
+    def update_shape(self, *args):
+        self.canvas.before.clear()
+
+        # Calculate the diameter of the circle
+        diameter = min(self.width, self.height)
+        radius = diameter / 2.0
+
+        # Calculate the position of the ellipse to center it on the image
+        ellipse_pos = (self.center_x - radius, self.center_y - radius)
+
+        with self.canvas.before:
+            StencilPush()
+            Ellipse(pos=ellipse_pos, size=(diameter, diameter))
+            StencilUse()
+
+        self.canvas.after.clear()
+        with self.canvas.after:
+            StencilUnUse()
+            Ellipse(pos=ellipse_pos, size=(diameter, diameter))
+            StencilPop()

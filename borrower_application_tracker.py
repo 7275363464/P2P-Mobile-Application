@@ -738,7 +738,7 @@ class ALLLoansAPT(Screen):
                     width="250dp",
                     theme_text_color="Custom",
                     text_color=(1, 1, 1, 1),  # White color in RGBA format
-                    pos_hint={"center_x": 0.6},
+                    pos_hint={"center_x": 0.7},
                     md_bg_color="#1E90FF",  # Background color in a shade of blue
                     on_release=lambda x, i=i: self.icon_button_clicked(x, loan_id[i])
                 )
@@ -826,7 +826,7 @@ class CircularImage(Image):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.size_hint = (None, None)
-        self.size = ("80dp", "120dp")  # Initial size of the image
+        self.size = ("80dp", "100dp")  # Initial size of the image
         self.bind(pos=self.update_shape, size=self.update_shape)
 
     def update_shape(self, *args):

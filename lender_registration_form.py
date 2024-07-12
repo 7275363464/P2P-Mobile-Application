@@ -219,7 +219,7 @@ KV = '''
     
                 MDTextField:
                     id: alternate_email
-                    hint_text: 'Enter Alternate Email ID *'
+                    hint_text: 'Enter Alternate Email ID '
                     multiline: False
                     font_size: "15dp"
                     theme_text_color: "Custom"
@@ -3954,8 +3954,7 @@ class LenderScreen(Screen):
             validation_errors.append((self.ids.spinner_id, ""))
         if not mobile_number:
             validation_errors.append((self.ids.mobile_number, ""))
-        if not alternate_email:
-            validation_errors.append((self.ids.alternate_email, ""))
+
         if not aadhar_number:
             validation_errors.append((self.ids.aadhar_number, ""))
 
@@ -3971,9 +3970,6 @@ class LenderScreen(Screen):
             validation_errors.append(
                 (self.ids.mobile_number, ""))
 
-        # Validate email
-        if not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', alternate_email):
-            validation_errors.append((self.ids.alternate_email, ""))
 
         # Validate date of birth
         try:
@@ -4056,10 +4052,10 @@ class LenderScreen(Screen):
         if not re.match(email_regex, alternate_email_text):
             alternate_email.helper_text = "Invalid email format"
             alternate_email.error = True
-        else:
-            alternate_email.helper_text = ""
-            alternate_email.line_color_normal = (0, 0, 0, 1)
-            alternate_email.error = False
+        # else:
+        #     alternate_email.helper_text = ""
+        #     alternate_email.line_color_normal = (0, 0, 0, 1)
+        #     alternate_email.error = False
 
     def validate_mobile(self, mobile_number):
         mobile_number_text = mobile_number.text

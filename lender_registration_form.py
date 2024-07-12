@@ -9509,13 +9509,13 @@ class LenderScreenIndividualBankForm1(Screen):
             return  # Prevent further execution if any field is missing
         if not re.match(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{3,}$', bank_id):
             self.show_validation_error(
-                "Bank ID should contain at least 3 characters, including both numbers and letters.")
+                "IFSC Code should contain at least 3 characters, including both numbers and letters.")
             return
         if not branch_name.isalpha() or len(branch_name) < 3:
             self.show_validation_error('Enter a valid branch name')
             return
         if not re.match(r'^[a-zA-Z]{3,}$', account_holder_name) or not account_holder_name[0].isupper():
-            self.show_validation_error('Enter a valid account name and first letter should be capital')
+            self.show_validation_error('Enter a valid account holder name and first letter should be capital')
             return
         if account_type not in account_type == 'Select Account Type':
             self.show_validation_error('Enter a valid account type')

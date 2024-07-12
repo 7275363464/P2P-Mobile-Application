@@ -46,6 +46,7 @@ from kivy.factory import Factory
 from kivymd.uix.button import MDFillRoundFlatButton
 from borrower_portfolio import LenderDetails
 from borrower_report_issue import ReportScreen
+from pytz import utc
 
 if platform == 'android':
     from kivy.uix.button import Button
@@ -154,7 +155,7 @@ user_helpers = '''
                                         padding: "10dp", "5dp", "10dp", "0dp"
                                         size_hint_y: None
                                         height: dp(450)
-                                        spacing: dp(10)
+                                        #spacing: dp(10)
                                         MDCard:
                                             id: card
                                             orientation: 'vertical'
@@ -233,8 +234,9 @@ user_helpers = '''
                                                 orientation: 'vertical'
                                                 size_hint_y: None
                                                 height: self.minimum_height
-                                                md_bg_color: "#AEDFF7"
+                                                md_bg_color: 0.043, 0.145, 0.278, 1
                                                 pos_hint: {'center_x': 0.5}
+                                                spacing: dp(5)
                                                 canvas.before:
                                                     Color:
                                                         rgba: 0, 0, 0, 1
@@ -246,9 +248,9 @@ user_helpers = '''
                                                     orientation: 'horizontal'
                                                     size_hint_y: None
                                                     height: self.minimum_height
-                                                    md_bg_color: "#AEDFF7"
+                                                    md_bg_color: 0.043, 0.145, 0.278, 1
                                                     pos_hint: {'center_x': 0.5}
-                                                    spacing: dp(10)
+                                                    #spacing: dp(5)
                                                     MDLabel:
                                                         text: "         Balance:"
                                                         size_hint_y: None
@@ -256,7 +258,7 @@ user_helpers = '''
                                                         halign: 'center'
                                                         font_name: "Roboto-Bold"
                                                         theme_text_color: "Custom"
-                                                        text_color: "#333333"
+                                                        text_color: "#ffffff"
                                                     MDLabel:
                                                         id: total_amount1
                                                         text: "Rs. 50,000"
@@ -264,7 +266,7 @@ user_helpers = '''
                                                         height: dp(30)
                                                         halign: 'left'
                                                         theme_text_color: "Custom"
-                                                        text_color: "#333333"
+                                                        text_color: "#ffffff"
                                                         font_name: "Roboto-Bold"
                                                         font_size: dp(18)
 
@@ -272,7 +274,7 @@ user_helpers = '''
                                                     orientation: 'horizontal'
                                                     size_hint_y: None
                                                     height: self.minimum_height
-                                                    md_bg_color: "#AEDFF7"
+                                                    md_bg_color: 0.043, 0.145, 0.278, 1
                                                     spacing: dp(10)
                                                     pos_hint: {'center_x': 0.5}
                                                     size_hint_x: None
@@ -286,16 +288,16 @@ user_helpers = '''
                                                         text: "Deposit"
                                                         icon: "cash"
                                                         font_name: "Roboto-Bold"
-                                                        text_color: "white"
-                                                        md_bg_color: 0.043, 0.145, 0.278, 1
+                                                        text_color: "black"
+                                                        md_bg_color: 1, 1,1,1 
                                                         on_release: root.go_to_wallet()
 
                                                     MDRectangleFlatIconButton:
                                                         text: "Withdraw"
                                                         icon: "cash"
                                                         font_name: "Roboto-Bold"
-                                                        text_color: "white"
-                                                        md_bg_color: 0.043, 0.145, 0.278, 1
+                                                        text_color: "black"
+                                                        md_bg_color: 1,1,1,1
                                                         on_release: root.go_to_wallet()
 
                                                 MDFlatButton:
@@ -586,6 +588,8 @@ user_helpers = '''
                 orientation: 'vertical'
                 spacing: dp(30)
                 padding: dp(30)
+                size_hint_y: None
+                height: self.minimum_height
                 MDLabel:
                     text: 'Available Balance'
                     halign: 'center'
@@ -604,8 +608,50 @@ user_helpers = '''
                     MDLabel:
                         id: total_amount
                         halign: 'left'
+                        text: "500000"
                         font_size: dp(25)
                         bold: True
+                MDLabel:
+                    text:''
+                GridLayout:
+                    cols: 1
+                    spacing: dp(20)
+                    MDLabel:
+                        id: enter_amount
+                        text: 'Enter Amount'
+                        bold: True
+                        size_hint_y: None
+                        height: dp(1)
+                    MDTextField:
+                        id: enter_amount
+                        multiline: False
+                        helper_text: 'Enter valid Amount example: (500, 1000)'
+                        helper_text_mode: 'on_focus'
+                        size_hint_y:None
+                        font_size: "15dp"
+                        theme_text_color: "Custom"
+                        hint_text_color: 0, 0, 0, 1
+                        hint_text_color_normal: "black"
+                        text_color_normal: "black"
+                        helper_text_color_normal: "black"
+                        input_type: 'number'  
+
+                MDLabel:
+                    text: ""
+                MDLabel:
+                    text: ''
+
+                MDFlatButton:
+                    text: "view transaction history >>"
+                    size_hint_y: None
+                    height: dp(30)
+                    pos_hint: {'center_x': 0.5}
+                    theme_text_color: "Custom"
+                    text_color: "#007BFF"
+                    on_release: root.view_transaction_history()
+                    md_bg_color: "#ffffff"
+                MDLabel:
+                    text: ''
 
                 GridLayout:
                     cols: 2
@@ -618,65 +664,25 @@ user_helpers = '''
                         id: deposit_button_grid
                         line_color: 0, 0, 0, 0
                         icon: "cash"
-                        text_color: 0, 0, 0, 1
-                        md_bg_color:1,1,1,1
+                        text_color: 1,1,1,1
+                        md_bg_color: 0.043, 0.145, 0.278, 1
                         font_name:"Roboto-Bold"
-                        on_release: root.highlight_button('deposit')
+                        on_release: root.deposit()
                     MDRectangleFlatIconButton:
                         id: withdraw_button_grid
                         text: "Withdraw"
                         icon: "cash"
                         line_color: 0, 0, 0, 0
-                        text_color: 0, 0, 0, 1
-                        md_bg_color: 1,1,1,1
+                        text_color: 1,1,1,1
+                        md_bg_color: 0.043, 0.145, 0.278, 1
                         font_name:"Roboto-Bold"
-                        on_release: root.highlight_button('withdraw')
-                MDLabel:
-                    text: 'Enter Amount'
-                    bold: True
-                    size_hint_y: None
-                    height: dp(5)
-                MDTextField:
-                    id: enter_amount
-                    multiline: False
-                    helper_text: 'Enter valid Amount'
-                    helper_text_mode: 'on_focus'
-                    size_hint_y:None
-                    font_size: "15dp"
-                    theme_text_color: "Custom"
-                    hint_text_color: 0, 0, 0, 1
-                    hint_text_color_normal: "black"
-                    text_color_normal: "black"
-                    helper_text_color_normal: "black"
-                    on_touch_down: root.on_amount_touch_down()
-
-                MDFlatButton:
-                    text: "View Transaction History >"
-                    theme_text_color: "Custom"
-                    text_color: "black"
-                    pos_hint: {'center_x': 0.5}
-                    padding: dp(10)
-                    md_bg_color: 140/255, 140/255, 140/255, 1
-                    on_release: root.view_transaction_history()
+                        on_release: root.withdraw()
                 GridLayout:
                     id: box
                     cols: 1
-                    spacing: dp(20)
                     size_hint_y: None
                     height: dp(50)
-                    pos_hint: {'center_x': 0.65}
-
-
-                MDRoundFlatButton:
-                    text: "Submit"
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    theme_text_color: 'Custom'
-                    font_name: "Roboto-Bold" 
-                    text_color: 1, 1, 1, 1
-                    size_hint: 0.7, None
-                    height: "40dp"
-                    pos_hint: {'center_x': 0.5}
-                    on_release: root.submit()
+                    pos_hint: {'center_x': 0.74}
                 MDLabel:
                     text:''
                     size_hint_y:None
@@ -885,6 +891,36 @@ user_helpers = '''
 
                                         MDLabel:
                                             text: "Professional Info"
+                                            font_size:dp(12)
+                                            bold: True
+                                            theme_text_color: "Custom"
+                                            text_color: 0, 0, 0, 1
+                                            halign: "center"
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+                                    size_hint_y: None
+                                    height: dp(70)
+                                    md_bg_color: "#ffffff"
+                                    canvas.before:
+                                        Color:
+                                            rgba: 0, 0, 0, 1
+                                        Line:
+                                            width: 1.5
+                                            rectangle: (self.x, self.y, self.width,self.height)
+                                    MDCard:
+                                        md_bg_color: "#ffffff"  # Customize background color
+                                        orientation: "vertical"
+                                        padding:dp(9), dp(3)
+                                        on_release: root.go_to_business()
+                                        Image:
+                                            source: "icon9.png"
+                                            size_hint: (0.4, 1)
+                                            pos_hint:{"center_x":0.5,"center_y":0.2}
+                                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+
+                                        MDLabel:
+                                            text: "Business Info"
                                             font_size:dp(12)
                                             bold: True
                                             theme_text_color: "Custom"
@@ -1120,6 +1156,37 @@ user_helpers = '''
 
                                 MDLabel:
                                     text: "Professional Info"
+                                    font_size:dp(12)
+                                    bold: True
+                                    theme_text_color: "Custom"
+                                    text_color: 0, 0, 0, 1
+                                    halign: "center"
+                        
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: None
+                            height: dp(70)
+                            md_bg_color: "#ffffff"
+                            canvas.before:
+                                Color:
+                                    rgba: 0, 0, 0, 1
+                                Line:
+                                    width: 1.5
+                                    rectangle: (self.x, self.y, self.width,self.height)
+                            MDCard:
+                                md_bg_color: "#ffffff"  # Customize background color
+                                orientation: "vertical"
+                                padding:dp(9), dp(3)
+                                on_release: root.go_to_business()
+                                Image:
+                                    source: "icon9.png"
+                                    size_hint: (0.4, 1)
+                                    pos_hint:{"center_x":0.5,"center_y":0.2}
+                                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+
+                                MDLabel:
+                                    text: "Business Info"
                                     font_size:dp(12)
                                     bold: True
                                     theme_text_color: "Custom"
@@ -7322,6 +7389,102 @@ class DashboardScreen(Screen):
     def on_back_button_press(self):
         self.manager.current = 'DashboardScreen'
 
+    def deposit(self):
+        enter_amount = self.ids.enter_amount.text
+        if self.ids.enter_amount.text == '' and not self.ids.enter_amount.text.isdigit():
+            self.show_validation_error3('Enter Valid Amount')
+            return
+        data = app_tables.fin_wallet.search()
+        transaction = app_tables.fin_wallet_transactions.search()
+        email = self.email()
+        w_email = []
+        w_id = []
+        w_amount = []
+        w_customer_id = []
+        for i in data:
+            w_email.append(i['user_email'])
+            w_id.append(i['wallet_id'])
+            w_amount.append(i['wallet_amount'])
+            w_customer_id.append(i['customer_id'])
+
+        t_id = []
+        for i in transaction:
+            t_id.append(i['transaction_id'])
+
+        if len(t_id) >= 1:
+            transaction_id = 'TA' + str(int(t_id[-1][2:]) + 1).zfill(4)
+        else:
+            transaction_id = 'TA0001'
+
+        transaction_date_time = datetime.today()
+        if email in w_email:
+            index = w_email.index(email)
+            data[index]['wallet_amount'] = int(enter_amount) + w_amount[index]
+            self.show_validation_error(f'Amount {enter_amount} Deposited Successfully')
+            self.ids.enter_amount.text = ''
+            app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                       customer_id=w_customer_id[index], user_email=email,
+                                                       transaction_type=self.type, amount=int(enter_amount),
+                                                       status='success', wallet_id=w_id[index],
+                                                       transaction_time_stamp=transaction_date_time)
+        else:
+            print("no email found")
+        self.refresh1()
+
+    def withdraw(self):
+        enter_amount = self.ids.enter_amount.text
+        if self.ids.enter_amount.text == '' and not self.ids.enter_amount.text.isdigit():
+            self.show_validation_error3('Enter Valid Amount')
+            return
+        data = app_tables.fin_wallet.search()
+        transaction = app_tables.fin_wallet_transactions.search()
+        email = self.email()
+        w_email = []
+        w_id = []
+        w_amount = []
+        w_customer_id = []
+        for i in data:
+            w_email.append(i['user_email'])
+            w_id.append(i['wallet_id'])
+            w_amount.append(i['wallet_amount'])
+            w_customer_id.append(i['customer_id'])
+
+        t_id = []
+        for i in transaction:
+            t_id.append(i['transaction_id'])
+
+        if len(t_id) >= 1:
+            transaction_id = 'TA' + str(int(t_id[-1][2:]) + 1).zfill(4)
+        else:
+            transaction_id = 'TA0001'
+
+        transaction_date_time = datetime.today()
+
+        if email in w_email:
+            index = w_email.index(email)
+            if w_amount[index] >= int(self.ids.enter_amount.text):
+                data[index]['wallet_amount'] = w_amount[index] - int(self.ids.enter_amount.text)
+                self.show_validation_error(
+                    f'Amount {self.ids.enter_amount.text} Withdraw Successfully')
+                self.ids.enter_amount.text = ''
+                app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                           customer_id=w_customer_id[index], user_email=email,
+                                                           transaction_type=self.type, amount=int(enter_amount),
+                                                           status='success', wallet_id=w_id[index],
+                                                           transaction_time_stamp=transaction_date_time)
+            else:
+                self.show_validation_error2(
+                    f'Insufficient Amount {self.ids.enter_amount.text} Please Deposit Required Money')
+                app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                           customer_id=w_customer_id[index], user_email=email,
+                                                           transaction_type=self.type, amount=int(enter_amount),
+                                                           status='fail', wallet_id=w_id[index],
+                                                           transaction_time_stamp=transaction_date_time)
+                self.ids.enter_amount.text = ''
+        else:
+            print("no email found")
+        self.refresh1()
+
     def wallet(self):
         self.type = None
         data = app_tables.fin_wallet.search()
@@ -7621,6 +7784,33 @@ class DashboardScreen(Screen):
             interest_rate.append(i['interest_rate'])
             tenure.append(i['tenure'])
 
+        emi_data = app_tables.fin_emi_table.search()
+        emi_loan_id = []
+        emi_num = []
+        next_payment = []
+        paid_amount = []
+        part_payment_type = []
+        part_payment_done = []
+        payment_date = []
+        part_payment_amount = []
+        remain_amo = []
+        remain_tenure = []
+        part_payment_date = []
+        emi_remain_amount = []
+        for i in emi_data:
+            emi_loan_id.append(i['loan_id'])
+            emi_num.append(i['emi_number'])
+            next_payment.append(i['next_payment'])
+            paid_amount.append(i['amount_paid'])
+            part_payment_type.append((i['payment_type']))
+            part_payment_done.append(i['part_payment_done'])
+            payment_date.append(i['part_payment_date'])
+            part_payment_amount.append(i['part_payment_amount'])
+            remain_amo.append(i['total_remaining_amount'])
+            remain_tenure.append(i['remaining_tenure'])
+            part_payment_date.append(i['part_payment_date'])
+            emi_remain_amount.append(i['total_remaining_amount'])
+
         c = -1
         index_list = []
         for i in range(s):
@@ -7644,6 +7834,92 @@ class DashboardScreen(Screen):
             self.ids.interest.text = str(interest_rate[a]) + "%"
             self.ids.tenure.text = str(int(tenure[a])) + ' Months'
             self.ids.status.text = str(loan_status[a])
+
+        # today_date = datetime.now(tz=utc).date()
+        # data = app_tables.fin_loan_details.search()
+        # emi_data = app_tables.fin_emi_table.search()
+        # profile = app_tables.fin_user_profile.search()
+        # foreclose = app_tables.fin_foreclosure.search()
+        # customer_id = []
+        # loan_id = []
+        # loan_status = []
+        # borrower_id = []
+        # borrower_name = []
+        # schedule_date = []
+        # interest_rate = []
+        # tenure = []
+        # loan_amount = []
+        #
+        # s = 0
+        #
+        # for i in data:
+        #     s += 1
+        #     loan_id.append(i['loan_id'])
+        #     customer_id.append(i['borrower_customer_id'])
+        #     loan_status.append(i['loan_updated_status'])
+        #     borrower_id.append(i['borrower_customer_id'])
+        #     borrower_name.append(i['borrower_full_name'])
+        #     schedule_date.append(i['first_emi_payment_due_date'])
+        #     interest_rate.append(i['interest_rate'])
+        #     tenure.append(i['tenure'])
+        #     loan_amount.append(i['loan_amount'])
+        #
+        # foreclose_loan_id = []
+        # foreclose_acceptance_date = []
+        # for i in foreclose:
+        #     foreclose_loan_id.append(i['loan_id'])
+        #     foreclose_acceptance_date.append((i['status_timestamp']))
+        # foreclose1 = 0
+        # if loan_id in foreclose_loan_id:
+        #     foreclose1 = foreclose_loan_id.index(loan_id)
+        #
+        # emi_loan_id = []
+        # emi_num = []
+        # next_payment = []
+        # part_payment_type = []
+        # part_payment_done = []
+        # for i in emi_data:
+        #     emi_loan_id.append(i['loan_id'])
+        #     emi_num.append(i['emi_number'])
+        #     next_payment.append(i['next_payment'])
+        #     part_payment_type.append((i['payment_type']))
+        #     part_payment_done.append(i['part_payment_done'])
+        # profile_customer_id = []
+        # profile_mobile_number = []
+        # profile_email_id = []
+        # for i in profile:
+        #     profile_customer_id.append(i['customer_id'])
+        #     profile_mobile_number.append(i['mobile'])
+        #     profile_email_id.append(i['email_user'])
+        # email = anvil.server.call('another_method')
+        #
+        # cos_id = None
+        # index = 0
+        # if email in profile_email_id:
+        #     index = profile_email_id.index(email)
+        #     cos_id = profile_customer_id[index]
+        # index_list = []
+        # a = -1
+        # shedule_date = {}
+        # for i in range(s):
+        #     a += 1
+        #     print(customer_id[i], profile_customer_id[index])
+        #     if customer_id[i] == profile_customer_id[index] and loan_status[i] == "disbursed" or customer_id[i] == \
+        #             profile_customer_id[index] and loan_status[i] == "extension" or customer_id[i] == \
+        #             profile_customer_id[index] and loan_status[i] == "foreclosure":
+        #         print(customer_id[i], profile_customer_id[index], loan_status[i])
+        #         if customer_id[i] == profile_customer_id[index] and loan_status[i] == "foreclosure":
+        #             index_list.append(i)
+        #             shedule_date[loan_id[i]] = (foreclose_acceptance_date[foreclose1]).date()
+        #         if loan_id[i] not in emi_loan_id and schedule_date[i] is not None and today_date >= schedule_date[i]:
+        #             index_list.append(i)
+        #             shedule_date[loan_id[i]] = schedule_date[i]
+        #         elif loan_id[i] in emi_loan_id:
+        #             last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(loan_id[i])
+        #             if next_payment[last_index] is not None and today_date >= next_payment[last_index]:
+        #                 index_list.append(i)
+        #                 shedule_date[loan_id[i]] = next_payment[last_index]
+        # print(shedule_date)
 
         data = app_tables.fin_wallet.search()
         w_email = []

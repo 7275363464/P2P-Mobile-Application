@@ -10,7 +10,7 @@ from kivy.uix.widget import Widget
 from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
 
-#from chatbot import ChatBotScreen
+# from chatbot import ChatBotScreen
 from lender_portfolio import Lend_Portfolio
 from anvil.tables import app_tables
 import base64
@@ -831,6 +831,8 @@ user_helpers1 = """
                 orientation: 'vertical'
                 spacing: dp(30)
                 padding: dp(30)
+                size_hint_y: None
+                height: self.minimum_height
                 MDLabel:
                     text: 'Available Balance'
                     halign: 'center'
@@ -849,9 +851,56 @@ user_helpers1 = """
                     MDLabel:
                         id: total_amount
                         halign: 'left'
+                        text: "500000"
                         font_size: dp(25)
                         bold: True
+                MDLabel:
+                    text:''
+                GridLayout:
+                    cols: 1
+                    spacing: dp(20)
+                    MDLabel:
+                        id: enter_amount
+                        text: 'Enter Amount'
+                        bold: True
+                        size_hint_y: None
+                        height: dp(1)
+                    MDTextField:
+                        id: enter_amount
+                        multiline: False
+                        helper_text: 'Enter valid Amount'
+                        helper_text_mode: 'on_focus'
+                        size_hint_y:None
+                        font_size: "15dp"
+                        theme_text_color: "Custom"
+                        hint_text_color: 0, 0, 0, 1
+                        hint_text_color_normal: "black"
+                        text_color_normal: "black"
+                        helper_text_color_normal: "black"
+                        input_type: 'number'  
 
+                MDLabel:
+                    text: ""
+                MDLabel:
+                    text: ''
+
+                MDFlatButton:
+                    text: "view transaction history >>"
+                    size_hint_y: None
+                    height: dp(30)
+                    pos_hint: {'center_x': 0.5}
+                    theme_text_color: "Custom"
+                    text_color: "#007BFF"
+                    on_release: root.view_transaction_history()
+                    md_bg_color: "#ffffff"
+                MDLabel:
+                    text: ''
+                GridLayout:
+                    id: box
+                    cols: 1
+                    size_hint_y: None
+                    height: dp(50)
+                    pos_hint: {'center_x': 0.74}
                 GridLayout:
                     cols: 2
                     spacing: dp(20)
@@ -863,65 +912,25 @@ user_helpers1 = """
                         id: deposit_button_grid
                         line_color: 0, 0, 0, 0
                         icon: "cash"
-                        text_color: 0, 0, 0, 1
-                        md_bg_color:1,1,1,1
+                        text_color: 1,1,1,1
+                        md_bg_color: 0.043, 0.145, 0.278, 1
                         font_name:"Roboto-Bold"
-                        on_release: root.highlight_button('deposit')
+                        on_release: root.deposit()
                     MDRectangleFlatIconButton:
                         id: withdraw_button_grid
                         text: "Withdraw"
                         icon: "cash"
                         line_color: 0, 0, 0, 0
-                        text_color: 0, 0, 0, 1
-                        md_bg_color: 1,1,1,1
+                        text_color: 1,1,1,1
+                        md_bg_color: 0.043, 0.145, 0.278, 1
                         font_name:"Roboto-Bold"
-                        on_release: root.highlight_button('withdraw')
-                MDLabel:
-                    text: 'Enter Amount'
-                    bold: True
-                    size_hint_y: None
-                    height: dp(5)
-                MDTextField:
-                    id: enter_amount
-                    multiline: False
-                    helper_text: 'Enter valid Amount'
-                    helper_text_mode: 'on_focus'
-                    size_hint_y:None
-                    font_size: "15dp"
-                    theme_text_color: "Custom"
-                    hint_text_color: 0, 0, 0, 1
-                    hint_text_color_normal: "black"
-                    text_color_normal: "black"
-                    helper_text_color_normal: "black"
-                    on_touch_down: root.on_amount_touch_down()
-
-                MDFlatButton:
-                    text: "View Transaction History >"
-                    theme_text_color: "Custom"
-                    text_color: "black"
-                    pos_hint: {'center_x': 0.5}
-                    padding: dp(10)
-                    md_bg_color: 140/255, 140/255, 140/255, 1
-                    on_release: root.view_transaction_history()
+                        on_release: root.withdraw()
                 GridLayout:
                     id: box
                     cols: 1
-                    spacing: dp(20)
                     size_hint_y: None
                     height: dp(50)
-                    pos_hint: {'center_x': 0.65}
-
-
-                MDRoundFlatButton:
-                    text: "Submit"
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    theme_text_color: 'Custom'
-                    font_name: "Roboto-Bold" 
-                    text_color: 1, 1, 1, 1
-                    size_hint: 0.7, None
-                    height: "40dp"
-                    pos_hint: {'center_x': 0.5}
-                    on_release: root.submit()
+                    pos_hint: {'center_x': 0.74}
                 MDLabel:
                     text:''
                     size_hint_y:None
@@ -6191,6 +6200,102 @@ class LenderDashboard(Screen):
     def refresh2(self):
         self.__init__()
 
+    def deposit(self):
+        enter_amount = self.ids.enter_amount.text
+        if self.ids.enter_amount.text == '' and not self.ids.enter_amount.text.isdigit():
+            self.show_validation_error3('Enter Valid Amount')
+            return
+        data = app_tables.fin_wallet.search()
+        transaction = app_tables.fin_wallet_transactions.search()
+        email = self.email()
+        w_email = []
+        w_id = []
+        w_amount = []
+        w_customer_id = []
+        for i in data:
+            w_email.append(i['user_email'])
+            w_id.append(i['wallet_id'])
+            w_amount.append(i['wallet_amount'])
+            w_customer_id.append(i['customer_id'])
+
+        t_id = []
+        for i in transaction:
+            t_id.append(i['transaction_id'])
+
+        if len(t_id) >= 1:
+            transaction_id = 'TA' + str(int(t_id[-1][2:]) + 1).zfill(4)
+        else:
+            transaction_id = 'TA0001'
+
+        transaction_date_time = datetime.today()
+        if email in w_email:
+            index = w_email.index(email)
+            data[index]['wallet_amount'] = int(enter_amount) + w_amount[index]
+            self.show_validation_error(f'Amount {enter_amount} Deposited Successfully')
+            self.ids.enter_amount.text = ''
+            app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                       customer_id=w_customer_id[index], user_email=email,
+                                                       transaction_type=self.type, amount=int(enter_amount),
+                                                       status='success', wallet_id=w_id[index],
+                                                       transaction_time_stamp=transaction_date_time)
+        else:
+            print("no email found")
+        self.refresh1()
+
+    def withdraw(self):
+        enter_amount = self.ids.enter_amount.text
+        if self.ids.enter_amount.text == '' and not self.ids.enter_amount.text.isdigit():
+            self.show_validation_error3('Enter Valid Amount')
+            return
+        data = app_tables.fin_wallet.search()
+        transaction = app_tables.fin_wallet_transactions.search()
+        email = self.email()
+        w_email = []
+        w_id = []
+        w_amount = []
+        w_customer_id = []
+        for i in data:
+            w_email.append(i['user_email'])
+            w_id.append(i['wallet_id'])
+            w_amount.append(i['wallet_amount'])
+            w_customer_id.append(i['customer_id'])
+
+        t_id = []
+        for i in transaction:
+            t_id.append(i['transaction_id'])
+
+        if len(t_id) >= 1:
+            transaction_id = 'TA' + str(int(t_id[-1][2:]) + 1).zfill(4)
+        else:
+            transaction_id = 'TA0001'
+
+        transaction_date_time = datetime.today()
+
+        if email in w_email:
+            index = w_email.index(email)
+            if w_amount[index] >= int(self.ids.enter_amount.text):
+                data[index]['wallet_amount'] = w_amount[index] - int(self.ids.enter_amount.text)
+                self.show_validation_error(
+                    f'Amount {self.ids.enter_amount.text} Withdraw Successfully')
+                self.ids.enter_amount.text = ''
+                app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                           customer_id=w_customer_id[index], user_email=email,
+                                                           transaction_type=self.type, amount=int(enter_amount),
+                                                           status='success', wallet_id=w_id[index],
+                                                           transaction_time_stamp=transaction_date_time)
+            else:
+                self.show_validation_error2(
+                    f'Insufficient Amount {self.ids.enter_amount.text} Please Deposit Required Money')
+                app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                           customer_id=w_customer_id[index], user_email=email,
+                                                           transaction_type=self.type, amount=int(enter_amount),
+                                                           status='fail', wallet_id=w_id[index],
+                                                           transaction_time_stamp=transaction_date_time)
+                self.ids.enter_amount.text = ''
+        else:
+            print("no email found")
+        self.refresh1()
+
     def wallet(self):
         self.type = None
         data = app_tables.fin_wallet.search()
@@ -6260,6 +6365,7 @@ class LenderDashboard(Screen):
 
     def on_back_button_press(self):
         self.go_back()
+
     def show_success_dialog(self, text):
         dialog = MDDialog(
             text=text,
@@ -7932,6 +8038,7 @@ class ViewEmployeeScreen(Screen):
 
 class ViewEditScreen4(Screen):
     MAX_IMAGE_SIZE_MB = 2
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         gender_data = app_tables.fin_occupation_type.search()
@@ -8104,25 +8211,27 @@ class ViewEditScreen4(Screen):
             print(f"Email {email} not found in data.")
 
     def check_and_open_file_manager1(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "employee_id", self.upload_image)
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "employee_id",
+                                         self.upload_image)
 
     def check_and_open_file_manager2(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1",
                                          "last_six_months_bank_statement", self.upload_image1)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id,upload_function):
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, upload_function):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id,upload_function)
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id, upload_function)
             else:
                 self.request_media_images_permission()
         else:
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id,upload_function)
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id, upload_function)
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id,upload_function):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, upload_function):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,upload_function),
+            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
+                                                       upload_function),
         )
         if platform == 'android':
             primary_external_storage = "/storage/emulated/0"
@@ -8141,11 +8250,10 @@ class ViewEditScreen4(Screen):
     #     else:
     #         self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id,upload_function):
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, upload_function):
         upload_function(path)  # Upload the selected image using the provided function
         self.ids[image_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
         self.file_manager.close()
-
 
     # def select_path2(self, path, icon_id, label_id, file_label_id, image_id):
     #     self.upload_image1(path)  # Upload the selected image
@@ -8214,6 +8322,7 @@ class ViewEditScreen4(Screen):
             ]
         )
         dialog.open()
+
     def refresh(self):
         pass
 
@@ -8511,6 +8620,7 @@ class ViewBusinessScreen(Screen):
 
 class ViewEditScreen5(Screen):
     MAX_IMAGE_SIZE_MB = 2
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         gender_data = app_tables.fin_borrower_no_of_employees.search()
@@ -8652,25 +8762,27 @@ class ViewEditScreen5(Screen):
             print(f"Email {email} not found in data.")
 
     def check_and_open_file_manager1(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "six_bank", self.upload_image)
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "six_bank",
+                                         self.upload_image)
 
     def check_and_open_file_manager2(self):
         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1",
                                          "proof", self.upload_image1)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id,upload_function):
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, upload_function):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id,upload_function)
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id, upload_function)
             else:
                 self.request_media_images_permission()
         else:
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id,upload_function)
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id, upload_function)
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id,upload_function):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, upload_function):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,upload_function),
+            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
+                                                       upload_function),
         )
         if platform == 'android':
             primary_external_storage = "/storage/emulated/0"
@@ -8712,7 +8824,7 @@ class ViewEditScreen5(Screen):
         )
         view.open()
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id,upload_function):
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, upload_function):
         upload_function(path)  # Upload the selected image using the provided function
         self.ids[image_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
         self.file_manager.close()
@@ -8957,6 +9069,7 @@ class ViewEditScreen6(Screen):
             ]
         )
         dialog.open()
+
     def update_profile_data(self, account_holder, account_type, account_number, branch_name, bank_name, bank_id):
         email = self.get_email()
         user_profiles = app_tables.fin_user_profile.search(email_user=email)
@@ -9600,6 +9713,7 @@ class ViewEditScreen7(Screen):
 
 class ViewEditScreen1(Screen):
     MAX_IMAGE_SIZE_MB = 2
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         gender_data = app_tables.fin_gender.search()
@@ -10076,26 +10190,31 @@ class ViewEditScreen1(Screen):
         return anvil.server.call('profile')
 
     def check_and_open_file_manager1(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1", self.upload_image1)
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
+                                         self.upload_image1)
 
     def check_and_open_file_manager2(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "upload_gov_id1_img", self.upload_image2)
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "upload_gov_id1_img",
+                                         self.upload_image2)
 
     def check_and_open_file_manager3(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "upload_gov_id2_img", self.upload_image3)
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id,upload_function):
+        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "upload_gov_id2_img",
+                                         self.upload_image3)
+
+    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, upload_function):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id,upload_function)
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id, upload_function)
             else:
                 self.request_media_images_permission()
         else:
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id,upload_function)
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id, upload_function)
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id,upload_function):
+    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, upload_function):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,upload_function),
+            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
+                                                       upload_function),
         )
         if platform == 'android':
             primary_external_storage = "/storage/emulated/0"
@@ -10103,7 +10222,7 @@ class ViewEditScreen1(Screen):
         else:
             self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id,upload_function):
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, upload_function):
         upload_function(path)  # Upload the selected image using the provided function
         self.ids[image_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
         self.file_manager.close()

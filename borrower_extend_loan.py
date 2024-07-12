@@ -1,6 +1,9 @@
 from datetime import datetime, timezone
 import anvil.server
+from kivy.graphics import Ellipse, StencilPush, StencilUse, StencilUnUse, StencilPop
+
 from bson import utc
+from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.config import value
 from kivy.lang import Builder
 from kivy.core.window import Window
@@ -10,7 +13,7 @@ from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
-from kivymd.uix.button import MDFlatButton, MDRectangleFlatButton, MDFillRoundFlatButton, MDRaisedButton
+from kivymd.uix.button import MDFlatButton, MDIconButton, MDRectangleFlatButton, MDFillRoundFlatButton, MDFlatButton,MDRectangleFlatButton, MDFillRoundFlatButton, MDRaisedButton
 from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.label import MDLabel
@@ -47,7 +50,7 @@ extension_loan_request = """
             MDBoxLayout:
                 id: container
                 orientation: 'vertical'
-                padding: dp(30)
+                padding: dp(10)
                 spacing: dp(10)
                 size_hint_y: None
                 height: self.minimum_height
@@ -464,18 +467,20 @@ class ExtendLoan(Screen):
         product_name = []
         email1 = []
         interest_rate = []
+        processing_fee = []
         s = 0
         for i in data:
             s += 1
-            customer_id.append(i['borrower_customer_id'])
+            customer_id.append(i['lender_customer_id'])
             loan_id.append(i['loan_id'])
             loan_amount.append(i['loan_amount'])
-            borrower_name.append(i['borrower_full_name'])
+            borrower_name.append(i['lender_full_name'])
             loan_status.append(i['loan_updated_status'])
             tenure.append(i['tenure'])
+            processing_fee.append(i['total_processing_fee_amount'])
             product_name.append(i['product_name'])
             interest_rate.append(i['interest_rate'])
-            email1.append(i['borrower_email_id'])
+            email1.append(i['lender_email_id'])
 
         extension_allowed = []
         extension_fee = []
@@ -513,68 +518,51 @@ class ExtendLoan(Screen):
             k += 1
             number = profile_customer_id.index(customer_id[i])
             card = MDCard(
-                orientation='vertical',
+                orientation='horizontal',
                 size_hint=(None, None),
-                size=("310dp", "200dp"),
-                padding="10dp",
-                spacing="3dp",
-                elevation=3,
+                size=("340dp", "195dp"),
+                padding="8dp",
+                spacing="5dp",
+                elevation=1,
+                radius=[0, 0, 0, 0]
             )
-            # Horizontal layout to keep the text and image in to the card
-            horizontal_layout = BoxLayout(orientation='horizontal')
+
+            # Horizontal layout to keep the text and image in the card
+            horizontal_layout = BoxLayout(orientation='horizontal', padding=dp(20), size_hint_x=0.3, pos_hint={"center_y": 0.53})
+
+            # Vertical layout to align image, name, and mobile number vertically
+            vertical_layout = BoxLayout(orientation='vertical', spacing=0.5)
+
             if photo_texture:
-                image = Image(texture=photo_texture, size_hint_x=None, height="30dp", width="60dp")
-                horizontal_layout.add_widget(image)
+                image = CircularImage(texture=photo_texture)
+                vertical_layout.add_widget(image)
 
-            # Text Layout to keep the text on card
-            horizontal_layout.add_widget(Widget(size_hint_x=None, width='25dp'))
-            text_layout = BoxLayout(orientation='vertical')
-            text_layout.add_widget(MDLabel(
-                text=f" [b]{borrower_name[i]},\n {profile_mobile_number[number]}[/b]",
-                theme_text_color='Custom',
-                text_color=(0, 0, 0, 1),
-                halign='left',
+            # Adding name and mobile number to vertical layout
+            vertical_layout.add_widget(MDLabel(
+                text=f"[b]{borrower_name[i]}[/b]",
                 markup=True,
-                font_size='10sp',
-                bold=True
-            ))
-            text_layout.add_widget(MDLabel(
-                text=f" [b]Product Name:[/b] {product_name[i]}",
-                theme_text_color='Custom',
-                text_color=(0, 0, 0, 1),
+                font_size='18sp',
+                font_style='Caption',
+                theme_text_color='Primary',
                 halign='left',
-                markup=True,
-                # font_size='10sp'
             ))
-            text_layout.add_widget(MDLabel(
-                text=f" [b]Loan Amount:[/b] {loan_amount[i]}",
-                theme_text_color='Custom',
-                text_color=(0, 0, 0, 1),
+
+            vertical_layout.add_widget(MDLabel(
+                text=f"[b]{profile_mobile_number[number]}[/b]",
+                markup=True,
+                size_hint=(None, None),
+                height="50dp",
+                font_size='15sp',
+                font_style='Caption',
+                theme_text_color='Primary',
                 halign='left',
-                markup=True,
-                # font_size='10sp'
             ))
-            text_layout.add_widget(MDLabel(
-                text=f" [b]Ascend Score :[/b]{ascend_value[number]}",
-                theme_text_color='Custom',
-                text_color=(0, 0, 0, 1),
-                halign='left',
-                markup=True,
-                # font_size='10sp'
-            ))
-            horizontal_layout.add_widget(text_layout)
+
+            # Add vertical layout to horizontal layout
+            horizontal_layout.add_widget(vertical_layout)
+
+            # Add horizontal layout to card
             card.add_widget(horizontal_layout)
-
-            horizontal_layout1 = BoxLayout(orientation='horizontal', size_hint_y=None, height=dp(45))
-            # Button layout to align the Buttons
-            button_layout2 = BoxLayout(
-                size_hint_y=None,
-                height="40dp",
-                padding="10dp",
-                spacing="30dp"
-            )
-
-            # this colors for loan status button colors based on loan status
 
             status_color = (0.545, 0.765, 0.290, 1)  # default color
             if loan_status[i] == "under process":
@@ -593,50 +581,102 @@ class ExtendLoan(Screen):
                 status_color = (0.2353, 0.7019, 0.4431, 1.0)
             elif loan_status[i] == "lost opportunities":
                 status_color = (0.902, 0.141, 0.141, 1)
-            button2 = MDFillRoundFlatButton(
+
+            text_layout = MDBoxLayout(orientation='vertical', size_hint_x=0.5)
+            text_layout.add_widget(MDLabel(
+                text=f" [b]Product Name:[/b] {product_name[i]}",
+                markup=True,
+                font_size='10sp',
+                font_style='Caption',
+                theme_text_color='Primary',
+                halign='left',
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f" [b]Loan Amount:[/b] {loan_amount[i]}",
+                markup=True,
+                font_size='10sp',
+                font_style='Caption',
+                theme_text_color='Primary',
+                halign='left',
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Tenure:[/b] {tenure[i]}",
+                markup=True,
+                font_size='10sp',
+                font_style='Caption',
+                theme_text_color='Primary',
+                halign='left',
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Intrest Rate:[/b] {interest_rate[i]}",
+                markup=True,
+                font_size='10sp',
+                font_style='Caption',
+                theme_text_color='Primary',
+                halign='left',
+            ))
+            text_layout.add_widget(MDLabel(
+                text=f"[b]Processing Fee:[/b] {processing_fee[i]}",
+                markup=True,
+                font_size='10sp',
+                font_style='Caption',
+                theme_text_color='Primary',
+                halign='left',
+            ))
+
+            button2 = MDFlatButton(
                 text="  View Details  ",
-                # size_hint=(None, None),
-                height="40dp",
+                size_hint=(None, None),
+                height="50dp",
                 width="250dp",
-                pos_hint={"center_x": 1},
-                md_bg_color=(0.043, 0.145, 0.278, 1),
-                on_release=lambda x, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id),
-                text_color=(1, 1, 1, 1)
-            )
-            button_layout1 = BoxLayout(
-                size_hint_y=None,
-                height="40dp",
-                padding="10dp",
-                spacing=30
-            )
-            # this status_text for status text to keep button
-            status_text = {
-                "under process": "  Under Process ",
-                "disbursed": "  Disburse Loan ",
-                "closed": "    Closed Loan   ",
-                "extension": " Extension Loan ",
-                "foreclosure": "  Foreclosure  ",
-                "accepted": " Accepted Loan ",
-                "rejected": "  Rejected Loan ",
-                "approved": "  Approved Loan ",
-                "lost opportunities": "lost opportunities"
-            }
-            button1 = MDFillRoundFlatButton(
-                text=status_text.get(loan_status[i], loan_status[i]),
-                height=dp(40),
-                pos_hint={"center_x": 0},
-                md_bg_color=status_color,
+                theme_text_color="Custom",
                 text_color=(1, 1, 1, 1),
+                pos_hint={"center_x": 0.7},
+                md_bg_color="#1E90FF",
+                on_release=lambda x, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id),
             )
-            button_layout1.add_widget(button1)
-            button_layout2.add_widget(button2)
+            text_layout.add_widget(button2)
+            card.add_widget(text_layout)
+            self.ids.container.add_widget(card)
+
+            # Button layout to align the Buttons
+            # button_layout2 = BoxLayout(
+            #     size_hint=(None, None),
+            #     height="50dp",
+            #     width="250dp",
+            #     theme_text_color="Custom",
+            #     text_color=(1, 1, 1, 1),  # White color in RGBA format
+            #     pos_hint={"center_x": 0.6},
+            # )
+
+            # # this status_text for status text to keep button
+            # status_text = {
+            #     "under process": "  Under Process ",
+            #     "disbursed": "  Disburse Loan ",
+            #     "closed": "    Closed Loan   ",
+            #     "extension": " Extension Loan ",
+            #     "foreclosure": "  Foreclosure  ",
+            #     "accepted": " Accepted Loan ",
+            #     "rejected": "  Rejected Loan ",
+            #     "approved": "  Approved Loan ",
+            #     "lost opportunities": "lost opportunities"
+            # }
+            # button1 = MDFillRoundFlatButton(
+            #     text=status_text.get(loan_status[i], loan_status[i]),
+            #     height=dp(40),
+            #     pos_hint={"center_x": 0},
+            #     md_bg_color=status_color,
+            #     text_color=(1, 1, 1, 1),
+            # )
+            # button_layout1.add_widget(button1)
+            #button_layout2.add_widget(button2)
 
             # Adding the Buttons to the card
-            horizontal_layout1.add_widget(button_layout1)
-            horizontal_layout1.add_widget(button_layout2)
-            card.add_widget(horizontal_layout1)
+            #horizontal_layout1.add_widget(button_layout1)
+            
+            #card.add_widget(button_layout2)
 
-            self.ids.container.add_widget(card)
+            
             # item = ThreeLineAvatarIconListItem(
             #
             #     IconLeftWidget(
@@ -707,6 +747,33 @@ class ExtendLoan(Screen):
     def on_start(self):
         Window.softinput_mode = "below_target"
 
+class CircularImage(Image):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.size_hint = (None, None)
+        self.size = ("80dp", "120dp")  # Initial size of the image
+        self.bind(pos=self.update_shape, size=self.update_shape)
+
+    def update_shape(self, *args):
+        self.canvas.before.clear()
+
+        # Calculate the diameter of the circle
+        diameter = min(self.width, self.height)
+        radius = diameter / 2.0
+
+        # Calculate the position of the ellipse to center it on the image
+        ellipse_pos = (self.center_x - radius, self.center_y - radius)
+
+        with self.canvas.before:
+            StencilPush()
+            Ellipse(pos=ellipse_pos, size=(diameter, diameter))
+            StencilUse()
+
+        self.canvas.after.clear()
+        with self.canvas.after:
+            StencilUnUse()
+            Ellipse(pos=ellipse_pos, size=(diameter, diameter))
+            StencilPop()
 
 class ExtendRequestScreen(Screen):
     def __init__(self, **kwargs):

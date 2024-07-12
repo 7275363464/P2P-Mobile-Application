@@ -153,8 +153,8 @@ user_helpers = '''
                                         orientation: 'vertical'
                                         padding: "10dp", "5dp", "10dp", "0dp"
                                         size_hint_y: None
-                                        height: dp(750)
-                                        spacing: dp(20)
+                                        height: dp(450)
+                                        spacing: dp(10)
                                         MDCard:
                                             id: card
                                             orientation: 'vertical'
@@ -164,6 +164,7 @@ user_helpers = '''
                                             spacing: dp(3)
                                             elevation: 1
                                             on_release: root.go_to_account()
+                                            radius: [0, 0, 0, 0]
 
                                             BoxLayout:
                                                 orientation: 'horizontal'
@@ -195,12 +196,6 @@ user_helpers = '''
                                                             pos: self.x + dp(5), self.y + dp(5)
                                                         StencilPop
 
-
-
-                                                Widget:
-                                                    size_hint_x: None
-                                                    width: dp(10)
-
                                                 BoxLayout:
                                                     orientation: 'vertical'
 
@@ -231,58 +226,89 @@ user_helpers = '''
 
                                         GridLayout:
                                             cols: 2
-                                            padding: dp(10)
+                                            #padding: dp(15)
                                             spacing: dp(10)
+                                        
                                             MDBoxLayout:
                                                 orientation: 'vertical'
                                                 size_hint_y: None
                                                 height: self.minimum_height
                                                 md_bg_color: "#AEDFF7"
+                                                pos_hint: {'center_x': 0.5}
                                                 canvas.before:
                                                     Color:
                                                         rgba: 0, 0, 0, 1
                                                     Line:
                                                         width: 0.1
                                                         rectangle: (self.x, self.y, self.width, self.height)
-                                                MDLabel:
-                                                    id: total_amount1
-                                                    text: "Rs. 50,000"
+                                        
+                                                MDBoxLayout:
+                                                    orientation: 'horizontal'
                                                     size_hint_y: None
-                                                    height: dp(30)
-                                                    halign: 'center'
-                                                    theme_text_color: "Custom"
-                                                    text_color: "#333333"
-                                                    font_name: "Roboto-Bold"
-                                                    font_size: dp(20)
-
-                                                MDLabel:
-                                                    text: "Opening Balance"
+                                                    height: self.minimum_height
+                                                    md_bg_color: "#AEDFF7"
+                                                    pos_hint: {'center_x': 0.5}
+                                                    spacing: dp(10)
+                                                    MDLabel:
+                                                        text: "         Balance:"
+                                                        size_hint_y: None
+                                                        height: dp(30)
+                                                        halign: 'center'
+                                                        font_name: "Roboto-Bold"
+                                                        theme_text_color: "Custom"
+                                                        text_color: "#333333"
+                                                    MDLabel:
+                                                        id: total_amount1
+                                                        text: "Rs. 50,000"
+                                                        size_hint_y: None
+                                                        height: dp(30)
+                                                        halign: 'left'
+                                                        theme_text_color: "Custom"
+                                                        text_color: "#333333"
+                                                        font_name: "Roboto-Bold"
+                                                        font_size: dp(18)
+                                        
+                                                MDBoxLayout:
+                                                    orientation: 'horizontal'
                                                     size_hint_y: None
-                                                    height: dp(30)
-                                                    halign: 'center'
-                                                    font_name: "Roboto-Bold"
-                                                    theme_text_color: "Custom"
-                                                    text_color: "#333333"
+                                                    height: self.minimum_height
+                                                    md_bg_color: "#AEDFF7"
+                                                    spacing: dp(10)
+                                                    pos_hint: {'center_x': 0.5}
+                                                    size_hint_x: None
+                                                    width: self.minimum_width  # This ensures the box is only as wide as needed
+                                        
+                                                    Widget:
+                                                        size_hint_x: None
+                                                        width: dp(0)  # Adjust this value if necessary to fine-tune centering
+                                        
+                                                    MDRectangleFlatIconButton:
+                                                        text: "Deposit"
+                                                        icon: "cash"
+                                                        font_name: "Roboto-Bold"
+                                                        text_color: "white"
+                                                        md_bg_color: 0.043, 0.145, 0.278, 1
+                                                        on_release: root.go_to_wallet()
+                                        
+                                                    MDRectangleFlatIconButton:
+                                                        text: "Withdraw"
+                                                        icon: "cash"
+                                                        font_name: "Roboto-Bold"
+                                                        text_color: "white"
+                                                        md_bg_color: 0.043, 0.145, 0.278, 1
+                                                        on_release: root.go_to_wallet()
+                                        
                                                 MDFlatButton:
-                                                    text: "View All"
+                                                    text: "view transaction history "
                                                     size_hint_y: None
                                                     height: dp(30)
                                                     pos_hint: {'center_x': 0.5}
                                                     theme_text_color: "Custom"
                                                     text_color: "#007BFF"
-                                                    on_release: root.go_to_wallet()
-                                        MDLabel:
-                                            text: ""
-                                            size_hint_y: None
-                                            height: dp(50)
-                                        Widget:
-                                            size_hint_y: None
-                                            height: 5
-                                            canvas:
-                                                Color:
-                                                    rgba: 0, 0, 0, 1  # Change color if needed
-                                                Line:
-                                                    points: self.x, self.y, self.x + self.width, self.y
+                                                    on_release: root.go_to_transaction_history()
+
+
+                                        
                                         MDBoxLayout:
                                             orientation: 'vertical'
                                             spacing: dp(10)
@@ -291,7 +317,7 @@ user_helpers = '''
                                                 size_hint_y: None
                                                 height: self.minimum_height
                                                 MDLabel:
-                                                    text: 'My Loans'
+                                                    text: 'Upcoming Payments'
                                                     bold: True
                                                     size_hint_y: None
                                                     height: dp(20)
@@ -454,40 +480,9 @@ user_helpers = '''
                                                             id:status
                                                             text: "under process"
                                                             font_size:dp(15)
-                                        MDLabel:
-                                            text: ""
-
-                                        GridLayout:
-                                            cols: 1
-                                            spacing: dp(20)
-                                            padding: dp(20)
-                                            pos_hint: {'center_x': 0.80}
-                                            MDFillRoundFlatIconButton:
-                                                text: "View More"
-                                                icon: "clipboard-text-outline"
-                                                font_name: "Roboto-Bold"
-                                                text_color: "white"
-                                                md_bg_color: 0.043, 0.145, 0.278, 1
-                                                on_release: root.go_to_view_loan_screen()
-                                        MDLabel:
-                                            text: ''
-                                            size_hint_y: None
-                                            height: dp(30)
-                                        Widget:
-                                            size_hint_y: None
-                                            height: 5
-                                            canvas:
-                                                Color:
-                                                    rgba: 0, 0, 0, 1  # Change color if needed
-                                                Line:
-                                                    points: self.x, self.y, self.x + self.width, self.y
-
-                                        MDLabel:
-                                            text: ""
-                                        MDLabel:
-                                            text: ''
-                                            size_hint_y: None
-                                            height: dp(30)
+                                                            
+                                        
+                                        
 
 
 
@@ -498,17 +493,17 @@ user_helpers = '''
 
                     MDNavigationDrawerMenu:
 
-                        MDNavigationDrawerHeader:
-                            id: my_name
-                            title: "Welcome Back"
-                            title_color: "#4a4939"
-                            text: "Sai Mamidala"
-                            spacing: "4dp"
-                            padding: "12dp", 0, 0, "56dp"
+                        # MDNavigationDrawerHeader:
+                        #     id: my_name
+                        #     title: "Welcome Back"
+                        #     title_color: "#4a4939"
+                        #     text: "Sai Mamidala"
+                        #     spacing: "4dp"
+                        #     padding: "12dp", 0, 0, "56dp"
 
                         MDNavigationDrawerItem
                             icon: "newspaper"
-                            text: "Apply Loan"
+                            text: "New Loan Requests"
                             icon_color: "#23639e"
                             on_release: root.go_to_newloan_screen()
                         MDNavigationDrawerDivider:
@@ -553,12 +548,12 @@ user_helpers = '''
                             text: "View Transaction History"
                             icon_color: "#23639e"
                             on_release: root.go_to_transaction_history()
-                        MDNavigationDrawerDivider:
-                        MDNavigationDrawerItem
-                            icon: "briefcase"
-                            text: "View Portofolio"
-                            icon_color: "#23639e"
-                            on_release: root.go_to_borrower_portofolio()
+                        # MDNavigationDrawerDivider:
+                        # MDNavigationDrawerItem
+                        #     icon: "briefcase"
+                        #     text: "View Portofolio"
+                        #     icon_color: "#23639e"
+                        #     on_release: root.go_to_borrower_portofolio()
                         MDNavigationDrawerDivider:
                         MDNavigationDrawerItem
                             icon: "report_icon.png"
@@ -7785,7 +7780,7 @@ class DashboardScreen(Screen):
             log_index = email_user.index(log_email)
             self.ids.details.text = "Welcome " + name_list[log_index]
             self.ids.details.font_style = 'H6'
-            self.ids.my_name.text = name_list[log_index]
+            #self.ids.my_name.text = name_list[log_index]
             self.ids.username.text = name_list[log_index]
         else:
             # Handle the case when 'logged' is not in the status list

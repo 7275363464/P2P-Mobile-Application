@@ -8449,9 +8449,9 @@ class BorrowerScreen15(Screen):
                 self.unique_list.append(i)
         print(self.unique_list)
         if len(self.unique_list) >= 1:
-            self.ids.marital_status_id.values = ['Select Marital Status'] + self.unique_list
+            self.ids.marital_status_id.values = self.unique_list
         else:
-            self.ids.marital_status_id.values = ['Select Marital Status']
+            self.ids.marital_status_id.values = []
 
         self.update_top_bar_image()
         Clock.schedule_once(self.setup_menu, 0.5)  # Schedule menu setup after a delay
@@ -8539,7 +8539,7 @@ class BorrowerScreen15(Screen):
                 "viewclass": "IconListItem",
                 "text": "Logout",
                 "icon": "logout",
-                "on_release": lambda x="Logout": self.menu_callback(x),
+                "on_release": lambda x="Logout": self.logout(),
             },
         ]
         self.menu = MDDropdownMenu(
@@ -8603,12 +8603,40 @@ class BorrowerScreen15(Screen):
             self.spouse_name.bind(text=self.spouse_name_validation)
             spouse_details.add_widget(self.spouse_name)
 
-            self.spouse_date_textfield = MDTextField(id='spouse_date_textfield', hint_text='Enter Marriage Date *',
-                                                     helper_text_mode='on_focus',
-                                                     input_type='number',
-                                                     font_size=15, mode="rectangle")
-            self.spouse_date_textfield.bind(text=self.spouse_date_validation)
-            spouse_details.add_widget(self.spouse_date_textfield)
+            self.date_box = BoxLayout(
+                orientation='horizontal',
+                spacing="10dp",
+                size_hint=(1, None),
+                height=dp(48),
+                width=dp(200)
+            )
+
+            # Bind the update method to the BoxLayout's size and position updates
+            self.date_box.bind(pos=self.update_canvas, size=self.update_canvas)
+
+            self.date_textfield = MDLabel(
+                id='date_textfield',
+                text=" Enter Marriage Date *",
+                font_size="15dp",
+                height=dp(40),
+                width=dp(200),
+                theme_text_color="Custom",
+                text_color=(0, 0, 0, 1),  # Use text_color instead of hint_text_color
+                halign="left",
+                valign="middle",
+            )
+
+            calendar_button = MDIconButton(
+                icon='calendar',
+                pos_hint={'center_x': .5, 'center_y': .5}
+            )
+
+            calendar_button.bind(on_release=self.show_date_picker)
+
+            self.date_box.add_widget(self.date_textfield)
+            self.date_box.add_widget(calendar_button)
+
+            spouse_details.add_widget(self.date_box)
 
             self.spouse_mobile = MDTextField(id='spouse_mobile', hint_text='Enter Spouse Mobile No *', multiline=False,
                                              helper_text_mode='on_focus',
@@ -8641,28 +8669,39 @@ class BorrowerScreen15(Screen):
             with self.spouse_profession.canvas.before:
                 Color(0, 0, 0, 1)  # Set the color to black with full opacity
                 Line(width=0.7, rectangle=(
-                self.spouse_profession.x, self.spouse_profession.y, self.spouse_profession.width,
-                self.spouse_profession.height))
+                    self.spouse_profession.x, self.spouse_profession.y, self.spouse_profession.width,
+                    self.spouse_profession.height))
 
             spouse_details.add_widget(self.spouse_profession)
 
             self.spouse_company_name = MDTextField(id='spouse_company_name', hint_text='Enter Spouse Company Name *',
                                                    multiline=False,
                                                    helper_text_mode='on_focus', font_size=15, mode="rectangle")
-            self.spouse_company_name.bind(text=self.spouse_company_name_validation)
             spouse_details.add_widget(self.spouse_company_name)
 
             self.spouse_annual_salary = MDTextField(id='spouse_annual_salary', hint_text='Enter Annual Salary *',
                                                     multiline=False,
                                                     helper_text_mode='on_focus', input_type='number', font_size=15,
                                                     mode="rectangle")
-            self.spouse_annual_salary.bind(text=self.spouse_annual_salary_validation)
             spouse_details.add_widget(self.spouse_annual_salary)
 
             self.error_msg = MDLabel(text='', halign='left', font_size=15,
                                      font_name='Roboto-Bold', size_hint_y=None, height=dp(20),
                                      theme_text_color="Custom", text_color='red')
             spouse_details.add_widget(self.error_msg)
+            spinner_data1 = app_tables.fin_spouse_profession.search()
+            data_list1 = []
+            for i in spinner_data1:
+                data_list1.append(i['spouse_profession'])
+            self.unique_list1 = []
+            for i in data_list1:
+                if i not in self.unique_list1:
+                    self.unique_list1.append(i)
+            print(self.unique_list1)
+            if len(self.unique_list1) >= 1:
+                self.spouse_profession.values = self.unique_list1
+            else:
+                self.spouse_profession.values = []
 
         # Add other person details widgets based on selected relation
         elif relation == "Father" or relation == "Mother":
@@ -8675,12 +8714,40 @@ class BorrowerScreen15(Screen):
             self.person_name.bind(text=self.person_name_validtion)
             person_details_box1.add_widget(self.person_name)
 
-            self.person_dob = MDTextField(id='person_dob', hint_text='Enter Date Of Birth *',
-                                          multiline=False, helper_text_mode='on_focus', halign='left',
-                                          input_type='number',
-                                          font_size=15, mode='rectangle')
-            self.person_dob.bind(text=self.person_dob_validtion)
-            person_details_box1.add_widget(self.person_dob)
+            self.date_box1 = BoxLayout(
+                orientation='horizontal',
+                spacing="10dp",
+                size_hint=(1, None),
+                height=dp(48),
+                width=dp(200)
+            )
+
+            # Bind the update method to the BoxLayout's size and position updates
+            self.date_box1.bind(pos=self.update_canvas, size=self.update_canvas)
+
+            self.date_textfield1 = MDLabel(
+                id='date_textfield',
+                text=" Enter Valid Date Of Birth *",
+                font_size="15dp",
+                height=dp(40),
+                width=dp(200),
+                theme_text_color="Custom",
+                text_color=(0, 0, 0, 1),  # Use text_color instead of hint_text_color
+                halign="left",
+                valign="middle",
+            )
+
+            calendar_button = MDIconButton(
+                icon='calendar',
+                pos_hint={'center_x': .5, 'center_y': .5}
+            )
+
+            calendar_button.bind(on_release=self.show_date_picker)
+
+            self.date_box1.add_widget(self.date_textfield1)
+            self.date_box1.add_widget(calendar_button)
+
+            person_details_box1.add_widget(self.date_box1)
 
             self.person_ph_no = MDTextField(id='person_ph_no', hint_text='Enter Phone No *',
                                             helper_text_mode='on_focus', halign='left', input_type='number',
@@ -8709,18 +8776,48 @@ class BorrowerScreen15(Screen):
             self.relation_name1.bind(text=self.relation_name1_validation)
             person_details_box1.add_widget(self.relation_name1)
 
+            person_details_box1 = self.ids.box
+
             self.person_name = MDTextField(id='person_name', hint_text='Enter Full Name *', multiline=False,
                                            helper_text_mode='on_focus',
                                            halign='left', font_size=15, mode='rectangle')
             self.person_name.bind(text=self.person_name_validtion)
             person_details_box1.add_widget(self.person_name)
 
-            self.person_dob = MDTextField(id='person_dob', hint_text='Enter Date Of Birth *',
-                                          multiline=False, helper_text_mode='on_focus', halign='left',
-                                          input_type='number',
-                                          font_size=15, mode='rectangle')
-            self.person_dob.bind(text=self.person_dob_validtion)
-            person_details_box1.add_widget(self.person_dob)
+            self.date_box1 = BoxLayout(
+                orientation='horizontal',
+                spacing="10dp",
+                size_hint=(1, None),
+                height=dp(48),
+                width=dp(200)
+            )
+
+            # Bind the update method to the BoxLayout's size and position updates
+            self.date_box1.bind(pos=self.update_canvas, size=self.update_canvas)
+
+            self.date_textfield1 = MDLabel(
+                id='date_textfield',
+                text=" Enter Valid Date Of Birth *",
+                font_size="15dp",
+                height=dp(40),
+                width=dp(200),
+                theme_text_color="Custom",
+                text_color=(0, 0, 0, 1),  # Use text_color instead of hint_text_color
+                halign="left",
+                valign="middle",
+            )
+
+            calendar_button = MDIconButton(
+                icon='calendar',
+                pos_hint={'center_x': .5, 'center_y': .5}
+            )
+
+            calendar_button.bind(on_release=self.show_date_picker)
+
+            self.date_box1.add_widget(self.date_textfield1)
+            self.date_box1.add_widget(calendar_button)
+
+            person_details_box1.add_widget(self.date_box1)
 
             self.person_ph_no = MDTextField(id='person_ph_no', hint_text='Enter Phone No *',
                                             helper_text_mode='on_focus', halign='left', input_type='number',
@@ -8739,6 +8836,38 @@ class BorrowerScreen15(Screen):
             person_details_box1.add_widget(self.error_msg)
 
         # Add widgets for other relations as needed
+
+    def update_canvas(self, *args):
+        if self.ids.relation_name.text == 'Spouse':
+            self.date_box.canvas.before.clear()
+            with self.date_box.canvas.before:
+                Color(0, 0, 0, 1)  # Black color for the line
+                Line(width=0.6, rectangle=(self.date_box.x, self.date_box.y, self.date_box.width, self.date_box.height))
+        else:
+            self.date_box1.canvas.before.clear()
+            with self.date_box1.canvas.before:
+                Color(0, 0, 0, 1)  # Black color for the line
+                Line(width=0.6,
+                     rectangle=(self.date_box1.x, self.date_box1.y, self.date_box1.width, self.date_box1.height))
+
+    def on_save(self, instance, value, date_range):
+        # print(instance, value, date_range)
+        if self.ids.relation_name.text == 'Spouse':
+            self.date_textfield.text = "  " + str(value)
+        else:
+            self.date_textfield1.text = "  " + str(value)
+
+    # Cancel
+    def on_cancel(self, instance, time):
+        if self.ids.relation_name.text == 'Spouse':
+            self.date_textfield.text = "You Clicked Cancel!"
+        else:
+            self.date_textfield1.text = "You Clicked Cancel!"
+
+    def show_date_picker(self, instance):
+        date_dialog = MDDatePicker(year=2000, month=2, day=14)
+        date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
+        date_dialog.open()
     def update_rect(self, instance, value):
         instance.canvas.before.clear()
         with instance.canvas.before:
@@ -8818,7 +8947,7 @@ class BorrowerScreen15(Screen):
         if not value.isdigit() or len(value) != 10:
             instance.error = True
             self.person_ph_no.helper_text = 'Enter Correct Phone Number'
-            self.person_dob._helper_text_color = 'red'
+            self.person_ph_no._helper_text_color = 'red'
             return
         else:
             self.person_ph_no.helper_text = ''
@@ -8921,13 +9050,13 @@ class BorrowerScreen15(Screen):
 
         if relation_name == 'Father' or relation_name == 'Mother':
             person_name = self.person_name.text
-            person_dob = self.person_dob.text
+            person_dob = self.date_textfield1.text
             person_ph_no = self.person_ph_no.text
             person_proffession = self.person_profession.text
             if not all([ person_name, person_dob, person_ph_no, person_proffession]):
                 self.error_msg.text = 'Please Fill All Mandatory * Values'
                 self.person_name.error = True
-                self.person_dob.error = True
+                #self.person_dob.error = True
                 self.person_ph_no.error = True
                 self.person_profession.error = True
             else:
@@ -8937,25 +9066,23 @@ class BorrowerScreen15(Screen):
                 self.person_name._helper_text_color = 'red'
                 self.person_name.error = True
 
-            try:
-                dob = datetime.strptime(person_dob, "%Y-%m-%d")
-                today = datetime.now()
-                age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
-                if age < 18:
-                    self.person_dob.helper_text = ''
-                    self.person_dob._helper_text_color = 'red'
-                    self.person_dob.error = True
-                    return
-                else:
-                    self.person_dob.helper_text = ''
+            # try:
+            #     dob = datetime.strptime(person_dob, "%Y-%m-%d")
+            #     today = datetime.now()
+            #     age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+            #     if age < 18:
+            #         self.date_textfield1.text = 'Must Select Date Grater Than  18'
+            #         self.date_textfield1.text_color = 'red'
+            #         return
+            #     else:
+            #         self.relation_name1.text = ''
+            #
+            # except ValueError:
+            #     self.date_textfield1.text = 'Must Select Date Grater Than  18'
+            #     self.date_textfield1.text_color = 'red'
+            #     return
 
-            except ValueError:
-                self.person_dob.helper_text = ''
-                self.person_dob._helper_text_color = 'red'
-                self.person_dob.error = True
-                return
-
-            if len(self.person_ph_no.text) != 10 and not self.person_dob.text.isdigit():
+            if len(self.person_ph_no.text) != 10 and not self.person_ph_no.text.isdigit():
                 self.person_ph_no.helper_text = ''
                 self.person_ph_no._helper_text_color = 'red'
                 self.person_ph_no.error = True
@@ -8969,14 +9096,14 @@ class BorrowerScreen15(Screen):
 
         elif relation_name == 'Others':
             person_name = self.person_name.text
-            person_dob = self.person_dob.text
+            person_dob = self.date_textfield1.text
             person_ph_no = self.person_ph_no.text
             person_proffession = self.person_profession.text
             relation_name1 = self.relation_name1.text
             if not all([relation_name1, person_name, person_dob, person_ph_no, person_proffession]):
                 self.error_msg.text = 'Please Fill All Mandatory * Values'
                 self.person_name.error = True
-                self.person_dob.error = True
+                #self.person_dob.error = True
                 self.person_ph_no.error = True
                 self.person_profession.error = True
                 self.relation_name1.error = True
@@ -8987,25 +9114,23 @@ class BorrowerScreen15(Screen):
                 self.person_name._helper_text_color = 'red'
                 self.person_name.error = True
 
-            try:
-                dob = datetime.strptime(person_dob, "%Y-%m-%d")
-                today = datetime.now()
-                age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
-                if age < 18:
-                    self.person_dob.helper_text = ''
-                    self.person_dob._helper_text_color = 'red'
-                    self.person_dob.error = True
-                    return
-                else:
-                    self.person_dob.helper_text = ''
+            # try:
+            #     dob = datetime.strptime(person_dob, "%Y-%m-%d")
+            #     today = datetime.now()
+            #     age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+            #     if age < 18:
+            #         self.date_textfield1.text = 'Must Select Date Grater Than  18'
+            #         self.date_textfield1.text_color = 'red'
+            #         return
+            #     else:
+            #         self.relation_name1.text = ''
+            #
+            # except ValueError:
+            #     self.date_textfield1.text = 'Must Select Date Grater Than  18'
+            #     self.date_textfield1.text_color = 'red'
+            #     return
 
-            except ValueError:
-                self.person_dob.helper_text = ''
-                self.person_dob._helper_text_color = 'red'
-                self.person_dob.error = True
-                return
-
-            if len(self.person_ph_no.text) != 10 and not self.person_dob.text.isdigit():
+            if len(self.person_ph_no.text) != 10 and not self.person_ph_no.text.isdigit():
                 self.person_ph_no.helper_text = ''
                 self.person_ph_no._helper_text_color = 'red'
                 self.person_ph_no.error = True
@@ -9020,7 +9145,7 @@ class BorrowerScreen15(Screen):
 
         elif relation_name == 'Spouse':
             spouse_name = self.spouse_name.text
-            spouse_date_textfield = self.spouse_date_textfield.text
+            spouse_date_textfield = self.date_textfield.text
             spouse_mobile = self.spouse_mobile.text
             spouse_company_name = self.spouse_company_name.text
             spouse_company_address = self.spouse_profession.text
@@ -9045,21 +9170,19 @@ class BorrowerScreen15(Screen):
                 self.spouse_mobile._helper_text_color = 'red'
                 self.spouse_mobile.error = True
                 return
-            try:
-                dob = datetime.strptime(self.spouse_date_textfield.text, "%Y-%m-%d").date()  # Convert to date object
-                today = datetime.now().date()
-                if dob > today:
-                    self.spouse_date_textfield.helper_text = ''
-                    self.spouse_date_textfield._helper_text_color = 'red'
-                    self.spouse_date_textfield.error = True
-                    return
-                else:
-                    self.spouse_date_textfield.helper_text = ''
-            except ValueError:
-                self.spouse_date_textfield.helper_text = ''
-                self.spouse_date_textfield._helper_text_color = 'red'
-                self.spouse_date_textfield.error = True
-                return
+            # try:
+            #     dob = datetime.strptime(self.date_textfield.text, "%Y-%m-%d").date()  # Convert to date object
+            #     today = datetime.now().date()
+            #     if dob > today:
+            #         self.date_textfield.text = 'Must Select Date like YYYY-MM-DD'
+            #         self.date_textfield.text_color = 'red'
+            #         return
+            #     else:
+            #         self.date_textfield.text = 'Must Select Date like YYYY-MM-DD'
+            # except ValueError:
+            #     self.date_textfield.text = 'Must Select Date like YYYY-MM-DD'
+            #     self.date_textfield.text_color = 'red'
+            #     return
             if len(self.spouse_company_name.text) < 3:
                 self.spouse_company_name.helper_text = ''
                 self.spouse_company_name._helper_text_color = 'red'
@@ -9100,7 +9223,7 @@ class BorrowerScreen15(Screen):
 
         if self.ids.marital_status_id.text == "Married" and self.ids.relation_name.text == "Spouse":
             spouse_name = self.spouse_name.text
-            spouse_date_textfield = self.spouse_date_textfield.text
+            spouse_date_textfield = self.date_textfield.text
             spouse_mobile = self.spouse_mobile.text
             spouse_company_name = self.spouse_company_name.text
             spouse_company_address = self.spouse_profession.text
@@ -9148,7 +9271,7 @@ class BorrowerScreen15(Screen):
         elif self.ids.relation_name.text == "Mother" or self.ids.relation_name.text == "Father":
             relation_name = self.ids.relation_name.text
             person_name = self.person_name.text
-            person_dob = self.person_dob.text
+            person_dob = self.date_textfield1.text
             person_ph_no = self.person_ph_no.text
             person_proffession = self.person_profession.text
 
@@ -9177,7 +9300,7 @@ class BorrowerScreen15(Screen):
 
             relation_name = self.ids.relation_name.text
             person_name = self.person_name.text
-            person_dob = self.person_dob.text
+            person_dob = self.date_textfield.text
             person_ph_no = self.person_ph_no.text
             person_proffession = self.person_profession.text
 

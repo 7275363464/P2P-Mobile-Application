@@ -119,8 +119,8 @@ user_helpers = '''
                                             pos_hint: {"center_y": 1.3}
                                             theme_text_color: 'Custom'
                                             text_color: 1, 1, 1, 1 
-        
-        
+
+
                                         MDLabel:
                                             id: notification_label
                                             text: root.false_count_text
@@ -228,7 +228,7 @@ user_helpers = '''
                                             cols: 2
                                             #padding: dp(15)
                                             spacing: dp(10)
-                                        
+
                                             MDBoxLayout:
                                                 orientation: 'vertical'
                                                 size_hint_y: None
@@ -241,7 +241,7 @@ user_helpers = '''
                                                     Line:
                                                         width: 0.1
                                                         rectangle: (self.x, self.y, self.width, self.height)
-                                        
+
                                                 MDBoxLayout:
                                                     orientation: 'horizontal'
                                                     size_hint_y: None
@@ -267,7 +267,7 @@ user_helpers = '''
                                                         text_color: "#333333"
                                                         font_name: "Roboto-Bold"
                                                         font_size: dp(18)
-                                        
+
                                                 MDBoxLayout:
                                                     orientation: 'horizontal'
                                                     size_hint_y: None
@@ -277,11 +277,11 @@ user_helpers = '''
                                                     pos_hint: {'center_x': 0.5}
                                                     size_hint_x: None
                                                     width: self.minimum_width  # This ensures the box is only as wide as needed
-                                        
+
                                                     Widget:
                                                         size_hint_x: None
                                                         width: dp(0)  # Adjust this value if necessary to fine-tune centering
-                                        
+
                                                     MDRectangleFlatIconButton:
                                                         text: "Deposit"
                                                         icon: "cash"
@@ -289,7 +289,7 @@ user_helpers = '''
                                                         text_color: "white"
                                                         md_bg_color: 0.043, 0.145, 0.278, 1
                                                         on_release: root.go_to_wallet()
-                                        
+
                                                     MDRectangleFlatIconButton:
                                                         text: "Withdraw"
                                                         icon: "cash"
@@ -297,7 +297,7 @@ user_helpers = '''
                                                         text_color: "white"
                                                         md_bg_color: 0.043, 0.145, 0.278, 1
                                                         on_release: root.go_to_wallet()
-                                        
+
                                                 MDFlatButton:
                                                     text: "view transaction history "
                                                     size_hint_y: None
@@ -308,7 +308,7 @@ user_helpers = '''
                                                     on_release: root.go_to_transaction_history()
 
 
-                                        
+
                                         MDBoxLayout:
                                             orientation: 'vertical'
                                             spacing: dp(10)
@@ -480,9 +480,9 @@ user_helpers = '''
                                                             id:status
                                                             text: "under process"
                                                             font_size:dp(15)
-                                                            
-                                        
-                                        
+
+
+
 
 
 
@@ -797,7 +797,7 @@ user_helpers = '''
 
                             MDLabel:
                                 id: date
-                                text: "Joined Date:"
+                                text: "Member Date:"
                                 font_size: dp(15)
                                 size_hint_y: None
                                 height: self.texture_size[1]
@@ -808,6 +808,14 @@ user_helpers = '''
                                 font_size: dp(15)
                                 size_hint_y: None
                                 height: self.texture_size[1]
+
+                            MDLabel:
+                                id: credit
+                                text: "Credit Limit:"
+                                font_size: dp(15)
+                                size_hint_y: None
+                                height: self.texture_size[1]
+
 
                     MDBoxLayout:
                         orientation: "vertical"
@@ -820,37 +828,6 @@ user_helpers = '''
                                 cols: 2
                                 spacing: dp(20)  # Equal gap between cards
                                 padding: dp(20)  # Proper padding around the grid
-                                MDBoxLayout:
-                                    orientation: 'vertical'
-                                    size_hint_y: None
-                                    height: dp(70)
-                                    md_bg_color: "#ffffff"
-                                    canvas.before:
-                                        Color:
-                                            rgba: 0, 0, 0, 1
-                                        Line:
-                                            width: 1.5
-                                            rectangle: (self.x, self.y, self.width,self.height)
-                                    # Card 1
-                                    MDCard:
-                                        md_bg_color: "#ffffff"  # Customize background color
-                                        orientation: "vertical"
-                                        padding:dp(9), dp(3)
-                                        on_release: root.go_to_profile()
-
-                                        Image:
-                                            source: "icon7.png"
-                                            size_hint: (0.4, 1)
-                                            pos_hint:{"center_x":0.5,"center_y":0.2}
-                                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-                                        MDLabel:
-                                            text: "Profile Info"
-                                            font_size:dp(12)
-                                            bold: True
-                                            theme_text_color: "Custom"
-                                            text_color: 0, 0, 0, 1
-                                            halign: "center"  # Center-align the label text
                                 MDBoxLayout:
                                     orientation: 'vertical'
                                     size_hint_y: None
@@ -882,6 +859,7 @@ user_helpers = '''
                                             theme_text_color: "Custom"
                                             text_color: 0, 0, 0, 1
                                             halign: "center"
+
                                 MDBoxLayout:
                                     orientation: 'vertical'
                                     size_hint_y: None
@@ -912,36 +890,7 @@ user_helpers = '''
                                             theme_text_color: "Custom"
                                             text_color: 0, 0, 0, 1
                                             halign: "center"
-                                MDBoxLayout:
-                                    orientation: 'vertical'
-                                    size_hint_y: None
-                                    height: dp(70)
-                                    md_bg_color: "#ffffff"
-                                    canvas.before:
-                                        Color:
-                                            rgba: 0, 0, 0, 1
-                                        Line:
-                                            width: 1.5
-                                            rectangle: (self.x, self.y, self.width,self.height)
-                                    MDCard:
-                                        md_bg_color: "#ffffff"  # Customize background color
-                                        orientation: "vertical"
-                                        padding:dp(9), dp(3)
-                                        on_release: root.go_to_business()
-                                        Image:
-                                            source: "icon9.png"
-                                            size_hint: (0.4, 1)
-                                            pos_hint:{"center_x":0.5,"center_y":0.2}
-                                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
-
-                                        MDLabel:
-                                            text: "Business Info"
-                                            font_size:dp(12)
-                                            bold: True
-                                            theme_text_color: "Custom"
-                                            text_color: 0, 0, 0, 1
-                                            halign: "center"
 
                                 MDBoxLayout:
                                     orientation: 'vertical'
@@ -1004,8 +953,7 @@ user_helpers = '''
                                             bold: True
                                             theme_text_color: "Custom"
                                             text_color: 0, 0, 0, 1
-                                            halign: "center"   
-
+                                            halign: "center"
 
 <AccountScreen>
     MDBoxLayout:
@@ -1068,8 +1016,6 @@ user_helpers = '''
                             pos: self.x + dp(5), self.y + dp(5)
                         StencilPop
 
-
-
                 MDBoxLayout:
                     orientation: "vertical"
                     size_hint_y: None
@@ -1087,17 +1033,25 @@ user_helpers = '''
 
                     MDLabel:
                         id: date
-                        text: "Joined Date:"
+                        text: "Member Date:"
                         font_size: dp(15)
                         size_hint_y: None
                         height: self.texture_size[1]
 
                     MDLabel:
                         id: balance
-                        text: "Available Balance:"
+                        text: "Balance:"
                         font_size: dp(15)
                         size_hint_y: None
                         height: self.texture_size[1]
+
+                    MDLabel:
+                        id: credit
+                        text: "Credit Limit:"
+                        font_size: dp(15)
+                        size_hint_y: None
+                        height: self.texture_size[1]
+
 
             MDBoxLayout:
                 orientation: "vertical"
@@ -1110,37 +1064,6 @@ user_helpers = '''
                         cols: 2
                         spacing: dp(20)  # Equal gap between cards
                         padding: dp(20)  # Proper padding around the grid
-                        MDBoxLayout:
-                            orientation: 'vertical'
-                            size_hint_y: None
-                            height: dp(70)
-                            md_bg_color: "#ffffff"
-                            canvas.before:
-                                Color:
-                                    rgba: 0, 0, 0, 1
-                                Line:
-                                    width: 1.5
-                                    rectangle: (self.x, self.y, self.width,self.height)
-                            # Card 1
-                            MDCard:
-                                md_bg_color: "#ffffff"  # Customize background color
-                                orientation: "vertical"
-                                padding:dp(9), dp(3)
-                                on_release: root.go_to_profile()
-
-                                Image:
-                                    source: "icon7.png"
-                                    size_hint: (0.4, 1)
-                                    pos_hint:{"center_x":0.5,"center_y":0.2}
-                                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-                                MDLabel:
-                                    text: "Profile Info"
-                                    font_size:dp(12)
-                                    bold: True
-                                    theme_text_color: "Custom"
-                                    text_color: 0, 0, 0, 1
-                                    halign: "center"  # Center-align the label text
                         MDBoxLayout:
                             orientation: 'vertical'
                             size_hint_y: None
@@ -1197,38 +1120,6 @@ user_helpers = '''
 
                                 MDLabel:
                                     text: "Professional Info"
-                                    font_size:dp(12)
-                                    bold: True
-                                    theme_text_color: "Custom"
-                                    text_color: 0, 0, 0, 1
-                                    halign: "center"
-
-                        MDBoxLayout:
-                            orientation: 'vertical'
-                            size_hint_y: None
-                            height: dp(70) 
-                            md_bg_color: "#ffffff"
-                            canvas.before:
-                                Color:
-                                    rgba: 0, 0, 0, 1
-                                Line:
-                                    width: 1.5
-                                    rectangle: (self.x, self.y, self.width,self.height)
-                            MDCard:
-                                md_bg_color: "#ffffff"  # Customize background color
-                                orientation: "vertical"
-                                padding:dp(9), dp(3)
-                                on_release: root.go_to_business()
-
-                                Image:
-                                    source: "icon9.png"
-                                    size_hint: (0.4, 1)
-                                    pos_hint:{"center_x":0.5,"center_y":0.2}
-                                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-
-                                MDLabel:
-                                    text: "Business Info"
                                     font_size:dp(12)
                                     bold: True
                                     theme_text_color: "Custom"
@@ -1329,12 +1220,12 @@ user_helpers = '''
                 size_hint_y: None
                 height: self.minimum_height
 
-                MDFloatLayout:
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    padding: dp(10)
+                    spacing: dp(30)
                     size_hint_y: None
-                    height: dp(120)
-                    padding: dp(20)
-                    spacing: dp(10)
-
+                    height: dp(120) 
 
                     MDFloatLayout:
                         size_hint: None, None
@@ -1379,12 +1270,40 @@ user_helpers = '''
                             pos_hint: {'center_x': 1.1, 'center_y': 0.}
                             on_release: app.root.get_screen('PersonalScreen').check_and_open_file_manager1()
 
-                Label:
-                    id: selected_file_label
-                    color: 0, 0, 0, 1
-                    text: 'Upload Photo'
-                    size_hint_y: None
-                    height: dp(10)
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        size_hint_y: None
+                        height: dp(70)  # Ensure this matches the height of the image
+                        pos_hint: {"center_y": 0.5}
+                        padding: dp(5)
+                        spacing: dp(10)  # Add spacing between the labels
+
+                        MDLabel:
+                            id: reg_email
+                            text: "Email:"
+                            font_size: dp(15)
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                            theme_text_color: 'Custom'  
+                            text_color: 0,0,0, 1   
+
+                        MDLabel:
+                            id: date_birth
+                            text: "Birth Date:"
+                            font_size: dp(15)
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                            theme_text_color: 'Custom'  
+                            text_color: 0,0,0, 1
+                        MDLabel:
+                            id: mobile_number
+                            text: "Mobile number:"
+                            font_size: dp(15)
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                            theme_text_color: 'Custom'  
+                            text_color: 0,0,0, 1
+
 
                 Widget:
                     size_hint_y: None
@@ -1464,115 +1383,6 @@ user_helpers = '''
                         multiline: False
                         halign: 'left'
                         font_size: dp(13)
-                        pos_hint: {'center_y': 0.5}
-
-                Widget:
-                    size_hint_y: None
-                    height: dp(1)
-                    canvas:
-                        Color:
-                            rgba: 0, 0, 0, 1
-                        Line:
-                            points: self.x, self.y, self.x + self.width, self.y
-
-                BoxLayout:
-                    orientation: "horizontal"
-                    size_hint_y: None
-                    height: dp(10)
-                    spacing: dp(10)
-                    padding:dp(7)
-
-                    MDLabel:
-                        text: ' Date Of Birth '
-                        color: 0, 0, 0, 1
-                        font_size: dp(13)
-                        halign: 'left'
-                        size_hint_x: 0.4
-                        pos_hint: {'center_y': 0.5}
-                        bold: True
-                        multiline: False
-
-                    MDLabel:
-                        id: dob
-                        text:'Add dob'
-                        size_hint: None, None
-                        size_hint_x: 0.6
-                        multiline: False
-                        halign: 'left'
-                        font_size: dp(13)
-                        pos_hint: {'center_y': 0.5}
-
-                Widget:
-                    size_hint_y: None
-                    height: dp(1)
-                    canvas:
-                        Color:
-                            rgba: 0, 0, 0, 1
-                        Line:
-                            points: self.x, self.y, self.x + self.width, self.y
-
-                BoxLayout:
-                    orientation: "horizontal"
-                    size_hint_y: None
-                    height: dp(10)
-                    spacing: dp(10)
-                    padding:dp(7)
-
-                    MDLabel:
-                        text: ' Mobile No '
-                        color: 0, 0, 0, 1
-                        halign: 'left'
-                        font_size: dp(13)
-                        size_hint_x: 0.4
-                        pos_hint: {'center_y': 0.5}
-                        bold: True
-                        multiline: False
-
-                    MDLabel:
-                        id: mobile_no
-                        text:'Add mobile no'
-                        size_hint: None, None
-                        size_hint_x: 0.6
-                        multiline: False
-                        font_size: dp(13)
-                        halign: 'left'
-                        pos_hint: {'center_y': 0.5}
-
-                Widget:
-                    size_hint_y: None
-                    height: dp(1)
-                    canvas:
-                        Color:
-                            rgba: 0, 0, 0, 1
-                        Line:
-                            points: self.x, self.y, self.x + self.width, self.y
-
-
-                BoxLayout:
-                    orientation: "horizontal"
-                    size_hint_y: None
-                    height: dp(10)
-                    spacing: dp(10)
-                    padding:dp(7)
-
-                    MDLabel:
-                        text: ' Email '
-                        color: 0, 0, 0, 1
-                        halign: 'left'
-                        font_size: dp(13)
-                        size_hint_x: 0.4
-                        pos_hint: {'center_y': 0.5}
-                        bold: True
-                        multiline: False
-
-                    MDLabel:
-                        id: email
-                        font_size: dp(13)
-                        text:'Add email'
-                        size_hint: None, None
-                        size_hint_x: 0.6
-                        multiline: False
-                        halign: 'left'
                         pos_hint: {'center_y': 0.5}
 
                 Widget:
@@ -7780,7 +7590,7 @@ class DashboardScreen(Screen):
             log_index = email_user.index(log_email)
             self.ids.details.text = "Welcome " + name_list[log_index]
             self.ids.details.font_style = 'H6'
-            #self.ids.my_name.text = name_list[log_index]
+            # self.ids.my_name.text = name_list[log_index]
             self.ids.username.text = name_list[log_index]
         else:
             # Handle the case when 'logged' is not in the status list
@@ -7857,20 +7667,25 @@ class DashboardScreen(Screen):
         borrower_cus_id = []
         credit_limit = []
         create_date = []
+        member_since = []
         for i in borrower_data:
             borrower_cus_id.append(i['customer_id'])
             credit_limit.append(i['credit_limit'])
             create_date.append(i['borrower_since'])
+            member_since.append(i['email_id'])
 
         if p_customer_id[log_index] in borrower_cus_id:
             index1 = borrower_cus_id.index(p_customer_id[log_index])
             self.ids.credit_limit.text = "[b]Credit Limit[/b]: " + str(credit_limit[index1])
             self.ids.joined_date.text = "[b]Joined Date[/b]: " + str(create_date[index1])
-            self.ids.date.text = "Joined Date: " + str(create_date[index1])
+            self.ids.date.text = "Member Since Date: " + str(create_date[index1])
+            self.ids.credit.text = "Credit Limit: " + str(credit_limit[index1])
+
         else:
             self.ids.credit_limit.text = "[b]Credit Limit[/b]: None"
             self.ids.joined_date.text = "[b]Joined Date[/b]: None"
-            self.ids.date.text = "[b]Joined Date[/b]: "
+            self.ids.date.text = "[b]Member Since Date[/b]: "
+            self.ids.credit.text = "Credit Limit: None"
 
         if profile_list[log_index] != None:
             image_data = profile_list[log_index].get_bytes()
@@ -8323,10 +8138,12 @@ class AccountScreen(Screen):
         if p_customer_id[log_index] in borrower_cus_id:
             index1 = borrower_cus_id.index(p_customer_id[log_index])
             self.ids.date.text = "[b]Joined Date[/b]: " + str(create_date[index1])
-            self.ids.date.text = "Joined Date: " + str(create_date[index1])
+            self.ids.date.text = "Member Since Date: " + str(create_date[index1])
+            self.ids.credit.text = "Credit Limit " + str(credit_limit[index1])
         else:
             self.ids.date.text = "[b]Joined Date[/b]: None"
-            self.ids.date.text = "[b]Joined Date[/b]: "
+            self.ids.date.text = "[b]Member Since Date[/b]: "
+            self.ids.credit.text = "Credit Limit "
 
         data = app_tables.fin_wallet.search()
         w_email = []
@@ -9163,6 +8980,7 @@ class StudentScreen(Screen):
 
 class EditScreen3(Screen):
     MAX_IMAGE_SIZE_MB = 2
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         email = self.get_email()
@@ -9520,6 +9338,7 @@ class EditScreen2(Screen):
 
 class PersonalScreen(Screen):
     MAX_IMAGE_SIZE_MB = 2
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.refresh_profile_data()  # Initial data retrieval
@@ -9675,9 +9494,9 @@ class PersonalScreen(Screen):
             index = email1.index(email)
             self.ids.name.text = str(name[index])
             self.ids.email_id.text = str(alternate_email[index])
-            self.ids.email.text = str(email1[index])
-            self.ids.mobile_no.text = str(mobile_no[index])
-            self.ids.dob.text = str(dob[index])
+            self.ids.reg_email.text = "Email: " + str(email1[index])
+            self.ids.date_birth.text = "Birth Date: " + str(dob[index])
+            self.ids.mobile_number.text = "Mobile Number: " + str(mobile_no[index])
             self.ids.address1.text = str(address1[index])
             self.ids.address2.text = str(address2[index])
             self.ids.type.text = str(type_of_address[index])
@@ -10450,7 +10269,6 @@ class BusinessScreen(Screen):
         else:
             self.manager.current = 'AccountScreen'
 
-
     def on_pre_enter(self):
         self.business_screen()
         Window.bind(on_keyboard=self.on_back_button)
@@ -10467,6 +10285,7 @@ class BusinessScreen(Screen):
 
 class EditScreen5(Screen):
     MAX_IMAGE_SIZE_MB = 2
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         gender_data = app_tables.fin_borrower_no_of_employees.search()
@@ -10799,7 +10618,6 @@ class EditScreen5(Screen):
         else:
             self.manager.current = 'BusinessScreen'
 
-
     def on_pre_enter(self):
         Window.bind(on_keyboard=self.on_back_button)
 
@@ -10815,6 +10633,7 @@ class EditScreen5(Screen):
 
 class EditScreen1(Screen):
     MAX_IMAGE_SIZE_MB = 2
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         gender_data = app_tables.fin_gender.search()
@@ -11358,7 +11177,6 @@ class EditScreen1(Screen):
 
         except Exception as e:
             print(f"An error occurred while updating related tables: {e}")
-
 
     def get_email(self):
         # Make a call to the Anvil server function

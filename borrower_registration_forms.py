@@ -249,7 +249,7 @@ Borrower = '''
     
                 MDTextField:
                     id: alternate_email
-                    hint_text: ' Enter Alternate Email ID *'
+                    hint_text: ' Enter Alternate Email ID '
                     multiline: False
                     font_size: "15dp"
                     theme_text_color: "Custom"
@@ -4256,8 +4256,6 @@ class BorrowerScreen(Screen):
             validation_errors.append((self.ids.spinner_id, ""))
         if not mobile_number:
             validation_errors.append((self.ids.mobile_number, ""))
-        if not alternate_email:
-            validation_errors.append((self.ids.alternate_email, ""))
         if not aadhar_number:
             validation_errors.append((self.ids.aadhar_number, ""))
         if not pan_number:
@@ -4272,9 +4270,7 @@ class BorrowerScreen(Screen):
             validation_errors.append(
                 (self.ids.mobile_number, ""))
 
-        # Validate email
-        if not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', alternate_email):
-            validation_errors.append((self.ids.alternate_email, ""))
+        # Validate emai
 
         # Validate date of birth
         try:
@@ -4357,9 +4353,7 @@ class BorrowerScreen(Screen):
         if not re.match(email_regex, alternate_email_text):
             alternate_email.helper_text = "Enter valid email format"
             alternate_email.error = True
-        else:
-            alternate_email.helper_text = ""
-            alternate_email.error = False
+
 
     def validate_mobile(self, mobile_number):
         mobile_number_text = mobile_number.text

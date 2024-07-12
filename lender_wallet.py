@@ -34,6 +34,8 @@ Builder.load_string(
         orientation: 'vertical'
         spacing: dp(30)
         padding: dp(30)
+        size_hint_y: None
+        height: self.minimum_height
         MDLabel:
             text: 'Available Balance'
             halign: 'center'
@@ -52,8 +54,50 @@ Builder.load_string(
             MDLabel:
                 id: total_amount
                 halign: 'left'
+                text: "500000"
                 font_size: dp(25)
                 bold: True
+        MDLabel:
+        	text:''
+        GridLayout:
+            cols: 1
+            spacing: dp(20)
+            MDLabel:
+                id: enter_amount
+                text: 'Enter Amount'
+                bold: True
+                size_hint_y: None
+                height: dp(1)
+            MDTextField:
+                id: enter_amount
+                multiline: False
+                helper_text: 'Enter valid Amount'
+                helper_text_mode: 'on_focus'
+                size_hint_y:None
+                font_size: "15dp"
+                theme_text_color: "Custom"
+                hint_text_color: 0, 0, 0, 1
+                hint_text_color_normal: "black"
+                text_color_normal: "black"
+                helper_text_color_normal: "black"
+                input_type: 'number'  
+
+        MDLabel:
+            text: ""
+        MDLabel:
+        	text: ''
+
+        MDFlatButton:
+            text: "view transaction history >>"
+            size_hint_y: None
+            height: dp(30)
+            pos_hint: {'center_x': 0.5}
+            theme_text_color: "Custom"
+            text_color: "#007BFF"
+            on_release: root.view_transaction_history()
+            md_bg_color: "#ffffff"
+        MDLabel:
+        	text: ''
 
         GridLayout:
             cols: 2
@@ -66,67 +110,27 @@ Builder.load_string(
                 id: deposit_button_grid
                 line_color: 0, 0, 0, 0
                 icon: "cash"
-                text_color: 0, 0, 0, 1
-                md_bg_color:1,1,1,1
+                text_color: 1,1,1,1
+                md_bg_color: 0.043, 0.145, 0.278, 1
                 font_name:"Roboto-Bold"
-                on_release: root.highlight_button('deposit')
+                on_release: root.deposit()
             MDRectangleFlatIconButton:
                 id: withdraw_button_grid
                 text: "Withdraw"
                 icon: "cash"
                 line_color: 0, 0, 0, 0
-                text_color: 0, 0, 0, 1
-                md_bg_color: 1,1,1,1
+                text_color: 1,1,1,1
+                md_bg_color: 0.043, 0.145, 0.278, 1
                 font_name:"Roboto-Bold"
-                on_release: root.highlight_button('withdraw')
-        MDLabel:
-            text: 'Enter Amount'
-            bold: True
-            size_hint_y: None
-            height: dp(5)
-        MDTextField:
-            id: enter_amount
-            multiline: False
-            helper_text: 'Enter valid Amount'
-            helper_text_mode: 'on_focus'
-            size_hint_y:None
-            font_size: "15dp"
-            theme_text_color: "Custom"
-            hint_text_color: 0, 0, 0, 1
-            hint_text_color_normal: "black"
-            text_color_normal: "black"
-            helper_text_color_normal: "black"
-            on_touch_down: root.on_amount_touch_down()
-
-        MDFlatButton:
-            text: "View Transaction History >"
-            theme_text_color: "Custom"
-            text_color: "black"
-            pos_hint: {'center_x': 0.5}
-            padding: dp(10)
-            md_bg_color: 140/255, 140/255, 140/255, 1
-            on_release: root.view_transaction_history()
+                on_release: root.withdraw()
         GridLayout:
             id: box
             cols: 1
-            spacing: dp(20)
             size_hint_y: None
             height: dp(50)
-            pos_hint: {'center_x': 0.65}
-
-
-        MDRoundFlatButton:
-            text: "Submit"
-            md_bg_color: 0.043, 0.145, 0.278, 1
-            theme_text_color: 'Custom'
-            font_name: "Roboto-Bold" 
-            text_color: 1, 1, 1, 1
-            size_hint: 0.7, None
-            height: "40dp"
-            pos_hint: {'center_x': 0.5}
-            on_release: root.submit()
+            pos_hint: {'center_x': 0.74}
         MDLabel:
-			text:''
+            text:''
             size_hint_y:None
             height:dp(20)
 
@@ -174,6 +178,7 @@ class LenderWalletScreen(Screen):
 
     def on_amount_touch_down(self):
         self.ids.enter_amount.input_type = 'number'
+
     def view_transaction_history(self):
         sm = self.manager
         # Create a new instance of the LenderWalletScreen
@@ -240,40 +245,83 @@ class LenderWalletScreen(Screen):
         dialog.dismiss()
         self.manager.current = 'LenderWalletScreen'
 
-    def submit(self):
+    def deposit(self):
         enter_amount = self.ids.enter_amount.text
-        if self.type == None:
-            self.show_validation_error3('Please Select Transaction Type')
-        elif self.ids.enter_amount.text == '' and not self.ids.enter_amount.text.isdigit():
+        if self.ids.enter_amount.text == '' and not self.ids.enter_amount.text.isdigit():
             self.show_validation_error3('Enter Valid Amount')
-        elif self.type == 'deposit':
-            data = app_tables.fin_wallet.search()
-            transaction = app_tables.fin_wallet_transactions.search()
-            email = self.email()
-            w_email = []
-            w_id = []
-            w_amount = []
-            w_customer_id = []
-            for i in data:
-                w_email.append(i['user_email'])
-                w_id.append(i['wallet_id'])
-                w_amount.append(i['wallet_amount'])
-                w_customer_id.append(i['customer_id'])
+            return
+        data = app_tables.fin_wallet.search()
+        transaction = app_tables.fin_wallet_transactions.search()
+        email = self.email()
+        w_email = []
+        w_id = []
+        w_amount = []
+        w_customer_id = []
+        for i in data:
+            w_email.append(i['user_email'])
+            w_id.append(i['wallet_id'])
+            w_amount.append(i['wallet_amount'])
+            w_customer_id.append(i['customer_id'])
 
-            t_id = []
-            for i in transaction:
-                t_id.append(i['transaction_id'])
+        t_id = []
+        for i in transaction:
+            t_id.append(i['transaction_id'])
 
-            if len(t_id) >= 1:
-                transaction_id = 'TA' + str(int(t_id[-1][2:]) + 1).zfill(4)
-            else:
-                transaction_id = 'TA0001'
+        if len(t_id) >= 1:
+            transaction_id = 'TA' + str(int(t_id[-1][2:]) + 1).zfill(4)
+        else:
+            transaction_id = 'TA0001'
 
-            transaction_date_time = datetime.today()
-            if email in w_email:
-                index = w_email.index(email)
-                data[index]['wallet_amount'] = int(enter_amount) + w_amount[index]
-                self.show_validation_error(f'Amount {enter_amount} Deposited Successfully')
+        transaction_date_time = datetime.today()
+        if email in w_email:
+            index = w_email.index(email)
+            data[index]['wallet_amount'] = int(enter_amount) + w_amount[index]
+            self.show_validation_error(f'Amount {enter_amount} Deposited Successfully')
+            self.ids.enter_amount.text = ''
+            app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                       customer_id=w_customer_id[index], user_email=email,
+                                                       transaction_type=self.type, amount=int(enter_amount),
+                                                       status='success', wallet_id=w_id[index],
+                                                       transaction_time_stamp=transaction_date_time)
+        else:
+            print("no email found")
+        self.refresh()
+
+    def withdraw(self):
+        enter_amount = self.ids.enter_amount.text
+        if self.ids.enter_amount.text == '' and not self.ids.enter_amount.text.isdigit():
+            self.show_validation_error3('Enter Valid Amount')
+            return
+        data = app_tables.fin_wallet.search()
+        transaction = app_tables.fin_wallet_transactions.search()
+        email = self.email()
+        w_email = []
+        w_id = []
+        w_amount = []
+        w_customer_id = []
+        for i in data:
+            w_email.append(i['user_email'])
+            w_id.append(i['wallet_id'])
+            w_amount.append(i['wallet_amount'])
+            w_customer_id.append(i['customer_id'])
+
+        t_id = []
+        for i in transaction:
+            t_id.append(i['transaction_id'])
+
+        if len(t_id) >= 1:
+            transaction_id = 'TA' + str(int(t_id[-1][2:]) + 1).zfill(4)
+        else:
+            transaction_id = 'TA0001'
+
+        transaction_date_time = datetime.today()
+
+        if email in w_email:
+            index = w_email.index(email)
+            if w_amount[index] >= int(self.ids.enter_amount.text):
+                data[index]['wallet_amount'] = w_amount[index] - int(self.ids.enter_amount.text)
+                self.show_validation_error(
+                    f'Amount {self.ids.enter_amount.text} Withdraw Successfully')
                 self.ids.enter_amount.text = ''
                 app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
                                                            customer_id=w_customer_id[index], user_email=email,
@@ -281,58 +329,111 @@ class LenderWalletScreen(Screen):
                                                            status='success', wallet_id=w_id[index],
                                                            transaction_time_stamp=transaction_date_time)
             else:
-                print("no email found")
-            self.refresh()
-
-        elif self.type == 'withdraw':
-            data = app_tables.fin_wallet.search()
-            transaction = app_tables.fin_wallet_transactions.search()
-            email = self.email()
-            w_email = []
-            w_id = []
-            w_amount = []
-            w_customer_id = []
-            for i in data:
-                w_email.append(i['user_email'])
-                w_id.append(i['wallet_id'])
-                w_amount.append(i['wallet_amount'])
-                w_customer_id.append(i['customer_id'])
-
-            t_id = []
-            for i in transaction:
-                t_id.append(i['transaction_id'])
-
-            if len(t_id) >= 1:
-                transaction_id = 'TA' + str(int(t_id[-1][2:]) + 1).zfill(4)
-            else:
-                transaction_id = 'TA0001'
-
-            transaction_date_time = datetime.today()
-
-            if email in w_email:
-                index = w_email.index(email)
-                if w_amount[index] >= int(self.ids.enter_amount.text):
-                    data[index]['wallet_amount'] = w_amount[index] - int(self.ids.enter_amount.text)
-                    self.show_validation_error(
-                        f'Amount {self.ids.enter_amount.text} Withdraw Successfully')
-                    self.ids.enter_amount.text = ''
-                    app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
-                                                               customer_id=w_customer_id[index], user_email=email,
-                                                               transaction_type=self.type, amount=int(enter_amount),
-                                                               status='success', wallet_id=w_id[index],
-                                                               transaction_time_stamp=transaction_date_time)
-                else:
-                    self.show_validation_error2(
-                        f'Insufficient Amount {self.ids.enter_amount.text} Please Deposit Required Money')
-                    app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
-                                                               customer_id=w_customer_id[index], user_email=email,
-                                                               transaction_type=self.type, amount=int(enter_amount),
-                                                               status='fail', wallet_id=w_id[index],
-                                                               transaction_time_stamp=transaction_date_time)
-                    self.ids.enter_amount.text = ''
-            else:
-                print("no email found")
+                self.show_validation_error2(
+                    f'Insufficient Amount {self.ids.enter_amount.text} Please Deposit Required Money')
+                app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+                                                           customer_id=w_customer_id[index], user_email=email,
+                                                           transaction_type=self.type, amount=int(enter_amount),
+                                                           status='fail', wallet_id=w_id[index],
+                                                           transaction_time_stamp=transaction_date_time)
+                self.ids.enter_amount.text = ''
+        else:
+            print("no email found")
         self.refresh()
+
+    # def submit(self):
+    #     enter_amount = self.ids.enter_amount.text
+    #     if self.type == None:
+    #         self.show_validation_error3('Please Select Transaction Type')
+    #     elif self.ids.enter_amount.text == '' and not self.ids.enter_amount.text.isdigit():
+    #         self.show_validation_error3('Enter Valid Amount')
+    #     elif self.type == 'deposit':
+    #         data = app_tables.fin_wallet.search()
+    #         transaction = app_tables.fin_wallet_transactions.search()
+    #         email = self.email()
+    #         w_email = []
+    #         w_id = []
+    #         w_amount = []
+    #         w_customer_id = []
+    #         for i in data:
+    #             w_email.append(i['user_email'])
+    #             w_id.append(i['wallet_id'])
+    #             w_amount.append(i['wallet_amount'])
+    #             w_customer_id.append(i['customer_id'])
+    #
+    #         t_id = []
+    #         for i in transaction:
+    #             t_id.append(i['transaction_id'])
+    #
+    #         if len(t_id) >= 1:
+    #             transaction_id = 'TA' + str(int(t_id[-1][2:]) + 1).zfill(4)
+    #         else:
+    #             transaction_id = 'TA0001'
+    #
+    #         transaction_date_time = datetime.today()
+    #         if email in w_email:
+    #             index = w_email.index(email)
+    #             data[index]['wallet_amount'] = int(enter_amount) + w_amount[index]
+    #             self.show_validation_error(f'Amount {enter_amount} Deposited Successfully')
+    #             self.ids.enter_amount.text = ''
+    #             app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+    #                                                        customer_id=w_customer_id[index], user_email=email,
+    #                                                        transaction_type=self.type, amount=int(enter_amount),
+    #                                                        status='success', wallet_id=w_id[index],
+    #                                                        transaction_time_stamp=transaction_date_time)
+    #         else:
+    #             print("no email found")
+    #         self.refresh()
+    #
+    #     elif self.type == 'withdraw':
+    #         data = app_tables.fin_wallet.search()
+    #         transaction = app_tables.fin_wallet_transactions.search()
+    #         email = self.email()
+    #         w_email = []
+    #         w_id = []
+    #         w_amount = []
+    #         w_customer_id = []
+    #         for i in data:
+    #             w_email.append(i['user_email'])
+    #             w_id.append(i['wallet_id'])
+    #             w_amount.append(i['wallet_amount'])
+    #             w_customer_id.append(i['customer_id'])
+    #
+    #         t_id = []
+    #         for i in transaction:
+    #             t_id.append(i['transaction_id'])
+    #
+    #         if len(t_id) >= 1:
+    #             transaction_id = 'TA' + str(int(t_id[-1][2:]) + 1).zfill(4)
+    #         else:
+    #             transaction_id = 'TA0001'
+    #
+    #         transaction_date_time = datetime.today()
+    #
+    #         if email in w_email:
+    #             index = w_email.index(email)
+    #             if w_amount[index] >= int(self.ids.enter_amount.text):
+    #                 data[index]['wallet_amount'] = w_amount[index] - int(self.ids.enter_amount.text)
+    #                 self.show_validation_error(
+    #                     f'Amount {self.ids.enter_amount.text} Withdraw Successfully')
+    #                 self.ids.enter_amount.text = ''
+    #                 app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+    #                                                            customer_id=w_customer_id[index], user_email=email,
+    #                                                            transaction_type=self.type, amount=int(enter_amount),
+    #                                                            status='success', wallet_id=w_id[index],
+    #                                                            transaction_time_stamp=transaction_date_time)
+    #             else:
+    #                 self.show_validation_error2(
+    #                     f'Insufficient Amount {self.ids.enter_amount.text} Please Deposit Required Money')
+    #                 app_tables.fin_wallet_transactions.add_row(transaction_id=transaction_id,
+    #                                                            customer_id=w_customer_id[index], user_email=email,
+    #                                                            transaction_type=self.type, amount=int(enter_amount),
+    #                                                            status='fail', wallet_id=w_id[index],
+    #                                                            transaction_time_stamp=transaction_date_time)
+    #                 self.ids.enter_amount.text = ''
+    #         else:
+    #             print("no email found")
+    #     self.refresh()
 
     def refresh(self):
         self.ids.box1.clear_widgets()
@@ -386,6 +487,7 @@ class LenderWalletScreen(Screen):
             ]
         )
         dialog.open()
+
     def email(self):
         return anvil.server.call('another_method')
 

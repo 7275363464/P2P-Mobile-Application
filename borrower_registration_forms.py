@@ -10597,6 +10597,9 @@ class BorrowerScreen15(Screen):
                 self.person_name.helper_text = ''
                 self.person_name._helper_text_color = 'red'
                 self.person_name.error = True
+            if self.date_textfield1.text == " Enter Valid Date Of Birth *" or self.date_textfield1.text == "You Clicked Cancel!":
+                self.show_validation_error('Select a valid Date Of Birth')
+                return
 
             # try:
             #     dob = datetime.strptime(person_dob, "%Y-%m-%d")
@@ -10614,7 +10617,7 @@ class BorrowerScreen15(Screen):
             #     self.date_textfield1.text_color = 'red'
             #     return
 
-            if len(self.person_ph_no.text) != 10 and not self.person_ph_no.text.isdigit():
+            if len(self.person_ph_no.text) != 10 or not self.person_ph_no.text.isdigit():
                 self.person_ph_no.helper_text = ''
                 self.person_ph_no._helper_text_color = 'red'
                 self.person_ph_no.error = True
@@ -10645,6 +10648,9 @@ class BorrowerScreen15(Screen):
                 self.person_name.helper_text = ''
                 self.person_name._helper_text_color = 'red'
                 self.person_name.error = True
+            if self.date_textfield1.text == " Enter Valid Date Of Birth *" or self.date_textfield1.text == "You Clicked Cancel!":
+                self.show_validation_error('Select a valid Date Of Birth')
+                return
 
             # try:
             #     dob = datetime.strptime(person_dob, "%Y-%m-%d")
@@ -10662,7 +10668,7 @@ class BorrowerScreen15(Screen):
             #     self.date_textfield1.text_color = 'red'
             #     return
 
-            if len(self.person_ph_no.text) != 10 and not self.person_ph_no.text.isdigit():
+            if len(self.person_ph_no.text) != 10 or not self.person_ph_no.text.isdigit():
                 self.person_ph_no.helper_text = ''
                 self.person_ph_no._helper_text_color = 'red'
                 self.person_ph_no.error = True
@@ -10697,10 +10703,16 @@ class BorrowerScreen15(Screen):
                 self.spouse_name._helper_text_color = 'red'
                 self.spouse_name.error = True
                 return
-            if len(self.spouse_mobile.text) != 10 and not self.spouse_mobile.text.isdigit():
+            if len(self.spouse_mobile.text) != 10 or not self.spouse_mobile.text.isdigit():
                 self.spouse_mobile.helper_text = ''
                 self.spouse_mobile._helper_text_color = 'red'
                 self.spouse_mobile.error = True
+                return
+            if self.spouse_profession.text not in self.unique_list1:
+                self.show_validation_error('Select a valid Spouse Profession')
+                return
+            if self.date_textfield.text == " Enter Marriage Date *" or self.date_textfield.text == "You Clicked Cancel!":
+                self.show_validation_error('Select a valid Marriage Date')
                 return
             # try:
             #     dob = datetime.strptime(self.date_textfield.text, "%Y-%m-%d").date()  # Convert to date object

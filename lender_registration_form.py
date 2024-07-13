@@ -153,6 +153,7 @@ KV = '''
                     width: dp(200)
                     text_size: self.width - dp(20), None
                     color: 0, 0, 0, 1
+                    # on_release: root.validate_spinner()                  
                     option_cls: 'CustomSpinnerOption'
                     canvas:
                         Color:
@@ -301,6 +302,7 @@ KV = '''
                     line_color_normal: 0, 0, 0, 1  # Red color for the line when not focused
                     line_color_focus: 0, 0, 0, 1
                     radius: [0, 0, 0,0]
+                    on_text: root.validate_aadhar_number(self)
                     mode: "rectangle"
     
                 MDBoxLayout:
@@ -371,6 +373,7 @@ KV = '''
                     line_color_normal: 0, 0, 0, 1  # Red color for the line when not focused
                     line_color_focus: 0, 0, 0, 1
                     radius: [0, 0, 0,0]
+                    on_text: root.validate_pan_number(self)
                     mode: "rectangle"
     
     
@@ -493,6 +496,7 @@ KV = '''
                     line_color_normal: 0, 0, 0, 1  # Red color for the line when not focused
                     line_color_focus: 0, 0, 0, 1
                     radius: [0, 0, 0,0]
+                    on_text: root.validate_street_address1(self)
 
                 MDTextField:
                     id: street_address2
@@ -510,6 +514,7 @@ KV = '''
                     line_color_focus: 0, 0, 0, 1
                     mode: "rectangle"
                     radius: [0, 0, 0,0]
+                    on_text: root.validate_street_address2(self)
 
                 Spinner:
                     id: spinner_id1
@@ -571,6 +576,7 @@ KV = '''
                     line_color_focus: 0, 0, 0, 1
                     mode: "rectangle"
                     radius: [0, 0, 0,0]
+                    on_text: root.validate_city(self)
                     
 
                 MDTextField:
@@ -592,6 +598,7 @@ KV = '''
                     mode: "rectangle"
                     on_text: root.validate_zip_code(self) 
                     radius: [0, 0, 0,0]
+                    
 
                 MDTextField:
                     id: state
@@ -609,6 +616,7 @@ KV = '''
                     line_color_focus: 0, 0, 0, 1
                     mode: "rectangle"
                     radius: [0, 0, 0,0]
+                    on_text: root.validate_state(self)
 
                 MDTextField:
                     id: country
@@ -626,6 +634,7 @@ KV = '''
                     line_color_focus: 0, 0, 0, 1
                     mode: "rectangle"
                     radius: [0, 0, 0,0]
+                    on_text: root.validate_country(self)
                 
                 MDLabel:
                     text: 'Please fill * mandatory details'
@@ -646,6 +655,7 @@ KV = '''
                     size_hint: 1, None
                     height: "50dp"
                     font_name: "Roboto-Bold"
+
 
 
 
@@ -3983,8 +3993,9 @@ class LenderScreen(Screen):
         if not date:
             validation_errors.append(
                 (self.ids.date_textfield, ""))  # Corrected to date_textfield
-        if not gender:
-            validation_errors.append((self.ids.spinner_id, ""))
+        if not gender or gender == 'Select Gender *':
+            self.show_validation_error("Please select your gender.")
+            return
         if not mobile_number:
             validation_errors.append((self.ids.mobile_number, ""))
 
@@ -4069,8 +4080,7 @@ class LenderScreen(Screen):
             widget.helper_text_color = (1, 0, 0, 1)
             widget.helper_text = error_message
             widget.helper_text_mode = "on_error"
-            if isinstance(widget, MDCheckbox):
-                widget.line_color_normal = (1, 0, 0, 1)
+            widget.line_color_normal = (1, 0, 0, 1)
             if isinstance(widget, MDCheckbox):
                 widget.theme_text_color = 'Error'
 
@@ -4085,11 +4095,35 @@ class LenderScreen(Screen):
         if not re.match(email_regex, alternate_email_text):
             alternate_email.helper_text = "Invalid email format"
             alternate_email.error = True
-        # else:
-        #     alternate_email.helper_text = ""
-        #     alternate_email.line_color_normal = (0, 0, 0, 1)
-        #     alternate_email.error = False
+        else:
+            alternate_email.helper_text = ""
+            alternate_email.line_color_normal = (0, 0, 0, 1)
+            alternate_email.error = False
 
+    # def validate_spinner(self, spinner):
+    #     # Assuming an empty or default value is considered invalid
+    #     if spinner.text == "" or spinner.text == "Select Gender":
+    #         return False
+    #     return True
+    def validate_aadhar_number(self, aadhar_number):
+        aadhar_number_text = aadhar_number.text
+        if not aadhar_number_text:
+            aadhar_number.helper_text = ""
+            aadhar_number.error = True
+        else:
+            aadhar_number.helper_text = ""
+            aadhar_number.line_color_normal = (0, 0, 0, 1)
+            aadhar_number.error = False
+
+    def validate_pan_number(self, pan_number):
+        pan_number_text = pan_number.text
+        if not pan_number_text:
+            pan_number.helper_text = ""
+            pan_number.error = True
+        else:
+            pan_number.helper_text = ""
+            pan_number.line_color_normal = (0, 0, 0, 1)
+            pan_number.error = False
     def validate_mobile(self, mobile_number):
         mobile_number_text = mobile_number.text
 
@@ -4106,6 +4140,7 @@ class LenderScreen(Screen):
             mobile_number.error = True
         else:
             mobile_number.helper_text = ""
+            mobile_number.line_color_normal = (0, 0, 0, 1)
             mobile_number.error = False
 
     def get_email(self):
@@ -4484,20 +4519,16 @@ class LenderScreen3(Screen):
         validation_errors = []
         # Check for missing fields
 
-        if spinner_id1 not in spinner_id1 == 'Select Present Address':
-            self.show_validation_errors('Select Present Address')
-            return
-        elif spinner_id2 not in spinner_id2 == 'Select Staying Address':
-            self.show_validation_errors('Select Duration at Address')
-            return
         if not street_address1:
             validation_errors.append((self.ids.street_address1, ""))
         if not street_address2:
             validation_errors.append((self.ids.street_address2, ""))
-        if not spinner_id1:
-            validation_errors.append((self.ids.spinner_id1, ""))
-        if not spinner_id2:
-            validation_errors.append((self.ids.spinner_id2, ""))
+        if not spinner_id1 or spinner_id1 == 'Select Present Address *':
+            self.show_validation_errors("Please Select Your Present Address.")
+            return
+        if not spinner_id2 or spinner_id2 == 'Select Staying Address *':
+            self.show_validation_errors("Please Select Your Duration At Address.")
+            return
         if not city:
             validation_errors.append((self.ids.city, ""))
         if not zip_code:
@@ -4570,6 +4601,7 @@ class LenderScreen3(Screen):
             zip_code.error = True
         else:
             zip_code.helper_text = ""
+            zip_code.line_color_normal = (0, 0, 0, 1)
             zip_code.error = False
 
     def show_validation_error(self, validation_errors):
@@ -4578,10 +4610,55 @@ class LenderScreen3(Screen):
             widget.helper_text_color = (1, 0, 0, 1)
             widget.helper_text = error_message
             widget.helper_text_mode = "on_error"
-            if isinstance(widget, MDCheckbox):
-                widget.line_color_normal = (1, 0, 0, 1)
+            widget.line_color_normal = (1, 0, 0, 1)
             if isinstance(widget, MDCheckbox):
                 widget.theme_text_color = 'Error'
+    def validate_street_address1(self, street_address1):
+        street_address1_text = street_address1.text
+        if not street_address1_text:
+            street_address1.helper_text = ""
+            street_address1.error = True
+        else:
+            street_address1.helper_text = ""
+            street_address1.line_color_normal = (0, 0, 0, 1)
+            street_address1.error = False
+    def validate_street_address2(self, street_address2):
+        street_address2_text = street_address2.text
+        if not street_address2_text:
+            street_address2.helper_text = ""
+            street_address2.error = True
+        else:
+            street_address2.helper_text = ""
+            street_address2.line_color_normal = (0, 0, 0, 1)
+            street_address2.error = False
+    def validate_city(self, city):
+        city_text = city.text
+        if not city_text:
+            city.helper_text = ""
+            city.error = True
+        else:
+            city.helper_text = ""
+            city.line_color_normal = (0, 0, 0, 1)
+            city.error = False
+    def validate_state(self, state):
+        state_text = state.text
+        if not state_text:
+            state.helper_text = ""
+            state.error = True
+        else:
+            state.helper_text = ""
+            state.line_color_normal = (0, 0, 0, 1)
+            state.error = False
+
+    def validate_country(self, country):
+        country_text = country.text
+        if not country_text:
+            country.helper_text = ""
+            country.error = True
+        else:
+            country.helper_text = ""
+            country.line_color_normal = (0, 0, 0, 1)
+            country.error = False
 
     def show_validation_errors(self, error_message):
         dialog = MDDialog(

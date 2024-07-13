@@ -337,7 +337,7 @@ class CustomTwoLineListItem(MDBoxLayout):
         name_label = MDLabel(
             text=text,
             size_hint=(None, None),
-            size=(250, 40),  # Fixed size
+            size=(300, 40),  # Fixed size
             halign='left',
             valign='middle',
             font_size='20sp',
@@ -347,7 +347,7 @@ class CustomTwoLineListItem(MDBoxLayout):
         amount_label = MDLabel(
             text=amount_text,
             size_hint=(None, None),
-            size=(125, 40),  # Fixed size
+            size=(200, 40),  # Fixed size
             halign='right',
             valign='middle',
             markup=True,
@@ -365,7 +365,7 @@ class CustomTwoLineListItem(MDBoxLayout):
         transaction_label = MDLabel(
             text=secondary_text,
             size_hint=(None, None),
-            size=(250, 40),  # Fixed size
+            size=(340, 40),  # Fixed size
             halign='left',
             valign='middle',
             font_size='13sp',  # Smaller font size
@@ -377,7 +377,7 @@ class CustomTwoLineListItem(MDBoxLayout):
         status_label = MDLabel(
             text=status_text,
             size_hint=(None, None),
-            size=(125, 40),  # Fixed size
+            size=(160, 40),  # Fixed size
             halign='right',
             valign='middle',
             font_size='20sp',

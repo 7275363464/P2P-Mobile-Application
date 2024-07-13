@@ -46,7 +46,7 @@ application_tracker = """
             MDBoxLayout:
                 id: container
                 orientation: 'vertical'
-                padding: dp(10)
+                padding: dp(15)
                 spacing: dp(10)
                 size_hint_y: None
                 height: self.minimum_height
@@ -606,15 +606,17 @@ class ALLLoansAPT(Screen):
                 card = MDCard(
                     orientation='horizontal',
                     size_hint=(None, None),
-                    size=("340dp", "200dp"),
-                    padding="8dp",
+                    size=("380dp", "200dp"),
+                    padding="12dp",
                     spacing="5dp",
                     elevation=1,
                     radius=[0, 0, 0, 0]
                 )
-
+                middle_box = MDBoxLayout(orientation='vertical', size_hint_x=0.05,
+                                       pos_hint={"center_y": 0.59}, )
+                card.add_widget(middle_box)
                 # Left side: User information
-                left_box = MDBoxLayout(orientation='vertical',padding=dp(20) ,size_hint_x=0.3,pos_hint={"center_y": 0.53},)
+                left_box = MDBoxLayout(orientation='vertical',padding=dp(10) ,size_hint_x=0.5,pos_hint={"center_y": 0.59},)
                 if photo_texture:
                     image = CircularImage(texture=photo_texture)
                     left_box.add_widget(image)
@@ -676,7 +678,7 @@ class ALLLoansAPT(Screen):
                     status_color = (0.902, 0.141, 0.141, 1)
 
                 # Right side: Loan details
-                right_box = MDBoxLayout(orientation='vertical', size_hint_x=0.5)
+                right_box = MDBoxLayout(orientation='vertical', size_hint_x=0.7)
 
                 right_box.add_widget(MDLabel(
                     text=f"[b][color=000000]Loan Status:[/color] {loan_status[i]}[/b]",

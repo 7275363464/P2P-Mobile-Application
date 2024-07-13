@@ -1811,6 +1811,7 @@ Borrower = '''
                                 width: 0.7 
 
                         MDIconButton:
+                            id: upload_stud
                             icon: 'upload'
                             theme_text_color: "Custom"
                             text_color: 0, 0, 0, 1  # Black text color
@@ -1820,7 +1821,7 @@ Borrower = '''
                             on_release: app.root.get_screen('BorrowerScreen7').check_and_open_file_manager_student()
         
                         MDLabel:
-                            id: upload_label1
+                            id: upload_label_stu
                             text: 'Upload College ID'
                             halign: 'left'
                             theme_text_color: "Custom"
@@ -2082,13 +2083,14 @@ Borrower = '''
                                 width: 0.8 
 
                         MDIconButton:
+                            id:emp1
                             icon: 'upload'
                             theme_text_color: "Custom"
                             text_color: 0, 0, 0, 1  # Black text color
                             size_hint_x: None
                             width: dp(24)
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                            on_release: app.root.get_screen('BorrowerScreen7').check_and_open_file_manager1()
+                            on_release: app.root.get_screen('BorrowerScreen7').check_and_open_file_manager_emp1()
 
                         MDLabel:
                             id: upload_label1
@@ -2102,7 +2104,7 @@ Borrower = '''
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
                         Image:
-                            id: image_label1
+                            id: image_label_emp1
                             source: ''
                             allow_stretch: True
                             keep_ratio: True
@@ -2127,16 +2129,17 @@ Borrower = '''
                                 rgba: 0, 0, 0, 1  # Black color for the line
                             Line:
                                 rectangle: self.x, self.y, self.width, self.height
-                                width: 0.8 
+                                width: 0.7 
 
                         MDIconButton:
+                            id: emp2
                             icon: 'upload'
                             theme_text_color: "Custom"
                             text_color: 0, 0, 0, 1  # Black text color
                             size_hint_x: None
                             width: dp(24)
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                            on_release: app.root.get_screen('BorrowerScreen7').check_and_open_file_manager2()
+                            on_release: app.root.get_screen('BorrowerScreen7').check_and_open_file_manager_emp2()
 
                         MDLabel:
                             id: upload_label2
@@ -2150,7 +2153,7 @@ Borrower = '''
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         
                         Image:
-                            id: image_label2
+                            id: image_label_emp2
                             source: ''
                             allow_stretch: True
                             keep_ratio: True
@@ -2205,14 +2208,15 @@ Borrower = '''
                 MDBoxLayout:
                     id: self_employment_box
                     orientation: 'vertical'
-                    spacing: dp(20)
+                    spacing: dp(10)
                     padding: dp(10)
                     size_hint_y: None
-                    height: dp(1500)
+                    height: dp(1600)
                                     
                     Spinner:
                         id: self_employment_type
                         text: " Select self employement Type"
+                        on_text: root.update_self_employment_details(self_employment_type.text)
                         font_size: "15dp"
                         multiline: False
                         size_hint: 1, None
@@ -2229,1244 +2233,457 @@ Borrower = '''
                             Line:
                                 rectangle: self.x, self.y, self.width, self.height
                                 width: 0.7
+                    #Farmer Details           
+                    MDBoxLayout:
+                        id: former_details_box
+                        orientation: 'vertical'
+                        spacing: dp(10)
+                        # padding: dp(10)
+                        size_hint_y: None
+                        height: dp(320)
                         
-                        #Business        
-                        MDBoxLayout:
-                            id: business_details_box
-                            orientation: 'vertical'
-                            spacing: dp(20)
-                            padding: dp(30)  # Reduce the top padding
-                
-                            MDLabel:
-                                text: 'Business Details'
-                                halign: 'center'
-                                bold: True
-                                size_hint_y: None
-                                height:dp(50)
-                
-                            MDTextField:
-                                id: business_name
-                                hint_text: 'Enter Business Name '
-                                multiline: False
-                                helper_text: "Enter valid Business Name"
-                                helper_text_mode: 'on_focus'
-                                font_size: "15dp"
-                                theme_text_color: "Custom"
-                                hint_text_color: 0, 0, 0, 1
-                                hint_text_color_normal: "black"
-                                text_color_normal: "black"
-                                helper_text_color_normal: "black"
-                
-                            MDLabel:
-                                text:"Select Your Business Type:"
-                                halign: 'left'
-                                font_size: "15dp"
-                                font_name: "Roboto-Bold"
-                                size_hint_y: None
-                                height:dp(20)
-                
-                            Spinner:
-                                id: spin
-                                text: " Select Business Type"
-                                multiline: False
-                                font_size: "15dp"
-                                size_hint: 1 , None
-                                height:"40dp"
-                                width: dp(200)
-                                text_size: self.width - dp(20), None
-                                background_color: 0,0,0,0
-                                background_normal:''
-                                color: 0, 0, 0, 1
-                                canvas.before:
-                                    Color:
-                                        rgba: 0, 0, 0, 1  
-                                    Line:
-                                        width: 0.7
-                                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-                
-                            MDTextField:
-                                id:  business_address
-                                hint_text: 'Enter Business Address'
-                                multiline: False
-                                helper_text: "Enter valid Business Address"
-                                helper_text_mode: 'on_focus'
-                                font_size: "15dp"
-                                theme_text_color: "Custom"
-                                hint_text_color: 0, 0, 0, 1
-                                hint_text_color_normal: "black"
-                                text_color_normal: "black"
-                                helper_text_color_normal: "black"
-                
-                            MDLabel:
-                                text:"Select Your No of Employees Working:"
-                                halign: 'left'
-                                font_size: "15dp"
-                                font_name: "Roboto-Bold"
-                                size_hint_y: None
-                                height:dp(20)
-                
-                            Spinner:
-                                id: no_of_employees_working
-                                text: "No of Employees Working"
-                                font_size: "15dp"
-                                multiline: False
-                                size_hint: 1 , None
-                                height:"40dp"
-                                width: dp(200)
-                                text_size: self.width - dp(20), None
-                                background_color: 0,0,0,0
-                                background_normal:''
-                                color: 0, 0, 0, 1
-                                canvas.before:
-                                    Color:
-                                        rgba: 0, 0, 0, 1  
-                                    Line:
-                                        width: 0.7
-                                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-                
-                            GridLayout:
-                                cols: 1
-                                spacing:dp(30)
-                                padding: [0, "30dp", 0, 0]
-                                MDRaisedButton:
-                                    text: "Next"
-                                    on_release: root.add_data(business_name.text, spin.text, business_address.text,no_of_employees_working.text)
-                                    md_bg_color: 0.043, 0.145, 0.278, 1
-                                    pos_hint: {'right': 1, 'y': 0.5}
-                                    text_color: 1, 1, 1, 1
-                                    size_hint: 1, None
-                                    height: "50dp"
-                                    font_name: "Roboto-Bold"
-                        #Farmer Details           
-                        MDBoxLayout:
-                            id: former_details_box
-                            orientation: 'vertical'
-                            spacing: dp(10)
-                            padding: dp(30)  # Reduce the top padding
-                
-                            MDLabel:
-                                text: 'Borrower Registration Form'
-                                halign: 'center'
-                                font_size: "20dp"
-                                font_name: "Roboto-Bold"
-                
-                            MDLabel:
-                                text: 'Farmer Details'
-                                halign: 'center'
-                                bold: True
-                
-                            MDLabel:
-                                text:"Select Your Type Of Land:"
-                                halign: 'left'
-                                font_size: "15dp"
-                                font_name: "Roboto-Bold"
-                                size_hint_y: None
-                                height:dp(20)
-                
-                            Spinner:
-                                id: land
-                                text: " Select Type Of Land"
-                                values: ["Select Type Of Land", "Rented", "Owned"]
-                                font_size: "15dp"
-                                multiline: False
-                                size_hint: 1 , None
-                                width: dp(200)
-                                text_size: self.width - dp(20), None
-                                height:"40dp"
-                                background_color: 0,0,0,0
-                                background_normal:''
-                                color: 0, 0, 0, 1
-                                canvas.before:
-                                    Color:
-                                        rgba: 0, 0, 0, 1  
-                                    Line:
-                                        width: 0.7
-                                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-                
-                            MDTextField:
-                                id: acers
-                                hint_text: 'Enter the number of acres of land'
-                                multiline: False
-                                helper_text_mode: 'on_focus'
-                                size_hint_y: None
-                                font_size: "15dp"
-                                theme_text_color: "Custom"
-                                hint_text_color: 0, 0, 0, 1
-                                hint_text_color_normal: "black"
-                                text_color_normal: "black"
-                                helper_text_color_normal: "black"
-                                input_type: 'number'
-                
-                            MDTextField:
-                                id: corp
-                                hint_text: 'Enter Crop Name'
-                                multiline: False
-                                helper_text_mode: 'on_focus'
-                                size_hint_y: None  
-                                font_size: "15dp"
-                                theme_text_color: "Custom"
-                                hint_text_color: 0, 0, 0, 1
-                                hint_text_color_normal: "black"
-                                text_color_normal: "black"
-                                helper_text_color_normal: "black"
-                
-                            MDTextField:
-                                id: income
-                                hint_text: 'Enter Your Yearly Income'
-                                multiline: False
-                                helper_text_mode: 'on_focus'
-                                size_hint_y: None  
-                                input_type: 'number'  
-                                # on_touch_down: root.on_mobile_number_touch_down()
-                                font_size: "15dp"
-                                theme_text_color: "Custom"
-                                hint_text_color: 0, 0, 0, 1
-                                hint_text_color_normal: "black"
-                                text_color_normal: "black"
-                                helper_text_color_normal: "black"
-                
-                
-                            GridLayout:
-                                cols: 1
-                                spacing: dp(30)
-                                padding: [0, "30dp", 0, 0]
-                                MDRectangleFlatButton:
-                                    text: "Next"
-                                    on_release: root.add_data(land.text, acers.text, corp.text, income.text)
-                                    md_bg_color: 0.043, 0.145, 0.278, 1
-                                    pos_hint: {'right': 1, 'y': 0.5}
-                                    text_color: 1, 1, 1, 1
-                                    size_hint: 1, None
-                                    height: "50dp"
-                                    font_name: "Roboto-Bold"
-                                    
-                    # GridLayout:
-                    #     cols: 1
-                    #     spacing:dp(15)
-                    #     padding: [0, "30dp", 0, 0]
-                    #     MDRectangleFlatButton:
-                    #         text: "Next"
-                    #         on_release: root.self_employee()
-                    #         md_bg_color: 0.043, 0.145, 0.278, 1
-                    #         pos_hint: {'right': 1, 'y': 0.5}
-                    #         text_color: 1, 1, 1, 1
-                    #         size_hint: 1, None
-                    #         height: "50dp"
-                    #         font_name: "Roboto-Bold"
-
-<BorrowerScreen8>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'BorrowerScreen7')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(20)
-        padding: dp(30)
-
-        MDLabel:
-            text:""
-            size_hint_y: None
-            height:dp(40)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(30)  # Reduce the top padding
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: 'Student Details'
-                halign: 'center'
-                bold: True
-                size_hint_y: None
-                height:dp(50)
-
-            MDTextField:
-                id: collage_name
-                hint_text: 'Enter Collage Name '
-                multiline: False
-                helper_text: 'Enter Valid Collage Name'
-                helper_text_mode: 'on_focus'
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDTextField:
-                id: collage_id
-                hint_text: 'Enter Collage ID *'
-                multiline: True
-                helper_text_mode: 'on_focus'
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDLabel:
-                text:"Upload College ID:"
-                halign: 'left'
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-                size_hint_y: None
-                height:dp(15)
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(270), dp(60)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.7 # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('BorrowerScreen8').check_and_open_file_manager1()
-
-                MDLabel:
-                    id: upload_label1
-                    text: 'Upload Document'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-
-                Image:
-                    id: image_label1
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            MDTextField:
-                id:  college_address
-                hint_text: 'Enter College Address'
-                halign: 'left'
-                text_color: 1, 1, 1, 1
-                multiline: False
-                helper_text: 'Enter valid College Address'
-                helper_text_mode: 'on_focus'
-                bold: True
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            GridLayout:
-                cols: 1
-                spacing:dp(30)
-
-                MDRectangleFlatButton:
-                    text: "Next"
-                    on_release: root.add_data(collage_name.text, college_address.text, collage_id.text)
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    text_color: 1, 1, 1, 1
-                    size_hint: 1, None
-                    height: "50dp"
-                    font_name: "Roboto-Bold"
-
-<BorrowerScreen9>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'BorrowerScreen7')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(20)
-        padding: dp(50)
-
-        MDLabel:
-            text:""
-            size_hint_y: None
-            height:dp(30)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(20)
-            padding: dp(30)  # Reduce the top padding
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: 'Business Details'
-                halign: 'center'
-                bold: True
-                size_hint_y: None
-                height:dp(50)
-
-            MDTextField:
-                id: business_name
-                hint_text: 'Enter Business Name '
-                multiline: False
-                helper_text: "Enter valid Business Name"
-                helper_text_mode: 'on_focus'
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDLabel:
-                text:"Select Your Business Type:"
-                halign: 'left'
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-                size_hint_y: None
-                height:dp(20)
-
-            Spinner:
-                id: spin
-                text: " Select Business Type"
-                multiline: False
-                font_size: "15dp"
-                size_hint: 1 , None
-                height:"40dp"
-                width: dp(200)
-                text_size: self.width - dp(20), None
-                background_color: 0,0,0,0
-                background_normal:''
-                color: 0, 0, 0, 1
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1  
-                    Line:
-                        width: 0.7
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDTextField:
-                id:  business_address
-                hint_text: 'Enter Business Address'
-                multiline: False
-                helper_text: "Enter valid Business Address"
-                helper_text_mode: 'on_focus'
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDLabel:
-                text:"Select Your No of Employees Working:"
-                halign: 'left'
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-                size_hint_y: None
-                height:dp(20)
-
-            Spinner:
-                id: no_of_employees_working
-                text: "No of Employees Working"
-                font_size: "15dp"
-                multiline: False
-                size_hint: 1 , None
-                height:"40dp"
-                width: dp(200)
-                text_size: self.width - dp(20), None
-                background_color: 0,0,0,0
-                background_normal:''
-                color: 0, 0, 0, 1
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1  
-                    Line:
-                        width: 0.7
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            GridLayout:
-                cols: 1
-                spacing:dp(30)
-                padding: [0, "30dp", 0, 0]
-                MDRaisedButton:
-                    text: "Next"
-                    on_release: root.add_data(business_name.text, spin.text, business_address.text,no_of_employees_working.text)
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    text_color: 1, 1, 1, 1
-                    size_hint: 1, None
-                    height: "50dp"
-                    font_name: "Roboto-Bold"
-
-<BorrowerScreen10>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'BorrowerScreen9')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(20)
-        padding: dp(50)
-
-        MDLabel:
-            text:""
-            size_hint_y: None
-            height:dp(40)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(30)  # Reduce the top padding
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: 'Business Details'
-                halign: 'center'
-                bold: True
-
-            MDTextField:
-                id: industry_type
-                hint_text: 'Enter Industry Type'
-                multiline: False
-                helper_text: "Enter valid Industry Type"
-                helper_text_mode: 'on_focus'
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDTextField:
-                id: year_of_estd
-                hint_text: 'Enter Year of Estd'
-                multiline: False
-                helper_text: 'YYYY-MM-DD'
-                helper_text_mode: 'on_focus'
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-                input_type: 'number'
-
-            MDTextField:
-                id: last_six_months_turnover
-                hint_text: 'Enter Last Six Months Turnover '
-                multiline: False
-                helper_text: "Enter Last Six Months Turnover"
-                helper_text_mode: 'on_focus'
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDLabel:
-                text: "Upload Last 6 months Bank Statements"
-                halign: 'left'
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-                size_hint_y: None
-                height:dp(20)
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(200), dp(50)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.7  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-                MDIconButton:
-                    icon: 'upload'
-                    id: upload_icon1
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('BorrowerScreen10').check_and_open_file_manager1()
-
-                MDLabel:
-                    id: upload_label1
-                    text: 'Upload Document' 
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                Image:
-                    id: image_label1
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            GridLayout:
-                cols: 1
-                spacing:dp(30)
-                padding: [0, "30dp", 0, 0]
-                MDRaisedButton:
-                    text: "Next"
-                    on_release: root.add_data(industry_type.text,last_six_months_turnover.text,year_of_estd.text)
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    size_hint: 1, None
-                    height: "50dp"
-
-<BorrowerScreen11>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'BorrowerScreen10')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(20)
-        padding: dp(50)
-
-        MDLabel:
-            text:""
-            size_hint_y: None
-            height:dp(40)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(20)
-            padding: dp(30)  # Reduce the top padding
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: 'Business Details'
-                halign: 'center'
-                bold: True
-
-            MDTextField:
-                id: cin
-                hint_text: 'Enter CIN'
-                multiline: False
-                helper_text: "Enter valid CIN"
-                helper_text_mode: 'on_focus'
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDTextField:
-                id: din
-                hint_text: 'Enter DIN'
-                multiline: False
-                helper_text: "Enter valid DIN"
-                helper_text_mode: 'on_focus'
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDTextField:
-                id: reg_office_address
-                hint_text: 'Enter Registered Office Address '
-                multiline: False
-                helper_text: "Enter valid Registration Office Address"
-                helper_text_mode: 'on_focus'
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDLabel:
-                text: "Upload Proof Of Verification"
-                halign: 'left'
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-                size_hint_y: None
-                height:dp(20)
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(260), dp(60)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  # Border color (black in this example)
-                    Line:
-                        width: 0.7  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-                MDIconButton:
-                    icon: 'upload'
-                    id: upload1
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('BorrowerScreen11').check_and_open_file_manager1()
-
-                MDLabel:
-                    id: upload_label1
-                    text: 'Upload Document'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_y: None
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-                Image:
-                    id: image_label1
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            GridLayout:
-                cols: 1
-                spacing:dp(30)
-                padding: [0, "30dp", 0, 0]
-
-                MDRaisedButton:
-                    text: "Next"
-                    on_release: root.add_data(cin.text,din.text,reg_office_address.text)
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    text_color: 1, 1, 1, 1
-                    size_hint: 1, None
-                    height: "50dp"
-                    font_name: "Roboto-Bold"
-
-<BorrowerScreen12>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'BorrowerScreen7')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(20)
-        padding: dp(50)
-
-        MDLabel:
-            text:""
-            size_hint_y: None
-            height:dp(50)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(30)
-            padding: dp(30)  # Reduce the top padding
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: 'Employment Details'
-                halign: 'center'
-                bold: True   
-                size_hint_y: None
-
-            MDTextField:              
-                id:company_name
-                hint_text: 'Enter company name'
-                multiline: False                        
-                helper_text_mode: 'on_focus'
-                size_hint_y: None
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDLabel:
-                text:"Select Your Employment Type:"
-                halign: 'left'
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-                size_hint_y: None
-                height:dp(20)
-
-            Spinner:
-                id: spinner1
-                text: " Select Employment Type"
-                font_size: "15dp"
-                multiline: False
-                size_hint: 1 , None
-                height:"40dp"
-                width: dp(200)
-                text_size: self.width - dp(20), None
-                background_color: 0,0,0,0
-                background_normal:''
-                color: 0, 0, 0, 1
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1  
-                    Line:
-                        width: 0.7
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text:"Select Your Organisation Type:"
-                halign: 'left'
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-                size_hint_y: None
-                height:dp(20)
-            Spinner:
-                id: spinner2
-                text: " Select Organisation Type"
-                font_size: "15dp"
-                multiline: False
-                size_hint: 1 , None
-                height:"40dp"
-                width: dp(200)
-                text_size: self.width - dp(20), None
-                background_color: 0,0,0,0
-                background_normal:''
-                color: 0, 0, 0, 1
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1  
-                    Line:
-                        width: 0.7
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            GridLayout:
-                cols: 1
-                spacing:dp(30)
-                padding: [0, "30dp", 0, 0]
-                MDRaisedButton:
-                    text: "Next"
-                    on_release: root.add_data(spinner1.text, company_name.text, spinner2.text)
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    text_color: 1, 1, 1, 1
-                    size_hint: 1, None
-                    height: "50dp"
-                    font_name: "Roboto-Bold"
-
-<BorrowerScreen13>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'BorrowerScreen12')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(20)
-        padding: dp(30)
-
-        MDLabel:
-            text:""
-            size_hint_y: None
-            height:dp(35)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(30)  # Reduce the top padding
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: ""
-                size_hint_y: None
-                height:dp(15)
-
-            MDLabel:
-                text: 'Employment Details'
-                halign: 'center'
-                bold: True   
-                size_hint_y: None
-                height:dp(30)
-
-            MDTextField:              
-                id: annual_salary
-                hint_text: 'Enter Annual Salary'
-                halign: 'left'
-                multiline: False
-                helper_text:  "Enter Valid Annual Salary"
-                helper_text_mode: 'on_focus'
-                input_type: 'number'  
-                on_touch_down: root.on_annual_salary_touch_down()
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
+                        MDLabel:
+                            text: ' '
+                            halign: 'center'
+                            bold: True
             
-            MDLabel:
-                text:"Select Your Salary Type:"
-                halign: 'left'
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-            MDLabel:
-                text:""
-            Spinner:
-                id: salary_type_id
-                text: " Select Salary type"
-                font_size: "15dp"
-                multiline: False
-                size_hint: 1 , None
-                height:"40dp"
-                width: dp(200)
-                text_size: self.width - dp(20), None
-                background_color: 0,0,0,0
-                background_normal:''
-                color: 0, 0, 0, 1
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1  
-                    Line:
-                        width: 0.7
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDTextField:              
-                id: designation
-                hint_text: 'Enter Designation'
-                halign: 'left'
-                multiline: False
-                helper_text: "Enter Valid Designation"
-                helper_text_mode: 'on_focus'
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDLabel:
-                text: "Upload Employee ID"
-                font_size: dp(15)
-                halign: 'left'
-                size_hint_y: None
-                height: dp(20)
-                bold: True
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(270), dp(60)  # Adjust size as needed
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1 
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('BorrowerScreen13').check_and_open_file_manager1()
-
-                MDLabel:
-                    id: upload_label1
-                    text: 'Upload Document'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-
-                Image:
-                    id: image_label1
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            MDLabel:
-                text: "Upload Last 6 months Bank Statements"
-                font_size: dp(15)
-                halign: 'left'
-                size_hint_y: None
-                height: dp(20)
-                bold: True
-
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: "10dp"
-                spacing: "10dp"
-                size_hint: None, None
-                size: dp(270), dp(60)  
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-                canvas:
-                    Color:
-                        rgba: 0, 0, 0, 1  
-                    Line:
-                        width: 0.4  # Border width
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-                MDIconButton:
-                    icon: 'upload'
-                    theme_text_color: "Custom"
-                    text_color: 0, 0, 0, 1  # Black text color
-                    size_hint_x: None
-                    width: dp(24)
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                    on_release: app.root.get_screen('BorrowerScreen13').check_and_open_file_manager2()
-
-                MDLabel:
-                    id: upload_label1
-                    text: 'Upload Document'
-                    halign: 'left'
-                    theme_text_color: "Custom"
-
-                Image:
-                    id: image_label2
-                    source: ''
-                    allow_stretch: True
-                    keep_ratio: True
-                    size_hint_y: None
-                    size: dp(50), dp(50)
-                    height: dp(36)
-                    valign: 'middle'  # Align the label text vertically in the center
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-            GridLayout:
-                cols: 1
-                spacing:dp(30)
-                padding: [0, "30dp", 0, 0]
-                MDRaisedButton:
-                    text: "Next"
-                    on_release: root.add_data(salary_type_id.text,annual_salary.text, designation.text)
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    text_color: 1, 1, 1, 1
-                    size_hint: 1, None
-                    height: "50dp"
-            MDLabel:
-                text:""
-            MDLabel:
-                text:""
-
-<BorrowerScreen14>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'BorrowerScreen13')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(20)
-        padding: dp(50)
-
-        MDLabel:
-            text:""
-            size_hint_y: None
-            height:dp(50)
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(20)
-            padding: dp(30)  # Reduce the top padding
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDLabel:
-                text: 'Employment Details'
-                halign: 'center'
-                font_name: "Roboto-Bold"
-                size_hint_y: None
-
-            MDTextField:              
-                id:company_address
-                hint_text: 'Enter company address'
-                multiline: False                        
-                helper_text_mode: 'on_focus'
-                size_hint_y: None
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDLabel:
-                text:"Select Your Occupation Type:"
-                halign: 'left'
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-                size_hint_y: None
-                height:dp(20)
-            Spinner:
-                id: spinner
-                text: " Select Occupation Type"
-                font_size: "15dp"
-                multiline: False
-                width: dp(200)
-                text_size: self.width - dp(20), None
-                size_hint: 1 , None
-                height:"40dp"
-                background_color: 0,0,0,0
-                background_normal:''
-                color: 0, 0, 0, 1
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1  
-                    Line:
-                        width: 0.7
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
-
-            MDTextField:              
-                id:landmark
-                hint_text: 'Enter landmark'
-                multiline: False                        
-                helper_text_mode: 'on_focus'
-                size_hint_y: None
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            MDTextField:              
-                id:business_number
-                hint_text: 'Enter Company Phone Number'
-                multiline: False                        
-                helper_text_mode: 'on_focus'
-                size_hint_y: None
-                input_type: 'number'  
-                on_touch_down: root.on_business_phone_number_touch_down()
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-
-            GridLayout:
-                cols: 1
-                spacing: dp(30)
-                padding: [0, "30dp", 0, 0]
-                MDRaisedButton:
-                    text: "Next"
-                    on_release: root.add_data(company_address.text, spinner.text, landmark.text, business_number.text)
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    text_color: 1, 1, 1, 1
-                    size_hint: 1, None
-                    height: "50dp"
-                    font_name: "Roboto-Bold"
+                        MDLabel:
+                            text: 'Farmer Details'
+                            halign: 'center'
+                            bold: True
+                        MDLabel:
+                            text: ' '
+                            halign: 'center'
+                            bold: True
+            
+                        Spinner:
+                            id: land
+                            text: "Select Type Of Land *"
+                            values: ["Rented", "Owned"]
+                            font_size: "15dp"
+                            multiline: False
+                            size_hint: 1 , None
+                            # width: dp(200)
+                            text_size: self.width - dp(20), None
+                            height:"40dp"
+                            background_color: 0,0,0,0
+                            background_normal:''
+                            color: 0, 0, 0, 1
+                            option_cls: 'CustomSpinnerOption'
+                            canvas:
+                                Color:
+                                    rgba: 0.5, 0.5, 0.5, 1  # Black color for the line
+                                Line:
+                                    rectangle: self.x, self.y, self.width, self.height
+                                    width: 0.7
+            
+                        MDTextField:
+                            id: acers
+                            hint_text: 'Enter the number of acres of land'
+                            on_text: root.validate_zip_code(self)
+                            multiline: False
+                            helper_text_mode: 'on_focus'
+                            size_hint_y: None
+                            font_size: "15dp"
+                            theme_text_color: "Custom"
+                            hint_text_color: 0, 0, 0, 1
+                            hint_text_color_normal: "black"
+                            text_color_normal: "black"
+                            helper_text_color_normal: "black"
+                            input_type: 'number'
+                            radius: [0, 0, 0,0]
+                            mode: "rectangle"
+            
+                        MDTextField:
+                            id: corp
+                            hint_text: 'Enter Crop Name'
+                            on_text: root.validate_zip_code_text(self)
+                            multiline: False
+                            helper_text_mode: 'on_focus'
+                            size_hint_y: None  
+                            font_size: "15dp"
+                            theme_text_color: "Custom"
+                            hint_text_color: 0, 0, 0, 1
+                            hint_text_color_normal: "black"
+                            text_color_normal: "black"
+                            helper_text_color_normal: "black"
+                            radius: [0, 0, 0,0]
+                            mode: "rectangle"
+            
+                        MDTextField:
+                            id: income
+                            hint_text: 'Enter Your Yearly Income'
+                            on_text: root.validate_zip_code(self)
+                            multiline: False
+                            helper_text_mode: 'on_focus'
+                            size_hint_y: None  
+                            input_type: 'number'  
+                            on_touch_down: root.on_mobile_number_touch_down()
+                            font_size: "15dp"
+                            theme_text_color: "Custom"
+                            hint_text_color: 0, 0, 0, 1
+                            hint_text_color_normal: "black"
+                            text_color_normal: "black"
+                            helper_text_color_normal: "black"
+                            radius: [0, 0, 0,0]
+                            mode: "rectangle"
+                            
+                        MDLabel:
+                            text: ' '
+                            halign: 'center'
+                            bold: True
+            
+                        MDLabel:
+                            id: error_message
+                            text: "Pleas fill all details! *"
+                            size: "30dp", "30dp"
+                            theme_text_color: "Custom"
+                            text_color: 150, 0, 0, 1
+                            halign: "left"
+                        GridLayout:
+                            cols: 1
+                            spacing: dp(30)
+                            padding: [0, "30dp", 0, 0]
+                            MDRectangleFlatButton:
+                                text: "Next"
+                                on_release: root.add_data_former(land.text, acers.text, corp.text, income.text,self_employment_type.text)
+                                md_bg_color: 0.043, 0.145, 0.278, 1
+                                pos_hint: {'right': 1, 'y': 0.5}
+                                text_color: 1, 1, 1, 1
+                                size_hint: 1, None
+                                height: "50dp"
+                                font_name: "Roboto-Bold"
+                    #Business        
+                    MDBoxLayout:
+                        id: business_details_box
+                        orientation: 'vertical'
+                        spacing: dp(18)
+                        # padding: dp(10)  # Reduce the top padding
+                        height: dp(600)
+            
+                        MDLabel:
+                            text: 'Business Details'
+                            halign: 'center'
+                            bold: True
+                            size_hint_y: None
+                            # height:dp(50)
+            
+                        MDTextField:
+                            id: business_name
+                            on_text: root.validate_zip_code_text(self)
+                            hint_text: 'Enter Business Name *'
+                            on_text: root.validate_zip_code_text(self)
+                            multiline: False
+                            helper_text_mode: 'on_focus'
+                            font_size: "15dp"
+                            theme_text_color: "Custom"
+                            hint_text_color: 0, 0, 0, 1
+                            hint_text_color_normal: "black"
+                            text_color_normal: "black"
+                            helper_text_color_normal: "black"
+                            radius: [0, 0, 0,0]
+                            mode: "rectangle"
+            
+                        Spinner:
+                            id: spin
+                            text: " Select Business Type *"
+                            multiline: False
+                            font_size: "15dp"
+                            size_hint: 1 , None
+                            option_cls: 'CustomSpinnerOption'
+                            height:"40dp"
+                            # width: dp(200)
+                            text_size: self.width - dp(20), None
+                            background_color: 0,0,0,0
+                            background_normal:''
+                            color: 0, 0, 0, 1
+                            canvas:
+                                Color:
+                                    rgba: 0.5, 0.5, 0.5, 1  # Black color for the line
+                                Line:
+                                    rectangle: self.x, self.y, self.width, self.height
+                                    width: 0.7
+            
+                        MDTextField:
+                            id:  business_address
+                            on_text: root.validate_zip_code_numchar(self)
+                            hint_text: 'Enter Business Address *'
+                            multiline: False
+                            helper_text_mode: 'on_focus'
+                            font_size: "15dp"
+                            theme_text_color: "Custom"
+                            hint_text_color: 0, 0, 0, 1
+                            hint_text_color_normal: "black"
+                            text_color_normal: "black"
+                            helper_text_color_normal: "black"
+                            radius: [0, 0, 0,0]
+                            mode: "rectangle"
+            
+                        Spinner:
+                            id: no_of_employees_working
+                            text: "No of Employees Working *"
+                            font_size: "15dp"
+                            multiline: False
+                            size_hint: 1 , None
+                            height:"40dp"
+                            # width: dp(200)
+                            option_cls: 'CustomSpinnerOption'
+                            text_size: self.width - dp(20), None
+                            background_color: 0,0,0,0
+                            background_normal:''
+                            color: 0, 0, 0, 1
+                            canvas:
+                                Color:
+                                    rgba: 0.5, 0.5, 0.5, 1  # Black color for the line
+                                Line:
+                                    rectangle: self.x, self.y, self.width, self.height
+                                    width: 0.7
+                                    
+                        MDTextField:
+                            id: industry_type
+                            on_text: root.validate_zip_code_text(self)
+                            hint_text: 'Enter Industry Type *'
+                            on_text: root.validate_zip_code_text(self)
+                            multiline: False
+                            helper_text_mode: 'on_focus'
+                            font_size: "15dp"
+                            theme_text_color: "Custom"
+                            hint_text_color: 0, 0, 0, 1
+                            hint_text_color_normal: "black"
+                            text_color_normal: "black"
+                            helper_text_color_normal: "black"
+                            radius: [0, 0, 0,0]
+                            mode: "rectangle"
+            
+                        # MDTextField:
+                        #     id: year_of_estd
+                        #     hint_text: 'Enter Year of Estd'
+                        #     font_size: "15dp"
+                        #     height: dp(40)
+                        #     width: dp(300)
+                        #     theme_text_color: "Custom"
+                        #     hint_text_color: 0, 0, 0, 1
+                        #     hint_text_color_normal: "black"
+                        #     text_color_normal: "black"
+                        #     helper_text_color_normal: "black"
+                        #     on_touch_down: root.on_date_touch_down()
+                        #     mode: "rectangle"
+                        #     radius: [0, 0, 0,0]
+                        # MDIconButton:
+                        #     icon: 'calendar'
+                        #     pos_hint: {'center_x': .5, 'center_y': .5}
+                        #     on_release: root.show_date_picker()
+                        MDBoxLayout:
+                            orientation: 'horizontal'
+                            spacing: "10dp"
+                            size_hint: 1, None
+                            halign: "left"
+                            font_size: "15dp"
+                            padding: dp(10)
+                            height: "48dp"
+                            # width: dp(200)  
+                            canvas:
+                                Color:
+                                    rgba: 0, 0, 0, 1   # Black color for the line
+                                Line:
+                                    rectangle: self.x, self.y, self.width, self.height
+                                    width: 0.7    
+                            MDLabel:
+                                id: year_of_estd
+                                text: "Enter Year of Estd *"
+                                font_size: "15dp"
+                                height: dp(40)
+                                width: dp(300)
+                                theme_text_color: "Custom"
+                                hint_text_color: 0, 0, 0, 1
+                                hint_text_color_normal: "black"
+                                text_color_normal: "black"
+                                helper_text_color_normal: "black"
+                                # on_touch_down: root.on_date_touch_down()
+                                mode: "rectangle"
+                                radius: [0, 0, 0,0]
+                            MDIconButton:
+                                icon: 'calendar'
+                                pos_hint: {'center_x': .5, 'center_y': .5}
+                                on_release: root.show_date_picker()
+            
+                        MDTextField:
+                            id: last_six_months_turnover
+                            on_text: root.validate_zip_code(self)
+                            hint_text: 'Enter Last Six Months Turnover *'
+                            multiline: False
+                            helper_text_mode: 'on_focus'
+                            font_size: "15dp"
+                            theme_text_color: "Custom"
+                            hint_text_color: 0, 0, 0, 1
+                            hint_text_color_normal: "black"
+                            text_color_normal: "black"
+                            helper_text_color_normal: "black"
+                            radius: [0, 0, 0,0]
+                            mode: "rectangle"
+            
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            padding: "10dp"
+                            spacing: "10dp"
+                            size_hint: 1, None
+                            halign: "left"
+                            font_size: "15dp"
+                            height: "70dp"
+                            # width: dp(200)
+                            canvas:
+                                Color:
+                                    rgba: 0, 0, 0, 1  # Black color for the line
+                                Line:
+                                    rectangle: self.x, self.y, self.width, self.height
+                                    width: 0.7
+            
+                            MDIconButton:
+                                icon: 'upload'
+                                id: upload_icon1
+                                theme_text_color: "Custom"
+                                text_color: 0, 0, 0, 1  # Black text color
+                                size_hint_x: None
+                                width: dp(24)
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                on_release: app.root.get_screen('BorrowerScreen7').check_and_open_file_manager_bus_1()
+            
+                            MDLabel:
+                                id: upload_label1
+                                text: 'Upload last 6 months statments *' 
+                                halign: 'left'
+                                theme_text_color: "Custom"
+                                text_color: 0, 0, 0, 1  # Black text color
+                                size_hint_y: None
+                                height: dp(36)
+                                valign: 'middle'  # Align the label text vertically in the center
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            Image:
+                                id: image_label1
+                                source: ''
+                                allow_stretch: True
+                                keep_ratio: True
+                                size_hint_y: None
+                                size: dp(50), dp(50)
+                                height: dp(36)
+                                on_touch_down: root.on_image_click(self, args[1])
+                                valign: 'middle'  # Align the label text vertically in the center
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}  
+                                
+                        MDTextField:
+                            id: cin
+                            on_text: root.validate_zip_code(self)
+                            hint_text: 'Enter CIN Value *'
+                            multiline: False
+                            helper_text_mode: 'on_focus'
+                            font_size: "15dp"
+                            theme_text_color: "Custom"
+                            hint_text_color: 0, 0, 0, 1
+                            hint_text_color_normal: "black"
+                            text_color_normal: "black"
+                            helper_text_color_normal: "black"
+                            radius: [0, 0, 0,0]
+                            mode: "rectangle"
+            
+                        MDTextField:
+                            id: din
+                            on_text: root.validate_zip_code(self)
+                            hint_text: 'Enter DIN Value *'
+                            multiline: False
+                            helper_text_mode: 'on_focus'
+                            font_size: "15dp"
+                            theme_text_color: "Custom"
+                            hint_text_color: 0, 0, 0, 1
+                            hint_text_color_normal: "black"
+                            text_color_normal: "black"
+                            helper_text_color_normal: "black"
+                            radius: [0, 0, 0,0]
+                            mode: "rectangle"
+            
+                        MDTextField:
+                            id: reg_office_address
+                            hint_text: 'Enter Registered Office Address *'
+                            on_text: root.validate_zip_code_numchar(self)
+                            multiline: False
+                            helper_text_mode: 'on_focus'
+                            font_size: "15dp"
+                            theme_text_color: "Custom"
+                            hint_text_color: 0, 0, 0, 1
+                            hint_text_color_normal: "black"
+                            text_color_normal: "black"
+                            helper_text_color_normal: "black"
+                            radius: [0, 0, 0,0]
+                            mode: "rectangle"
+            
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            padding: "10dp"
+                            spacing: "10dp"
+                            size_hint: 1, None
+                            halign: "left"
+                            font_size: "15dp"
+                            height: "70dp"
+                            # width: dp(200)
+                            canvas:
+                                Color:
+                                    rgba: 0, 0, 0, 1  # Black color for the line
+                                Line:
+                                    rectangle: self.x, self.y, self.width, self.height
+                                    width: 0.7
+            
+                            MDIconButton:
+                                icon: 'upload'
+                                id: upload1
+                                theme_text_color: "Custom"
+                                text_color: 0, 0, 0, 1  # Black text color
+                                size_hint_x: None
+                                width: dp(24)
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                on_release: app.root.get_screen('BorrowerScreen7').check_and_open_file_manager_bus_2()
+            
+                            MDLabel:
+                                id: upload_label_veri
+                                text: 'Upload Verified Document *'
+                                halign: 'left'
+                                theme_text_color: "Custom"
+                                text_color: 0, 0, 0, 1  # Black text color
+                                size_hint_y: None
+                                height: dp(36)
+                                valign: 'middle'  # Align the label text vertically in the center
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            
+                            Image:
+                                id: upload_label_verification_document
+                                source: ''
+                                allow_stretch: True
+                                on_touch_down: root.on_image_click(self, args[1])
+                                keep_ratio: True
+                                size_hint_y: None
+                                size: dp(50), dp(50)
+                                height: dp(36)
+                                valign: 'middle'  # Align the label text vertically in the center
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                              
+                        MDLabel:
+                            id: error_message
+                            text: "Pleas fill all details! *"
+                            # size: "30dp", "30dp"
+                            theme_text_color: "Custom"
+                            text_color: 150, 0, 0, 1
+                            halign: "left"
+                        GridLayout:
+                            cols: 1
+                            spacing:dp(10)
+                            padding: [0, "10dp", 0, 0]
+                            MDRaisedButton:
+                                text: "Next"
+                                on_release: root.add_data_business_details(business_name.text,spin.text,business_address.text,no_of_employees_working.text,industry_type.text,year_of_estd.text,last_six_months_turnover.text,cin.text,din.text,reg_office_address.text,self_employment_type.text)
+                                md_bg_color: 0.043, 0.145, 0.278, 1
+                                pos_hint: {'right': 1, 'y': 0.5}
+                                text_color: 1, 1, 1, 1
+                                size_hint: 1, None
+                                height: "50dp"
+                                font_name: "Roboto-Bold"
 
 <CustomSpinnerOption@SpinnerOption>:
     background_color:0, 0, 1, 1  
@@ -4676,133 +3893,133 @@ Borrower = '''
                 size_hint_y: None
                 height:dp(50)
 
-<BorrowerScreen26>:
-    MDTopAppBar:
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'BorrowerScreen25')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
+# <BorrowerScreen26>:
+#     MDTopAppBar:
+#         title: "P2P LENDING"
+#         elevation: 2
+#         pos_hint: {'top': 1}
+#         left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'BorrowerScreen25')]]
+#         right_action_items: [['home', lambda x: root.go_to_dashboard()]]
+#         title_align: 'center'  # Center-align the title
+#         md_bg_color: 0.043, 0.145, 0.278, 1
 
-    MDBoxLayout:
-        orientation: 'vertical'
-        spacing: dp(30)
-        padding: dp(30)
+#     MDBoxLayout:
+#         orientation: 'vertical'
+#         spacing: dp(30)
+#         padding: dp(30)
 
-        MDLabel:
-            text:""
-            size_hint_y: None
-            height:dp(50)
+#         MDLabel:
+#             text:""
+#             size_hint_y: None
+#             height:dp(50)
 
-        MDBoxLayout:
-            orientation: 'vertical'
-            spacing: dp(10)
-            padding: dp(30)  # Reduce the top padding
-            md_bg_color:253/255, 254/255, 254/255, 1
-            canvas:
-                Color:
-                    rgba: 174/255, 214/255, 241/255, 1 # Dull background color
-                Line:
-                    width: 0.7  # Border width
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+#         MDBoxLayout:
+#             orientation: 'vertical'
+#             spacing: dp(10)
+#             padding: dp(30)  # Reduce the top padding
+#             md_bg_color:253/255, 254/255, 254/255, 1
+#             canvas:
+#                 Color:
+#                     rgba: 174/255, 214/255, 241/255, 1 # Dull background color
+#                 Line:
+#                     width: 0.7  # Border width
+#                     rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
-            MDLabel:
-                text: 'Borrower Registration Form'
-                halign: 'center'
-                font_size: "20dp"
-                font_name: "Roboto-Bold"
+#             MDLabel:
+#                 text: 'Borrower Registration Form'
+#                 halign: 'center'
+#                 font_size: "20dp"
+#                 font_name: "Roboto-Bold"
 
-            MDLabel:
-                text: 'Farmer Details'
-                halign: 'center'
-                bold: True
+#             MDLabel:
+#                 text: 'Farmer Details'
+#                 halign: 'center'
+#                 bold: True
 
-            MDLabel:
-                text:"Select Your Type Of Land:"
-                halign: 'left'
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-                size_hint_y: None
-                height:dp(20)
+#             MDLabel:
+#                 text:"Select Your Type Of Land:"
+#                 halign: 'left'
+#                 font_size: "15dp"
+#                 font_name: "Roboto-Bold"
+#                 size_hint_y: None
+#                 height:dp(20)
 
-            Spinner:
-                id: land
-                text: " Select Type Of Land"
-                values: ["Select Type Of Land", "Rented", "Owned"]
-                font_size: "15dp"
-                multiline: False
-                size_hint: 1 , None
-                width: dp(200)
-                text_size: self.width - dp(20), None
-                height:"40dp"
-                background_color: 0,0,0,0
-                background_normal:''
-                color: 0, 0, 0, 1
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1  
-                    Line:
-                        width: 0.7
-                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
+#             Spinner:
+#                 id: land
+#                 text: " Select Type Of Land"
+#                 values: ["Select Type Of Land", "Rented", "Owned"]
+#                 font_size: "15dp"
+#                 multiline: False
+#                 size_hint: 1 , None
+#                 width: dp(200)
+#                 text_size: self.width - dp(20), None
+#                 height:"40dp"
+#                 background_color: 0,0,0,0
+#                 background_normal:''
+#                 color: 0, 0, 0, 1
+#                 canvas.before:
+#                     Color:
+#                         rgba: 0, 0, 0, 1  
+#                     Line:
+#                         width: 0.7
+#                         rounded_rectangle: (self.x, self.y, self.width, self.height, 15)
 
-            MDTextField:
-                id: acers
-                hint_text: 'Enter the number of acres of land'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                size_hint_y: None
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
-                input_type: 'number'
+#             MDTextField:
+#                 id: acers
+#                 hint_text: 'Enter the number of acres of land'
+#                 multiline: False
+#                 helper_text_mode: 'on_focus'
+#                 size_hint_y: None
+#                 font_size: "15dp"
+#                 theme_text_color: "Custom"
+#                 hint_text_color: 0, 0, 0, 1
+#                 hint_text_color_normal: "black"
+#                 text_color_normal: "black"
+#                 helper_text_color_normal: "black"
+#                 input_type: 'number'
 
-            MDTextField:
-                id: corp
-                hint_text: 'Enter Crop Name'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                size_hint_y: None  
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
+#             MDTextField:
+#                 id: corp
+#                 hint_text: 'Enter Crop Name'
+#                 multiline: False
+#                 helper_text_mode: 'on_focus'
+#                 size_hint_y: None  
+#                 font_size: "15dp"
+#                 theme_text_color: "Custom"
+#                 hint_text_color: 0, 0, 0, 1
+#                 hint_text_color_normal: "black"
+#                 text_color_normal: "black"
+#                 helper_text_color_normal: "black"
 
-            MDTextField:
-                id: income
-                hint_text: 'Enter Your Yearly Income'
-                multiline: False
-                helper_text_mode: 'on_focus'
-                size_hint_y: None  
-                input_type: 'number'  
-                on_touch_down: root.on_mobile_number_touch_down()
-                font_size: "15dp"
-                theme_text_color: "Custom"
-                hint_text_color: 0, 0, 0, 1
-                hint_text_color_normal: "black"
-                text_color_normal: "black"
-                helper_text_color_normal: "black"
+#             MDTextField:
+#                 id: income
+#                 hint_text: 'Enter Your Yearly Income'
+#                 multiline: False
+#                 helper_text_mode: 'on_focus'
+#                 size_hint_y: None  
+#                 input_type: 'number'  
+#                 on_touch_down: root.on_mobile_number_touch_down()
+#                 font_size: "15dp"
+#                 theme_text_color: "Custom"
+#                 hint_text_color: 0, 0, 0, 1
+#                 hint_text_color_normal: "black"
+#                 text_color_normal: "black"
+#                 helper_text_color_normal: "black"
 
 
-            GridLayout:
-                cols: 1
-                spacing: dp(30)
-                padding: [0, "30dp", 0, 0]
-                MDRectangleFlatButton:
-                    text: "Next"
-                    on_release: root.add_data(land.text, acers.text, corp.text, income.text)
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    text_color: 1, 1, 1, 1
-                    size_hint: 1, None
-                    height: "50dp"
-                    font_name: "Roboto-Bold"
+#             GridLayout:
+#                 cols: 1
+#                 spacing: dp(30)
+#                 padding: [0, "30dp", 0, 0]
+#                 MDRectangleFlatButton:
+#                     text: "Next"
+#                     on_release: root.add_data(land.text, acers.text, corp.text, income.text)
+#                     md_bg_color: 0.043, 0.145, 0.278, 1
+#                     pos_hint: {'right': 1, 'y': 0.5}
+#                     text_color: 1, 1, 1, 1
+#                     size_hint: 1, None
+#                     height: "50dp"
+#                     font_name: "Roboto-Bold"
 
 '''
 
@@ -7481,7 +6698,8 @@ class BorrowerScreen7(Screen):
         self.ids.person_details_box.opacity = 0
         self.ids.employee_details_box.opacity = 0
         self.ids.self_employment_box.opacity = 0
-        # self.ids.business_details_box.opacity = 0
+        self.ids.business_details_box.opacity = 0
+        self.ids.former_details_box.opacity = 0
 
 #----------------------------------------------------------------------------------
         #Select Employment Type
@@ -7489,15 +6707,43 @@ class BorrowerScreen7(Screen):
         data_list = []
         for i in spinner_data:
             data_list.append(i['borrower_employee_type'])
-        self.unique_list = []
+        self.unique_list_employment_type = []
         for i in data_list:
-            if i not in self.unique_list:
-                self.unique_list.append(i)
-        print(self.unique_list)
-        if len(self.unique_list) >= 1:
-            self.ids.employment_type.values = ['Select Employment Type'] + self.unique_list
+            if i not in self.unique_list_employment_type:
+                self.unique_list_employment_type.append(i)
+        print(self.unique_list_employment_type)
+        if len(self.unique_list_employment_type) >= 1:
+            self.ids.employment_type.values = self.unique_list_employment_type
         else:
             self.ids.employment_type.values = ['Select Employment Type']
+
+        spinner_data_bus = app_tables.fin_borrower_business_type.search()
+        data_list_bus = []
+        for i in spinner_data_bus:
+            data_list_bus.append(i['borrower_business_type'])
+        self.unique_list_business_type = []
+        for i in data_list_bus:
+            if i not in self.unique_list_business_type:
+                self.unique_list_business_type.append(i)
+        print(self.unique_list_business_type)
+        if len(self.unique_list_business_type) >= 1:
+            self.ids.spin.values = self.unique_list_business_type
+        else:
+            self.ids.spin.values = ['Select Business Type']
+
+        spinner_data_no = app_tables.fin_borrower_no_of_employees.search()
+        data_list_no_of = []
+        for i in spinner_data_no:
+            data_list_no_of.append(i['borrower_no_of_employees'])
+        self.unique_list_no_of_emp = []
+        for i in data_list_no_of:
+            if i not in self.unique_list_no_of_emp:
+                self.unique_list_no_of_emp.append(i)
+        print(self.unique_list_no_of_emp)
+        if len(self.unique_list_no_of_emp) >= 1:
+            self.ids.no_of_employees_working.values = self.unique_list_no_of_emp
+        else:
+            self.ids.no_of_employees_working.values = ['No of Employees Working']
 
 #-----------------------------------------------------------------------------------------------
         #Select Organisation Type
@@ -7581,7 +6827,7 @@ class BorrowerScreen7(Screen):
 
     def close_popup(self, instance):
         self.popup.dismiss()
-
+#=================================================================================================================================
     def update_person_details(self, spinner_id):
         spinner_id = self.ids.spinner_id.text
         print(spinner_id)
@@ -7632,58 +6878,7 @@ class BorrowerScreen7(Screen):
 
         self.adjust_screen_height()
         print(spinner_id)
-     #---------------------------------------------------------------------------------------------------------------
-       #self_employment_screen
-    def update_self_employment_details(self, self_employment_type):
-        spinner_id = self.ids.self_employment_type.text
-        print(spinner_id)
-        if spinner_id not in self.data_list_self:
-            self.show_validation_error('Select Self_Employment_Type')
-            return
 
-        # List of all box layouts
-        all_boxes = ['self_employment_box', 'former_details_box']
-
-        # Map spinner_id to the corresponding box id
-        spinner_to_box = {
-            'Business': 'business_details_box',
-            'Farmer': 'former_details_box',
-            'business': 'business_details_box',
-            'farmer': 'former_details_box',
-        }
-
-        selected_box_id = spinner_to_box.get(spinner_id)
-
-        # Get the parent layout of the boxes
-        parent_layout = self.ids.parent_layout_id  # Replace with the actual id of the parent layout
-
-        # Hide all boxes
-        for box_id in all_boxes:
-            box = self.ids[box_id]
-            box.opacity = 0
-
-        # Show the selected box
-        if selected_box_id:
-            selected_box = self.ids[selected_box_id]
-            selected_box.opacity = 1
-
-        # Remove all boxes from the parent layout
-        for box_id in all_boxes:
-            box = self.ids[box_id]
-            if box.parent:
-                parent_layout.remove_widget(box)
-
-        # Re-add boxes to the parent layout in order, with the visible box on top
-        if selected_box_id:
-            parent_layout.add_widget(self.ids[selected_box_id])
-        for box_id in all_boxes:
-            if box_id != selected_box_id:
-                parent_layout.add_widget(self.ids[box_id])
-
-        self.adjust_screen_height()
-        print(spinner_id)
-
-     #---------------------------------------------------------------------------------------------------------------
         cursor.execute('select * from fin_users')
         rows = cursor.fetchall()
         row_id_list = []
@@ -7713,6 +6908,67 @@ class BorrowerScreen7(Screen):
             data[index]['profession'] = spinner_id
         else:
             print('no email found')
+
+    # ---------------------------------------------------------------------------------------------------------------
+    # self_employment_screen
+    def update_self_employment_details(self, self_employment_type):
+        spinner_id_emp = self.ids.self_employment_type.text
+        print(spinner_id_emp)
+        if spinner_id_emp not in self.unique_list_self:
+            self.show_validation_error('Select Self_Employment_Type')
+            return
+
+        # List of all box layouts
+        all_boxes = ['business_details_box', 'former_details_box']
+
+        # Map spinner_id to the corresponding box id
+        spinner_to_box = {
+            'Business': 'business_details_box',
+            'Farmer': 'former_details_box',
+            'business': 'business_details_box',
+            'farmer': 'former_details_box',
+        }
+
+        selected_box_id = spinner_to_box.get(spinner_id_emp)
+
+        # Get the parent layout of the boxes
+        second_layout = self.ids.self_employment_box  # Replace with the actual id of the parent layout
+
+        # Hide all boxes
+        for box_id in all_boxes:
+            box = self.ids[box_id]
+            box.opacity = 0
+
+        # Show the selected box
+        if selected_box_id:
+            selected_box = self.ids[selected_box_id]
+            selected_box.opacity = 1
+
+        # Remove all boxes from the parent layout
+        for box_id in all_boxes:
+            box = self.ids[box_id]
+            if box.parent:
+                box.parent.remove_widget(box)
+
+        # Re-add boxes to the parent layout in order, with the visible box on top
+        if selected_box_id:
+            second_layout.add_widget(self.ids[selected_box_id])
+        for box_id in all_boxes:
+            if box_id != selected_box_id:
+                second_layout.add_widget(self.ids[box_id])
+
+        self.adjust_screen_height_self_emp()
+        print(spinner_id_emp)
+
+    def adjust_screen_height_self_emp(self):
+        height = 0
+        for box_id in ['business_details_box', 'former_details_box']:
+            box = self.ids[box_id]
+            if box.opacity == 1:
+                height += box.height
+        self.height = height
+
+    # ---------------------------------------------------------------------------------------------------------------
 
     def adjust_screen_height(self):
         height = 0
@@ -7761,8 +7017,8 @@ class BorrowerScreen7(Screen):
             zip_code.helper_text = ""
             zip_code.error = False
     def check_and_open_file_manager_student(self):
-        self.check_and_open_file_manager_stud("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label_stud", self.upload_image)
+        self.check_and_open_file_manager_stud("upload_stud", "upload_label_stu", "selected_file_label1", "selected_image1",
+                                         "image_label_stud", self.upload_image_stu)
 
     def check_and_open_file_manager_stud(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         if platform == 'android':
@@ -7800,7 +7056,7 @@ class BorrowerScreen7(Screen):
     def get_email(self):
         return anvil.server.call('another_method')
 
-    def upload_image(self, file_path):
+    def upload_image_stu(self, file_path):
         try:
             if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
                 self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
@@ -7871,7 +7127,7 @@ class BorrowerScreen7(Screen):
             status.append(row[-1])
         log_index = status.index('logged')
 
-        cursor.execute("UPDATE fin_registration_table SET tenth_certificate = ? WHERE customer_id = ?",
+        cursor.execute("UPDATE fin_user_profile SET college_proof = ? WHERE customer_id = ?",
                        (file_path, row_id_list[log_index]))
         conn.commit()
         self.ids.upload_label1.text = 'Upload Successfully'
@@ -7928,7 +7184,7 @@ class BorrowerScreen7(Screen):
         modal_view.dismiss()
         if not all([college_name, college_address, college_id]):
             # Display a validation error dialog
-            self.show_validation_error("Please fill in all fields.")
+            self.show_validation_error("Please fill all mandatory fields.")
             return  # Prevent further execution if any field is missing
         if len(college_name) < 3:
             self.show_validation_error('Enter a valid college Name')
@@ -8014,7 +7270,7 @@ class BorrowerScreen7(Screen):
         return anvil.server.call('another_method')
 
 
-    def upload_image(self, file_path):
+    def upload_image_emp1(self, file_path):
         try:
             if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
                 self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
@@ -8038,7 +7294,7 @@ class BorrowerScreen7(Screen):
             print(f"Error uploading image: {e}")
 
 
-    def upload_image1(self, file_path):
+    def upload_image_emp2(self, file_path):
         try:
             if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
                 self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
@@ -8067,14 +7323,14 @@ class BorrowerScreen7(Screen):
         self.ids.annual_salary.input_type = 'number'
 
 
-    def check_and_open_file_manager1(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1", self.upload_image)
+    def check_and_open_file_manager_emp1(self):
+        self.check_and_open_file_manager("emp1", "upload_label1", "selected_file_label1", "selected_image1",
+                                         "image_label_emp1", self.upload_image_emp1)
 
 
-    def check_and_open_file_manager2(self):
-        self.check_and_open_file_manager("upload_icon2", "upload_label2", "selected_file_label2", "selected_image2",
-                                         "image_label2", self.upload_image1)
+    def check_and_open_file_manager_emp2(self):
+        self.check_and_open_file_manager("emp2", "upload_label2", "selected_file_label2", "selected_image2",
+                                         "image_label_emp2", self.upload_image_emp2)
 
 
     def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
@@ -8226,9 +7482,9 @@ class BorrowerScreen7(Screen):
 
         if not all([company_name,organisation_type,occupation_type,company_address,landmark,employment_type,annual_salary,salary_type,designation,business_number]):
             # Display a validation error dialog
-            self.show_validation_error("Please fill in all fields.")
+            self.show_validation_error("Please fill all mandatory fields.")
             return  # Prevent further execution if any field is missing
-        if employment_type not in self.unique_list:
+        if employment_type not in self.unique_list_employment_type:
             self.show_validation_error('Select a valid employment type')
             return
         if len(company_name) < 3:
@@ -8238,7 +7494,7 @@ class BorrowerScreen7(Screen):
             self.show_validation_error('Select a valid organisation type')
             return
         if len(annual_salary) < 3 and not annual_salary.isdigit():
-            self.show_validation_error("Please Enter Annual Salary Number.")
+            self.show_validation_error("Please Enter Annual Salary.")
             return
         if len(designation) < 3:
             self.show_validation_error("Please Enter Valid Designation.")
@@ -8288,6 +7544,16 @@ class BorrowerScreen7(Screen):
         user_email = anvil.server.call('another_method')
         if user_email in id_list:
             index = id_list.index(user_email)
+            print(company_name)
+            print(occupation_type)
+            print(organisation_type)
+            print(company_address)
+            print(landmark)
+            print(employment_type)
+            print(annual_salary)
+            print(salary_type)
+            print(business_number)
+
             data[index]['company_name'] = company_name
             data[index]['occupation_type'] = occupation_type
             data[index]['organization_type'] = organisation_type
@@ -8307,11 +7573,11 @@ class BorrowerScreen7(Screen):
             self.show_validation_errors(validation_errors)
             return
 
-        if not self.validate_image_loaded(self.ids.image_label1):
-            validation_errors.append((self.ids.image_label1, "Image not loaded."))
+        if not self.validate_image_loaded(self.ids.image_label_emp1):
+            validation_errors.append((self.ids.image_label_emp1, "Image not loaded."))
             self.show_validation_error("Please Upload Employee ID.")
-        elif not self.validate_image_loaded(self.ids.image_label2):
-            validation_errors.append((self.ids.image_label2, "Image not loaded."))
+        elif not self.validate_image_loaded(self.ids.image_label_emp2):
+            validation_errors.append((self.ids.image_label_emp2, "Image not loaded."))
             self.show_validation_error("Please Upload 6 Months Bank Statements.")
         else:
             sm = self.manager
@@ -8358,7 +7624,7 @@ class BorrowerScreen7(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def add_data(self, land, acers, corp, income):
+    def add_data_former(self, land, acers, corp, income,self_employment_type):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -8378,16 +7644,17 @@ class BorrowerScreen7(Screen):
         # Perform the actual action (e.g., fetching loan requests)
         # You can replace the sleep with your actual logic
         Clock.schedule_once(
-            lambda dt: self.perform_data_addition_action4(land, acers, corp, income, modal_view), 2)
+            lambda dt: self.perform_data_addition_action_former(land, acers, corp, income,self_employment_type, modal_view), 2)
 
-    def perform_data_addition_action4(self, land, acers, corp, income, modal_view):
+    def perform_data_addition_action_former(self, land, acers, corp, income,self_employment_type, modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
         if not all([land, acers, corp, income]):
-            # Display a validation error dialog
-            self.show_validation_error("Please fill in all fields.")
+            self.show_validation_error("Please fill all mandatory fields.")
             return  # Prevent further execution if any field is missing
-
+        if land == "Select Type Of Land *":
+            self.show_validation_error('Select Type of Land')
+            return
         if not acers.isdigit():
             self.show_validation_error('Enter a valid No Of Acers')
             return
@@ -8408,6 +7675,7 @@ class BorrowerScreen7(Screen):
             index = id_list.index(user_email)
             data[index]['land_type'] = land
             data[index]['crop_name'] = corp
+            data[index]['self_employment'] = self_employment_type
             data[index]['total_acres'] = int(acers)
             data[index]['farmer_earnings'] = income
         else:
@@ -8434,38 +7702,48 @@ class BorrowerScreen7(Screen):
             ]
         )
         dialog.open()
+
+    def on_mobile_number_touch_down(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.income.input_type = 'number'
+
+    # def go_to_dashboard(self):
+    #     self.manager.current = 'DashScreen'
+    #
+    # def on_pre_enter(self):
+    #     Window.bind(on_keyboard=self.on_back_button)
+    #
+    # def on_pre_leave(self):
+    #     Window.unbind(on_keyboard=self.on_back_button)
+    #
+    # def on_back_button(self, instance, key, scancode, codepoint, modifier):
+    #     if key == 27:
+    #         self.go_back()
+    #         return True
+    #     return False
+    #
+    # def go_back(self):
+    #     self.manager.transition = SlideTransition(direction='right')
+    #     self.manager.current = 'BorrowerScreen25'
     #===============================================================================================
-    def go_to_dashboard(self):
-        self.manager.current = 'DashScreen'
 
-    def on_pre_enter(self):
-        Window.bind(on_keyboard=self.on_back_button)
+    #Business Details
+    def show_date_picker(self):
+        date_dialog = MDDatePicker(year=2000, month=2, day=14)
+        date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
+        date_dialog.open()
+    def on_last_six_months_turnover_touch_down(self):
+        # Change keyboard mode to numeric when the mobile number text input is touched
+        self.ids.last_six_months_turnover.input_type = 'number'
 
-    def on_pre_leave(self):
-        Window.unbind(on_keyboard=self.on_back_button)
+    def check_and_open_file_manager_bus_1(self):
+        self.check_and_open_file_manager_bus1("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
+                                         "image_label1", self.upload_image_bus_1)
+    def check_and_open_file_manager_bus_2(self):
+        self.check_and_open_file_manager_bus2("upload1", "upload_label_veri", "selected_file_label1", "selected_image1",
+                                         "upload_label_verification_document", self.upload_image_bus_2)
 
-    def on_back_button(self, instance, key, scancode, codepoint, modifier):
-        if key == 27:
-            self.go_back()
-            return True
-        return False
-
-    def go_back(self):
-        self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'BorrowerScreen3'
-
-
-class BorrowerScreen8(Screen):
-    MAX_IMAGE_SIZE_MB = 2
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def check_and_open_file_manager1(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1", self.upload_image)
-
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+    def check_and_open_file_manager_bus1(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         if platform == 'android':
             if check_permission(Permission.READ_MEDIA_IMAGES):
                 self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
@@ -8474,6 +7752,17 @@ class BorrowerScreen8(Screen):
         else:
             # For non-Android platforms, directly open the file manager
             self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
+
+    def check_and_open_file_manager_bus2(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+        if platform == 'android':
+            if check_permission(Permission.READ_MEDIA_IMAGES):
+                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
+            else:
+                self.request_media_images_permission()
+        else:
+            # For non-Android platforms, directly open the file manager
+            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
+
 
     def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
         self.file_manager = MDFileManager(
@@ -8488,20 +7777,10 @@ class BorrowerScreen8(Screen):
             # For other platforms, show the file manager from the root directory
             self.file_manager.show('/')
 
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
-        upload_function(path)  # Upload the selected image
-        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('BorrowerScreen8').ids[image_label_id].text = file_name  # Update the label text
-        self.file_manager.close()
-
-    def exit_manager(self, *args):
-        self.file_manager.close()
-
     def get_email(self):
         return anvil.server.call('another_method')
 
-    def upload_image(self, file_path):
+    def upload_image_bus_1(self, file_path):
         try:
             if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
                 self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
@@ -8517,12 +7796,36 @@ class BorrowerScreen8(Screen):
             user_data = data[0]
 
             # Update user_photo column with the media object
-            user_data['college_proof'] = user_photo_media
+            user_data['last_six_month_bank_proof'] = user_photo_media
 
             print("Image uploaded successfully.")
 
         except Exception as e:
             print(f"Error uploading image: {e}")
+
+    def upload_image_bus_2(self, file_path):
+        try:
+            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+                return
+            user_photo_media = media.from_file(file_path, mime_type='image/png')
+            email = self.get_email()
+            data = app_tables.fin_user_profile.search(email_user=email)
+
+            if not data:
+                print("No data found for email:", email)
+                return
+
+            user_data = data[0]
+
+            # Update user_photo column with the media object
+            user_data['proof_verification'] = user_photo_media
+
+            print("Image uploaded successfully.")
+
+        except Exception as e:
+            print(f"Error uploading image: {e}")
+
     def show_validation_error(self, error_message):
         dialog = MDDialog(
             title="Validation Error",
@@ -8538,6 +7841,18 @@ class BorrowerScreen8(Screen):
             ]
         )
         dialog.open()
+
+    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+        upload_function(path)  # Upload the selected image
+        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
+        file_name = os.path.basename(path)  # Extract file name from the path
+        self.manager.get_screen('BorrowerScreen7').ids[
+            image_label_id].text = file_name  # Update the label text
+        self.file_manager.close()
+
+    def exit_manager(self, *args):
+        self.file_manager.close()
+
     def request_media_images_permission(self):
         request_permissions([Permission.READ_MEDIA_IMAGES], self.permission_callback)
 
@@ -8569,8 +7884,7 @@ class BorrowerScreen8(Screen):
             row_id_list.append(row[0])
             status.append(row[-1])
         log_index = status.index('logged')
-
-        cursor.execute("UPDATE fin_registration_table SET tenth_certificate = ? WHERE customer_id = ?",
+        cursor.execute("UPDATE fin_registration_table SET last_six_months_turnover_file = ? WHERE customer_id = ?",
                        (file_path, row_id_list[log_index]))
         conn.commit()
         self.ids.upload_label1.text = 'Upload Successfully'
@@ -8586,7 +7900,7 @@ class BorrowerScreen8(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def add_data(self, collage_name, college_address, collage_id):
+    def add_data_business_details(self, business_name, business_location, business_address, no_of_emp,industry_type, last_six_months_turnover, year_of_estd,cin, din, reg_addres,self_employment_type):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -8606,23 +7920,74 @@ class BorrowerScreen8(Screen):
         # Perform the actual action (e.g., fetching loan requests)
         # You can replace the sleep with your actual logic
         Clock.schedule_once(
-            lambda dt: self.perform_data_addition_action(collage_name, college_address, collage_id, modal_view), 2)
+            lambda dt: self.perform_data_addition_action_bus(business_name, business_location, business_address, no_of_emp,industry_type, last_six_months_turnover, year_of_estd,cin, din, reg_addres,self_employment_type,
+                                                         modal_view), 2)
 
-    def perform_data_addition_action(self, collage_name, college_address, collage_id, modal_view):
+    def calculate_age(self, last_six_months_turnover):
+        today = datetime.today()
+        dob = datetime.strptime(last_six_months_turnover, '%Y-%m-%d')
+        age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+        return age
+    def show_date_picker(self):
+        date_dialog = MDDatePicker(year=2000, month=2, day=14)
+        date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
+        date_dialog.open()
+
+    def on_cancel(self, instance, time):
+        self.ids.date_textfield.text = "You Clicked Cancel!"
+    def on_save(self, instance, value, date_range):
+        # print(instance, value, date_range)
+        self.ids.year_of_estd.text = str(value)
+    def perform_data_addition_action_bus(self, business_name, business_location, business_address, no_of_emp,industry_type, last_six_months_turnover, year_of_estd,cin, din, reg_addres,self_employment_type, modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
-        if not all([collage_name, college_address, collage_id]):
+        if not all([business_name, business_location, business_address, no_of_emp,industry_type, last_six_months_turnover,cin, din, reg_addres, year_of_estd]):
             # Display a validation error dialog
-            self.show_validation_error("Please fill in all fields.")
+            self.show_validation_error("Please fill all mandatory fields.")
             return  # Prevent further execution if any field is missing
-        if len(collage_name) < 3:
-            self.show_validation_error('Enter a valid college Name')
+
+        if last_six_months_turnover == 'Enter Year of Estd *':
+            self.show_validation_error('Select Year of ESTD *')
             return
-        if len(collage_id) < 3:
-            self.show_validation_error('Enter a valid college ID')
+        print(last_six_months_turnover)
+        if len(business_name) < 3:
+            self.show_validation_error('Enter a valid business Name')
             return
-        if len(college_address) < 3:
-            self.show_validation_error('Enter a valid college Address')
+        if business_location not in self.unique_list_business_type:
+            self.show_validation_error('Select valid business type')
+            return
+        if len(business_address) < 3:
+            self.show_validation_error('Enter a valid business address')
+            return
+        if no_of_emp not in self.unique_list_no_of_emp:
+            self.show_validation_error('Select a valid no of employees')
+            return
+        if len(industry_type) < 3:
+            self.show_validation_error('Select a valid industry type')
+            return
+        if len(last_six_months_turnover) < 3:
+            self.show_validation_error('Enter a valid last six months turnover')
+            return
+        if len(cin) < 3:
+            self.show_validation_error("Enter a valid CIN.")
+            return
+        if len(din) < 3:
+            self.show_validation_error("Enter a valid DIN")
+            return
+        if len(reg_addres) < 3:
+            self.show_validation_error("Enter a valid Registration Address")
+            return
+
+        # try:
+        #     dob = datetime.strptime(year_of_estd, "%Y-%m-%d")
+        # except ValueError:
+        #     self.show_validation_error("Please enter a valid Year of Establishment in the format YYYY-MM-DD")
+        #     return
+
+        validation_errors = []
+
+        if validation_errors:
+            self.show_validation_errors(validation_errors)
             return
 
         cursor.execute('select * from fin_users')
@@ -8634,36 +7999,51 @@ class BorrowerScreen8(Screen):
             status.append(row[-1])
 
         if 'logged' in status:
-            # Check if any user is logged in
             log_index = status.index('logged')
             cursor.execute(
-                "UPDATE fin_registration_table SET collage_name = ?, college_address = ?, college_id = ? WHERE customer_id = ?",
-                (collage_name, college_address, collage_id, row_id_list[log_index]))
+                "UPDATE fin_registration_table SET business_name = ?, business_type = ?, business_address = ?, no_of_employees_working=?,industry_type = ?, last_six_months_turnover = ?, year_of_estd = ?,CIN = ?, DIN = ?, registered_office_address = ?,self_employment = ? WHERE customer_id = ?",
+                (business_name, business_location, business_address, no_of_emp,industry_type, last_six_months_turnover, year_of_estd,cin, din, reg_addres,self_employment_type, row_id_list[log_index]))
             conn.commit()
-
         else:
             # Handle the case where the user is not logged in
             print("User is not logged in.")
-            print("Moving to BorrowerScreen15...")
 
         data = app_tables.fin_user_profile.search()
-        id_list = []
-        for i in data:
-            id_list.append(i['email_user'])
-
+        # id_list = []
+        id_list = [i['email_user'] for i in data]
+        # for i in data:
+        #     id_list.append(i['email_user'])
         user_email = anvil.server.call('another_method')
         if user_email in id_list:
             index = id_list.index(user_email)
-            data[index]['college_name'] = collage_name
-            data[index]['college_address'] = college_address
-            data[index]['college_id'] = collage_id
+            data[index]['business_name'] = business_name
+            data[index]['business_add'] = business_address
+            data[index]['business_type'] = business_location
+            data[index]['employees_working'] = no_of_emp
+            data[index]['industry_type'] = industry_type
+            data[index]['six_month_turnover'] = year_of_estd
+            data[index]['year_of_estd'] = last_six_months_turnover
+            age = self.calculate_age(last_six_months_turnover)
+            data[index]['business_age'] = age
+            data[index]['self_employment'] = self_employment_type
+            data[index]['cin'] = cin
+            data[index]['din'] = din
+            data[index]['registered_off_add'] = reg_addres
         else:
-            print('email not found')
-        sm = self.manager
-        borrower_screen = BorrowerScreen15(name='BorrowerScreen15')
-        sm.add_widget(borrower_screen)
-        sm.transition.direction = 'left'
-        sm.current = 'BorrowerScreen15'
+            print('no email found')
+
+        if not self.validate_image_loaded(self.ids.image_label1):
+            validation_errors.append((self.ids.image_label1, "Image not loaded."))
+            self.show_validation_error("Please Upload Last 6 Months Bank Statements.")
+        elif not self.validate_image_loaded(self.ids.upload_label_verification_document):
+            validation_errors.append((self.ids.upload_label_verification_document, "Image not loaded."))
+            self.show_validation_error("Please Upload verified certificate.")
+        else:
+            sm = self.manager
+            borrower_screen = BorrowerScreen15(name='BorrowerScreen15')
+            sm.add_widget(borrower_screen)
+            sm.transition.direction = 'left'
+            sm.current = 'BorrowerScreen15'
 
     def show_validation_error(self, error_message):
         dialog = MDDialog(
@@ -8681,6 +8061,7 @@ class BorrowerScreen8(Screen):
         )
         dialog.open()
 
+    #===============================================================================================
     def go_to_dashboard(self):
         self.manager.current = 'DashScreen'
 
@@ -8698,7 +8079,254 @@ class BorrowerScreen8(Screen):
 
     def go_back(self):
         self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'BorrowerScreen7'
+        self.manager.current = 'BorrowerScreen3'
+
+
+# class BorrowerScreen8(Screen):
+#     MAX_IMAGE_SIZE_MB = 2
+#
+#     def __init__(self, **kwargs):
+#         super().__init__(**kwargs)
+#
+#     def check_and_open_file_manager1(self):
+#         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
+#                                          "image_label1", self.upload_image)
+#
+#     def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+#         if platform == 'android':
+#             if check_permission(Permission.READ_MEDIA_IMAGES):
+#                 self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
+#             else:
+#                 self.request_media_images_permission()
+#         else:
+#             # For non-Android platforms, directly open the file manager
+#             self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
+#
+#     def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+#         self.file_manager = MDFileManager(
+#             exit_manager=self.exit_manager,
+#             select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
+#                                                        image_label_id, upload_function),
+#         )
+#         if platform == 'android':
+#             primary_external_storage = "/storage/emulated/0"
+#             self.file_manager.show(primary_external_storage)
+#         else:
+#             # For other platforms, show the file manager from the root directory
+#             self.file_manager.show('/')
+#
+#     def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+#         upload_function(path)  # Upload the selected image
+#         self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
+#         file_name = os.path.basename(path)  # Extract file name from the path
+#         self.manager.get_screen('BorrowerScreen8').ids[image_label_id].text = file_name  # Update the label text
+#         self.file_manager.close()
+#
+#     def exit_manager(self, *args):
+#         self.file_manager.close()
+#
+#     def get_email(self):
+#         return anvil.server.call('another_method')
+#
+#     def upload_image(self, file_path):
+#         try:
+#             if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+#                 self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+#                 return
+#             user_photo_media = media.from_file(file_path, mime_type='image/png')
+#             email = self.get_email()
+#             data = app_tables.fin_user_profile.search(email_user=email)
+#
+#             if not data:
+#                 print("No data found for email:", email)
+#                 return
+#
+#             user_data = data[0]
+#
+#             # Update user_photo column with the media object
+#             user_data['college_proof'] = user_photo_media
+#
+#             print("Image uploaded successfully.")
+#
+#         except Exception as e:
+#             print(f"Error uploading image: {e}")
+#     def show_validation_error(self, error_message):
+#         dialog = MDDialog(
+#             title="Validation Error",
+#             text=error_message,
+#             size_hint=(0.8, None),
+#             height=dp(200),
+#             buttons=[
+#                 MDRectangleFlatButton(
+#                     text="OK",
+#                     text_color=(0.043, 0.145, 0.278, 1),
+#                     on_release=lambda x: dialog.dismiss()
+#                 )
+#             ]
+#         )
+#         dialog.open()
+#     def request_media_images_permission(self):
+#         request_permissions([Permission.READ_MEDIA_IMAGES], self.permission_callback)
+#
+#     def permission_callback(self, permissions, grants):
+#         if all(grants):
+#             # All grants are truthy, permission granted, open the file manager
+#             self.file_manager_open()
+#         else:
+#             # At least one grant is falsy, permission denied, show a modal view
+#             self.show_permission_denied()
+#
+#     def show_permission_denied(self):
+#         view = ModalView()
+#         view.add_widget(Button(
+#             text='Permission NOT granted.\n\n' +
+#                  'Tap to quit app.\n\n\n' +
+#                  'If you selected "Don\'t Allow",\n' +
+#                  'enable permission with App Settings.',
+#             on_press=self.bye)
+#         )
+#         view.open()
+#
+#     def update_data_with_file_1(self, file_path):
+#         cursor.execute('select * from fin_users')
+#         rows = cursor.fetchall()
+#         row_id_list = []
+#         status = []
+#         for row in rows:
+#             row_id_list.append(row[0])
+#             status.append(row[-1])
+#         log_index = status.index('logged')
+#
+#         cursor.execute("UPDATE fin_registration_table SET tenth_certificate = ? WHERE customer_id = ?",
+#                        (file_path, row_id_list[log_index]))
+#         conn.commit()
+#         self.ids.upload_label1.text = 'Upload Successfully'
+#
+#     def animate_loading_text(self, loading_label, modal_height):
+#         # Define the animation to move the label vertically
+#         anim = Animation(y=modal_height - loading_label.height, duration=1) + \
+#                Animation(y=0, duration=1)
+#         # Loop the animation
+#         anim.repeat = True
+#         anim.bind(on_complete=lambda *args: self.animate_loading_text(loading_label, modal_height))
+#         anim.start(loading_label)
+#         # Store the animation object
+#         loading_label.animation = anim  # Store the animation object in a custom attribute
+#
+#     def add_data(self, collage_name, college_address, collage_id):
+#         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
+#
+#         # Create MDLabel with white text color, increased font size, and bold text
+#         loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
+#                                 theme_text_color="Custom", text_color=[1, 1, 1, 1],
+#                                 font_size="50sp", bold=True)
+#
+#         # Set initial y-position off-screen
+#         loading_label.y = -loading_label.height
+#
+#         modal_view.add_widget(loading_label)
+#         modal_view.open()
+#
+#         # Perform the animation
+#         self.animate_loading_text(loading_label, modal_view.height)
+#
+#         # Perform the actual action (e.g., fetching loan requests)
+#         # You can replace the sleep with your actual logic
+#         Clock.schedule_once(
+#             lambda dt: self.perform_data_addition_action(collage_name, college_address, collage_id, modal_view), 2)
+#
+#     def perform_data_addition_action(self, collage_name, college_address, collage_id, modal_view):
+#         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
+#         modal_view.dismiss()
+#         if not all([collage_name, college_address, collage_id]):
+#             # Display a validation error dialog
+#             self.show_validation_error("Please fill in all fields.")
+#             return  # Prevent further execution if any field is missing
+#         if len(collage_name) < 3:
+#             self.show_validation_error('Enter a valid college Name')
+#             return
+#         if len(collage_id) < 3:
+#             self.show_validation_error('Enter a valid college ID')
+#             return
+#         if len(college_address) < 3:
+#             self.show_validation_error('Enter a valid college Address')
+#             return
+#
+#         cursor.execute('select * from fin_users')
+#         rows = cursor.fetchall()
+#         row_id_list = []
+#         status = []
+#         for row in rows:
+#             row_id_list.append(row[0])
+#             status.append(row[-1])
+#
+#         if 'logged' in status:
+#             # Check if any user is logged in
+#             log_index = status.index('logged')
+#             cursor.execute(
+#                 "UPDATE fin_registration_table SET collage_name = ?, college_address = ?, college_id = ? WHERE customer_id = ?",
+#                 (collage_name, college_address, collage_id, row_id_list[log_index]))
+#             conn.commit()
+#
+#         else:
+#             # Handle the case where the user is not logged in
+#             print("User is not logged in.")
+#             print("Moving to BorrowerScreen15...")
+#
+#         data = app_tables.fin_user_profile.search()
+#         id_list = []
+#         for i in data:
+#             id_list.append(i['email_user'])
+#
+#         user_email = anvil.server.call('another_method')
+#         if user_email in id_list:
+#             index = id_list.index(user_email)
+#             data[index]['college_name'] = collage_name
+#             data[index]['college_address'] = college_address
+#             data[index]['college_id'] = collage_id
+#         else:
+#             print('email not found')
+#         sm = self.manager
+#         borrower_screen = BorrowerScreen15(name='BorrowerScreen15')
+#         sm.add_widget(borrower_screen)
+#         sm.transition.direction = 'left'
+#         sm.current = 'BorrowerScreen15'
+#
+#     def show_validation_error(self, error_message):
+#         dialog = MDDialog(
+#             title="Validation Error",
+#             text=error_message,
+#             size_hint=(0.8, None),
+#             height=dp(200),
+#             buttons=[
+#                 MDRectangleFlatButton(
+#                     text="OK",
+#                     text_color=(0.043, 0.145, 0.278, 1),
+#                     on_release=lambda x: dialog.dismiss()
+#                 )
+#             ]
+#         )
+#         dialog.open()
+#
+#     def go_to_dashboard(self):
+#         self.manager.current = 'DashScreen'
+#
+#     def on_pre_enter(self):
+#         Window.bind(on_keyboard=self.on_back_button)
+#
+#     def on_pre_leave(self):
+#         Window.unbind(on_keyboard=self.on_back_button)
+#
+#     def on_back_button(self, instance, key, scancode, codepoint, modifier):
+#         if key == 27:
+#             self.go_back()
+#             return True
+#         return False
+#
+#     def go_back(self):
+#         self.manager.transition = SlideTransition(direction='right')
+#         self.manager.current = 'BorrowerScreen7'
+
 
 
 class BorrowerScreen9(Screen):
@@ -8817,10 +8445,10 @@ class BorrowerScreen9(Screen):
             print('no email found')
 
         sm = self.manager
-        borrower_screen = BorrowerScreen10(name='BorrowerScreen10')
+        borrower_screen = BorrowerScreen7(name='BorrowerScreen7')
         sm.add_widget(borrower_screen)
         sm.transition.direction = 'left'
-        sm.current = 'BorrowerScreen10'
+        sm.current = 'BorrowerScreen7'
 
     def show_validation_error(self, error_message):
         dialog = MDDialog(
@@ -8858,268 +8486,268 @@ class BorrowerScreen9(Screen):
         self.manager.current = 'BorrowerScreen7'
 
 
-class BorrowerScreen10(Screen):
-    MAX_IMAGE_SIZE_MB = 2
+# class BorrowerScreen10(Screen):
+#     MAX_IMAGE_SIZE_MB = 2
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+#     def __init__(self, **kwargs):
+#         super().__init__(**kwargs)
 
-    def on_last_six_months_turnover_touch_down(self):
-        # Change keyboard mode to numeric when the mobile number text input is touched
-        self.ids.last_six_months_turnover.input_type = 'number'
+#     def on_last_six_months_turnover_touch_down(self):
+#         # Change keyboard mode to numeric when the mobile number text input is touched
+#         self.ids.last_six_months_turnover.input_type = 'number'
 
-    def check_and_open_file_manager1(self):
-        self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
-                                         "image_label1", self.upload_image)
+#     def check_and_open_file_manager1(self):
+#         self.check_and_open_file_manager("upload_icon1", "upload_label1", "selected_file_label1", "selected_image1",
+#                                          "image_label1", self.upload_image)
 
-    def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
-        if platform == 'android':
-            if check_permission(Permission.READ_MEDIA_IMAGES):
-                self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
-            else:
-                self.request_media_images_permission()
-        else:
-            # For non-Android platforms, directly open the file manager
-            self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
+#     def check_and_open_file_manager(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+#         if platform == 'android':
+#             if check_permission(Permission.READ_MEDIA_IMAGES):
+#                 self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
+#             else:
+#                 self.request_media_images_permission()
+#         else:
+#             # For non-Android platforms, directly open the file manager
+#             self.file_manager_open(icon_id, label_id, file_label_id, image_id, image_label_id, upload_function)
 
-    def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
-                                                       image_label_id, upload_function),
-        )
-        if platform == 'android':
-            primary_external_storage = "/storage/emulated/0"
-            self.file_manager.show(primary_external_storage)
-        else:
-            # For other platforms, show the file manager from the root directory
-            self.file_manager.show('/')
+#     def file_manager_open(self, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+#         self.file_manager = MDFileManager(
+#             exit_manager=self.exit_manager,
+#             select_path=lambda path: self.select_path1(path, icon_id, label_id, file_label_id, image_id,
+#                                                        image_label_id, upload_function),
+#         )
+#         if platform == 'android':
+#             primary_external_storage = "/storage/emulated/0"
+#             self.file_manager.show(primary_external_storage)
+#         else:
+#             # For other platforms, show the file manager from the root directory
+#             self.file_manager.show('/')
 
-    def get_email(self):
-        return anvil.server.call('another_method')
+#     def get_email(self):
+#         return anvil.server.call('another_method')
 
-    def upload_image(self, file_path):
-        try:
-            if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
-                self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
-                return
-            user_photo_media = media.from_file(file_path, mime_type='image/png')
-            email = self.get_email()
-            data = app_tables.fin_user_profile.search(email_user=email)
+#     def upload_image(self, file_path):
+#         try:
+#             if os.path.getsize(file_path) > self.MAX_IMAGE_SIZE_MB * 1024 * 1024:
+#                 self.show_validation_error(f"File size should be less than {self.MAX_IMAGE_SIZE_MB}MB")
+#                 return
+#             user_photo_media = media.from_file(file_path, mime_type='image/png')
+#             email = self.get_email()
+#             data = app_tables.fin_user_profile.search(email_user=email)
 
-            if not data:
-                print("No data found for email:", email)
-                return
+#             if not data:
+#                 print("No data found for email:", email)
+#                 return
 
-            user_data = data[0]
+#             user_data = data[0]
 
-            # Update user_photo column with the media object
-            user_data['last_six_month_bank_proof'] = user_photo_media
+#             # Update user_photo column with the media object
+#             user_data['last_six_month_bank_proof'] = user_photo_media
 
-            print("Image uploaded successfully.")
+#             print("Image uploaded successfully.")
 
-        except Exception as e:
-            print(f"Error uploading image: {e}")
-    def show_validation_error(self, error_message):
-        dialog = MDDialog(
-            title="Validation Error",
-            text=error_message,
-            size_hint=(0.8, None),
-            height=dp(200),
-            buttons=[
-                MDRectangleFlatButton(
-                    text="OK",
-                    text_color=(0.043, 0.145, 0.278, 1),
-                    on_release=lambda x: dialog.dismiss()
-                )
-            ]
-        )
-        dialog.open()
-    def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
-        upload_function(path)  # Upload the selected image
-        self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
-        file_name = os.path.basename(path)  # Extract file name from the path
-        self.manager.get_screen('BorrowerScreen10').ids[
-            image_label_id].text = file_name  # Update the label text
-        self.file_manager.close()
+#         except Exception as e:
+#             print(f"Error uploading image: {e}")
+#     def show_validation_error(self, error_message):
+#         dialog = MDDialog(
+#             title="Validation Error",
+#             text=error_message,
+#             size_hint=(0.8, None),
+#             height=dp(200),
+#             buttons=[
+#                 MDRectangleFlatButton(
+#                     text="OK",
+#                     text_color=(0.043, 0.145, 0.278, 1),
+#                     on_release=lambda x: dialog.dismiss()
+#                 )
+#             ]
+#         )
+#         dialog.open()
+#     def select_path1(self, path, icon_id, label_id, file_label_id, image_id, image_label_id, upload_function):
+#         upload_function(path)  # Upload the selected image
+#         self.ids[image_label_id].source = path if os.path.getsize(path) <= self.MAX_IMAGE_SIZE_MB * 1024 * 1024 else ''
+#         file_name = os.path.basename(path)  # Extract file name from the path
+#         self.manager.get_screen('BorrowerScreen10').ids[
+#             image_label_id].text = file_name  # Update the label text
+#         self.file_manager.close()
 
-    def exit_manager(self, *args):
-        self.file_manager.close()
+#     def exit_manager(self, *args):
+#         self.file_manager.close()
 
-    def request_media_images_permission(self):
-        request_permissions([Permission.READ_MEDIA_IMAGES], self.permission_callback)
+#     def request_media_images_permission(self):
+#         request_permissions([Permission.READ_MEDIA_IMAGES], self.permission_callback)
 
-    def permission_callback(self, permissions, grants):
-        if all(grants):
-            # All grants are truthy, permission granted, open the file manager
-            self.file_manager_open()
-        else:
-            # At least one grant is falsy, permission denied, show a modal view
-            self.show_permission_denied()
+#     def permission_callback(self, permissions, grants):
+#         if all(grants):
+#             # All grants are truthy, permission granted, open the file manager
+#             self.file_manager_open()
+#         else:
+#             # At least one grant is falsy, permission denied, show a modal view
+#             self.show_permission_denied()
 
-    def show_permission_denied(self):
-        view = ModalView()
-        view.add_widget(Button(
-            text='Permission NOT granted.\n\n' +
-                 'Tap to quit app.\n\n\n' +
-                 'If you selected "Don\'t Allow",\n' +
-                 'enable permission with App Settings.',
-            on_press=self.bye)
-        )
-        view.open()
+#     def show_permission_denied(self):
+#         view = ModalView()
+#         view.add_widget(Button(
+#             text='Permission NOT granted.\n\n' +
+#                  'Tap to quit app.\n\n\n' +
+#                  'If you selected "Don\'t Allow",\n' +
+#                  'enable permission with App Settings.',
+#             on_press=self.bye)
+#         )
+#         view.open()
 
-    def update_data_with_file_1(self, file_path):
-        cursor.execute('select * from fin_users')
-        rows = cursor.fetchall()
-        row_id_list = []
-        status = []
-        for row in rows:
-            row_id_list.append(row[0])
-            status.append(row[-1])
-        log_index = status.index('logged')
-        cursor.execute("UPDATE fin_registration_table SET last_six_months_turnover_file = ? WHERE customer_id = ?",
-                       (file_path, row_id_list[log_index]))
-        conn.commit()
-        self.ids.upload_label1.text = 'Upload Successfully'
+#     def update_data_with_file_1(self, file_path):
+#         cursor.execute('select * from fin_users')
+#         rows = cursor.fetchall()
+#         row_id_list = []
+#         status = []
+#         for row in rows:
+#             row_id_list.append(row[0])
+#             status.append(row[-1])
+#         log_index = status.index('logged')
+#         cursor.execute("UPDATE fin_registration_table SET last_six_months_turnover_file = ? WHERE customer_id = ?",
+#                        (file_path, row_id_list[log_index]))
+#         conn.commit()
+#         self.ids.upload_label1.text = 'Upload Successfully'
 
-    def animate_loading_text(self, loading_label, modal_height):
-        # Define the animation to move the label vertically
-        anim = Animation(y=modal_height - loading_label.height, duration=1) + \
-               Animation(y=0, duration=1)
-        # Loop the animation
-        anim.repeat = True
-        anim.bind(on_complete=lambda *args: self.animate_loading_text(loading_label, modal_height))
-        anim.start(loading_label)
-        # Store the animation object
-        loading_label.animation = anim  # Store the animation object in a custom attribute
+#     def animate_loading_text(self, loading_label, modal_height):
+#         # Define the animation to move the label vertically
+#         anim = Animation(y=modal_height - loading_label.height, duration=1) + \
+#                Animation(y=0, duration=1)
+#         # Loop the animation
+#         anim.repeat = True
+#         anim.bind(on_complete=lambda *args: self.animate_loading_text(loading_label, modal_height))
+#         anim.start(loading_label)
+#         # Store the animation object
+#         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def add_data(self, industry_type, last_six_months_turnover, year_of_estd):
-        modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
+#     def add_data(self, industry_type, last_six_months_turnover, year_of_estd):
+#         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
-        # Create MDLabel with white text color, increased font size, and bold text
-        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
-                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
-                                font_size="50sp", bold=True)
+#         # Create MDLabel with white text color, increased font size, and bold text
+#         loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
+#                                 theme_text_color="Custom", text_color=[1, 1, 1, 1],
+#                                 font_size="50sp", bold=True)
 
-        # Set initial y-position off-screen
-        loading_label.y = -loading_label.height
+#         # Set initial y-position off-screen
+#         loading_label.y = -loading_label.height
 
-        modal_view.add_widget(loading_label)
-        modal_view.open()
+#         modal_view.add_widget(loading_label)
+#         modal_view.open()
 
-        # Perform the animation
-        self.animate_loading_text(loading_label, modal_view.height)
+#         # Perform the animation
+#         self.animate_loading_text(loading_label, modal_view.height)
 
-        # Perform the actual action (e.g., fetching loan requests)
-        # You can replace the sleep with your actual logic
-        Clock.schedule_once(
-            lambda dt: self.perform_data_addition_action(industry_type, last_six_months_turnover,
-                                                         year_of_estd, modal_view), 2)
+#         # Perform the actual action (e.g., fetching loan requests)
+#         # You can replace the sleep with your actual logic
+#         Clock.schedule_once(
+#             lambda dt: self.perform_data_addition_action(industry_type, last_six_months_turnover,
+#                                                          year_of_estd, modal_view), 2)
 
-    def calculate_age(self, year_of_estd):
-        today = datetime.today()
-        dob = datetime.strptime(year_of_estd, '%Y-%m-%d')
-        age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
-        return age
+#     def calculate_age(self, year_of_estd):
+#         today = datetime.today()
+#         dob = datetime.strptime(year_of_estd, '%Y-%m-%d')
+#         age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+#         return age
 
-    def perform_data_addition_action(self, industry_type, last_six_months_turnover,
-                                     year_of_estd, modal_view):
-        modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
-        modal_view.dismiss()
+#     def perform_data_addition_action(self, industry_type, last_six_months_turnover,
+#                                      year_of_estd, modal_view):
+#         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
+#         modal_view.dismiss()
 
-        # Check for missing fields
-        if not all([industry_type, last_six_months_turnover, year_of_estd]):
-            # Display a validation error dialog
-            self.show_validation_error("Please fill in all fields.")
-            return  # Prevent further execution if any field is missing
-        if len(industry_type) < 3:
-            self.show_validation_error('Enter a valid industry type')
-            return
+#         # Check for missing fields
+#         if not all([industry_type, last_six_months_turnover, year_of_estd]):
+#             # Display a validation error dialog
+#             self.show_validation_error("Please fill in all fields.")
+#             return  # Prevent further execution if any field is missing
+#         if len(industry_type) < 3:
+#             self.show_validation_error('Enter a valid industry type')
+#             return
 
-        if len(last_six_months_turnover) < 3:
-            self.show_validation_error('Enter a valid last six months turnover')
-            return
-        try:
-            dob = datetime.strptime(year_of_estd, "%Y-%m-%d")
+#         if len(last_six_months_turnover) < 3:
+#             self.show_validation_error('Enter a valid last six months turnover')
+#             return
+#         try:
+#             dob = datetime.strptime(year_of_estd, "%Y-%m-%d")
 
-        except ValueError:
-            self.show_validation_error("Please enter a valid Year of Establishment in the format YYYY-MM-DD")
-            return
+#         except ValueError:
+#             self.show_validation_error("Please enter a valid Year of Establishment in the format YYYY-MM-DD")
+#             return
 
-        cursor.execute('select * from fin_users')
-        rows = cursor.fetchall()
-        row_id_list = []
-        status = []
-        for row in rows:
-            row_id_list.append(row[0])
-            status.append(row[-1])
+#         cursor.execute('select * from fin_users')
+#         rows = cursor.fetchall()
+#         row_id_list = []
+#         status = []
+#         for row in rows:
+#             row_id_list.append(row[0])
+#             status.append(row[-1])
 
-        if 'logged' in status:
-            log_index = status.index('logged')
-            cursor.execute(
-                "UPDATE fin_registration_table SET industry_type = ?, last_six_months_turnover = ?, year_of_estd = ? WHERE customer_id = ?",
-                (industry_type, last_six_months_turnover, year_of_estd,
-                 row_id_list[log_index]))
-            conn.commit()
-        else:
-            # Handle the case where the user is not logged in
-            print("User is not logged in.")
+#         if 'logged' in status:
+#             log_index = status.index('logged')
+#             cursor.execute(
+#                 "UPDATE fin_registration_table SET industry_type = ?, last_six_months_turnover = ?, year_of_estd = ? WHERE customer_id = ?",
+#                 (industry_type, last_six_months_turnover, year_of_estd,
+#                  row_id_list[log_index]))
+#             conn.commit()
+#         else:
+#             # Handle the case where the user is not logged in
+#             print("User is not logged in.")
 
-        data = app_tables.fin_user_profile.search()
-        id_list = []
-        for i in data:
-            id_list.append(i['email_user'])
+#         data = app_tables.fin_user_profile.search()
+#         id_list = []
+#         for i in data:
+#             id_list.append(i['email_user'])
 
-        user_email = anvil.server.call('another_method')
-        if user_email in id_list:
-            index = id_list.index(user_email)
-            data[index]['industry_type'] = industry_type
-            data[index]['six_month_turnover'] = last_six_months_turnover
-            data[index]['year_of_estd'] = year_of_estd
-            age = self.calculate_age(year_of_estd)
-            data[index]['business_age'] = age
-        else:
-            print('no email found')
-        sm = self.manager
-        borrower_screen = BorrowerScreen11(name='BorrowerScreen11')
-        sm.add_widget(borrower_screen)
-        sm.transition.direction = 'left'
-        sm.current = 'BorrowerScreen11'
+#         user_email = anvil.server.call('another_method')
+#         if user_email in id_list:
+#             index = id_list.index(user_email)
+#             data[index]['industry_type'] = industry_type
+#             data[index]['six_month_turnover'] = last_six_months_turnover
+#             data[index]['year_of_estd'] = year_of_estd
+#             age = self.calculate_age(year_of_estd)
+#             data[index]['business_age'] = age
+#         else:
+#             print('no email found')
+#         sm = self.manager
+#         borrower_screen = BorrowerScreen11(name='BorrowerScreen11')
+#         sm.add_widget(borrower_screen)
+#         sm.transition.direction = 'left'
+#         sm.current = 'BorrowerScreen11'
 
-    def show_validation_error(self, error_message):
-        dialog = MDDialog(
-            title="Validation Error",
-            text=error_message,
-            size_hint=(0.8, None),
-            height=dp(200),
-            buttons=[
-                MDRectangleFlatButton(
-                    text="OK",
-                    text_color=(0.043, 0.145, 0.278, 1),
-                    on_release=lambda x: dialog.dismiss()
-                )
-            ]
-        )
-        dialog.open()
+#     def show_validation_error(self, error_message):
+#         dialog = MDDialog(
+#             title="Validation Error",
+#             text=error_message,
+#             size_hint=(0.8, None),
+#             height=dp(200),
+#             buttons=[
+#                 MDRectangleFlatButton(
+#                     text="OK",
+#                     text_color=(0.043, 0.145, 0.278, 1),
+#                     on_release=lambda x: dialog.dismiss()
+#                 )
+#             ]
+#         )
+#         dialog.open()
 
-    def go_to_dashboard(self):
-        self.manager.current = 'DashScreen'
+#     def go_to_dashboard(self):
+#         self.manager.current = 'DashScreen'
 
-    def on_pre_enter(self):
-        Window.bind(on_keyboard=self.on_back_button)
+#     def on_pre_enter(self):
+#         Window.bind(on_keyboard=self.on_back_button)
 
-    def on_pre_leave(self):
-        Window.unbind(on_keyboard=self.on_back_button)
+#     def on_pre_leave(self):
+#         Window.unbind(on_keyboard=self.on_back_button)
 
-    def on_back_button(self, instance, key, scancode, codepoint, modifier):
-        if key == 27:
-            self.go_back()
-            return True
-        return False
+#     def on_back_button(self, instance, key, scancode, codepoint, modifier):
+#         if key == 27:
+#             self.go_back()
+#             return True
+#         return False
 
-    def go_back(self):
-        self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'BorrowerScreen9'
+#     def go_back(self):
+#         self.manager.transition = SlideTransition(direction='right')
+#         self.manager.current = 'BorrowerScreen9'
 
 
 class BorrowerScreen11(Screen):
@@ -12366,267 +11994,267 @@ class BorrowerScreen24(Screen):
         self.manager.current = 'BorrowerScreen'
 
 
-class BorrowerScreen25(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        spinner_data = app_tables.fin_self_employment.search()
-        data_list = []
-        for i in spinner_data:
-            data_list.append(i['self_employment'])
-        self.unique_list = []
-        for i in data_list:
-            if i not in self.unique_list:
-                self.unique_list.append(i)
-        print(self.unique_list)
-        if len(self.unique_list) >= 1:
-            self.ids.spinner_id.values = ['Select Self Employment type'] + self.unique_list
-        else:
-            self.ids.spinner_id.values = ['Select Self Employment type']
+# class BorrowerScreen25(Screen):
+#     def __init__(self, **kwargs):
+#         super().__init__(**kwargs)
+#         spinner_data = app_tables.fin_self_employment.search()
+#         data_list = []
+#         for i in spinner_data:
+#             data_list.append(i['self_employment'])
+#         self.unique_list = []
+#         for i in data_list:
+#             if i not in self.unique_list:
+#                 self.unique_list.append(i)
+#         print(self.unique_list)
+#         if len(self.unique_list) >= 1:
+#             self.ids.spinner_id.values = ['Select Self Employment type'] + self.unique_list
+#         else:
+#             self.ids.spinner_id.values = ['Select Self Employment type']
 
-    def animate_loading_text(self, loading_label, modal_height):
-        # Define the animation to move the label vertically
-        anim = Animation(y=modal_height - loading_label.height, duration=1) + \
-               Animation(y=0, duration=1)
-        # Loop the animation
-        anim.repeat = True
-        anim.bind(on_complete=lambda *args: self.animate_loading_text(loading_label, modal_height))
-        anim.start(loading_label)
-        # Store the animation object
-        loading_label.animation = anim  # Store the animation object in a custom attribute
+#     def animate_loading_text(self, loading_label, modal_height):
+#         # Define the animation to move the label vertically
+#         anim = Animation(y=modal_height - loading_label.height, duration=1) + \
+#                Animation(y=0, duration=1)
+#         # Loop the animation
+#         anim.repeat = True
+#         anim.bind(on_complete=lambda *args: self.animate_loading_text(loading_label, modal_height))
+#         anim.start(loading_label)
+#         # Store the animation object
+#         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def add_data(self, spinner_id):
-        modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
+#     def add_data(self, spinner_id):
+#         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
-        # Create MDLabel with white text color, increased font size, and bold text
-        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
-                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
-                                font_size="50sp", bold=True)
+#         # Create MDLabel with white text color, increased font size, and bold text
+#         loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
+#                                 theme_text_color="Custom", text_color=[1, 1, 1, 1],
+#                                 font_size="50sp", bold=True)
 
-        # Set initial y-position off-screen
-        loading_label.y = -loading_label.height
+#         # Set initial y-position off-screen
+#         loading_label.y = -loading_label.height
 
-        modal_view.add_widget(loading_label)
-        modal_view.open()
+#         modal_view.add_widget(loading_label)
+#         modal_view.open()
 
-        # Perform the animation
-        self.animate_loading_text(loading_label, modal_view.height)
+#         # Perform the animation
+#         self.animate_loading_text(loading_label, modal_view.height)
 
-        # Perform the actual action (e.g., fetching loan requests)
-        # You can replace the sleep with your actual logic
-        Clock.schedule_once(lambda dt: self.perform_data_addition_action(spinner_id, modal_view), 2)
+#         # Perform the actual action (e.g., fetching loan requests)
+#         # You can replace the sleep with your actual logic
+#         Clock.schedule_once(lambda dt: self.perform_data_addition_action(spinner_id, modal_view), 2)
 
-    def perform_data_addition_action(self, spinner_id, modal_view):
-        modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
-        modal_view.dismiss()
-        if not all([spinner_id]):
-            # Display a validation error dialog
-            self.show_validation_error("Please fill in all fields.")
-            return  # Prevent further execution if any field is missing
-        if spinner_id not in self.unique_list:
-            self.show_validation_error('Select valid Self Employment type')
-            return
+#     def perform_data_addition_action(self, spinner_id, modal_view):
+#         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
+#         modal_view.dismiss()
+#         if not all([spinner_id]):
+#             # Display a validation error dialog
+#             self.show_validation_error("Please fill in all fields.")
+#             return  # Prevent further execution if any field is missing
+#         if spinner_id not in self.unique_list:
+#             self.show_validation_error('Select valid Self Employment type')
+#             return
 
-        if spinner_id == 'Farmer':
-            sm = self.manager
-            borrower_screen = BorrowerScreen26(name='BorrowerScreen26')
-            sm.add_widget(borrower_screen)
-            sm.transition.direction = 'left'
-            sm.current = 'BorrowerScreen26'
+#         if spinner_id == 'Farmer':
+#             sm = self.manager
+#             borrower_screen = BorrowerScreen26(name='BorrowerScreen26')
+#             sm.add_widget(borrower_screen)
+#             sm.transition.direction = 'left'
+#             sm.current = 'BorrowerScreen26'
 
-        elif spinner_id == 'Business' or spinner_id == 'Self employment':
-            sm = self.manager
-            borrower_screen = BorrowerScreen9(name='BorrowerScreen9')
-            sm.add_widget(borrower_screen)
-            sm.transition.direction = 'left'
-            sm.current = 'BorrowerScreen9'
+#         elif spinner_id == 'Business' or spinner_id == 'Self employment':
+#             sm = self.manager
+#             borrower_screen = BorrowerScreen9(name='BorrowerScreen9')
+#             sm.add_widget(borrower_screen)
+#             sm.transition.direction = 'left'
+#             sm.current = 'BorrowerScreen9'
 
-        else:
-            sm = self.manager
-            borrower_screen = BorrowerScreen15(name='BorrowerScreen15')
-            sm.add_widget(borrower_screen)
-            sm.transition.direction = 'left'
-            sm.current = 'BorrowerScreen15'
-        print(spinner_id)
-        cursor.execute('select * from fin_users')
-        rows = cursor.fetchall()
-        row_id_list = []
-        status = []
+#         else:
+#             sm = self.manager
+#             borrower_screen = BorrowerScreen15(name='BorrowerScreen15')
+#             sm.add_widget(borrower_screen)
+#             sm.transition.direction = 'left'
+#             sm.current = 'BorrowerScreen15'
+#         print(spinner_id)
+#         cursor.execute('select * from fin_users')
+#         rows = cursor.fetchall()
+#         row_id_list = []
+#         status = []
 
-        for row in rows:
-            row_id_list.append(row[0])
-            status.append(row[-1])
-        if 'logged' in status:
-            log_index = status.index('logged')
-            cursor.execute(
-                "UPDATE fin_registration_table SET proficient_type = ? WHERE customer_id = ?",
-                (spinner_id, row_id_list[log_index]))
-            conn.commit()
-        else:
-            # Handle the case where the user is not logged in
-            print("User is not logged in.")
+#         for row in rows:
+#             row_id_list.append(row[0])
+#             status.append(row[-1])
+#         if 'logged' in status:
+#             log_index = status.index('logged')
+#             cursor.execute(
+#                 "UPDATE fin_registration_table SET proficient_type = ? WHERE customer_id = ?",
+#                 (spinner_id, row_id_list[log_index]))
+#             conn.commit()
+#         else:
+#             # Handle the case where the user is not logged in
+#             print("User is not logged in.")
 
-        data = app_tables.fin_user_profile.search()
-        id_list = []
-        for i in data:
-            id_list.append(i['email_user'])
+#         data = app_tables.fin_user_profile.search()
+#         id_list = []
+#         for i in data:
+#             id_list.append(i['email_user'])
 
-        user_email = anvil.server.call('another_method')
-        if user_email in id_list:
-            index = id_list.index(user_email)
-            data[index]['self_employment'] = spinner_id
-        else:
-            print('no email found')
+#         user_email = anvil.server.call('another_method')
+#         if user_email in id_list:
+#             index = id_list.index(user_email)
+#             data[index]['self_employment'] = spinner_id
+#         else:
+#             print('no email found')
 
-    def show_validation_error(self, error_message):
-        dialog = MDDialog(
-            title="Validation Error",
-            text=error_message,
-            size_hint=(0.8, None),
-            height=dp(200),
-            buttons=[
-                MDRectangleFlatButton(
-                    text="OK",
-                    text_color=(0.043, 0.145, 0.278, 1),
-                    on_release=lambda x: dialog.dismiss()
-                )
-            ]
-        )
-        dialog.open()
+#     def show_validation_error(self, error_message):
+#         dialog = MDDialog(
+#             title="Validation Error",
+#             text=error_message,
+#             size_hint=(0.8, None),
+#             height=dp(200),
+#             buttons=[
+#                 MDRectangleFlatButton(
+#                     text="OK",
+#                     text_color=(0.043, 0.145, 0.278, 1),
+#                     on_release=lambda x: dialog.dismiss()
+#                 )
+#             ]
+#         )
+#         dialog.open()
 
-    def go_to_dashboard(self):
-        self.manager.current = 'DashScreen'
+#     def go_to_dashboard(self):
+#         self.manager.current = 'DashScreen'
 
-    def on_pre_enter(self):
-        Window.bind(on_keyboard=self.on_back_button)
+#     def on_pre_enter(self):
+#         Window.bind(on_keyboard=self.on_back_button)
 
-    def on_pre_leave(self):
-        Window.unbind(on_keyboard=self.on_back_button)
+#     def on_pre_leave(self):
+#         Window.unbind(on_keyboard=self.on_back_button)
 
-    def on_back_button(self, instance, key, scancode, codepoint, modifier):
-        if key == 27:
-            self.go_back()
-            return True
-        return False
+#     def on_back_button(self, instance, key, scancode, codepoint, modifier):
+#         if key == 27:
+#             self.go_back()
+#             return True
+#         return False
 
-    def go_back(self):
-        self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'BorrowerScreen7'
+#     def go_back(self):
+#         self.manager.transition = SlideTransition(direction='right')
+#         self.manager.current = 'BorrowerScreen7'
 
 
-class BorrowerScreen26(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+# class BorrowerScreen26(Screen):
+#     def __init__(self, **kwargs):
+#         super().__init__(**kwargs)
 
-    def animate_loading_text(self, loading_label, modal_height):
-        # Define the animation to move the label vertically
-        anim = Animation(y=modal_height - loading_label.height, duration=1) + \
-               Animation(y=0, duration=1)
-        # Loop the animation
-        anim.repeat = True
-        anim.bind(on_complete=lambda *args: self.animate_loading_text(loading_label, modal_height))
-        anim.start(loading_label)
-        # Store the animation object
-        loading_label.animation = anim  # Store the animation object in a custom attribute
+#     def animate_loading_text(self, loading_label, modal_height):
+#         # Define the animation to move the label vertically
+#         anim = Animation(y=modal_height - loading_label.height, duration=1) + \
+#                Animation(y=0, duration=1)
+#         # Loop the animation
+#         anim.repeat = True
+#         anim.bind(on_complete=lambda *args: self.animate_loading_text(loading_label, modal_height))
+#         anim.start(loading_label)
+#         # Store the animation object
+#         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def add_data(self, land, acers, corp, income):
-        modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
+#     def add_data(self, land, acers, corp, income):
+#         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
-        # Create MDLabel with white text color, increased font size, and bold text
-        loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
-                                theme_text_color="Custom", text_color=[1, 1, 1, 1],
-                                font_size="50sp", bold=True)
+#         # Create MDLabel with white text color, increased font size, and bold text
+#         loading_label = MDLabel(text="Loading...", halign="center", valign="bottom",
+#                                 theme_text_color="Custom", text_color=[1, 1, 1, 1],
+#                                 font_size="50sp", bold=True)
 
-        # Set initial y-position off-screen
-        loading_label.y = -loading_label.height
+#         # Set initial y-position off-screen
+#         loading_label.y = -loading_label.height
 
-        modal_view.add_widget(loading_label)
-        modal_view.open()
+#         modal_view.add_widget(loading_label)
+#         modal_view.open()
 
-        # Perform the animation
-        self.animate_loading_text(loading_label, modal_view.height)
+#         # Perform the animation
+#         self.animate_loading_text(loading_label, modal_view.height)
 
-        # Perform the actual action (e.g., fetching loan requests)
-        # You can replace the sleep with your actual logic
-        Clock.schedule_once(
-            lambda dt: self.perform_data_addition_action4(land, acers, corp, income, modal_view), 2)
+#         # Perform the actual action (e.g., fetching loan requests)
+#         # You can replace the sleep with your actual logic
+#         Clock.schedule_once(
+#             lambda dt: self.perform_data_addition_action4(land, acers, corp, income, modal_view), 2)
 
-    def perform_data_addition_action4(self, land, acers, corp, income, modal_view):
-        modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
-        modal_view.dismiss()
-        if not all([land, acers, corp, income]):
-            # Display a validation error dialog
-            self.show_validation_error("Please fill in all fields.")
-            return  # Prevent further execution if any field is missing
+#     def perform_data_addition_action4(self, land, acers, corp, income, modal_view):
+#         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
+#         modal_view.dismiss()
+#         if not all([land, acers, corp, income]):
+#             # Display a validation error dialog
+#             self.show_validation_error("Please fill in all fields.")
+#             return  # Prevent further execution if any field is missing
 
-        if not acers.isdigit():
-            self.show_validation_error('Enter a valid No Of Acers')
-            return
-        if len(corp) < 3:
-            self.show_validation_error('Enter a valid Corp Name')
-            return
-        if len(income) < 3 or not income.isdigit():
-            self.show_validation_error('Enter a valid Yearly Income')
-            return
+#         if not acers.isdigit():
+#             self.show_validation_error('Enter a valid No Of Acers')
+#             return
+#         if len(corp) < 3:
+#             self.show_validation_error('Enter a valid Corp Name')
+#             return
+#         if len(income) < 3 or not income.isdigit():
+#             self.show_validation_error('Enter a valid Yearly Income')
+#             return
 
-        data = app_tables.fin_user_profile.search()
-        id_list = []
-        for i in data:
-            id_list.append(i['email_user'])
+#         data = app_tables.fin_user_profile.search()
+#         id_list = []
+#         for i in data:
+#             id_list.append(i['email_user'])
 
-        user_email = anvil.server.call('another_method')
-        if user_email in id_list:
-            index = id_list.index(user_email)
-            data[index]['land_type'] = land
-            data[index]['crop_name'] = corp
-            data[index]['total_acres'] = int(acers)
-            data[index]['farmer_earnings'] = income
-        else:
-            print('no email found')
+#         user_email = anvil.server.call('another_method')
+#         if user_email in id_list:
+#             index = id_list.index(user_email)
+#             data[index]['land_type'] = land
+#             data[index]['crop_name'] = corp
+#             data[index]['total_acres'] = int(acers)
+#             data[index]['farmer_earnings'] = income
+#         else:
+#             print('no email found')
 
-        sm = self.manager
-        borrower_screen = BorrowerScreen15(name='BorrowerScreen15')
-        sm.add_widget(borrower_screen)
-        sm.transition.direction = 'left'  # Set the transition direction explicitly
-        sm.current = 'BorrowerScreen15'
+#         sm = self.manager
+#         borrower_screen = BorrowerScreen15(name='BorrowerScreen15')
+#         sm.add_widget(borrower_screen)
+#         sm.transition.direction = 'left'  # Set the transition direction explicitly
+#         sm.current = 'BorrowerScreen15'
 
-    def show_validation_error(self, error_message):
-        dialog = MDDialog(
-            title="Validation Error",
-            text=error_message,
-            size_hint=(0.8, None),
-            height=dp(200),
-            buttons=[
-                MDRectangleFlatButton(
-                    text="OK",
-                    text_color=(0.043, 0.145, 0.278, 1),
-                    on_release=lambda x: dialog.dismiss()
-                )
-            ]
-        )
-        dialog.open()
+#     def show_validation_error(self, error_message):
+#         dialog = MDDialog(
+#             title="Validation Error",
+#             text=error_message,
+#             size_hint=(0.8, None),
+#             height=dp(200),
+#             buttons=[
+#                 MDRectangleFlatButton(
+#                     text="OK",
+#                     text_color=(0.043, 0.145, 0.278, 1),
+#                     on_release=lambda x: dialog.dismiss()
+#                 )
+#             ]
+#         )
+#         dialog.open()
 
-    def on_mobile_number_touch_down(self):
-        # Change keyboard mode to numeric when the mobile number text input is touched
-        self.ids.income.input_type = 'number'
+#     def on_mobile_number_touch_down(self):
+#         # Change keyboard mode to numeric when the mobile number text input is touched
+#         self.ids.income.input_type = 'number'
 
-    def go_to_dashboard(self):
-        self.manager.current = 'DashScreen'
+#     def go_to_dashboard(self):
+#         self.manager.current = 'DashScreen'
 
-    def on_pre_enter(self):
-        Window.bind(on_keyboard=self.on_back_button)
+#     def on_pre_enter(self):
+#         Window.bind(on_keyboard=self.on_back_button)
 
-    def on_pre_leave(self):
-        Window.unbind(on_keyboard=self.on_back_button)
+#     def on_pre_leave(self):
+#         Window.unbind(on_keyboard=self.on_back_button)
 
-    def on_back_button(self, instance, key, scancode, codepoint, modifier):
-        if key == 27:
-            self.go_back()
-            return True
-        return False
+#     def on_back_button(self, instance, key, scancode, codepoint, modifier):
+#         if key == 27:
+#             self.go_back()
+#             return True
+#         return False
 
-    def go_back(self):
-        self.manager.transition = SlideTransition(direction='right')
-        self.manager.current = 'BorrowerScreen25'
+#     def go_back(self):
+#         self.manager.transition = SlideTransition(direction='right')
+#         self.manager.current = 'BorrowerScreen25'
 
 
 class MyScreenManager(ScreenManager):

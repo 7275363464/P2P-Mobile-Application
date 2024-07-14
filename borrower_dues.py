@@ -6,6 +6,7 @@ from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 from kivy.uix.widget import Widget
+from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.card import MDCard
 from kivymd.uix.datatables import MDDataTable
 from pytz import utc
@@ -15,7 +16,7 @@ from kivy.uix.modalview import ModalView
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen, ScreenManager, SlideTransition
-from kivymd.uix.button import MDRectangleFlatButton, MDRaisedButton, MDFillRoundFlatButton
+from kivymd.uix.button import MDRectangleFlatButton, MDRaisedButton, MDFillRoundFlatButton, MDFlatButton
 from kivymd.uix.list import ThreeLineAvatarIconListItem, IconLeftWidget, TwoLineAvatarIconListItem
 from kivymd.uix.slider import MDSlider
 from kivymd.uix.label import MDLabel
@@ -28,6 +29,8 @@ from datetime import datetime, timezone, timedelta, date
 
 from kivymd.uix.spinner import MDSpinner
 import anvil.tables.query as q
+
+from borrower_application_tracker import CircularImage
 from borrower_wallet import WalletScreen
 from datetime import datetime
 from kivy.uix.label import Label
@@ -90,7 +93,7 @@ user_helpers2 = """
 
                 BoxLayout:
                     orientation: 'vertical'
-                    spacing: dp(50)
+                    spacing: dp(40)
                     padding: dp(30)
                     size_hint_y: None
                     height: self.minimum_height
@@ -141,7 +144,7 @@ user_helpers2 = """
                     MDGridLayout:
                         cols: 2
                         MDLabel:
-                            text: 'Borrower Name'
+                            text: 'Product Name'
                             halign: 'left'
                             theme_text_color: 'Custom'
                             text_color: 0, 0, 0, 1
@@ -181,38 +184,6 @@ user_helpers2 = """
 
                         MDLabel:
                             id: interest_rate
-                            halign: 'left'
-                            theme_text_color: 'Custom'
-                            text_color: 140/255, 140/255, 140/255, 1
-                            bold: True
-
-                    MDGridLayout:
-                        cols: 2
-                        MDLabel:
-                            text: 'Account Number'
-                            halign: 'left'
-                            theme_text_color: 'Custom'
-                            text_color: 0, 0, 0, 1
-                            bold: True
-
-                        MDLabel:
-                            id: account_number
-                            halign: 'left'
-                            theme_text_color: 'Custom'
-                            text_color: 140/255, 140/255, 140/255, 1
-                            bold: True
-
-                    MDGridLayout:
-                        cols: 2
-                        MDLabel:
-                            text: 'Loan Status'
-                            halign: 'left'
-                            theme_text_color: 'Custom'
-                            text_color: 0, 0, 0, 1
-                            bold: True
-
-                        MDLabel:
-                            id: status
                             halign: 'left'
                             theme_text_color: 'Custom'
                             text_color: 140/255, 140/255, 140/255, 1
@@ -393,7 +364,7 @@ user_helpers2 = """
                     MDGridLayout:
                         cols: 2
                         MDLabel:
-                            text: "Borrower Name"
+                            text: "Product Name"
                             halign: "left"
                             bold: True
                             theme_text_color: 'Custom'  
@@ -431,37 +402,6 @@ user_helpers2 = """
                         MDLabel:
                             id: interest_rate
                             halign: 'left' 
-                            theme_text_color: 'Custom' 
-                            text_color: 140/255, 140/255, 140/255, 1
-                            bold: True
-
-                    MDGridLayout: 
-                        cols: 2 
-                        MDLabel:
-                            text: "Account number" 
-                            halign: "left"
-                            bold: True
-                            theme_text_color: 'Custom'  
-                            text_color: 0, 0, 0, 1
-                        MDLabel:
-                            id: account_number
-                            halign: 'left' 
-                            theme_text_color: 'Custom' 
-                            text_color: 140/255, 140/255, 140/255, 1
-                            bold: True
-
-                    MDGridLayout:
-                        cols: 2
-                        MDLabel:
-                            text: 'Loan Status'
-                            halign: 'left'
-                            theme_text_color: 'Custom'  
-                            text_color: 0, 0, 0, 1
-                            bold: True
-
-                        MDLabel:
-                            id: status
-                            halign: 'left'
                             theme_text_color: 'Custom' 
                             text_color: 140/255, 140/255, 140/255, 1
                             bold: True
@@ -714,6 +654,7 @@ class BorrowerDuesScreen(Screen):
         loan_product = []
         emi_amount = []
         remain_amount_loan = []
+        product_name = []
         for i in data1:
             loan_id.append(i['loan_id'])
             borrower_name.append(i['borrower_full_name'])
@@ -732,14 +673,15 @@ class BorrowerDuesScreen(Screen):
             loan_product.append(i['product_id'])
             emi_amount.append(i['monthly_emi'])
             remain_amount_loan.append(i['remaining_amount'])
+            product_name.append(i['product_name'])
         index = 0
 
         if value in loan_id:
             index = loan_id.index(value)
-            self.ids.name.text = str(borrower_name[index])
+            self.ids.name.text = str(product_name[index])
             self.ids.loan_amount1.text = str(loan_amount[index])
             self.ids.tenure.text = str(tenure[index])
-            self.ids.status.text = str(loan_status[index])
+            #self.ids.status.text = str(loan_status[index])
             self.ids.interest_rate.text = str(interest[index])
             self.ids.emi_amount.text = str(monthly_emi[index])
 
@@ -751,7 +693,7 @@ class BorrowerDuesScreen(Screen):
 
         if cos_id1[index] in cos_id:
             index1 = cos_id1.index(cos_id1[index])
-            self.ids.account_number.text = str(account_num[index1])
+            #self.ids.account_number.text = str(account_num[index1])
 
         last_index = 0
         if value not in emi_loan_id:
@@ -1883,10 +1825,11 @@ class ViewPaymentDetails(Screen):
             ))
 
         layout = AnchorLayout()
+        layout = AnchorLayout()
         data_tables = MDDataTable(
             size_hint=(1, 1),
             use_pagination=True,
-            rows_num=12,
+            rows_num=15,  # Number of rows per page
             column_data=[
                 ("Payment No", dp(30)),
                 ("Next Payment Date", dp(30)),
@@ -1980,6 +1923,7 @@ class PartPayment(Screen):
         loan_product = []
         remaining_amount_list = []
         emi_amount = []
+        product_name = []
         for i in data1:
             loan_id.append(i['loan_id'])
             borrower_name.append(i['borrower_full_name'])
@@ -1998,15 +1942,16 @@ class PartPayment(Screen):
             loan_product.append(i['product_id'])
             remaining_amount_list.append(i['remaining_amount'])
             emi_amount.append(i['monthly_emi'])
+            product_name.append(i['product_name'])
 
         index = 0
 
         if value in loan_id:
             index = loan_id.index(value)
-            self.ids.name.text = str(borrower_name[index])
+            self.ids.name.text = str(product_name[index])
             self.ids.loan_amount1.text = str(loan_amount[index])
             self.ids.tenure.text = str(tenure[index])
-            self.ids.status.text = str(loan_status[index])
+            #self.ids.status.text = str(loan_status[index])
             self.ids.interest_rate.text = str(interest[index])
             self.ids.emi_amount.text = str(monthly_emi[index])
 
@@ -2026,7 +1971,7 @@ class PartPayment(Screen):
 
         if cos_id1[index] in cos_id:
             index1 = cos_id1.index(cos_id1[index])
-            self.ids.account_number.text = str(account_num[index1])
+            #self.ids.account_number.text = str(account_num[index1])
 
         extend_row = None
         extend_amount = 0
@@ -2473,7 +2418,7 @@ class PartPayment(Screen):
             extend_row = app_tables.fin_extends_loan.get(
                 loan_id=str(value)
             )
-            print(extend_row is not None, extend_row['status'] == "approved")
+            #print(extend_row is not None, extend_row['status'] == "approved")
             if extend_row is not None and extend_row['status'] == "approved":
                 extend_amount = 0
                 new_emi_amount += extend_row['new_emi']
@@ -3386,7 +3331,7 @@ class PartPayment(Screen):
         index = 0
         if cos_id1[index] in cos_id:
             index2 = cos_id1.index(cos_id1[index])
-            self.ids.account_number.text = str(account_num[index2])
+            #self.ids.account_number.text = str(account_num[index2])
 
         wallet_customer_id = []
         wallet_amount = []
@@ -3972,6 +3917,8 @@ class DuesScreen(Screen):
         interest_rate = []
         tenure = []
         loan_amount = []
+        product_name = []
+        monthly_emi = []
 
         s = 0
 
@@ -3985,7 +3932,9 @@ class DuesScreen(Screen):
             schedule_date.append(i['first_emi_payment_due_date'])
             interest_rate.append(i['interest_rate'])
             tenure.append(i['tenure'])
+            product_name.append(i['product_name'])
             loan_amount.append(i['loan_amount'])
+            monthly_emi.append(i['monthly_emi'])
 
         foreclose_loan_id = []
         foreclose_acceptance_date=[]
@@ -4054,111 +4003,159 @@ class DuesScreen(Screen):
             else:
                 number = 0
             card = MDCard(
-                orientation='vertical',
+
+                orientation='horizontal',
                 size_hint=(None, None),
-                size=("320dp", "240dp"),
-                padding="10dp",
-                spacing="3dp",
-                elevation=3
+                size=("340dp", "200dp"),
+                padding="8dp",
+                spacing="5dp",
+                elevation=1,
+                radius=[0, 0, 0, 0]
             )
-            horizontal_layout = BoxLayout(orientation='horizontal')
+
+            # Left side: User information
+            left_box = MDBoxLayout(orientation='vertical', padding=dp(20), size_hint_x=0.3,
+                                   pos_hint={"center_y": 0.53}, )
             if photo_texture:
-                image = Image(texture=photo_texture, size_hint_x=None, height="30dp", width="60dp")
-                horizontal_layout.add_widget(image)
+                image = CircularImage(texture=photo_texture)
+                left_box.add_widget(image)
 
-            horizontal_layout.add_widget(Widget(size_hint_x=None, width='20dp'))
-            text_layout = BoxLayout(orientation='vertical')
-            text_layout.add_widget(MDLabel(
-                text=f"[b]{borrower_name[i]}[/b],\n[b]{profile_mobile_number[number]}[/b]",
-                theme_text_color='Custom',
-                text_color=(0, 0, 0, 1),
-                halign='left',
+            left_box.add_widget(MDLabel(
+                text=f"[b]{borrower_name[i]}[/b]",
                 markup=True,
-            ))
-            text_layout.add_widget(Widget(size_hint_y=None, height=dp(10)))
-            # text_layout.add_widget(MDLabel(
-            #     text=f"[b]Mobile No[/b]: {profile_mobile_number[number]}",
-            #     theme_text_color='Custom',
-            #     text_color=(0, 0, 0, 1),
-            #     halign='left',
-            #     markup=True,
-            # ))
-            text_layout.add_widget(MDLabel(
-                text=f"[b]Loan Amount[/b]: {loan_amount[i]}",
-                theme_text_color='Custom',
-                text_color=(0, 0, 0, 1),
+                font_size='18sp',
+                font_style='Caption',  # You can adjust font style as needed
+                theme_text_color='Primary',
                 halign='left',
-                markup=True,
             ))
-            # text_layout.add_widget(MDLabel(
-            #     text=f"[b]Scheduled Payment:[/b] {scheduled_payment[number]}",
-            #     theme_text_color='Custom',
-            #     text_color=(0, 0, 0, 1),
-            #     halign='left',
-            #     markup=True,
-            # ))
-            text_layout.add_widget(MDLabel(
+
+            left_box.add_widget(MDLabel(
+                text=f"[b]{profile_mobile_number[number]}[/b]",
+                markup=True,
+                size_hint=(None, None),
+                height="50dp",
+                font_size='15sp',
+                font_style='Caption',  # You can adjust font style as needed
+                theme_text_color='Primary',
+                halign='left',
+            ))
+            left_box.add_widget(MDLabel(
+                text=f" ",
+                markup=True,
+                font_size='15sp',
+                font_style='Subtitle2',  # You can adjust font style as needed
+                theme_text_color='Secondary',
+                halign='left',
+            ))
+            left_box.add_widget(MDLabel(
+                text=f" ",
+                markup=True,
+                font_size='15sp',
+                font_style='Subtitle2',  # You can adjust font style as needed
+                theme_text_color='Primary',
+                halign='left',
+            ))
+
+            card.add_widget(left_box)
+            # Define status color
+            status_color = (0.545, 0.765, 0.290, 1)  # default color
+            if loan_status[i] == "under process":
+                status_color = (253 / 255, 218 / 255, 13 / 255, 1)
+            elif loan_status[i] == "disbursed loan":
+                status_color = (0.8588, 0.4392, 0.5765, 1.0)
+            elif loan_status[i] == "closed":
+                status_color = (0.4235, 0.5569, 0.1373, 1.0)
+            elif loan_status[i] == "extension":
+                status_color = (1.0, 0.6275, 0.4824, 1.0)
+            elif loan_status[i] == "foreclosure":
+                status_color = (0.0, 0.749, 1.0, 1.0)
+            elif loan_status[i] == "rejected":
+                status_color = (0.902, 0.141, 0.141, 1)
+            elif loan_status[i] == "approved":
+                status_color = (0.2353, 0.7019, 0.4431, 1.0)
+            elif loan_status[i] == "lost opportunities":
+                status_color = (0.902, 0.141, 0.141, 1)
+
+            # Right side: Loan details
+            right_box = MDBoxLayout(orientation='vertical', size_hint_x=0.5)
+
+            right_box.add_widget(MDLabel(
+                text=f"[b][color=000000]Loan Status:[/color] {loan_status[i]}[/b]",
+                markup=True,
+                font_size='15sp',
+                font_style='Caption',  # You can adjust font style as needed
+                theme_text_color='Custom',
+                halign='left',
+                text_color=status_color
+            ))
+            right_box.add_widget(MDLabel(
+                text=f"[b]Product Name:[/b] {product_name[i]}",
+                markup=True,
+                font_size='10sp',
+                font_style='Caption',  # You can adjust font style as needed
+                theme_text_color='Primary',
+                halign='left',
+            ))
+
+            right_box.add_widget(MDLabel(
+                text=f"[b]Loan Amount:[/b] {loan_amount[i]}",
+                markup=True,
+                font_size='10sp',
+                font_style='Caption',  # You can adjust font style as needed
+                theme_text_color='Primary',
+                halign='left',
+            ))
+            right_box.add_widget(MDLabel(
                 text=f"[b]Interest Rate:[/b] {interest_rate[i]}",
-                theme_text_color='Custom',
-                text_color=(0, 0, 0, 1),
-                halign='left',
                 markup=True,
-                # font_size='10sp'
+                font_size='10sp',
+                font_style='Caption',  # You can adjust font style as needed
+                theme_text_color='Primary',
+                halign='left',
             ))
-            text_layout.add_widget(MDLabel(
+            right_box.add_widget(MDLabel(
                 text=f"[b]Tenure:[/b] {tenure[i]}",
-                theme_text_color='Custom',
-                text_color=(0, 0, 0, 1),
-                halign='left',
                 markup=True,
-            ))
-            text_layout.add_widget(MDLabel(
-                text=f"[b]Due Date[/b]: {shedule_date[loan_id[i]]}",
-                theme_text_color='Custom',
-                text_color=(0, 0, 0, 1),
+                font_size='10sp',
+                font_style='Caption',  # You can adjust font style as needed
+                theme_text_color='Primary',
                 halign='left',
-                markup=True,
-            ))
-            text_layout.add_widget(MDLabel(
-                text=f"[b]Day Passed Due Date[/b] : {(today_date - shedule_date[loan_id[i]]).days}",
-                theme_text_color='Custom',
-                text_color=(0, 0, 0, 1),
-                halign='left',
-                markup=True,
             ))
 
-            horizontal_layout.add_widget(text_layout)
-            card.add_widget(horizontal_layout)
-            card.add_widget(Widget(size_hint_y=None, height='10dp'))
-            button_layout = BoxLayout(
-                size_hint_y=None,
-                height="40dp",
-                padding="10dp",
-                spacing="35dp"
-            )
-            button2 = MDFillRoundFlatButton(
-                text="     Pay Now     ",
-                size_hint=(None, None),
-                height="40dp",
-                width="250dp",
-                pos_hint={"center_x": 0},
-                md_bg_color=(0, 0.502, 0, 1),
-                on_release=lambda x, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id, shedule_date)
-            )
-            button1 = MDFillRoundFlatButton(
-                text="  Payment Details  ",
-                size_hint=(None, None),
-                height="40dp",
-                width="250dp",
-                pos_hint={"center_x": 1},
-                md_bg_color=(0.043, 0.145, 0.278, 1),
-                on_release=lambda x, loan_id=loan_id[i]: self.go_to_menu_screen(instance, loan_id, shedule_date)
-            )
-            button_layout.add_widget(button1)
-            button_layout.add_widget(button2)
-            card.add_widget(button_layout)
+            right_box.add_widget(MDLabel(
+                text=f"[b]Due Payment:[/b] [color=ff0000]{monthly_emi[i]}[/color]",
+                markup=True,
+                font_size='10sp',
+                font_style='Caption',  # You can adjust font style as needed
+                theme_text_color='Primary',
+                halign='left',
+            ))
 
-            # card.bind(on_release=lambda instance, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id))
+            right_box.add_widget(MDLabel(
+                text=f"[b]Due By:[/b] [color=ff0000]{(today_date - shedule_date[loan_id[i]]).days}[/color]",
+                markup=True,
+                font_size='10sp',
+                font_style='Caption',  # You can adjust font style as needed
+                theme_text_color='Primary',
+                halign='left',
+            ))
+
+
+            button2 = MDFlatButton(
+                text="  Pay Now  ",
+                size_hint=(None, None),
+                height="50dp",
+                width="250dp",
+                theme_text_color="Custom",
+                text_color=(1, 1, 1, 1),  # White color in RGBA format
+                pos_hint={"center_x": 0.7},
+                md_bg_color="#1E90FF",  # Background color in a shade of blue
+                on_release=lambda x, i=i: self.icon_button_clicked(x, loan_id[i], shedule_date)
+            )
+
+            right_box.add_widget(button2)
+            card.add_widget(right_box)
+
             self.ids.container.add_widget(card)
             # item = ThreeLineAvatarIconListItem(
             #     IconLeftWidget(

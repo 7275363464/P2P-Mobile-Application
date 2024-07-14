@@ -763,7 +763,7 @@ class OpenLoanVLB(Screen):
         profile = app_tables.fin_user_profile.search(email_user=email)
         customer_id = []
         loan_id = []
-        lender_name = []
+        borrower_name = []
         loan_status = []
         product_name = []
         email1 = []
@@ -783,7 +783,7 @@ class OpenLoanVLB(Screen):
             customer_id2.append(i['lender_customer_id'])
             email_id.append(i['lender_email_id'])
             loan_id.append(i['loan_id'])
-            lender_name.append(i['lender_full_name'])
+            borrower_name.append(i['borrower_full_name'])
             loan_status.append(i['loan_updated_status'])
             product_name.append(i['product_name'])
             email1.append(i['borrower_email_id'])
@@ -852,7 +852,7 @@ class OpenLoanVLB(Screen):
                     left_box.add_widget(image)
 
                 left_box.add_widget(MDLabel(
-                    text=f"[b]{lender_name[i]}[/b]",
+                    text=f"[b]{borrower_name[i]}[/b]",
                     markup=True,
                     font_size='10sp',
                     height="50dp",
@@ -983,7 +983,7 @@ class OpenLoanVLB(Screen):
                         last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(loan_id[i])
 
                         right_box.add_widget(MDLabel(
-                            text=f"[b]Next_emi_date:[/b] {next_payment[last_index]}",
+                            text=f"[b]Next_emi_date: [color=32CD32]{next_payment[last_index]}[/color][/b]",
                             markup=True,
                             font_size='15sp',
                             font_style='Caption',  # You can adjust font style as needed

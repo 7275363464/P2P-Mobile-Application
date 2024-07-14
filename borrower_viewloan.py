@@ -1,9 +1,13 @@
+from datetime import date
+
+from kivy.graphics import StencilPush, Ellipse, StencilUse, StencilUnUse, StencilPop
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivymd.app import MDApp
 from kivymd.material_resources import dp
+from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDRaisedButton, MDRoundFlatIconButton, MDRoundFlatButton, MDFillRoundFlatButton
 from kivymd.uix.card import MDCard
 from kivymd.uix.list import *
@@ -44,7 +48,6 @@ borrower_view_loan = '''
     UnderProcessLoanVLB:
     RejectedLoanVLB:
     ViewLoansScreenVLB:
-
 
 
 <DashboardScreenVLB>:
@@ -250,203 +253,216 @@ borrower_view_loan = '''
             halign: 'left'
             pos_hint: {'top': 1}
 
-        BoxLayout:
-            orientation: 'vertical'
-            spacing: dp(50)
-            padding: dp(30)
-            size_hint_y: None
-            height: self.minimum_height
-            canvas.before:
-                Color:
-                    rgba: 230/255, 245/255, 255/255, 1 
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [1, 1, 1, 1]
-                    source: "background.jpg"
-            MDGridLayout:
-                cols: 2
+        ScrollView:
+            BoxLayout:
+                orientation: 'vertical'
+                spacing: dp(50)
+                padding: dp(30)
+                size_hint_y: None
+                height: self.minimum_height
+                canvas.before:
+                    Color:
+                        rgba: 230/255, 245/255, 255/255, 1 
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [1, 1, 1, 1]
+                        source: "background.jpg"
+                MDGridLayout:
+                    cols: 2
+
+                    MDLabel:
+                        text: 'Loan amount:'
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        text_color: 0, 0, 0, 1 
+                        bold: True
+                MDGridLayout:
+                    cols: 2
+                    MDIconButton:
+                        icon: 'currency-inr'
+                        halign: 'left'
+                        size_hint_y: None
+                        height: dp(1)
+
+                    MDLabel:
+                        id: amount
+                        halign: 'left'
+                        bold: True
 
                 MDLabel:
-                    text: 'Required amount:'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1 
-                    bold: True
-            MDGridLayout:
-                cols: 2
-                MDIconButton:
-                    icon: 'currency-inr'
+                    text: ''
                     halign: 'left'
                     size_hint_y: None
-                    height: dp(1)
+                    height: dp(2)
 
-                MDLabel:
-                    id: amount
-                    halign: 'left'
-                    bold: True
-
-            MDLabel:
-                text: ''
-                halign: 'left'
-                size_hint_y: None
-                height: dp(20)
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Product Name'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    bold: True
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        text: 'Product Name'
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        bold: True
 
 
-                MDLabel:
-                    id: pro_name
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
+                    MDLabel:
+                        id: pro_name
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
 
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Borrower Name'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    bold: True
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        text: 'Lender Name'
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        bold: True
 
-                MDLabel:
-                    id: b_name
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
+                    MDLabel:
+                        id: b_name
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
 
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Phone Number'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    bold: True
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        text: 'Phone Number'
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        bold: True
 
-                MDLabel:
-                    id: phone_num
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
+                    MDLabel:
+                        id: phone_num
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        text: 'EMI start date'
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        bold: True
 
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Ascend Score'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    bold: True
+                    MDLabel:
+                        id: first_emi_payment_due_date
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        text: 'EMI last date'
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        bold: True
 
-                MDLabel:
-                    id: asc_score
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
+                    MDLabel:
+                        id: borrower_last_payment_done
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
 
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Interest(%)'
-                    halign: 'left'
-                    bold: True
-
-
-                MDLabel:
-                    id: int_rate
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Duration(M)'
-                    halign: 'left'
-                    bold: True
-
-                MDLabel:
-                    id: tenure
-                    halign: 'left' 
-                    theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Published Date'
-                    halign: 'left'
-                    bold: True
-
-                MDLabel:
-                    id: date
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-
-            MDGridLayout:
-                cols: 2
-                MDLabel:
-                    text: 'Loan Status'
-                    halign: 'left'
-                    bold: True
-
-                MDLabel:
-                    id: updated_status
-                    halign: 'left' 
-                    theme_text_color: 'Custom'  
-                    text_color: 140/255, 140/255, 140/255, 1
-                    bold: True
-
-        BoxLayout:
-            orientation: 'vertical'
-            spacing: dp(50)
-            padding: dp(30)
-            size_hint_y: None
-            height: self.minimum_height
-            canvas.before:
-                Color:
-                    rgba: 249/255, 249/255, 247/255, 1 
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [25, 25, 25, 25]
-            MDLabel:
-                text: ''
-                halign: 'left'
-                size_hint_y: None
-                height: dp(5)
-            MDGridLayout:
-                cols: 3
-
-                MDLabel:
-                    text: 'Total'
-                    halign: 'left'
-                    theme_text_color: 'Custom'  
-                    text_color: 0, 0, 0, 1  
-                    bold: True
-                MDIconButton:
-                    icon: 'currency-inr'
-                    halign: 'center' 
-                    bold: True   
-
-                MDLabel:
-                    id: amount_1
-                    halign: 'left'
-                    bold: True
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        text: 'Interest(%)'
+                        halign: 'left'
+                        bold: True
 
 
+                    MDLabel:
+                        id: int_rate
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
+
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        text: 'Tenure(M)'
+                        halign: 'left'
+                        bold: True
+
+                    MDLabel:
+                        id: tenure
+                        halign: 'left' 
+                        theme_text_color: 'Custom'  
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
+
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        text: 'Applied Date'
+                        halign: 'left'
+                        bold: True
+
+                    MDLabel:
+                        id: date
+                        halign: 'left'
+                        theme_text_color: 'Custom'  
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
+
+                MDGridLayout:
+                    cols: 2
+                    MDLabel:
+                        text: 'Loan Status'
+                        halign: 'left'
+                        bold: True
+
+                    MDLabel:
+                        id: updated_status
+                        halign: 'left' 
+                        theme_text_color: 'Custom'  
+                        text_color: 140/255, 140/255, 140/255, 1
+                        bold: True
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: dp(50)
+                    padding: dp(30)
+                    size_hint_y: None
+                    height: self.minimum_height
+                    canvas.before:
+                        Color:
+                            rgba: 249/255, 249/255, 247/255, 1 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [25, 25, 25, 25]
+                    MDLabel:
+                        text: ''
+                        halign: 'left'
+                        size_hint_y: None
+                        height: dp(5)
+                    MDGridLayout:
+                        cols: 3
+
+                        MDLabel:
+                            text: 'Total'
+                            halign: 'left'
+                            theme_text_color: 'Custom'  
+                            text_color: 0, 0, 0, 1  
+                            bold: True
+                        MDIconButton:
+                            icon: 'currency-inr'
+                            halign: 'center' 
+                            bold: True   
+
+                        MDLabel:
+                            id: amount_1
+                            halign: 'left'
+                            bold: True
 
 
 '''
@@ -636,13 +652,15 @@ class ViewLoansScreenVLB(Screen):
         customer_id = []
         loan_id = []
         product_name = []
-        borrower_name = []
+        lender_name = []
         loan_amount = []
         loan_amount1 = []
         interest_rate = []
         tenure = []
         date_of_apply = []
         status = []
+        first_emi_payment_due_date = []
+        borrower_last_payment_done = []
         print(loan_id)
         for i in data:
             customer_id.append(i['borrower_customer_id'])
@@ -650,7 +668,9 @@ class ViewLoansScreenVLB(Screen):
             product_name.append(i['product_name'])
             loan_amount.append(i['loan_amount'])
             loan_amount1.append(i['loan_amount'])
-            borrower_name.append(i['borrower_full_name'])
+            lender_name.append(i['lender_full_name'])
+            first_emi_payment_due_date.append(i['first_emi_payment_due_date'])
+            borrower_last_payment_done.append(i['borrower_last_payment_done'])
             tenure.append(i['tenure'])
             interest_rate.append(i['interest_rate'])
             date_of_apply.append(i['borrower_loan_created_timestamp'])
@@ -662,15 +682,16 @@ class ViewLoansScreenVLB(Screen):
         for i in profile:
             profile_customer_id.append(i['customer_id'])
             profile_mobile_number.append(i['mobile'])
-            ascend_value.append(i['ascend_value'])
 
         index = 0
         if value in loan_id:
             index = loan_id.index(value)
             self.ids.pro_name.text = str(product_name[index])
-            self.ids.b_name.text = str(borrower_name[index])
+            self.ids.b_name.text = str(lender_name[index])
             self.ids.amount.text = str(loan_amount[index])
             self.ids.amount_1.text = str(loan_amount1[index])
+            self.ids.first_emi_payment_due_date.text = str(first_emi_payment_due_date[index])
+            self.ids.borrower_last_payment_done.text = str(borrower_last_payment_done[index])
             self.ids.tenure.text = str(tenure[index])
             self.ids.int_rate.text = str(interest_rate[index])
             self.ids.date.text = str(date_of_apply[index])
@@ -680,7 +701,6 @@ class ViewLoansScreenVLB(Screen):
             index2 = profile_customer_id.index(customer_id[index])
 
             self.ids.phone_num.text = str(profile_mobile_number[index2])
-            self.ids.asc_score.text = str(ascend_value[index2])
 
     def on_pre_enter(self):
         # Bind the back button event to the on_back_button method
@@ -702,20 +722,20 @@ class ViewLoansScreenVLB(Screen):
         self.manager.current = 'ViewLoansRequest'
 
     def on_back_button_press(self):
-        self.manager.current = 'DashboardScreen'
+        self.manager.current = 'OpenLoanVLB'
 
 
 class OpenLoanVLB(Screen):
     def __init__(self, instance=None, **kwargs):
         super().__init__(**kwargs)
         email = self.get_email()
-        data = app_tables.fin_user_profile.search(email_user=email)
+        data1 = app_tables.fin_user_profile.search(email_user=email)
 
-        if not data:
+        if not data1:
             print("No data found for email:", email)
             return
 
-        for row in data:
+        for row in data1:
             if row['user_photo']:
                 image_data = row['user_photo'].get_bytes()
                 if isinstance(image_data, bytes):
@@ -723,7 +743,7 @@ class OpenLoanVLB(Screen):
                         profile_texture_io = BytesIO(image_data)
                         photo_texture = CoreImage(profile_texture_io, ext='png').texture
                     except Exception as e:
-                        print(f"Error processing image for email {row['email_user']}: {e}")
+                        print(f"Error processing image for email2 {row['email_user']}: {e}")
                 else:
                     try:
                         image_data_binary = base64.b64decode(image_data)
@@ -738,31 +758,50 @@ class OpenLoanVLB(Screen):
 
         data = app_tables.fin_loan_details.search()
         email = anvil.server.call('another_method')
+
+        emi = app_tables.fin_emi_table.search()
         profile = app_tables.fin_user_profile.search(email_user=email)
         customer_id = []
         loan_id = []
-        borrower_name = []
+        lender_name = []
         loan_status = []
         product_name = []
         email1 = []
         loan_amount = []
         tenure = []
+        monthly_emi = []
         interest_rate = []
+        interest_amount = []
+        processing_fee = []
+        customer_id2 = []
+        email_id = []
         # ascend_value = []
         s = 0
         for i in data:
             s += 1
             customer_id.append(i['borrower_customer_id'])
+            customer_id2.append(i['lender_customer_id'])
+            email_id.append(i['lender_email_id'])
             loan_id.append(i['loan_id'])
-            borrower_name.append(i['borrower_full_name'])
+            lender_name.append(i['lender_full_name'])
             loan_status.append(i['loan_updated_status'])
             product_name.append(i['product_name'])
             email1.append(i['borrower_email_id'])
             loan_amount.append(i['loan_amount'])
             tenure.append(i['tenure'])
+            interest_amount.append(i['total_interest_amount'])
+            processing_fee.append(i['total_processing_fee_amount'])
             interest_rate.append(i['interest_rate'])
+            monthly_emi.append(i['monthly_emi'])
             # ascend_value.append(i['ascend_value'])
 
+        remaining_tenure = []
+        next_payment = []
+        emi_loan_id = []
+        for i in emi:
+            remaining_tenure.append(i['remaining_tenure'])
+            next_payment.append(i['next_payment'])
+            emi_loan_id.append(i['loan_id'])
         profile_customer_id = []
         profile_mobile_number = []
         ascend_value = []
@@ -771,6 +810,7 @@ class OpenLoanVLB(Screen):
             profile_mobile_number.append(i['mobile'])
             ascend_value.append(i['ascend_value'])
         cos_id = None
+
         if email in email1:
             index = email1.index(email)
             cos_id = customer_id[index]
@@ -778,6 +818,7 @@ class OpenLoanVLB(Screen):
 
             c = -1
             index_list = []
+            last_index = []
             for i in range(s):
                 c += 1
                 if customer_id[c] == cos_id:
@@ -794,70 +835,51 @@ class OpenLoanVLB(Screen):
                     number = 0
                 # Card to display the list of details
                 card = MDCard(
-                    orientation='vertical',
+                    orientation='horizontal',
                     size_hint=(None, None),
-                    size=("310dp", "200dp"),
-                    padding="10dp",
-                    spacing="3dp",
-                    elevation=3,
+                    size=("340dp", "200dp"),
+                    padding="8dp",
+                    spacing="5dp",
+                    elevation=1,
+                    radius=[0, 0, 0, 0]
                 )
-                # Horizontal layout to keep the text and image in to the card
-                horizontal_layout = BoxLayout(orientation='horizontal')
-                if photo_texture:
-                    image = Image(texture=photo_texture, size_hint_x=None, height="30dp", width="60dp")
-                    horizontal_layout.add_widget(image)
 
-                # Text Layout to keep the text on card
-                horizontal_layout.add_widget(Widget(size_hint_x=None, width='25dp'))
-                text_layout = BoxLayout(orientation='vertical')
-                text_layout.add_widget(MDLabel(
-                    text=f" [b]{borrower_name[i]}[/b],\n [b]{profile_mobile_number[number]}[/b]",
-                    theme_text_color='Custom',
-                    text_color=(0, 0, 0, 1),
-                    halign='left',
+                # Left side: User information
+                left_box = MDBoxLayout(orientation='vertical', padding=dp(10), size_hint_x=0.3,
+                                       pos_hint={"center_y": 0.53}, )
+                if photo_texture:
+                    image = CircularImage(texture=photo_texture)
+                    left_box.add_widget(image)
+
+                left_box.add_widget(MDLabel(
+                    text=f"[b]{lender_name[i]}[/b]",
                     markup=True,
                     font_size='10sp',
-                    bold=True
+                    height="50dp",
+                    font_style='Caption',  # You can adjust font style as needed
+                    theme_text_color='Primary',
+                    halign='center',
                 ))
-                text_layout.add_widget(Widget(size_hint_y=None, height=dp(5)))
-                text_layout.add_widget(MDLabel(
-                    text=f" [b]Product Name:[/b] {product_name[i]}",
-                    theme_text_color='Custom',
-                    text_color=(0, 0, 0, 1),
-                    halign='left',
+                left_box.add_widget(Widget(size_hint_y=None, height=dp(10)))
+                left_box.add_widget(MDLabel(
+                    text=f"[b]{profile_mobile_number[number]}[/b]",
                     markup=True,
-                    # font_size='10sp'
+                    font_size='10sp',
+                    font_style='Caption',  # You can adjust font style as needed
+                    theme_text_color='Secondary',
+                    halign='center',
                 ))
-                text_layout.add_widget(MDLabel(
-                    text=f" [b]Loan Amount:[/b] {loan_amount[i]}",
-                    theme_text_color='Custom',
-                    text_color=(0, 0, 0, 1),
-                    halign='left',
+                left_box.add_widget(MDLabel(
+                    text=f" ",
                     markup=True,
-                    # font_size='10sp'
-                ))
-                text_layout.add_widget(MDLabel(
-                    text=f" [b]Ascend Score :[/b]{ascend_value[number]}",
-                    theme_text_color='Custom',
-                    text_color=(0, 0, 0, 1),
+                    font_size='8sp',
+                    font_style='Subtitle2',  # You can adjust font style as needed
+                    theme_text_color='Secondary',
                     halign='left',
-                    markup=True,
-                    # font_size='10sp'
                 ))
-                horizontal_layout.add_widget(text_layout)
-                card.add_widget(horizontal_layout)
 
-                horizontal_layout1 = BoxLayout(orientation='horizontal', size_hint_y=None, height=dp(45))
-                # Button layout to align the Buttons
-                button_layout2 = BoxLayout(
-                    size_hint_y=None,
-                    height="40dp",
-                    padding="10dp",
-                    spacing=30
-                )
-
-                # this colors for loan status button colors based on loan status
-
+                card.add_widget(left_box)
+                # Define status color
                 status_color = (0.545, 0.765, 0.290, 1)  # default color
                 if loan_status[i] == "under process":
                     status_color = (253 / 255, 218 / 255, 13 / 255, 1)
@@ -875,48 +897,111 @@ class OpenLoanVLB(Screen):
                     status_color = (0.2353, 0.7019, 0.4431, 1.0)
                 elif loan_status[i] == "lost opportunities":
                     status_color = (0.902, 0.141, 0.141, 1)
-                button2 = MDFillRoundFlatButton(
-                    text="  View Details  ",
-                    # size_hint=(None, None),
-                    height="40dp",
-                    width="250dp",
-                    pos_hint={"center_x": 1},
-                    md_bg_color=(0.043, 0.145, 0.278, 1),
-                    on_release=lambda x, loan_id=loan_id[i]: self.icon_button_clicked(instance, loan_id),
-                    text_color=(1, 1, 1, 1)
-                )
-                button_layout1 = BoxLayout(
-                    size_hint_y=None,
-                    height="40dp",
-                    padding="10dp",
-                    spacing=30
-                )
-                # this status_text for status text to keep button
-                status_text = {
-                    "under process": "  Under Process ",
-                    "disbursed": "  Disburse Loan ",
-                    "closed": "    Closed Loan   ",
-                    "extension": " Extension Loan ",
-                    "foreclosure": "  Foreclosure  ",
-                    "accepted": " Accepted Loan ",
-                    "rejected": "  Rejected Loan ",
-                    "approved": "  Approved Loan ",
-                    "lost opportunities": "lost opportunities"
-                }
-                button1 = MDFillRoundFlatButton(
-                    text=status_text.get(loan_status[i], loan_status[i]),
-                    height=dp(40),
-                    pos_hint={"center_x": 0},
-                    md_bg_color=status_color,
-                    text_color=(1, 1, 1, 1),
-                )
-                button_layout1.add_widget(button1)
-                button_layout2.add_widget(button2)
 
-                # Adding the Buttons to the card
-                horizontal_layout1.add_widget(button_layout1)
-                horizontal_layout1.add_widget(button_layout2)
-                card.add_widget(horizontal_layout1)
+                # Right side: Loan details
+                right_box = MDBoxLayout(orientation='vertical', size_hint_x=0.6)
+
+                right_box.add_widget(MDLabel(
+                    text=f"[color=000000][b]Loan Status:[/color] {loan_status[i]}[/b]",
+                    markup=True,
+                    font_size='19sp',
+                    font_style='Caption',  # You can adjust font style as needed
+                    theme_text_color='Custom',
+                    halign='left',
+                    text_color=status_color
+                ))
+
+                right_box.add_widget(MDLabel(
+                    text=f"[b]Product Name:[/b] {product_name[i]}",
+                    markup=True,
+                    font_size='15sp',
+                    font_style='Caption',  # You can adjust font style as needed
+                    theme_text_color='Primary',
+                    halign='left',
+                ))
+
+                right_box.add_widget(MDLabel(
+                    text=f"[b]Loan Amount:[/b] {loan_amount[i]}",
+                    markup=True,
+                    font_size='15sp',
+                    font_style='Caption',  # You can adjust font style as needed
+                    theme_text_color='Primary',
+                    halign='left',
+                ))
+                if loan_status[i] not in ["extension", "foreclosure", "approved", "disbursed"]:
+                    right_box.add_widget(MDLabel(
+                        text=f"[b]Tenure:[/b] {tenure[i]}",
+                        markup=True,
+                        font_size='15sp',
+                        font_style='Caption',  # You can adjust font style as needed
+                        theme_text_color='Primary',
+                        halign='left',
+                    ))
+                if loan_status[i] not in ["extension", "foreclosure", "approved", "disbursed"]:
+                    right_box.add_widget(MDLabel(
+                        text=f"[b]Processing Fee:[/b] {processing_fee[i]}",
+                        markup=True,
+                        font_size='15sp',
+                        font_style='Caption',  # You can adjust font style as needed
+                        theme_text_color='Primary',
+                        halign='left',
+                    ))
+                if loan_status[i] not in ["extension", "foreclosure", "approved", "disbursed"]:
+                    right_box.add_widget(MDLabel(
+                        text=f"[b]Interest Amount:[/b] {interest_amount[i]}",
+                        markup=True,
+                        font_size='15sp',
+                        font_style='Caption',  # You can adjust font style as needed
+                        theme_text_color='Primary',
+                        halign='left',
+                    ))
+                if loan_status[i] not in ["rejected", "closed", "under process"]:
+                    if loan_id[i] in emi_loan_id:
+                        last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(loan_id[i])
+                        right_box.add_widget(MDLabel(
+                            text=f"[b]emi_remaining:[/b] {remaining_tenure[last_index]}",
+                            markup=True,
+                            font_size='15sp',
+                            font_style='Caption',  # You can adjust font style as needed
+                            theme_text_color='Primary',
+                            halign='left',
+                        ))
+
+                if loan_status[i] not in ["rejected", "closed", "under process"]:
+                    if loan_id[i] in emi_loan_id:
+                        last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(loan_id[i])
+                        right_box.add_widget(MDLabel(
+                            text=f"[b]EMI Amount:[/b] {monthly_emi[last_index]}",
+                            markup=True,
+                            font_size='15sp',
+                            font_style='Caption',  # You can adjust font style as needed
+                            theme_text_color='Primary',
+                            halign='left',
+                        ))
+                if loan_status[i] not in ["rejected", "closed", "under process"]:
+                    if loan_id[i] in emi_loan_id:
+                        last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(loan_id[i])
+
+                        right_box.add_widget(MDLabel(
+                            text=f"[b]Next_emi_date:[/b] {next_payment[last_index]}",
+                            markup=True,
+                            font_size='15sp',
+                            font_style='Caption',  # You can adjust font style as needed
+                            theme_text_color='Primary',
+                            halign='left',
+                        ))
+                if loan_status[i] not in ["under process", "rejected"]:
+                    button2 = MDFillRoundFlatButton(
+                        text="  View Details  ",
+                        size_hint=(None, None),
+                        height="10dp",
+                        width="150dp",
+                        pos_hint={"center_x": 0.6},
+                        md_bg_color=(0.043, 0.145, 0.278, 1),
+                        on_release=lambda x, i=i: self.icon_button_clicked(x, loan_id[i])
+                    )
+                    right_box.add_widget(button2)
+                card.add_widget(right_box)
 
                 self.ids.container.add_widget(card)
 
@@ -1391,6 +1476,48 @@ class ClosedLoanVLB(Screen):
     def refresh(self):
         self.ids.container3.clear_widgets()
         self.__init__()
+
+
+class CircularImage(Image):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.size_hint = (None, None)
+        self.size = ("80dp", "120dp")  # Initial size of the image
+        self.bind(pos=self.update_shape, size=self.update_shape)
+
+    def update_shape(self, *args):
+        self.canvas.before.clear()
+
+        # Calculate the diameter of the circle
+        diameter = min(self.width, self.height)
+        radius = diameter / 2.0
+
+        # Calculate the position of the ellipse to center it on the image
+        ellipse_pos = (self.center_x - radius, self.center_y - radius)
+
+        with self.canvas.before:
+            StencilPush()
+            Ellipse(pos=ellipse_pos, size=(diameter, diameter))
+            StencilUse()
+
+        self.canvas.after.clear()
+        with self.canvas.after:
+            StencilUnUse()
+            Ellipse(pos=ellipse_pos, size=(diameter, diameter))
+            StencilPop()
+
+    def loan_status_sort_key(status):
+        status_order = {
+            "under process": 1,
+            "approved": 2,
+            "disbursed": 3,
+            "closed": 4,
+            "extension": 5,
+            "foreclosure": 6,
+            "rejected": 7,
+            "lost opportunities": 8
+        }
+        return status_order.get(status, 9)  # Default to 9 for unknown statuses
 
 
 class MyScreenManager(ScreenManager):

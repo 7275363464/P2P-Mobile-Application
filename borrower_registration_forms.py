@@ -175,7 +175,7 @@ Borrower = '''
         
                 Spinner:
                     id: gender_id
-                    text: "Select Gender"
+                    text: "Select Gender *"
                     font_size: "15dp"
                     multiline: False
                     multiline: False
@@ -186,6 +186,7 @@ Borrower = '''
                     background_normal: ''
                     text_size: self.width - dp(20), None
                     color: 0, 0, 0, 1
+                    on_text: root.validate_spinner(self)
                     option_cls: 'CustomSpinnerOption'
                     canvas:
                         Color:
@@ -262,7 +263,7 @@ Borrower = '''
                     line_color_focus: 0, 0, 0, 1
                     radius: [0, 0, 0,0]
                     on_text: root.check_alternate_email(self)
-    
+                    
                 BoxLayout:
                     orientation: 'horizontal'
                     padding: "10dp"
@@ -329,6 +330,7 @@ Borrower = '''
                     line_color_normal: 0, 0, 0, 1  # Red color for the line when not focused
                     line_color_focus: 0, 0, 0, 1
                     radius: [0, 0, 0,0]
+                    on_text: root.validate_aadhar_number(self)
     
                 BoxLayout:
                     id: GovID1
@@ -398,6 +400,8 @@ Borrower = '''
                     line_color_normal: 0, 0, 0, 1  # Red color for the line when not focused
                     line_color_focus: 0, 0, 0, 1
                     radius: [0, 0, 0,0]
+                    on_text: root.validate_pan_number(self)
+                    
     
     
                 BoxLayout:
@@ -3627,7 +3631,7 @@ Borrower = '''
                 MDLabel:
                     text: 'Address Information'
                     halign: 'left'
-                    height: dp(10)
+                    height: dp(20)
                     bold: True
 
                 MDTextField:
@@ -3646,6 +3650,7 @@ Borrower = '''
                     line_color_focus: 0, 0, 0, 1
                     mode: "rectangle"
                     radius: [0, 0, 0,0]
+                    on_text: root.validate_street_address1(self)
 
                 MDTextField:
                     id: street_address2
@@ -3663,6 +3668,7 @@ Borrower = '''
                     line_color_focus: 0, 0, 0, 1
                     mode: "rectangle"
                     radius: [0, 0, 0,0]
+                    on_text: root.validate_street_address1(self)
 
                 Spinner:
                     id: spinner_id2
@@ -3724,7 +3730,8 @@ Borrower = '''
                     line_color_focus: 0, 0, 0, 1
                     mode: "rectangle"
                     radius: [0, 0, 0,0]
-                    
+                    on_text: root.validate_city(self)
+
 
                 MDTextField:
                     id: zip_code
@@ -3760,7 +3767,9 @@ Borrower = '''
                     helper_text_color_normal: "black"
                     line_color_normal: 0, 0, 0, 1  # Red color for the line when not focused
                     line_color_focus: 0, 0, 0, 1
+                    radius: [0, 0, 0,0]
                     mode: "rectangle"
+                    on_text: root.validate_state(self)
 
                 MDTextField:
                     id: country
@@ -3778,6 +3787,7 @@ Borrower = '''
                     line_color_focus: 0, 0, 0, 1
                     mode: "rectangle"
                     radius: [0, 0, 0,0]
+                    on_text: root.validate_country(self)
                     
                 MDLabel:
                     text: 'Please fill * mandatory details'
@@ -4157,8 +4167,9 @@ class BorrowerScreen(Screen):
         if not date_of_birth:
             validation_errors.append(
                 (self.ids.date_textfield, ""))  # Corrected to date_textfield
-        if not gender:
-            validation_errors.append((self.ids.spinner_id, ""))
+        if not self.validate_spinner(self.ids.gender_id):
+            validation_errors.append((self.ids.gender_id, ""))
+            self.show_validation_error("Please select Gender.")
         if not mobile_number:
             validation_errors.append((self.ids.mobile_number, ""))
         if not aadhar_number:
@@ -4179,13 +4190,16 @@ class BorrowerScreen(Screen):
 
         # Validate date of birth
         try:
-            dob = datetime.strptime(date_of_birth, '%Y-%m-%d')
-            today = datetime.today()
+            dob = datetime.strptime(date_of_birth, "%Y-%m-%d")
+            today = datetime.now()
             age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
             if age < 18:
-                validation_errors.append((self.ids.date_textfield, "You must be at least 18 years old to register."))
+                self.show_validation_error("Enter a Valid Date of Birth Age must be Greater Than 18")
+                return
+
         except ValueError:
-            validation_errors.append((self.ids.date_textfield, "Invalid date format. Please use YYYY-MM-DD."))
+            self.show_validation_error("Please enter a valid date of birth in the format YYYY-MM-DD")
+            return
 
         if validation_errors:
             self.show_validation_errors(validation_errors)
@@ -4243,8 +4257,7 @@ class BorrowerScreen(Screen):
             widget.helper_text_color = (1, 0, 0, 1)
             widget.helper_text = error_message
             widget.helper_text_mode = "on_error"
-            if isinstance(widget, MDCheckbox):
-                widget.line_color_normal = (1, 0, 0, 1)
+            widget.line_color_normal = (1, 0, 0, 1)
             if isinstance(widget, MDCheckbox):
                 widget.theme_text_color = 'Error'
     def check_alternate_email(self, alternate_email):
@@ -4258,7 +4271,35 @@ class BorrowerScreen(Screen):
         if not re.match(email_regex, alternate_email_text):
             alternate_email.helper_text = "Enter valid email format"
             alternate_email.error = True
+        else:
+            alternate_email.helper_text = ""
+            alternate_email.line_color_normal = (0, 0, 0, 1)
+            alternate_email.error = False
 
+    def validate_aadhar_number(self, aadhar_number):
+        aadhar_number_text = aadhar_number.text
+        if not aadhar_number_text:
+            aadhar_number.helper_text = ""
+            aadhar_number.error = True
+        else:
+            aadhar_number.helper_text = ""
+            aadhar_number.line_color_normal = (0, 0, 0, 1)
+            aadhar_number.error = False
+
+    def validate_pan_number(self, pan_number):
+        pan_number_text = pan_number.text
+        if not pan_number_text:
+            pan_number.helper_text = ""
+            pan_number.error = True
+        else:
+            pan_number.helper_text = ""
+            pan_number.line_color_normal = (0, 0, 0, 1)
+            pan_number.error = False
+    def validate_spinner(self, spinner):
+        # Assuming an empty or default value is considered invalid
+        if spinner.text == "" or spinner.text == "Select Gender *":
+            return False
+        return True
 
     def validate_mobile(self, mobile_number):
         mobile_number_text = mobile_number.text
@@ -4276,6 +4317,7 @@ class BorrowerScreen(Screen):
             mobile_number.error = True
         else:
             mobile_number.helper_text = ""
+            mobile_number.line_color_normal = (0, 0, 0, 1)
             mobile_number.error = False
     def upload_image(self, file_path):
         try:
@@ -11806,7 +11848,7 @@ class BorrowerScreen24(Screen):
                 self.unique_list.append(i)
         print(self.unique_list)
         if len(self.unique_list) >= 1:
-            self.ids.spinner_id.values = ['Select How long you are staying'] + self.unique_list
+            self.ids.spinner_id.values =  self.unique_list
         else:
             self.ids.spinner_id.values = ['Select How long you are staying']
 
@@ -11820,7 +11862,7 @@ class BorrowerScreen24(Screen):
                 self.unique_list1.append(i)
         print(self.unique_list1)
         if len(self.unique_list1) >= 1:
-            self.ids.spinner_id2.values = ['Select Present Address'] + self.unique_list1
+            self.ids.spinner_id2.values = self.unique_list1
         else:
             self.ids.spinner_id2.values = ['Select Present Address']
 
@@ -11864,22 +11906,24 @@ class BorrowerScreen24(Screen):
         modal_view.dismiss()
         validation_errors = []
         # Check for missing fields
-
-        if spinner_id not in spinner_id == 'Select How long you are staying':
-            validation_errors.append((self.ids.spinner_id, ""))
-            self.show_validation_errors('Select How long you are staying')
-            return
-        elif spinner_id2 not in spinner_id2 == 'Select Present Address':
-            self.show_validation_errors('Select Duration at Address')
-            return
+        # if not spinner_id1 or spinner_id1 == 'Select Present Address *':
+        #     self.show_validation_errors("Please Select Your Present Address.")
+        #     return
+        # if not spinner_id2 or spinner_id2 == 'Select Staying Address *':
+        #     self.show_validation_errors("Please Select Your Duration At Address.")
+        #     return
         if not street:
             validation_errors.append((self.ids.street_address1, ""))
         if not street_address2:
             validation_errors.append((self.ids.street_address2, ""))
-        if not spinner_id:
-            validation_errors.append((self.ids.spinner_id, ""))
-        if not spinner_id2:
-            validation_errors.append((self.ids.spinner_id2, ""))
+        if self.ids.spinner_id2.text not in self.unique_list1:
+            self.show_validation_errors(" Select a valid present Address")
+            return
+        if self.ids.spinner_id.text not in self.unique_list:
+            self.show_validation_errors(" Select a valid Address Duration")
+            return
+        # if self.spouse_profession.text not in self.unique_list1:
+
         if not city:
             validation_errors.append((self.ids.city, ""))
         if not zip_code:
@@ -11917,7 +11961,7 @@ class BorrowerScreen24(Screen):
         if user_email in id_list:
             index = id_list.index(user_email)
             data[index]['street_adress_1'] = street
-            data[index]['street_address_2']=street_address2
+            data[index]['street_address_2'] = street_address2
             data[index]['duration_at_address'] = spinner_id
             data[index]['present_address'] = spinner_id2
             data[index]['city'] = city
@@ -11947,15 +11991,60 @@ class BorrowerScreen24(Screen):
         else:
             zip_code.helper_text = ""
             zip_code.error = False
+    def validate_street_address1(self, street_address1):
+        street_address1_text = street_address1.text
+        if not street_address1_text:
+            street_address1.helper_text = ""
+            street_address1.line_color_normal = (0, 0, 0, 1)
+            street_address1.error = True
+        else:
+            street_address1.helper_text = ""
+            street_address1.line_color_normal = (0, 0, 0, 1)
+            street_address1.error = False
+    def validate_street_address2(self, street_address2):
+        street_address2_text = street_address2.text
+        if not street_address2_text:
+            street_address2.helper_text = ""
+            street_address2.error = True
+        else:
+            street_address2.helper_text = ""
+            street_address2.line_color_normal = (0, 0, 0, 1)
+            street_address2.error = False
+    def validate_city(self, city):
+        city_text = city.text
+        if not city_text:
+            city.helper_text = ""
+            city.error = True
+        else:
+            city.helper_text = ""
+            city.line_color_normal = (0, 0, 0, 1)
+            city.error = False
+    def validate_state(self, state):
+        state_text = state.text
+        if not state_text:
+            state.helper_text = ""
+            state.error = True
+        else:
+            state.helper_text = ""
+            state.line_color_normal = (0, 0, 0, 1)
+            state.error = False
 
+    def validate_country(self, country):
+        country_text = country.text
+        if not country_text:
+            country.helper_text = ""
+            country.error = True
+        else:
+            country.helper_text = ""
+            country.line_color_normal = (0, 0, 0, 1)
+            country.error = False
     def show_validation_error(self, validation_errors):
         for widget, error_message in validation_errors:
             widget.error = True
             widget.helper_text_color = (1, 0, 0, 1)
             widget.helper_text = error_message
             widget.helper_text_mode = "on_error"
-            if isinstance(widget, MDCheckbox):
-                widget.line_color_normal = (1, 0, 0, 1)
+            widget.line_color_normal = (1, 0, 0, 1)
             if isinstance(widget, MDCheckbox):
                 widget.theme_text_color = 'Error'
 

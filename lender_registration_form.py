@@ -2,7 +2,10 @@ import re
 import os
 import json
 import base64
+import tempfile
 
+from anvil._server import LazyMedia
+from kivy.graphics import Color, Line
 # from Crypto.SelfTest.Cipher.test_CBC import file_name
 from kivy.properties import BooleanProperty
 from kivy.uix.button import Button
@@ -31,6 +34,7 @@ from kivymd.app import MDApp
 from kivymd.uix.button import MDRaisedButton, MDIconButton, MDRectangleFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.filemanager import MDFileManager
+from kivymd.uix.menu import MDDropdownMenu
 import sqlite3
 from kivymd.uix.pickers import MDDatePicker
 from kivy.utils import platform
@@ -2852,124 +2856,126 @@ KV = '''
 
 
 <LenderScreen7>:
-    MDTopAppBar:
-        id: bar
-        title: "P2P LENDING"
-        elevation: 2
-        pos_hint: {'top': 1}
-        left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen6')]]
-        right_action_items: [['home', lambda x: root.go_to_dashboard()]]
-        title_align: 'center'  # Center-align the title
-        md_bg_color: 0.043, 0.145, 0.278, 1
-
-    ScrollView:
-        MDBoxLayout:
-            orientation: 'vertical'
-            size_hint_y: None
-            height: self.minimum_height
-            padding: dp(30)
-            spacing: dp(20)
-
-            MDLabel:
-                text: 'Lender Registration Form'
-                halign: 'center'
-                font_size: "20dp"
-                font_name: "Roboto-Bold"
-
-            MDLabel:
-                text: ''
-                halign: 'center'
-                size_hint_y: None
-                height: dp(0)
-
-            MDLabel:
-                text: "Select Marital Status Type:"
-                halign: 'left'
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-                size_hint_y: None
-                height: dp(20)
-
-            Spinner:
-                id: marital_status_id
-                text: "Marital Status"
-                values: ["Married", "Unmarried", "Others"]
-                font_size: "15dp"
-                multiline: False
-                size_hint: 1, None
-                height: "40dp"
-                width: dp(200)
-                text_size: self.width - dp(20), None
-                background_color: 0, 0, 0, 0
-                background_normal: ''
-                color: 0, 0, 0, 1
-                option_cls: 'CustomSpinnerOption'
-                on_text: root.update_details(marital_status_id.text)
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1  
-                    Line:
-                        width: 0.7
-                        rectangle: (self.x, self.y, self.width, self.height)
-
-            MDLabel:
-                text:"Select Your Guaranter:"
-                halign: 'left'
-                font_size: "15dp"
-                font_name: "Roboto-Bold"
-                size_hint_y: None
-                height: dp(20)
-
-            Spinner:
-                id: relation_name
-                text: "How is the person related to you"
-                font_size: "15dp"
-                multiline: False
-                size_hint: 1 , None
-                height: "40dp"
-                width: dp(200)
-                text_size: self.width - dp(20), None
-                background_color: 0, 0, 0, 0
-                background_normal: ''
-                color: 0, 0, 0, 1
-                option_cls: 'CustomSpinnerOption'  
-                on_text: root.update_person_details_visibility(relation_name.text)
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 0, 1  
-                    Line:
-                        width: 0.7
-                        rectangle: (self.x, self.y, self.width, self.height)
-                        
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            id: bar
+            title: "P2P LENDING"
+            elevation: 2
+            pos_hint: {'top': 1}
+            left_action_items: [['arrow-left', lambda x: setattr(app.root, 'current', 'LenderScreen6')]]
+            right_action_items: [["icon8.png", lambda x: root.account()]]
+            title_align: 'center'  # Center-align the title
+            md_bg_color: 0.043, 0.145, 0.278, 1
+    
+        ScrollView:
             MDBoxLayout:
-                id: box
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height
-                opacity: 1
-                spacing: dp(22)
-
-
-            GridLayout:
-                cols: 1
-                spacing: dp(30)
-                padding: [0, "30dp", 0, 0]
-
-                MDRaisedButton:
-                    text: "Next"
-                    on_release: root.add_data(marital_status_id.text)
-                    md_bg_color: 0.043, 0.145, 0.278, 1
-                    pos_hint: {'right': 1, 'y': 0.5}
-                    text_color: 1, 1, 1, 1
-                    size_hint: 1, None
-                    height: "50dp"
+                padding: dp(30)
+                spacing: dp(20)
+    
+                MDLabel:
+                    text: 'Lender Registration Form'
+                    halign: 'center'
+                    font_size: "20dp"
                     font_name: "Roboto-Bold"
-
-            MDLabel:
-                text: ''
-                halign: 'center'
-                size_hint_y: None
-                height: dp(50)
+    
+                MDLabel:
+                    text: ''
+                    halign: 'center'
+                    size_hint_y: None
+                    height: dp(0)
+    
+                MDLabel:
+                    text: "Select Marital Status Type:"
+                    halign: 'left'
+                    font_size: "15dp"
+                    font_name: "Roboto-Bold"
+                    size_hint_y: None
+                    height: dp(20)
+    
+                Spinner:
+                    id: marital_status_id
+                    text: "Marital Status"
+                    values: ["Married", "Unmarried", "Others"]
+                    font_size: "15dp"
+                    multiline: False
+                    size_hint: 1, None
+                    height: "40dp"
+                    width: dp(200)
+                    text_size: self.width - dp(20), None
+                    background_color: 0, 0, 0, 0
+                    background_normal: ''
+                    color: 0, 0, 0, 1
+                    option_cls: 'CustomSpinnerOption'
+                    on_text: root.update_details(marital_status_id.text)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1  
+                        Line:
+                            width: 0.7
+                            rectangle: (self.x, self.y, self.width, self.height)
+    
+                MDLabel:
+                    text:"Select Your Guaranter:"
+                    halign: 'left'
+                    font_size: "15dp"
+                    font_name: "Roboto-Bold"
+                    size_hint_y: None
+                    height: dp(20)
+    
+                Spinner:
+                    id: relation_name
+                    text: "How is the person related to you"
+                    font_size: "15dp"
+                    multiline: False
+                    size_hint: 1 , None
+                    height: "40dp"
+                    width: dp(200)
+                    text_size: self.width - dp(20), None
+                    background_color: 0, 0, 0, 0
+                    background_normal: ''
+                    color: 0, 0, 0, 1
+                    option_cls: 'CustomSpinnerOption'  
+                    on_text: root.update_person_details_visibility(relation_name.text)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1  
+                        Line:
+                            width: 0.7
+                            rectangle: (self.x, self.y, self.width, self.height)
+                            
+                MDBoxLayout:
+                    id: box
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    opacity: 1
+                    spacing: dp(22)
+    
+    
+                GridLayout:
+                    cols: 1
+                    spacing: dp(30)
+                    padding: [0, "30dp", 0, 0]
+    
+                    MDRaisedButton:
+                        text: "Next"
+                        on_release: root.add_data(marital_status_id.text)
+                        md_bg_color: 0.043, 0.145, 0.278, 1
+                        pos_hint: {'right': 1, 'y': 0.5}
+                        text_color: 1, 1, 1, 1
+                        size_hint: 1, None
+                        height: "50dp"
+                        font_name: "Roboto-Bold"
+    
+                MDLabel:
+                    text: ''
+                    halign: 'center'
+                    size_hint_y: None
+                    height: dp(50)
 
 <LenderScreen8>:
     MDTopAppBar:
@@ -10625,7 +10631,8 @@ class LenderScreenIndividualBankForm1(Screen):
         )
         dialog.open()
 
-from kivy.uix.spinner import SpinnerOption
+from kivy.uix.spinner import SpinnerOption, Spinner
+
 
 class CustomSpinnerOption(SpinnerOption):
     pass

@@ -154,7 +154,7 @@ user_helpers = '''
                                         orientation: 'vertical'
                                         padding: "10dp", "5dp", "10dp", "0dp"
                                         size_hint_y: None
-                                        height: dp(450)
+                                        height: dp(550)
                                         #spacing: dp(10)
                                         MDCard:
                                             id: card
@@ -319,7 +319,7 @@ user_helpers = '''
                                                 size_hint_y: None
                                                 height: self.minimum_height
                                                 MDLabel:
-                                                    text: 'Upcoming Payments'
+                                                    text: 'My Loans'
                                                     bold: True
                                                     size_hint_y: None
                                                     height: dp(20)
@@ -483,7 +483,19 @@ user_helpers = '''
                                                             text: "under process"
                                                             font_size:dp(15)
 
-
+                                        GridLayout:
+                                            cols: 1
+                                            spacing: dp(20)
+                                            padding: dp(20)
+                                            pos_hint: {'center_x': 0.80}
+                                            MDFillRoundFlatIconButton:
+                                                text: "View More"
+                                                icon: "clipboard-text-outline"
+                                                font_name: "Roboto-Bold"
+                                                text_color: "white"
+                                                md_bg_color: 0.043, 0.145, 0.278, 1
+                                                on_release: root.go_to_view_loan_screen()
+                                                    
 
 
 

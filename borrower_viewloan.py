@@ -969,9 +969,8 @@ class OpenLoanVLB(Screen):
 
                 if loan_status[i] not in ["rejected", "closed", "under process"]:
                     if loan_id[i] in emi_loan_id:
-                        last_index = len(emi_loan_id) - 1 - emi_loan_id[::-1].index(loan_id[i])
                         right_box.add_widget(MDLabel(
-                            text=f"[b]EMI Amount:[/b] {monthly_emi[last_index]}",
+                            text=f"[b]EMI Amount:[/b] {monthly_emi[i]}",
                             markup=True,
                             font_size='15sp',
                             font_style='Caption',  # You can adjust font style as needed

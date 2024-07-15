@@ -452,6 +452,8 @@ class SignupScreen(Screen):
         app_tables.fin_user_profile.add_row(customer_id=user_id, email_user=email, full_name=name,
                                             mobile=number)
         app_tables.fin_guarantor_details.add_row(customer_id=user_id)
+        app_tables.fin_lender.add_row(customer_id=user_id,email_id=email,user_name=name)
+        app_tables.fin_borrower.add_row(customer_id=user_id, email_id=email, user_name=name)
 
     def animate_loading_text(self, loading_label, modal_height):
         # Define the animation to move the label vertically

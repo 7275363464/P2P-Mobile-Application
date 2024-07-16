@@ -1792,6 +1792,7 @@ KV = '''
     BoxLayout:
         orientation: 'vertical'
         MDTopAppBar:
+            id: bar
             title: "P2P LENDING"
             elevation: 2
             pos_hint: {'top': 1}
@@ -1848,10 +1849,10 @@ KV = '''
                     option_cls: 'CustomSpinnerOption'
                     canvas:
                         Color:
-                            rgba: 0.5, 0.5, 0.5, 1  # Black color for the line
+                            rgba: 0, 0, 0, 1  # Black color for the line
                         Line:
                             rectangle: self.x, self.y, self.width, self.height
-                            width: 0.7 
+                            width: 0.8
 
                 # dropdown details
 
@@ -1871,11 +1872,10 @@ KV = '''
                     on_text: root.update_person_details(loan_type.text)
                     canvas.before:
                         Color:
-                            rgba: 0.5, 0.5, 0.5, 1
+                            rgba: 0, 0, 0, 1  # Black color for the line
                         Line:
                             rectangle: self.x, self.y, self.width, self.height
-                            width: 0.7
-
+                            width: 0.8
                 # Employee Details
                 MDBoxLayout:
                     id: employee_details_box
@@ -1924,10 +1924,10 @@ KV = '''
                         option_cls: 'CustomSpinnerOption'
                         canvas:
                             Color:
-                                rgba: 0.5, 0.5, 0.5, 1  # Black color for the line
+                                rgba: 0, 0, 0, 1  # Black color for the line
                             Line:
                                 rectangle: self.x, self.y, self.width, self.height
-                                width: 0.7 
+                                width: 0.8
 
                     #screen14
 
@@ -1947,10 +1947,10 @@ KV = '''
                         # on_text: root.self_employment(spinner.text)
                         canvas.before:
                             Color:
-                                rgba: 0.5, 0.5, 0.5, 1
+                                rgba: 0, 0, 0, 1  # Black color for the line
                             Line:
                                 rectangle: self.x, self.y, self.width, self.height
-                                width: 0.7
+                                width: 0.8
                     MDTextField:              
                         id:company_address
                         hint_text: ' Enter company address *'
@@ -2001,10 +2001,10 @@ KV = '''
 
                         canvas:
                             Color:
-                                rgba: 0.5, 0.5, 0.5, 1  # Black color for the line
+                                rgba: 0, 0, 0, 1  # Black color for the line
                             Line:
                                 rectangle: self.x, self.y, self.width, self.height
-                                width: 0.7 
+                                width: 0.8
 
                     #screen13
                     MDTextField:              
@@ -2039,10 +2039,10 @@ KV = '''
                         option_cls: 'CustomSpinnerOption'
                         canvas:
                             Color:
-                                rgba: 0.5, 0.5, 0.5, 1  # Black color for the line
+                                rgba: 0, 0, 0, 1  # Black color for the line
                             Line:
                                 rectangle: self.x, self.y, self.width, self.height
-                                width: 0.7 
+                                width: 0.8
                     MDTextField:              
                         id: designation
                         hint_text: ' Enter Designation *'
@@ -2097,7 +2097,7 @@ KV = '''
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
                         Image:
-                            id: image_label1
+                            id: image_label_emp1
                             source: ''
                             allow_stretch: True
                             keep_ratio: True
@@ -2145,7 +2145,7 @@ KV = '''
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
                         Image:
-                            id: image_label2
+                            id: image_label_emp2
                             source: ''
                             allow_stretch: True
                             keep_ratio: True
@@ -2208,9 +2208,9 @@ KV = '''
                     MDLabel:
                         text: 'Business Details'
                         halign: 'center'
-                        bold: True
                         size_hint_y: None
-                        # height:dp(50)
+                        height: dp(20)
+                        bold: True
 
                     MDTextField:
                         id: business_name
@@ -2243,10 +2243,10 @@ KV = '''
                         color: 0, 0, 0, 1
                         canvas:
                             Color:
-                                rgba: 0.5, 0.5, 0.5, 1  # Black color for the line
+                                rgba: 0, 0, 0, 1  # Black color for the line
                             Line:
                                 rectangle: self.x, self.y, self.width, self.height
-                                width: 0.7
+                                width: 0.8
 
                     MDTextField:
                         id:  business_address
@@ -2278,10 +2278,10 @@ KV = '''
                         color: 0, 0, 0, 1
                         canvas:
                             Color:
-                                rgba: 0.5, 0.5, 0.5, 1  # Black color for the line
+                                rgba: 0, 0, 0, 1  # Black color for the line
                             Line:
                                 rectangle: self.x, self.y, self.width, self.height
-                                width: 0.7
+                                width: 0.8
 
                     MDTextField:
                         id: industry_type
@@ -7412,19 +7412,20 @@ class LenderScreen6(Screen):
         else:
             self.ids.lending_period.values = ''
 
-        spinner_data_employee = app_tables.fin_lendor_employee_type.search()
-        data_list_employee = []
-        for i in spinner_data_employee:
-            data_list_employee.append(i['lendor_employee_type'])
+        spinner_data = app_tables.fin_lendor_employee_type.search()
+        data_list = []
+        for i in spinner_data:
+            data_list.append(i['lendor_employee_type'])
         self.unique_list_employment_type = []
-        for i in data_list_employee:
+        for i in data_list:
             if i not in self.unique_list_employment_type:
                 self.unique_list_employment_type.append(i)
         print(self.unique_list_employment_type)
         if len(self.unique_list_employment_type) >= 1:
             self.ids.employment_type.values = self.unique_list_employment_type
         else:
-            self.ids.employment_type.values = ''
+            self.ids.employment_type.values = ['Select Employment Type']
+
 
         spinner_data_bus = app_tables.fin_lendor_business_type.search()
         data_list_bus = []
@@ -7438,7 +7439,7 @@ class LenderScreen6(Screen):
         if len(self.unique_list_business_type) >= 1:
             self.ids.spin.values = self.unique_list_business_type
         else:
-            self.ids.spin.values = ''
+            self.ids.spin.values = ['Select Business Type']
         spinner_data_no = app_tables.fin_lendor_no_of_employees.search()
         data_list_no_of = []
         for i in spinner_data_no:
@@ -7451,7 +7452,7 @@ class LenderScreen6(Screen):
         if len(self.unique_list_no_of_emp) >= 1:
             self.ids.no_of_employees_working.values = self.unique_list_no_of_emp
         else:
-            self.ids.no_of_employees_working.values = ''
+            self.ids.no_of_employees_working.values = ['No of Employees Working']
 
         # -----------------------------------------------------------------------------------------------
         # Select Organisation Type
@@ -7467,7 +7468,7 @@ class LenderScreen6(Screen):
         if len(self.unique_list_organisation) >= 1:
             self.ids.organisation_type.values = self.unique_list_organisation
         else:
-            self.ids.organisation_type.values = ''
+            self.ids.organisation_type.values = ['Select Organisation Type']
         # -------------------------------------------------------------------------------------------------
         # Select Salary type
         gender_data = app_tables.fin_lendor_salary_type.search()
@@ -7482,7 +7483,7 @@ class LenderScreen6(Screen):
         if len(self.unique_sal) >= 1:
             self.ids.salary_type.values = self.unique_sal
         else:
-            self.ids.salary_type.values = ''
+            self.ids.salary_type.values = ['Select Salary type']
         # =======================================================================
         # Occupation type spinner
         spinner_data_occu = app_tables.fin_occupation_type.search()
@@ -7497,7 +7498,7 @@ class LenderScreen6(Screen):
         if len(self.unique_list_occu) >= 1:
             self.ids.occupation_type.values = self.unique_list_occu
         else:
-            self.ids.occupation_type.values = ''
+            self.ids.occupation_type.values = ['Select Occupation Type']
 
         self.update_top_bar_image()
         Clock.schedule_once(self.setup_menu, 0.5)  # Schedule menu setup after a delay
@@ -7770,6 +7771,7 @@ class LenderScreen6(Screen):
             else:
                 self.show_validation_error("Invalid investment amount.")
 
+        
     # ===============================================================================================
 
     # Business Details
@@ -8000,6 +8002,7 @@ class LenderScreen6(Screen):
                                          investment, loan_type, lending_period, modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
+        
         if not all(
                 [business_name, business_location, business_address, no_of_emp, industry_type, last_six_months_turnover,
                  cin, din, reg_addres, year_of_estd]):
@@ -8073,7 +8076,7 @@ class LenderScreen6(Screen):
         data = app_tables.fin_user_profile.search()
         # id_list = []
         id_list = [i['email_user'] for i in data]
-        investment = ""
+        investment = float(investment)
         email_id=""
         customer_id= ""
         lending_period = ""
@@ -8328,6 +8331,7 @@ class LenderScreen6(Screen):
                                                 business_number, investment, loan_type, lending_period, modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
+        
 
         if not all([company_name, organisation_type, occupation_type, company_address, landmark, employment_type,
                     annual_salary, salary_type, designation, business_number]):
@@ -8392,7 +8396,7 @@ class LenderScreen6(Screen):
         data = app_tables.fin_user_profile.search()
         id_list = [i['email_user'] for i in data]
         user_email = anvil.server.call('another_method')
-        investment = ""
+        investment = float(investment)
         customer_id= ""
         email_id=""
         lending_period = ""

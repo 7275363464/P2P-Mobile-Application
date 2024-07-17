@@ -1869,7 +1869,7 @@ KV = '''
                     background_normal: ''
                     color: 0, 0, 0, 1  #0.043, 0.145, 0.278, 1
                     option_cls: 'CustomSpinnerOption'
-                    on_text: root.update_person_details(loan_type.text)
+                    on_text: root.update_person_details(investment.text,loan_type.text,lending_period.text)
                     canvas.before:
                         Color:
                             rgba: 0, 0, 0, 1  # Black color for the line
@@ -2188,7 +2188,7 @@ KV = '''
                         padding: [0, "30dp", 0, 0]        
                         MDRectangleFlatButton:
                             text: "Next"
-                            on_release: root.add_data_employment_details(investment.text,loan_type.text,lending_period.text,company_name.text,organisation_type.text,occupation_type.text,company_address.text,landmark.text,employment_type.text,annual_salary.text,salary_type.text,designation.text,business_number.text)
+                            on_release: root.add_data_employment_details(company_name.text,organisation_type.text,occupation_type.text,company_address.text,landmark.text,employment_type.text,annual_salary.text,salary_type.text,designation.text,business_number.text)
                             md_bg_color: 0.043, 0.145, 0.278, 1
                             pos_hint: {'right': 1, 'y': 0.5}
                             text_color: 1, 1, 1, 1
@@ -2521,7 +2521,7 @@ KV = '''
                         padding: [0, "10dp", 0, 0]
                         MDRaisedButton:
                             text: "Next"
-                            on_release: root.add_data_business_details(business_name.text,spin.text,business_address.text,no_of_employees_working.text,industry_type.text,year_of_estd.text,last_six_months_turnover.text,cin.text,din.text,reg_office_address.text,investment.text,loan_type.text,lending_period.text)
+                            on_release: root.add_data_business_details(business_name.text,spin.text,business_address.text,no_of_employees_working.text,industry_type.text,year_of_estd.text,last_six_months_turnover.text,cin.text,din.text,reg_office_address.text)
                             md_bg_color: 0.043, 0.145, 0.278, 1
                             pos_hint: {'right': 1, 'y': 0.5}
                             text_color: 1, 1, 1, 1
@@ -7601,7 +7601,7 @@ class LenderScreen6(Screen):
 
     def account(self):
         self.menu.open()
-    def update_person_details(self, spinner):
+    def update_person_details(self, investment,loan_type,lending_period):
         spinner = self.ids.loan_type.text
         print(spinner)
         if spinner not in self.unique_list_type:
@@ -7649,6 +7649,20 @@ class LenderScreen6(Screen):
 
         self.adjust_screen_height()
         print(spinner)
+        data = app_tables.fin_lender.search()
+        id_list = []
+        for i in data:
+            id_list.append(i['email_id'])
+
+        user_email = anvil.server.call('another_method')
+        if user_email in id_list:
+            index = id_list.index(user_email)
+            data[index]['lending_type'] = loan_type
+            data[index]['lending_period'] = lending_period
+            data[index]['investment'] = float(investment)
+        else:
+            print('no email found')
+
 
     def adjust_screen_height(self):
         height = 0
@@ -7952,8 +7966,7 @@ class LenderScreen6(Screen):
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
     def add_data_business_details(self, business_name, business_location, business_address, no_of_emp, industry_type,
-                                  last_six_months_turnover, year_of_estd, cin, din, reg_addres, investment, loan_type,
-                                  lending_period):
+                                  last_six_months_turnover, year_of_estd, cin, din, reg_addres):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
 
         # Create MDLabel with white text color, increased font size, and bold text
@@ -7975,8 +7988,7 @@ class LenderScreen6(Screen):
         Clock.schedule_once(
             lambda dt: self.perform_data_addition_action_bus(business_name, business_location, business_address,
                                                              no_of_emp, industry_type, last_six_months_turnover,
-                                                             year_of_estd, cin, din, reg_addres, investment, loan_type,
-                                                             lending_period,
+                                                             year_of_estd, cin, din, reg_addres,
                                                              modal_view), 2)
 
     def calculate_age(self, last_six_months_turnover):
@@ -7999,7 +8011,7 @@ class LenderScreen6(Screen):
 
     def perform_data_addition_action_bus(self, business_name, business_location, business_address, no_of_emp,
                                          industry_type, last_six_months_turnover, year_of_estd, cin, din, reg_addres,
-                                         investment, loan_type, lending_period, modal_view):
+                                          modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
         
@@ -8076,11 +8088,7 @@ class LenderScreen6(Screen):
         data = app_tables.fin_user_profile.search()
         # id_list = []
         id_list = [i['email_user'] for i in data]
-        investment = float(investment)
-        email_id=""
-        customer_id= ""
-        lending_period = ""
-        lending_type = ""
+
         # for i in data:
         #     id_list.append(i['email_user'])
         user_email = anvil.server.call('another_method')
@@ -8098,16 +8106,6 @@ class LenderScreen6(Screen):
             data[index]['cin'] = cin
             data[index]['din'] = din
             data[index]['registered_off_add'] = reg_addres
-
-            existing_record = app_tables.fin_lender.get(email_id=email_id,)
-            if not existing_record:
-                app_tables.fin_lender.add_row(investment=investment,
-                                              lending_period=lending_period,
-                                              lending_type=lending_type)
-            else:
-                # Optionally, update the existing record if needed
-                # existing_record.update(user_name=data[index]['full_name'], ...)
-                print(f"Record for {user_email} already exists. Skipping insertion.")
         else:
             print('no email found')
 
@@ -8283,7 +8281,7 @@ class LenderScreen6(Screen):
         # Store the animation object
         loading_label.animation = anim  # Store the animation object in a custom attribute
 
-    def add_data_employment_details(self, investment, loan_type, lending_period, company_name, organisation_type,
+    def add_data_employment_details(self,  company_name, organisation_type,
                                     occupation_type, company_address, landmark,
                                     employment_type, annual_salary, salary_type, designation, business_number):
         modal_view = ModalView(size_hint=(None, None), size=(1000, 500), background_color=[0, 0, 0, 0])
@@ -8305,7 +8303,7 @@ class LenderScreen6(Screen):
         # Perform the actual action (e.g., fetching loan requests)
         # You can replace the sleep with your actual logic
         Clock.schedule_once(
-            lambda dt: self.perform_data_addition_action_employment(investment, loan_type, lending_period, company_name,
+            lambda dt: self.perform_data_addition_action_employment( company_name,
                                                                     organisation_type, occupation_type,
                                                                     company_address, landmark, employment_type,
                                                                     annual_salary, salary_type, designation,
@@ -8328,7 +8326,7 @@ class LenderScreen6(Screen):
 
     def perform_data_addition_action_employment(self, company_name, organisation_type, occupation_type, company_address,
                                                 landmark, employment_type, annual_salary, salary_type, designation,
-                                                business_number, investment, loan_type, lending_period, modal_view):
+                                                business_number, modal_view):
         modal_view.children[0].animation.cancel_all(modal_view.children[0].animation)
         modal_view.dismiss()
         
@@ -8396,11 +8394,7 @@ class LenderScreen6(Screen):
         data = app_tables.fin_user_profile.search()
         id_list = [i['email_user'] for i in data]
         user_email = anvil.server.call('another_method')
-        investment = float(investment)
-        customer_id= ""
-        email_id=""
-        lending_period = ""
-        lending_type = ""
+
         if user_email in id_list:
             index = id_list.index(user_email)
             print(company_name)
@@ -8423,16 +8417,6 @@ class LenderScreen6(Screen):
             data[index]['salary_type'] = salary_type
             data[index]['designation'] = designation
             data[index]['business_no'] = business_number
-
-            existing_record = app_tables.fin_lender.get(email_id=email_id,)
-            if not existing_record:
-                app_tables.fin_lender.add_row(investment=investment,
-                                              lending_period=lending_period,
-                                              lending_type=lending_type)
-            else:
-                # Optionally, update the existing record if needed
-                # existing_record.update(user_name=data[index]['full_name'], ...)
-                print(f"Record for {user_email} already exists. Skipping insertion.")
         else:
             print('email not found')
 

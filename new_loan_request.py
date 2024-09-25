@@ -39,7 +39,7 @@ user_helpers2 = """
 
 <WindowManager>:
     NewloanScreen:
-    
+
     NewloanScreen2:
     NewloanScreen3:
     MenuScreen:
@@ -1147,7 +1147,7 @@ class NewloanScreen2(Screen):
             self.ids.total_interest_amount.text = "₹" + " " + str(round(interest_amount, 2))
             processing_fee_amount = (self.processing_fee / 100) * p
             self.ids.total_processing_fee_amount.text = "₹" + " " + str(round(processing_fee_amount, 2))
-            total_repayment_amount = Monthly_EMI * t + interest_amount + processing_fee_amount
+            total_repayment_amount = Monthly_EMI * t + processing_fee_amount
             self.ids.total.text = "₹" + " " + str(round(total_repayment_amount, 2))
 
     def on_pre_leave(self):

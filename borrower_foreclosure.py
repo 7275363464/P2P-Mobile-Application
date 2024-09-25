@@ -652,7 +652,7 @@ class LoansDetailsB(Screen):
         s = 0
         for i in data:
             s += 1
-            customer_id.append(i['lender_customer_id'])
+            customer_id.append(i['borrower_customer_id'])
             product_name.append(i['product_name'])
             loan_id.append(i['loan_id'])
             borrower_name.append(i['lender_full_name'])
@@ -689,11 +689,11 @@ class LoansDetailsB(Screen):
         print(profile_customer_id[index])
         for i in range(s):
             c += 1
-            print(customer_id[i], i)
 
+            print(loan_status[i])
             if customer_id[i] == cos_id and loan_status[i] == 'disbursed' or customer_id[i] == cos_id and loan_status[i] == 'foreclosure':
                 index_list.append(c)
-        print(index_list)
+
         b = 1
         k = -1
         for i in reversed(index_list):
@@ -868,6 +868,8 @@ class LoansDetailsB(Screen):
             loan_id.append(i['loan_id'])
             customer_id.append(i['borrower_customer_id'])
             loan_status.append(i['loan_updated_status'])
+
+
             borrower_id.append(i['borrower_customer_id'])
             borrower_name.append(i['borrower_full_name'])
             schedule_date.append(i['first_emi_payment_due_date'])
@@ -904,6 +906,7 @@ class LoansDetailsB(Screen):
         shedule_date = {}
         for i in range(s):
             a += 1
+            print(loan_status[i])
             if customer_id[i] == profile_customer_id[index] and loan_status[i] == "foreclosure":
                 if loan_id[i] not in emi_loan_id and schedule_date[i] is not None:
                     index_list.append(i)
@@ -914,8 +917,6 @@ class LoansDetailsB(Screen):
                         index_list.append(i)
                         shedule_date[loan_id[i]] = next_payment[last_index]
 
-        print(shedule_date)
-        print(index_list)
         loan_ida = []
         loan_status_a = []
         for i in data:
@@ -932,6 +933,7 @@ class LoansDetailsB(Screen):
         if loan_id1 in loan_ida:
             index_a = loan_ida.index(loan_id1)
         if loan_id1 in loan_idb:
+
             index_b = loan_idb.index(loan_id1)
 
         if loan_status_a[index_a] == "foreclosure" and loan_status_b[index_b] == "approved":

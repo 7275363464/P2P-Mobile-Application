@@ -34,7 +34,7 @@ from login import OTPScreen, PreLoginScreen
 from new_loan_request import NewloanScreen
 from signup import SignupScreen, EmailOTPScreen
 
-anvil.server.connect("server_ICVO6RJCL6BCD7JT3ASVXABB-DVKXHXN3FMGIYIJX")
+anvil.server.connect("server_SVS4B6TMZ5MHZ6NQHY7OHQDW-FIQKYXY2ZSMCJ537")
 
 
 class MyApp(MDApp):
@@ -96,6 +96,8 @@ class MyApp(MDApp):
             self.send_otp(signup=False)
         else:
             self.show_dialog("Please enter email ID or phone number")
+
+
 
     def send_otp(self, signup=True):
         if signup:
@@ -254,7 +256,7 @@ class MyApp(MDApp):
     def update_email_verification_status(self, email):
         try:
             # Connect to Anvil server
-            anvil.server.connect("server_UZIZ2X7JH2VWL7MZUF3E7H2W-Z4NNV2LPHIX6BAPW")
+            anvil.server.connect("server_SVS4B6TMZ5MHZ6NQHY7OHQDW-FIQKYXY2ZSMCJ537")
 
             # Check if the email already exists in the table
             user = app_tables.users.get(email=email)

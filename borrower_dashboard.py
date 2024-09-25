@@ -7841,7 +7841,7 @@ class DashboardScreen(Screen):
         else:
             a = index_list[-1]
             print(a)
-            self.ids.product.text = str(product_name[a])
+            self.ids.product = str(product_name[a])
             self.ids.amount.text = "Rs. " + str(round(loan_amount[a], 2))
             self.ids.interest.text = str(interest_rate[a]) + "%"
             self.ids.tenure.text = str(int(tenure[a])) + ' Months'

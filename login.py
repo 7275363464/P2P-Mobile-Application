@@ -151,7 +151,7 @@ KV = """
                 theme_text_color: "Secondary"
                 halign: "left"
                 valign: "center"     
-             
+
         GridLayout:
             id:grid1
             cols: 1
@@ -318,7 +318,7 @@ KV = """
                 height: dp(80)
                 pos_hint: {'center_x': 0.5}
                 font_size: "18sp"
-                
+
 
 
             MDRoundFlatButton:
@@ -333,7 +333,7 @@ KV = """
                 md_bg_color: 0.043, 0.145, 0.278, 1
                 on_release: app.verify_login()
                 text_color: 1, 1, 1, 1
-                
+
             MDTextField:
                 id: otp_input
                 hint_text: " Enter OTP"
@@ -414,7 +414,7 @@ KV = """
             padding: dp(20)
             spacing: dp(20)
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        
+
             Image:
                 source: "one-time-password.png"
                 size_hint: None, None
@@ -437,7 +437,7 @@ KV = """
                 orientation: 'vertical'
                 size_hint: 1, None
                 height: dp(28)
-                
+
             MDTextField:
                 id: password
                 hint_text: " New Password"
@@ -466,7 +466,7 @@ KV = """
                 md_bg_color: 0.043, 0.145, 0.278, 1
                 on_release: app.update_password()
                 text_color: 1, 1, 1, 1
-                
+
         Widget:
             size_hint_y: 1.8
 """
@@ -519,8 +519,21 @@ class PreLoginScreen(Screen):
         # Start a separate thread for background validation
         self.background_validation()
         last_login = datetime.now()
-        user_profiles = app_tables.users.search(email=entered_email)
+        user_profiles = list(app_tables.users.search(email=entered_email))  # Convert to list to avoid query errors
+
+        # Check if the email exists in the database
+        if not user_profiles:
+            # No account found, prompt the user to sign up
+            # self.show_error_dialog("No account found with this email. Please sign up first.")
+            return  # Stop further execution if the email is not found
+
+        # If email exists, proceed with password verification
         user_profile = user_profiles[0]
+
+        # Check if the entered password matches the stored password
+        # if user_profile['password'] != entered_password:
+        #     self.show_error_dialog("Incorrect password. Please try again.")
+        #     return  # Stop further execution if the password is incorrect
         user_profile.update(last_login=last_login)
 
     def show_loading_spinner(self):
@@ -669,7 +682,8 @@ class PreLoginScreen(Screen):
                 # Clock.schedule_once(lambda dt: self.hide_loading_spinner(), 0)
         elif entered_email not in email_list and not user_data:
 
-            Clock.schedule_once(lambda dt: self.show_error_dialog("Enter valid Email and password"), 0)
+            Clock.schedule_once(
+                lambda dt: self.show_error_dialog("No account found with this email. Please sign up first."), 0)
             # Clock.schedule_once(lambda dt: self.hide_loading_spinner(), 0)
 
     def save_user_info(self, email, user_type):
@@ -763,6 +777,7 @@ class PreLoginScreen(Screen):
 
 from kivy.uix.screenmanager import ScreenManager, Screen
 
+
 class LoginScreen(Screen):
 
     def go_back(self):
@@ -774,8 +789,6 @@ class OTPScreen(Screen):
     def go_back(self):
         self.manager.add_widget(Factory.LoginScreen(name='login'))
         self.manager.current = 'login'
-
-
 
 
 class MyScreenManager(ScreenManager):

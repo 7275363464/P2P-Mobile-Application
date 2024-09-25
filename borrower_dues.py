@@ -1,3 +1,4 @@
+
 import anvil
 from anvil.tables import app_tables
 from kivy import properties
@@ -1170,7 +1171,7 @@ class BorrowerDuesScreen(Screen):
         index = 0
         if cos_id1[index] in cos_id:
             index2 = cos_id.index(cos_id1[index])
-            self.ids.account_number.text = str(account_num[index2])
+            #self.ids.account_number.text = str(account_num[index2])
 
         wallet_customer_id = []
         wallet_amount = []
@@ -1400,7 +1401,7 @@ class BorrowerDuesScreen(Screen):
                 scheduled_payment_made=datetime.today(),
                 scheduled_payment=schedule_date[index],
                 next_payment=next_payment_date,
-                account_number=account_num[index1],
+                #account_number=account_num[index1],
                 emi_number=emi_number,
                 borrower_email=borrower_email[index],
                 borrower_customer_id=cos_id1[index],
@@ -3486,7 +3487,7 @@ class PartPayment(Screen):
                     scheduled_payment_made=datetime.today(),
                     scheduled_payment=schedule_date[index],
                     part_payment_date=datetime.today().date(),
-                    account_number=account_num[index1],
+                    #account_number=account_num[index1],
                     emi_number=emi_number,
                     borrower_email=borrower_email[index],
                     borrower_customer_id=cos_id1[index],
@@ -3597,7 +3598,7 @@ class PartPayment(Screen):
                     scheduled_payment_made=datetime.today(),
                     scheduled_payment=schedule_date[index],
                     part_payment_date=datetime.today().date(),
-                    account_number=account_num[index1],
+                    #account_number=account_num[index1],
                     emi_number=emi_number,
                     borrower_email=borrower_email[index],
                     borrower_customer_id=cos_id1[index],

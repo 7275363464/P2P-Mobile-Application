@@ -755,33 +755,38 @@ Builder.load_string(view_loan_request)
 class ViewLoansRequest(Screen):
     def __init__(self, instance=None, **kwargs):
         super().__init__(**kwargs)
-        email = anvil.server.call('another_method')
-        print(f"Fetching lender information for email: {email}")
 
-        # Fetch lender_row from Anvil tables
-        lender_rows = app_tables.fin_lender.search(email_id=email)
+        try:
+            email = anvil.server.call('another_method')
+            print(f"Fetching lender information for email: {email}")
 
-        if not lender_rows or len(lender_rows) == 0:
-            print(f"Error: Lender not found for email {email}")
+            # Fetch lender_row from Anvil tables
+            lender_rows = app_tables.fin_lender.search(email_id=email)
+
+            if not lender_rows or len(lender_rows) == 0:
+                print(f"Error: Lender not found for email {email}")
+                return
+
+            lender_row = lender_rows[0]  # Assuming there's only one lender with this email
+
+            # Fetch membership_type from lender_row
+            lender_membership = lender_row['membership']
+            print(f"Lender membership type: {lender_membership}")
+
+            # Define membership levels and their hierarchy
+            membership_hierarchy = {
+                'silver': 1,
+                'gold': 2,
+                'platinum': 3
+            }
+
+            lender_membership_level = membership_hierarchy.get(lender_membership.lower(), 0)
+
+            # Fetch relevant data
+            data = app_tables.fin_loan_details.search()
+        except Exception as e:
+            print(f"Error fetching lender or loan details: {e}")
             return
-
-        lender_row = lender_rows[0]  # Assuming there's only one lender with this email
-
-        # Fetch membership_type from lender_row
-        lender_membership = lender_row['membership']
-        print(f"Lender membership type: {lender_membership}")
-
-        # Define membership levels and their hierarchy
-        membership_hierarchy = {
-            'silver': 1,
-            'gold': 2,
-            'platinum': 3
-        }
-
-        lender_membership_level = membership_hierarchy.get(lender_membership.lower(), 0)
-
-        # Fetch relevant data
-        data = app_tables.fin_loan_details.search()
 
         customer_id = []
         loan_id = []
